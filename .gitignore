@@ -1,0 +1,14 @@
+# Edgeline: en el repositorio solo van codigo, calibracion y resultados publicos.
+# Los datos historicos viven en la rama "datos"; jugadores y copias crudas no se suben.
+__pycache__/
+*.pyc
+*.log
+*.bak
+.env
+data_maestra/
+contexto/
+datos/
+salida/*
+!salida/proximos.json
+!salida/historial_picks.csv
+!salida/odds_snapshots_*.csv

@@ -1,0 +1,46 @@
+name: fotos de cuotas (movimiento de linea y CLV)
+
+on:
+  schedule:
+    - cron: "5 */3 * * *"        # cada 3 horas
+  workflow_dispatch:
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  cuotas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bajar partidos por jugar y cuotas (ESPN)
+        run: python colectores/recolectar_proximos.py --dias 3 --sin-contexto
+
+      - name: Guardar foto de cuotas
+        run: python colectores/snapshot_cuotas.py
+
+      - name: Subir a main
+        run: |
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -f salida/odds_snapshots_*.csv
+          if git diff --cached --quiet; then
+            echo "Sin cuotas nuevas."
+          else
+            git commit -m "cuotas $(date -u +'%Y-%m-%d %H:%M')Z"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
