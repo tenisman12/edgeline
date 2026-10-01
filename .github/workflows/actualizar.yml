@@ -20,6 +20,7 @@ jobs:
       EDGELINE_BASE: ${{ github.workspace }}
       EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
       PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4
 
@@ -37,9 +38,17 @@ jobs:
           git archive FETCH_HEAD datos | tar -x -C .
           ls datos | head -30
 
+      - name: Sembrar jugadores recientes
+        run: python utilidades/jugadores_recientes.py sembrar
+
       - name: Actualizar datos (solo lo nuevo)
         continue-on-error: true
         run: python actualizar_todo.py
+
+      - name: Actualizar jugadores recientes (solo lo nuevo)
+        continue-on-error: true
+        timeout-minutes: 120
+        run: python utilidades/jugadores_recientes.py diario
 
       - name: Predecir proximos dias
         run: python plataforma.py --dias 3

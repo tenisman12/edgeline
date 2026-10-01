@@ -8,16 +8,13 @@ run line / puck line, cuotas y edge de TODOS los mercados con cuota, probables E
 import argparse, datetime as dt, io, json, os
 
 BASE = os.environ.get("EDGELINE_BASE", r"C:\Edgeline_repo")
-PRE_INICIO = {"nhl": "2026-10-07"}
 
 
 def pct(x): return "%5.1f%%" % (100 * x) if x is not None else "   -  "
 
 
 def es_pre(p):
-    if p.get("pretemporada"): return True
-    ini = PRE_INICIO.get(p["liga"])
-    return bool(ini and p["fecha"] < ini)
+    return bool(p.get("pretemporada"))      # lo marca plataforma.py (fecha de inicio de temporada regular)
 
 
 def ab(t): return t.get("abrev") or t["nombre"].split()[-1]
@@ -52,9 +49,174 @@ def movimiento(c, v, h):
     return out
 
 
+def _f1(x, d=2):
+    return ("%." + str(d) + "f") % x if isinstance(x, (int, float)) else "-"
+
+
+def _forma_linea(nombre, f):
+    if not f:
+        return "      %-14s sin historial en tus datos" % nombre
+    t = f.get("ventanas", {}).get("temp", {}); l10 = f.get("ventanas", {}).get("L10", {})
+    rec = f.get("record", {})
+    ult = "".join(x["r"] for x in f.get("ultimos10", []))
+    osc = f.get("osciladores") or {}
+    pw = f.get("power") or {}
+    s = "      %-14s %s%s  racha %s  status %s  power %s/%s  record %s (L %s, V %s)" % (
+        nombre, "[FUERA DE TEMPORADA] " if f.get("fuera_de_temporada") else "", f.get("temporada"), f.get("racha"),
+        f.get("status"), pw.get("rank"), pw.get("de"), rec.get("temp"), rec.get("local") or "-", rec.get("visita") or "-")
+    s += "\n      %-14s ult.10 %s | L10 anota %s permite %s (ofensiva %s defensiva %s) | oscil. forma %+.2f ataque %s defensa %s -> %s" % (
+        "", ult or "-", _f1(l10.get("gf")), _f1(l10.get("ga")), _f1(l10.get("of_idx")), _f1(l10.get("df_idx")),
+        osc.get("forma", 0.0), _f1(osc.get("ataque"), 2), _f1(osc.get("defensa"), 2), osc.get("tendencia", "-"))
+    return s
+
+
+def _fx(x, d=2):
+    return "-" if x is None else ("%.*f" % (d, x) if isinstance(x, float) else str(x))
+
+
+def _bloque_tenis(d):
+    """Una ventana del detalle de tenis -> 4 lineas: games, saque, resto, breaks."""
+    if not d:
+        return ["sin datos"]
+    g, s, r, b = d.get("games") or {}, d.get("saque") or {}, d.get("resto") or {}, d.get("breaks") or {}
+    return [
+        "games: %s por partido (gana %s, pierde %s) %s%% games ganados | %s por set | tiebreaks %s | al maximo de sets %s%%" % (
+            _fx(g.get("games_por_partido"), 1), _fx(g.get("games_ganados_pp"), 1), _fx(g.get("games_perdidos_pp"), 1),
+            _fx(100 * g["pct_games_ganados"], 0) if g.get("pct_games_ganados") is not None else "-", _fx(g.get("games_por_set"), 1),
+            _fx(g.get("tiebreaks_por_partido")), _fx(100 * g["pct_partidos_al_maximo_de_sets"], 0) if g.get("pct_partidos_al_maximo_de_sets") is not None else "-"),
+        "saque: aces %s%% dobles faltas %s%% 1er saque %s%% | gana con 1er %s%% con 2do %s%% | puntos al saque %s%%" % (
+            _pc(s.get("ace_pct")), _pc(s.get("doble_falta_pct")), _pc(s.get("primer_saque_pct")),
+            _pc(s.get("gana_con_1er_saque")), _pc(s.get("gana_con_2do_saque")), _pc(s.get("puntos_ganados_al_saque"))),
+        "resto: puntos al resto %s%% | gana vs 1er %s%% vs 2do %s%% | dominance %s" % (
+            _pc(r.get("puntos_ganados_al_resto")), _pc(r.get("gana_vs_1er_saque_rival")),
+            _pc(r.get("gana_vs_2do_saque_rival")), _fx(r.get("dominance_ratio"))),
+        "breaks: hold %s%% | break %s%% | hace %s y concede %s por partido (total %s) | bp creados %s convertidos %s%% | bp salvados %s%%" % (
+            _pc(b.get("hold_pct")), _pc(b.get("break_pct")), _fx(b.get("breaks_hechos_pp")), _fx(b.get("breaks_concedidos_pp")),
+            _fx(b.get("breaks_totales_pp")), _fx(b.get("bp_creados_pp")), _pc(b.get("bp_convertidos_pct")), _pc(b.get("bp_salvados_pct")))]
+
+
+def _pc(x):
+    return "-" if x is None else "%.1f" % (100 * x)
+
+
+def _forma_tenis_linea(nombre, f):
+    if not f:
+        return "      %-14s sin historial en tus datos" % nombre
+    r12, r10 = f.get("record_12m", {}), f.get("record_L10", {})
+    sup = ", ".join("%s %d-%d" % (k, v["w"], v["l"]) for k, v in (f.get("por_superficie_12m") or {}).items())
+    pf = f.get("perfil") or {}
+    ca = f.get("carga") or {}
+    osc = f.get("osciladores") or {}
+    rv = f.get("records_vs_12m") or {}
+    out = ["      %-14s rank %s  racha %s  12m %s-%s  L10 %s-%s  por superficie: %s" % (
+        nombre, f.get("ranking"), f.get("racha"), r12.get("w"), r12.get("l"), r10.get("w"), r10.get("l"), sup or "-"),
+        "      %-14s mano %s, edad %s | carga: %s dias desde el ultimo, %s partidos y %s min en 14d | oscilador %s" % (
+            "", pf.get("mano"), round(pf["edad"], 1) if isinstance(pf.get("edad"), (int, float)) else pf.get("edad"), ca.get("dias_desde_ultimo"), ca.get("partidos_14d"), ca.get("minutos_14d"),
+            osc.get("tendencia", "-"))]
+    if rv:
+        out.append("      %-14s vs: %s" % ("", " | ".join("%s %s-%s" % (k, v.get("w"), v.get("l")) for k, v in rv.items() if isinstance(v, dict))))
+    return "\n".join(out)
+
+
+def _tenis_estadisticas(p, completo):
+    ee = p.get("estadisticas_equipo") or {}
+    h, v = p["home"], p["away"]
+    for lado, t in (("away", v), ("home", h)):
+        x = ee.get(lado)
+        if not x:
+            continue
+        ventanas = [("L10", x.get("L10")), ("12m", x.get("12m"))]
+        if x.get("superficie_hoy") is not None:
+            ventanas.append(("superficie de hoy 12m", x.get("superficie_hoy")))
+        if completo:
+            ventanas.insert(0, ("L5", x.get("L5")))
+            for k, d in (x.get("superficie_12m") or {}).items():
+                ventanas.append(("superficie %s 12m" % k, d))
+            for k, d in (x.get("formato_12m") or {}).items():
+                ventanas.append(("formato %s 12m" % k.replace("_", " "), d))
+        for nom, d in ventanas:
+            print("      ESTADISTICAS %-4s [%s]" % (ab(t), nom))
+            for ln in _bloque_tenis(d):
+                print("            " + ln)
+
+
+def _jug_resumen(lado, j):
+    if not j or not j.get("disponible"):
+        return ["      %-5s no disponible: %s" % (lado, (j or {}).get("motivo", "-"))]
+    out = ["      %-5s (jugadores hasta %s)" % (lado, j.get("ultimo_juego"))]
+    pr = j.get("probable")
+    if pr:
+        r = pr.get("resumen_ultimas5") or {}
+        out.append("            abridor %s: ult.5 salidas IP %s ERA %s WHIP %s K/9 %s" % (
+            pr.get("jugador"), r.get("ip"), r.get("era"), r.get("whip"), r.get("k9")) if r else
+            "            abridor %s: %s" % (pr.get("jugador"), pr.get("nota")))
+    if j.get("bullpen"):
+        b = j["bullpen"]
+        out.append("            bullpen ult.3 dias: %s lanzamientos, %s relevistas usados" % (b.get("pitches_total"), b.get("relevistas_usados")))
+    if j.get("bateadores"):
+        out.append("            bateadores (ult.14): " + "; ".join("%s %s/%s/%s" % (x["jugador"], x["avg"], x["hr"], x["rbi"]) for x in j["bateadores"]["jugadores"][:5]) + "  (avg/HR/RBI)")
+    if j.get("porteros"):
+        out.append("            porteros (ult.10): " + "; ".join("%s sv%% %s aperturas %s" % (x["jugador"], x["sv_pct"], x["aperturas"]) for x in j["porteros"]["jugadores"]))
+    if j.get("patinadores"):
+        out.append("            patinadores (ult.10): " + "; ".join("%s %dG %dA" % (x["jugador"], x["g"], x["a"]) for x in j["patinadores"]["jugadores"][:5]))
+    for k, tit in (("qb", "QB"), ("rb", "RB"), ("receptores", "receptores")):
+        if j.get(k):
+            out.append("            %s: " % tit + "; ".join("%s %s" % (x["jugador"], ", ".join("%s %s" % (a, b) for a, b in x.items() if a not in ("jugador", "pos", "juegos"))) for x in j[k]))
+    if j.get("jugadores"):
+        out.append("            por minutos/titularidad (ult.%s, criterio %s): " % (j.get("ventana_juegos"), j.get("criterio")) +
+                   "; ".join(x["jugador"] for x in j["jugadores"][:8]))
+    return out
+
+
+def imprimir_bloques(p, completo=False):
+    """Mismos bloques en todos los deportes: validacion, forma, h2h, estadisticas, jugadores, disponibilidad."""
+    h, v = p["home"], p["away"]
+    val = p.get("validacion") or {}
+    if val:
+        print("      VALIDACION  " + " | ".join("%s %s" % (k, val[k].replace("_", " ")) for k in ("Ganador", "Total", "Spread") if k in val))
+    em = p.get("emparejado") or {}
+    if em:
+        print("      NOMBRES EN TUS DATOS  %s = %s | %s = %s" % (ab(v), em.get("away") or "SIN EMPATE", ab(h), em.get("home") or "SIN EMPATE"))
+    fo = p.get("forma") or {}
+    if fo.get("home") or fo.get("away"):
+        print("      FORMA")
+        if p.get("tipo") == "tenis":
+            print(_forma_tenis_linea(ab(v), fo.get("away"))); print(_forma_tenis_linea(ab(h), fo.get("home")))
+        else:
+            print(_forma_linea(ab(v), fo.get("away"))); print(_forma_linea(ab(h), fo.get("home")))
+    hd = p.get("h2h_datos") or {}
+    if hd.get("partidos"):
+        if p.get("tipo") == "tenis":
+            print("      H2H (tus datos) %s %d - %d %s" % (ab(h), hd.get("gana_a", 0), hd.get("gana_b", 0), ab(v)))
+        else:
+            print("      H2H (tus datos) %d juegos: %s %d - %d %s%s" % (hd["partidos"], ab(h), hd.get("gana_a", 0), hd.get("gana_b", 0), ab(v),
+                  (" (%d empates)" % hd["empates"]) if hd.get("empates") else ""))
+    ee = p.get("estadisticas_equipo") or {}
+    if p.get("tipo") == "tenis":
+        _tenis_estadisticas(p, completo)
+    elif ee.get("home") or ee.get("away"):
+        for lado, t in (("away", v), ("home", h)):
+            x = ee.get(lado) or {}
+            l10 = x.get("L10") or {}
+            if l10:
+                n = len(l10)
+                print("      ESTADISTICAS %-4s %d columnas (%s) | %s" % (ab(t), n, ee.get("fuente"),
+                      ", ".join("%s %s" % (k, val_) for k, val_ in list(l10.items())[: (n if completo else 8)])))
+    jc = p.get("jugadores_clave")
+    if jc:
+        print("      JUGADORES CLAVE")
+        for lado, t in (("away", v), ("home", h)):
+            for linea_ in _jug_resumen(ab(t), jc.get(lado)): print(linea_)
+    bl = p.get("bloques") or {}
+    falt = ["%s (%s)" % (k, x.get("motivo")) for k, x in bl.items() if not x.get("ok")]
+    print("      BLOQUES %d/%d disponibles%s" % (sum(1 for x in bl.values() if x.get("ok")), len(bl),
+          ("  | no disponibles: " + "; ".join(falt)) if falt else ""))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ligas"); ap.add_argument("--fecha"); ap.add_argument("--dias", type=int, default=1)
+    ap.add_argument("--completo", action="store_true", help="imprime TODAS las columnas de estadisticas de equipo")
     ap.add_argument("--archivo", default=os.path.join(BASE, "salida", "proximos.json"))
     a = ap.parse_args()
     with io.open(a.archivo, encoding="utf-8") as f:
@@ -75,20 +237,25 @@ def main():
                 print("\n%s%s  %s @ %s%s   %s" % ("*" if pre else " ", p["hora"], v["nombre"], h["nombre"], pre, p.get("nota") or ""))
                 if p.get("serie"): print("      serie: %s" % p["serie"])
                 if not m:
-                    print("      modelo: sin datos suficientes (%s)" % p.get("motivo")); continue
+                    print("      modelo: sin datos suficientes (%s)" % p.get("motivo")); imprimir_bloques(p, a.completo); continue
                 u = m.get("unidad", "")
                 print("      PROBABILIDAD  %-4s %s   %-4s %s" % (ab(v), pct(m["p_away"]), ab(h), pct(m["p_home"])))
                 pk = p.get("pick") or {}
                 print("      PICK          %s (%s) | confianza %s" % (pk.get("texto"), pct(pk.get("prob")).strip(), pk.get("confianza")))
-                print("      %-13s %-4s %.2f   %-4s %.2f   total %.2f" % (u.upper() + " ESP.", ab(v), m["x_away"], ab(h), m["x_home"], m["total"]))
+                if m.get("x_away") is not None and m.get("x_home") is not None:
+                    print("      %-13s %-4s %.2f   %-4s %.2f   total %.2f" % (u.upper() + " ESP.", ab(v), m["x_away"], ab(h), m["x_home"], m["total"]))
+                else:
+                    print("      %-13s total %.2f" % (u.upper() + " ESP.", m["total"]))
                 if m.get("linea_total"):
-                    print("      TOTAL %.1f (%s)   Over %s   Under %s" % (
+                    print("      TOTAL %.1f (%s%s)   Over %s   Under %s" % (
                         m["linea_total"], "linea de mercado" if m.get("linea_es_mercado") else "linea de referencia",
+                        ", total sin validar" if (p.get("validacion") or {}).get("Total") == "sin_validar" else "",
                         pct(m.get("p_over")).strip(), pct(1 - m["p_over"] if m.get("p_over") is not None else None).strip()))
                 else:
                     print("      TOTAL sin linea publicada todavia (modelo %.2f)" % m["total"])
                 for nom, pr in m.get("extra") or []:
-                    print("      %-26s %s" % (nom, pct(pr).strip()))
+                    es_prob = isinstance(pr, float) and 0 <= pr <= 1 and ("rob" in nom or "%" in nom)
+                    print("      %-26s %s" % (nom, pct(pr).strip() if es_prob else pr))
                 if m.get("nota"): print("      nota: %s" % m["nota"])
                 c = p.get("cuotas")
                 if c:
@@ -106,6 +273,7 @@ def main():
                 pj = [x for x in (v.get("probable"), h.get("probable")) if x]
                 if pj: print("      probables ESPN (contexto, no se aplican): %s / %s" % (v.get("probable") or "?", h.get("probable") or "?"))
                 if p.get("alerta"): print("      AVISO: %s" % p["alerta"])
+                imprimir_bloques(p, a.completo)
     if not hubo:
         print("No hay partidos en esas fechas/ligas.")
         fs = sorted({p["fecha"] for p in d["partidos"] if ligas is None or p["liga"] in ligas})

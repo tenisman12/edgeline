@@ -56,6 +56,7 @@ ALIAS = {
 
 # abreviaturas de ESPN -> otras que usan nflverse / api-web.nhle.com
 ALIAS_ABREV = {
+    "NY": ["NYK"], "GS": ["GSW"], "SA": ["SAS"], "NO": ["NOP"],      # NBA (datos/nba.csv usa 3 letras)
     "WSH": ["WAS"], "LAR": ["LA"], "TB": ["TBL", "TB"], "NJ": ["NJD"], "SJ": ["SJS"],
     "LA": ["LAK", "LA"], "UTAH": ["UTA"], "MON": ["MTL"], "VGS": ["VGK"], "CLB": ["CBJ"],
 }

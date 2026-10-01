@@ -22,9 +22,10 @@ import argparse, csv, io as _io, os, sys, json, datetime as dt
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 sys.path.insert(0, os.path.join(AQUI, "colectores"))
-from nucleo import io, mercado, calibrar, equipos, estado
+from nucleo import io, mercado, calibrar, equipos, estado, forma, linea, jugadores
 from modelos import beisbol, hockey, americano, nba, futbol
 import recolectar_proximos as RP
+import proximos_beisbol as PB
 import pagina_plataforma as PAG
 
 BASE = io.BASE
@@ -40,14 +41,20 @@ for _l in _BEIS:
 for _l in ("kbo", "lmp", "lvbp", "lidom", "abl"):      # ganador de beisbol: solo MLB y NPB superan al baseline
     NO_PUBLICABLE.add((_l, "Ganador"))
 NO_PUBLICABLE.add(("nhl", "Total")); NO_PUBLICABLE.add(("nhl", "Spread"))
+# Futbol: Over/Under 2.5 sin ventaja sobre el baseline en walk-forward (Liga MX -0.1, MLS +0.2, Serie A -0.1);
+# tenis: games totales sin ventaja (sesgo de games por set).
+for _l in ("ligamx", "mls", "seriea", "atp", "wta"):
+    NO_PUBLICABLE.add((_l, "Total"))
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
 TZ = RP.TZ_MX
 
-DEPORTE = {"mlb": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba",
+DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol", "lvbp": "beisbol",
+           "lidom": "beisbol", "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba",
            "premier": "futbol", "laliga": "futbol", "seriea": "futbol", "bundesliga": "futbol",
            "ligue1": "futbol", "ligamx": "futbol", "champions": "futbol", "mls": "futbol",
            "atp": "tenis", "wta": "tenis"}
-NOMBRE = {"mlb": "MLB", "nfl": "NFL", "ncaafb": "NCAA Fútbol Americano", "nhl": "NHL", "nba": "NBA",
+NOMBRE = {"mlb": "MLB", "npb": "NPB", "kbo": "KBO", "lmp": "LMP", "lvbp": "LVBP", "lidom": "LIDOM", "abl": "ABL",
+          "nfl": "NFL", "ncaafb": "NCAA Fútbol Americano", "nhl": "NHL", "nba": "NBA",
           "ncaamb": "NCAA Basketball", "premier": "Premier League", "laliga": "La Liga",
           "seriea": "Serie A", "bundesliga": "Bundesliga", "ligue1": "Ligue 1", "ligamx": "Liga MX",
           "champions": "Champions League", "mls": "MLS", "atp": "ATP", "wta": "WTA"}
@@ -57,7 +64,7 @@ MODS = {"hockey": hockey, "americano": americano, "nba": nba, "futbol": futbol}
 # ================================================================== modelos (cache)
 class Cache:
     def __init__(self):
-        self.est, self.emp, self.avisos = {}, {}, []
+        self.est, self.emp, self.avisos, self.ff = {}, {}, [], {}
 
     def obtener(self, dep, liga):
         k = (dep, "" if dep == "tenis" else liga)      # ATP y WTA comparten el mismo estado
@@ -239,6 +246,156 @@ def _consenso(m, mercados, ctx):
     return {"fuentes": fuentes, "coinciden": n, "de": len(fuentes)}
 
 
+def _pre_inicio(liga):
+    """Fecha de inicio de temporada regular. NHL: si tus datos (API oficial, ids de temporada regular) ya traen
+    juegos de la temporada nueva, manda el primer dia de esos juegos; si no, la constante PRE_INICIO."""
+    base = PRE_INICIO.get(liga)
+    if liga == "nhl":
+        try:
+            F = forma.forma("hockey", "nhl")
+            fechas = [j["f"] for l in F.eq.values() for j in l]
+            if fechas:
+                ult = max((j["season"] for l in F.eq.values() for j in l))
+                reg = [j["f"] for l in F.eq.values() for j in l if j["season"] == ult and str(j["gp"])[4:6] == "02"]
+                if reg and (base is None or min(reg) < base):
+                    return min(reg)
+        except Exception:
+            pass
+    return base
+
+
+# ================================================================== ficha homogenea (mismos bloques, todos los deportes)
+def _fuente_forma(cache, liga, dep):
+    """(Forma, Emparejador) de la liga: tus datos del deporte; si no tienen la liga, los archivos de equipos de ESPN."""
+    if liga in cache.ff:
+        return cache.ff[liga]
+    res = (None, None)
+    try:
+        if dep in forma.SCORE:
+            F = forma.forma(dep, liga)
+            if F.activos:
+                res = (F, equipos.Emparejador(list(F.eq)))
+        if res[0] is None:
+            F = forma.forma_espn(liga)
+            if F.activos:
+                res = (F, equipos.Emparejador(list(F.eq)))
+    except Exception as ex:
+        cache.avisos.append("forma %s: %s" % (liga, str(ex)[:80]))
+    cache.ff[liga] = res
+    return res
+
+
+def _lado_nombre(emp, e):
+    return emp.buscar(_variantes(e), e.get("abrev"))[0]
+
+
+def _ficha(rec, g, cache):
+    """Agrega a rec los bloques: movimiento, forma, h2h_datos, estadisticas_equipo, jugadores_clave, validacion, bloques."""
+    liga, dep, m = g["liga"], DEPORTE.get(g["liga"]), rec.get("modelo")
+    bl = {}
+
+    def marca(nombre, ok, motivo=""):
+        bl[nombre] = {"ok": bool(ok), "motivo": "" if ok else motivo}
+    rec["forma"] = {"home": None, "away": None}
+    rec["h2h_datos"] = None
+    rec["estadisticas_equipo"] = None
+    rec["jugadores_clave"] = None
+    rec["movimiento"] = linea.movimiento(g.get("cuotas"), liga, g["id"], g.get("fecha_utc"),
+                                         directorio=os.path.join(BASE, "salida"))
+    mv = rec["movimiento"]
+    marca("movimiento", mv["ml"] or mv["total"] or mv["spread"], "sin cuotas de apertura y actuales para este partido")
+
+    if g["tipo"] == "tenis":
+        c = cache.obtener("tenis", liga)
+        j1 = j2 = None
+        if c:
+            j1 = c["emp"].buscar(g["home"]["nombre"])[0]
+            j2 = c["emp"].buscar(g["away"]["nombre"])[0]
+        ft = forma.forma_tenis()
+        sup = g.get("superficie")
+        fref = (rec.get("fecha") or "")[:10] or None
+        mj = g.get("mejor_de") or g.get("best_of")
+        try:
+            mj = int(mj) if mj else None
+        except (TypeError, ValueError):
+            mj = None
+        rec["forma"] = {"home": ft.jugador(j1, sup, fref, mj) if j1 else None,
+                        "away": ft.jugador(j2, sup, fref, mj) if j2 else None}
+        rec["h2h_datos"] = ft.h2h(j1, j2) if (j1 and j2) else None
+        okf = bool(rec["forma"]["home"] and rec["forma"]["away"])
+        marca("forma", okf, "jugador sin historial en tus datos")
+        marca("estadisticas_equipo", okf, "jugador sin historial en tus datos")
+        marca("jugadores_clave", True)
+        # estadisticas detalladas: games, saque, resto y breaks por ventana (L5, L10, 12m), superficie y formato
+        def _est(f):
+            if not f:
+                return None
+            d = f.get("detalle") or {}
+            return {"L5": d.get("L5"), "L10": d.get("L10"), "12m": d.get("12m"),
+                    "superficie_12m": f.get("detalle_superficie_12m"), "formato_12m": f.get("detalle_formato_12m"),
+                    "superficie_hoy": f.get("detalle_superficie_hoy"), "records_vs_12m": f.get("records_vs_12m"),
+                    "carga": f.get("carga")}
+        rec["estadisticas_equipo"] = {"fuente": "datos/tenis.csv (games, saque, resto, breaks)",
+                                      "home": _est(rec["forma"]["home"]), "away": _est(rec["forma"]["away"])}
+    else:
+        F, emp = _fuente_forma(cache, liga, dep)
+        nh = na = None
+        if F:
+            nh, na = _lado_nombre(emp, g["home"]), _lado_nombre(emp, g["away"])
+            rec["emparejado"] = {"home": nh, "away": na}      # nombre del equipo en tus datos (para auditar el empate)
+            fh = F.equipo(nh) if nh else None
+            fa = F.equipo(na) if na else None
+            rec["forma"] = {"home": fh, "away": fa}
+            rec["h2h_datos"] = F.h2h(nh, na) if (nh and na) else None
+        marca("forma", rec["forma"]["home"] and rec["forma"]["away"],
+              "equipo sin historial en tus datos" if F else "tus datos no traen esta liga todavia")
+        # estadisticas de equipo: archivos datos/equipos/*.csv (si hay) y, si no, las columnas del propio historial
+        EE = forma.estadisticas(liga)
+        est = {"fuente": None, "home": None, "away": None}
+        if EE.disponible():
+            emp2 = cache.ff.get(("ee", liga))
+            if emp2 is None:
+                emp2 = cache.ff[("ee", liga)] = equipos.Emparejador(EE.equipos)
+            for lado in ("home", "away"):
+                nm = _lado_nombre(emp2, g[lado])
+                est[lado] = EE.de(nm) if nm else None
+            est["fuente"] = os.path.basename(EE.ruta)
+        for lado in ("home", "away"):
+            if est[lado] is None and rec["forma"][lado] and rec["forma"][lado].get("stats"):
+                est[lado] = {"temp": rec["forma"][lado]["stats"]["temp"], "L10": rec["forma"][lado]["stats"]["L10"]}
+                est["fuente"] = est["fuente"] or "datos/%s.csv" % (dep or liga)
+        for lado in ("home", "away"):                       # las stats ya van en estadisticas_equipo
+            if rec["forma"][lado]:
+                rec["forma"][lado].pop("stats", None)
+        rec["estadisticas_equipo"] = est
+        marca("estadisticas_equipo", est["home"] and est["away"], "sin estadisticas de equipo para esta liga")
+        # jugadores clave
+        jug = {}
+        for lado, nm in (("home", nh), ("away", na)):
+            if dep == "beisbol" or liga in ("nhl", "nfl"):
+                team = nm
+            else:
+                team = jugadores.resolver_espn(liga, _variantes(g[lado]), g[lado].get("abrev"))
+            if team is None:
+                jug[lado] = {"disponible": False, "motivo": "equipo sin empate en los archivos de jugadores"}
+            else:
+                jug[lado] = jugadores.clave(dep, liga, team, g[lado].get("probable") if dep == "beisbol" else None)
+        rec["jugadores_clave"] = jug
+        marca("jugadores_clave", jug["home"].get("disponible") and jug["away"].get("disponible"),
+              jug["home"].get("motivo") or jug["away"].get("motivo") or "sin datos de jugadores")
+
+    marca("prediccion", m, rec.get("motivo") or "sin prediccion")
+    marca("totales", m and m.get("total") is not None, "sin modelo de totales")
+    marca("spread", m and (m.get("spread") or any("line" in str(n).lower() for n, _ in (m.get("extra") or []))),
+          "sin modelo de spread / run line / puck line")
+    q = g.get("cuotas") or {}
+    marca("mercado", q.get("ml_home") is not None and q.get("ml_away") is not None, "ESPN aun no publica cuotas")
+    marca("contexto", rec.get("contexto"), "ESPN no publico contexto (lesiones, ATS, H2H) para este partido")
+    rec["bloques"] = bl
+    rec["validacion"] = {t: ("sin_validar" if (liga, t) in NO_PUBLICABLE else "publicable")
+                         for t in ("Ganador", "Total", "Spread")}
+
+
 def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
     res, sin = [], []
     for g in juegos:
@@ -276,7 +433,10 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
                     if any(x["estado"] == "revisar" for x in rec["mercados"]):
                         rec["alerta"] = ("El modelo difiere mucho del mercado (edge > %d%%). Casi siempre falta informacion "
                                          "que el mercado ya conoce (lesion, alineacion, abridor). Revisa antes de confiar." % int(EDGE_SOSPECHOSO * 100))
-                    if g.get("pretemporada") or (g["liga"] in PRE_INICIO and rec["fecha"] < PRE_INICIO[g["liga"]]):
+                    pre_ini = _pre_inicio(g["liga"])
+                    nota_pre = ((g.get("nota") or "") + " " + (g.get("serie") or "")).lower()
+                    if g.get("pretemporada") or "pretemporada" in nota_pre or "preseason" in nota_pre \
+                            or (pre_ini and rec["fecha"] < pre_ini):
                         rec["pretemporada"] = True
                         rec["valor"] = None
                         for x in rec["mercados"]:
@@ -290,6 +450,11 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
                     top = _lado_fav(lados)
                     texto = {"home": rec["home"]["nombre"], "away": rec["away"]["nombre"], "draw": "Empate"}[top]
                     rec["pick"] = {"lado": top, "texto": texto, "prob": round(lados[top], 4), "confianza": m["confianza"]}
+        try:
+            _ficha(rec, g, cache)
+        except Exception as ex:                     # un bloque roto no tumba el partido
+            rec.setdefault("bloques", {})["error"] = {"ok": False, "motivo": "ficha: %s" % str(ex)[:100]}
+            cache.avisos.append("ficha %s %s: %s" % (g["liga"], g["id"], str(ex)[:80]))
         if not rec["modelo"]:
             sin.append("%s: %s @ %s -> %s" % (g["liga"].upper(), g["away"]["nombre"], g["home"]["nombre"], rec["motivo"]))
         res.append(rec)
@@ -309,6 +474,8 @@ def registrar(partidos, ruta):
     for p in partidos:
         if not p["pick"] or p.get("pretemporada") or (p["liga"], "Ganador") in NO_PUBLICABLE or (p["liga"], p["id"]) in existentes:
             continue
+        if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
+            continue                        # juego condicional: puede no jugarse; se registra cuando deja de decir "If Necessary"
         v = p["valor"] or {}
         nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
                        "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
@@ -342,9 +509,13 @@ def main():
         juegos = crudo["partidos"]
         print("Usando %d partidos de %s (generado %s)" % (len(juegos), a.entrada, crudo.get("generado")))
     else:
-        ligas = [x.strip() for x in a.ligas.split(",")] if a.ligas else RP.DEFAULT
+        ligas = [x.strip() for x in a.ligas.split(",")] if a.ligas else RP.DEFAULT + PB.DEFAULT
         print("1/3  Partidos por jugar (ESPN), proximos %d dia(s):" % a.dias)
-        juegos = RP.recolectar(ligas, a.dias, not a.sin_contexto)
+        juegos = RP.recolectar([x for x in ligas if x not in PB.DEFAULT], a.dias, not a.sin_contexto)
+        extra = [x for x in ligas if x in PB.DEFAULT]
+        if extra:
+            print("     NPB, KBO y ligas de invierno (MLB Stats API / koreabaseball.com, sin cuotas):")
+            juegos += PB.recolectar(extra, a.dias)
         RP.guardar(juegos)
     if not juegos:
         print("No hay partidos por jugar en ese rango."); return
@@ -356,6 +527,7 @@ def main():
     print("3/3  Escribiendo salida ...")
     os.makedirs(a.salida, exist_ok=True)
     data = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "tz": TZ, "umbral_edge": a.umbral,
+            "ficha": 2,
             "partidos": partidos, "sin_modelo": sin, "avisos": cache.avisos}
     rj = os.path.join(a.salida, "proximos.json")
     with _io.open(rj, "w", encoding="utf-8") as f:
