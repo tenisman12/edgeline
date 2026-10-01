@@ -123,6 +123,8 @@ def _pred(g, c, fecha):
     """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}
     if g["tipo"] == "tenis":
+        if "TBD" in ((g["home"]["nombre"] or "").upper(), (g["away"]["nombre"] or "").upper()):
+            return None, "rival por definir (TBD)"
         j1, s1 = c["emp"].buscar(g["home"]["nombre"]); j2, s2 = c["emp"].buscar(g["away"]["nombre"])
         if not j1 or not j2:
             return None, "jugador sin historial en tus datos: %s" % (g["home"]["nombre"] if not j1 else g["away"]["nombre"])
@@ -247,21 +249,10 @@ def _consenso(m, mercados, ctx):
 
 
 def _pre_inicio(liga):
-    """Fecha de inicio de temporada regular. NHL: si tus datos (API oficial, ids de temporada regular) ya traen
-    juegos de la temporada nueva, manda el primer dia de esos juegos; si no, la constante PRE_INICIO."""
-    base = PRE_INICIO.get(liga)
-    if liga == "nhl":
-        try:
-            F = forma.forma("hockey", "nhl")
-            fechas = [j["f"] for l in F.eq.values() for j in l]
-            if fechas:
-                ult = max((j["season"] for l in F.eq.values() for j in l))
-                reg = [j["f"] for l in F.eq.values() for j in l if j["season"] == ult and str(j["gp"])[4:6] == "02"]
-                if reg and (base is None or min(reg) < base):
-                    return min(reg)
-        except Exception:
-            pass
-    return base
+    """Fecha de inicio de temporada regular (constante PRE_INICIO). Para la NHL la constante manda aunque tus datos
+    traigan juegos de finales de septiembre con id de temporada regular: esos 5 juegos del 29-sep no se pueden confirmar y
+    es mas seguro dejar los juegos dudosos fuera del track record que mezclar pretemporada con temporada."""
+    return PRE_INICIO.get(liga)
 
 
 # ================================================================== ficha homogenea (mismos bloques, todos los deportes)
@@ -323,8 +314,10 @@ def _ficha(rec, g, cache):
                         "away": ft.jugador(j2, sup, fref, mj) if j2 else None}
         rec["h2h_datos"] = ft.h2h(j1, j2) if (j1 and j2) else None
         okf = bool(rec["forma"]["home"] and rec["forma"]["away"])
-        marca("forma", okf, "jugador sin historial en tus datos")
-        marca("estadisticas_equipo", okf, "jugador sin historial en tus datos")
+        mot = ("rival por definir (TBD)" if "TBD" in ((g["home"]["nombre"] or "").upper(), (g["away"]["nombre"] or "").upper())
+               else "jugador sin historial en tus datos")
+        marca("forma", okf, mot)
+        marca("estadisticas_equipo", okf, mot)
         marca("jugadores_clave", True)
         # estadisticas detalladas: games, saque, resto y breaks por ventana (L5, L10, 12m), superficie y formato
         def _est(f):
@@ -408,7 +401,7 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
                "home": {k: g["home"].get(k) for k in ("nombre", "abrev", "logo", "record", "probable", "probable_rol", "ranking")},
                "away": {k: g["away"].get(k) for k in ("nombre", "abrev", "logo", "record", "probable", "probable_rol", "ranking")},
                "cuotas": g.get("cuotas") or {}, "contexto": g.get("contexto") or {},
-               "modelo": None, "motivo": None, "mercados": [], "valor": None, "alerta": None, "pick": None,
+               "modelo": None, "motivo": None, "mercados": [], "valor": None, "alerta": None, "pick": None, "ganador": None,
                "consenso": None}
         for k in ("torneo", "ronda", "cancha", "superficie", "best_of", "superficie_estimada"):
             if k in g:
@@ -450,6 +443,8 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
                     top = _lado_fav(lados)
                     texto = {"home": rec["home"]["nombre"], "away": rec["away"]["nombre"], "draw": "Empate"}[top]
                     rec["pick"] = {"lado": top, "texto": texto, "prob": round(lados[top], 4), "confianza": m["confianza"]}
+                    # lo que se muestra en la prediccion general: solo quien gana segun el modelo (el pick va en Picks IA)
+                    rec["ganador"] = {"lado": top, "nombre": texto, "prob": round(lados[top], 4)}
         try:
             _ficha(rec, g, cache)
         except Exception as ex:                     # un bloque roto no tumba el partido
@@ -541,11 +536,8 @@ def main():
     val = [p for p in partidos if p["valor"]]
     print("\n%d partidos: %d con prediccion, %d sin modelo, %d con VALOR (edge >= %d%%)."
           % (len(partidos), len(con), len(partidos) - len(con), len(val), int(a.umbral * 100)))
-    for p in val:
-        v = p["valor"]
-        print("  VALOR  %-9s %s @ %s   %s %s  cuota %+d  edge %+.1f%%  kelly %.1f%%"
-              % (p["liga"].upper(), p["away"]["nombre"], p["home"]["nombre"], v["mercado"], v["lado"],
-                 v["cuota"], v["edge"] * 100, v["kelly"] * 100))
+    if val:
+        print("  (el detalle de VALOR esta en su apartado: python utilidades\\ver_predicciones.py --valor)")
     if cache.avisos:
         print("\nAvisos:"); [print("  -", x) for x in cache.avisos]
     if sin:

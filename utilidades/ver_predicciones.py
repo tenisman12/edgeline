@@ -64,7 +64,7 @@ def _forma_linea(nombre, f):
     s = "      %-14s %s%s  racha %s  status %s  power %s/%s  record %s (L %s, V %s)" % (
         nombre, "[FUERA DE TEMPORADA] " if f.get("fuera_de_temporada") else "", f.get("temporada"), f.get("racha"),
         f.get("status"), pw.get("rank"), pw.get("de"), rec.get("temp"), rec.get("local") or "-", rec.get("visita") or "-")
-    s += "\n      %-14s ult.10 %s | L10 anota %s permite %s (ofensiva %s defensiva %s) | oscil. forma %+.2f ataque %s defensa %s -> %s" % (
+    s += "\n      %-14s ult.10 (reciente primero) %s | L10 anota %s permite %s (ofensiva %s defensiva %s) | oscil. forma %+.2f ataque %s defensa %s -> %s" % (
         "", ult or "-", _f1(l10.get("gf")), _f1(l10.get("ga")), _f1(l10.get("of_idx")), _f1(l10.get("df_idx")),
         osc.get("forma", 0.0), _f1(osc.get("ataque"), 2), _f1(osc.get("defensa"), 2), osc.get("tendencia", "-"))
     return s
@@ -217,6 +217,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ligas"); ap.add_argument("--fecha"); ap.add_argument("--dias", type=int, default=1)
     ap.add_argument("--completo", action="store_true", help="imprime TODAS las columnas de estadisticas de equipo")
+    ap.add_argument("--valor", action="store_true", help="agrega el apartado VALOR (edge y Kelly por mercado); sin esta opcion no se muestra")
     ap.add_argument("--archivo", default=os.path.join(BASE, "salida", "proximos.json"))
     a = ap.parse_args()
     with io.open(a.archivo, encoding="utf-8") as f:
@@ -240,8 +241,8 @@ def main():
                     print("      modelo: sin datos suficientes (%s)" % p.get("motivo")); imprimir_bloques(p, a.completo); continue
                 u = m.get("unidad", "")
                 print("      PROBABILIDAD  %-4s %s   %-4s %s" % (ab(v), pct(m["p_away"]), ab(h), pct(m["p_home"])))
-                pk = p.get("pick") or {}
-                print("      PICK          %s (%s) | confianza %s" % (pk.get("texto"), pct(pk.get("prob")).strip(), pk.get("confianza")))
+                gw = p.get("ganador") or {}
+                print("      GANA          %s" % (gw.get("nombre") or "-"))
                 if m.get("x_away") is not None and m.get("x_home") is not None:
                     print("      %-13s %-4s %.2f   %-4s %.2f   total %.2f" % (u.upper() + " ESP.", ab(v), m["x_away"], ab(h), m["x_home"], m["total"]))
                 else:
@@ -263,16 +264,19 @@ def main():
                         c.get("casa"), ab(v), cuota(c.get("ml_away")), ab(h), cuota(c.get("ml_home")),
                         c.get("total"), cuota(c.get("over_odds")), cuota(c.get("under_odds"))))
                     for t in movimiento(c, v, h): print("      MOVIMIENTO  " + t)
-                    print("      %-22s %-9s %8s %9s %9s %8s" % ("MERCADO", "lado", "cuota", "p modelo", "p mercado", "edge"))
-                    for x in p.get("mercados") or []:
-                        print("      %-22s %-9s %8s %9s %9s %+7.1f%%%s" % (
-                            x["mercado"], x["lado"], cuota(x["cuota"]), pct(x["p_modelo"]).strip(), pct(x["p_mercado"]).strip(),
-                            100 * x["edge"], "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else "")))
+                    if a.valor:
+                        print("      VALOR (apartado aparte: modelo contra mercado)")
+                        print("      %-22s %-9s %8s %9s %9s %8s %7s" % ("MERCADO", "lado", "cuota", "p modelo", "p mercado", "edge", "kelly"))
+                        for x in p.get("mercados") or []:
+                            print("      %-22s %-9s %8s %9s %9s %+7.1f%% %6.1f%%%s" % (
+                                x["mercado"], x["lado"], cuota(x["cuota"]), pct(x["p_modelo"]).strip(), pct(x["p_mercado"]).strip(),
+                                100 * x["edge"], 100 * (x.get("kelly") or 0.0),
+                                "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else "")))
                 else:
                     print("      CUOTAS: aun no publicadas")
                 pj = [x for x in (v.get("probable"), h.get("probable")) if x]
                 if pj: print("      probables ESPN (contexto, no se aplican): %s / %s" % (v.get("probable") or "?", h.get("probable") or "?"))
-                if p.get("alerta"): print("      AVISO: %s" % p["alerta"])
+                if p.get("alerta") and (a.valor or p.get("pretemporada")): print("      AVISO: %s" % p["alerta"])
                 imprimir_bloques(p, a.completo)
     if not hubo:
         print("No hay partidos en esas fechas/ligas.")

@@ -147,8 +147,11 @@ def _superficie(torneo, fecha):
 def _tenis_pre(ev, liga):
     out, torneo = [], ev.get("name")
     for g in ev.get("groupings") or []:
-        if "Singles" not in ((g.get("grouping") or {}).get("displayName") or ""):
+        gname = ((g.get("grouping") or {}).get("displayName") or "")
+        if "Singles" not in gname:
             continue
+        # en torneos combinados ESPN devuelve los dos cuadros en el mismo endpoint: el cuadro manda, no el endpoint
+        liga_g = "wta" if "women" in gname.lower() else ("atp" if "men" in gname.lower() else liga)
         for c in g.get("competitions") or []:
             if (((c.get("status") or {}).get("type") or {}).get("state")) != "pre":
                 continue
@@ -159,7 +162,7 @@ def _tenis_pre(ev, liga):
                 continue
             fecha = (c.get("date") or "")[:10]
             slam = any(s in (torneo or "").lower() for s in SLAMS)
-            out.append({"id": str(c.get("id")), "liga": liga, "tipo": "tenis",
+            out.append({"id": str(c.get("id")), "liga": liga_g, "tipo": "tenis",
                         "fecha_utc": c.get("date"),
                         "estado": ((c.get("status") or {}).get("type") or {}).get("shortDetail"),
                         "home": _equipo(h), "away": _equipo(a), "cuotas": {},
@@ -167,7 +170,7 @@ def _tenis_pre(ev, liga):
                         "torneo": torneo, "ronda": (c.get("round") or {}).get("displayName"),
                         "cancha": (c.get("venue") or {}).get("court"),
                         "superficie": _superficie(torneo, fecha),
-                        "best_of": 5 if (slam and liga == "atp") else 3, "superficie_estimada": True})
+                        "best_of": 5 if (slam and liga_g == "atp") else 3, "superficie_estimada": True})
     return out
 
 
@@ -256,9 +259,11 @@ def recolectar(ligas, dias, con_contexto=True, hoy=None, verbose=True):
             for ev in d.get("events", []):
                 filas = _tenis_pre(ev, lg) if ev.get("groupings") else [x for x in [_evento(ev, lg)] if x]
                 for g in filas:
-                    if (lg, g["id"]) in vistos:
+                    if (g["liga"], g["id"]) in vistos:
                         continue
-                    vistos.add((lg, g["id"])); juegos.append(g); n += 1
+                    if lg in ("atp", "wta") and g["liga"] != lg:
+                        continue                 # ese cuadro se cuenta cuando se recorre su propio endpoint
+                    vistos.add((g["liga"], g["id"])); juegos.append(g); n += 1
             time.sleep(0.15)
         if verbose: print("  %-10s %3d partidos por jugar" % (lg, n))
     if con_contexto:
