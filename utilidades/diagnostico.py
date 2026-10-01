@@ -436,8 +436,7 @@ def g_codigo():
     try:
         from nucleo import forma
         ft = forma.forma_tenis()
-        n = len(getattr(ft, "por_jugador", {}) or getattr(ft, "j", {}) or {})
-        p("  forma de tenis cargada ok (%s jugadores indexados)" % (n or "?"))
+        p("  forma de tenis cargada ok (%d jugadores indexados)" % len(getattr(ft, "por", {}) or {}))
     except Exception as ex:
         p("  forma de tenis FALLA: %s" % str(ex)[:80]); alerta("FALLO", "forma de tenis no carga: %s" % str(ex)[:80])
 

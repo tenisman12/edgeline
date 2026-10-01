@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""C:\Edgeline\diagnosticar_datos.py - resume cada CSV de datos\ : filas, ligas, rango de fechas, ultimo juego."""
+"""utilidades/diagnosticar_datos.py - resume cada CSV de datos : filas, ligas, rango de fechas, ultimo juego."""
 import csv, glob, os, collections
 BASE = os.path.dirname(os.path.abspath(__file__))
 for ruta in sorted(glob.glob(os.path.join(BASE, "datos", "*.csv"))):

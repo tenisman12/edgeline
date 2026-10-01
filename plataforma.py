@@ -370,7 +370,9 @@ def _ficha(rec, g, cache):
             else:
                 team = jugadores.resolver_espn(liga, _variantes(g[lado]), g[lado].get("abrev"))
             if team is None:
-                jug[lado] = {"disponible": False, "motivo": "equipo sin empate en los archivos de jugadores"}
+                hay = bool(jugadores._filas("espn_%s_jugadores.csv" % liga)[0]) if dep != "beisbol" and liga not in ("nhl", "nfl") else True
+                jug[lado] = {"disponible": False, "motivo": ("equipo sin empate en los archivos de jugadores" if hay
+                                                             else "tus archivos de jugadores no traen %s todavia" % liga)}
             else:
                 jug[lado] = jugadores.clave(dep, liga, team, g[lado].get("probable") if dep == "beisbol" else None)
         rec["jugadores_clave"] = jug

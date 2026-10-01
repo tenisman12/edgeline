@@ -101,6 +101,9 @@ def _llave(r):
         if gp.endswith(".0"): gp = gp[:-2]
         lado = str(r.get("is_home")).replace(".0", "") if r.get("is_home") not in (None, "") else str(r.get("team"))
         return (gp, lado)
+    if r.get("tourney_id"):
+        # tenis: TML fecha el partido con el inicio del torneo y ESPN con el dia real; sin la fecha en la llave no se duplica
+        return ("tenis", str(r.get("tourney_id")), str(r.get("round")), str(r.get("winner_name")), str(r.get("loser_name")))
     return (str(r.get("tourney_date")), str(r.get("winner_name")), str(r.get("loser_name")), str(r.get("round")))
 
 
@@ -117,11 +120,20 @@ def publicar(origen, destino, filtro):
         co, viejas = leer(dst)
     else:
         co, viejas = [], []
-    idx = {_llave(r): r for r in viejas}
+    es_tenis = destino == "tenis.csv"
+    idx = {}
+    for r in viejas:
+        k = _llave(r)
+        if es_tenis and k in idx:
+            continue                         # tenis: un partido repetido se queda con la primera fila (la de TML, con mas columnas)
+        idx[k] = r
     agregadas = reemplazadas = 0
     for r in nuevas:
         k = _llave(r)
-        if k in idx: reemplazadas += 1
+        if k in idx:
+            if es_tenis:
+                continue                     # partido ya registrado: no se pisa con la version de otra fuente
+            reemplazadas += 1
         else: agregadas += 1
         idx[k] = r
     filas = list(idx.values())
