@@ -406,8 +406,99 @@
     "dos_mitades": true,
     "estado": "publicable"
    }
+  },
+  "ncaafb": {
+   "Ganador": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.159,
+    "z": 8.84,
+    "p_media": 0.597,
+    "tasa_real": 0.642,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   },
+   "Total esperado": {
+    "tipo": "conteo",
+    "n": 1900,
+    "skill": 0.0184,
+    "z": 3.68,
+    "sesgo": 0.319,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (lineas ~promedio)": {
+    "tipo": "prob",
+    "n": 5700,
+    "skill": 0.0199,
+    "z": 4.74,
+    "p_media": 0.502,
+    "tasa_real": 0.478,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -10.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1099,
+    "z": 8.66,
+    "p_media": 0.803,
+    "tasa_real": 0.82,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -6.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1238,
+    "z": 10.17,
+    "p_media": 0.732,
+    "tasa_real": 0.754,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -2.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1353,
+    "z": 11.98,
+    "p_media": 0.65,
+    "tasa_real": 0.671,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +2.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1224,
+    "z": 8.56,
+    "p_media": 0.537,
+    "tasa_real": 0.609,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   },
+   "Local cubre margen > +6.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1276,
+    "z": 9.45,
+    "p_media": 0.444,
+    "tasa_real": 0.51,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   },
+   "Local cubre margen > +10.5": {
+    "tipo": "prob",
+    "n": 1900,
+    "skill": 0.1486,
+    "z": 11.41,
+    "p_media": 0.354,
+    "tasa_real": 0.417,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   }
   }
  },
- "generado": "2026-09-30 20:02",
+ "generado": "2026-09-30 20:18",
  "criterio": "n>=300, mejora a la base, z>=2.0, mejora en las dos mitades, calibrado (prob |p media - tasa|<=0.04) o sesgo<=0.10 desv. (conteos)"
 }
