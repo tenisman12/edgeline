@@ -175,6 +175,8 @@ def _conf(p, tres=False):
 def _pred(g, c, fecha):
     """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}
+    if g["tipo"] != "tenis" and any("/" in (g[l]["nombre"] or "") for l in ("home", "away")):
+        return None, "rival por definir (TBD)"            # ganador de una serie aun sin resolver, p. ej. "Phillies/Braves"
     if g["tipo"] == "tenis":
         if "TBD" in ((g["home"]["nombre"] or "").upper(), (g["away"]["nombre"] or "").upper()):
             return None, "rival por definir (TBD)"
@@ -538,6 +540,19 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
 
 
 # ================================================================== historial (base del track record)
+HORAS_REGISTRO = 36       # el pick entra al historial cuando faltan <= 36 h para el partido (con mas info: abridores, lesiones, cuotas)
+
+
+def _cerca(p):
+    """True si el partido empieza dentro de HORAS_REGISTRO horas (hora de CDMX). Sin hora, se toma el final del dia."""
+    try:
+        ini = dt.datetime.strptime("%s %s" % (p["fecha"], p.get("hora") or "23:59"), "%Y-%m-%d %H:%M")
+        ahora = dt.datetime.utcnow() + dt.timedelta(hours=TZ)      # hora de CDMX
+        return ini <= ahora + dt.timedelta(hours=HORAS_REGISTRO)
+    except Exception:
+        return True
+
+
 def registrar(partidos, ruta):
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza",
             "valor_mercado", "valor_lado", "valor_cuota", "valor_edge"]
@@ -549,6 +564,8 @@ def registrar(partidos, ruta):
     for p in partidos:
         if not p["pick"] or p.get("pretemporada") or (p["liga"], "Ganador") in NO_PUBLICABLE or (p["liga"], p["id"]) in existentes:
             continue
+        if not _cerca(p):
+            continue                        # aun falta mucho: se registra en una corrida posterior
         if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
             continue                        # juego condicional: puede no jugarse; se registra cuando deja de decir "If Necessary"
         v = p["valor"] or {}

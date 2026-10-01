@@ -31,6 +31,22 @@ def _sin_pretemporada_nhl(fila):
     return not (len(g) == 10 and g[4:6] == "01")
 
 
+def _dias_mlb():
+    """dias a pedir de MLB en modo diario: desde el ultimo juego guardado menos 3 de solape (minimo 4, maximo 45)."""
+    try:
+        ult = ""
+        with open(os.path.join(BASE, "datos", "beisbol.csv"), encoding="utf-8-sig", newline="") as fh:
+            for r in csv.DictReader(fh):
+                if r.get("league") == "MLB" and (r.get("game_date") or "") > ult:
+                    ult = r["game_date"]
+        if ult:
+            d = (HOY - dt.date.fromisoformat(ult[:10])).days + 3
+            return max(4, min(45, d))
+    except Exception:
+        pass
+    return 45
+
+
 def pasos(completo):
     m = HOY.month
     y_nhl = HOY.year if m >= 9 else HOY.year - 1          # temporada NHL en curso (arranca en octubre)
@@ -46,7 +62,8 @@ def pasos(completo):
                "--hasta", os.environ.get("EDGELINE_NHL_HASTA", "%d%d" % (y_nhl, y_nhl + 1))]
         nba, nfl, fut = "2022", "2021", "2021"
     else:
-        bb_inv, bb_mlb, y_bb = ventana, ventana, HOY.year
+        bb_inv, y_bb = ventana, HOY.year
+        bb_mlb = (HOY - dt.timedelta(days=_dias_mlb())).isoformat()       # solo lo nuevo (antes: siempre 45 dias, ~20 min)
         nhl = ["--desde", "%d%d" % (y_nhl - 1, y_nhl), "--hasta", "%d%d" % (y_nhl, y_nhl + 1),
                "--conocidos", os.path.join(BASE, "datos", "hockey.csv")]
         nba, nfl, fut = str(y_nba), str(y_nfl), str(y_fut)

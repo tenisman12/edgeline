@@ -67,7 +67,7 @@ jobs:
           fi
 
       - name: Predecir proximos dias
-        run: python plataforma.py --dias 3
+        run: python plataforma.py --dias 7
 
       - name: Calificar picks contra resultados reales
         continue-on-error: true
