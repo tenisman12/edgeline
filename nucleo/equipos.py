@@ -119,12 +119,14 @@ class EmparejadorJugadores:
         self.claves = [c for c in dict.fromkeys(claves) if c]
         self.por_norm = {}
         self.por_apellido = {}
+        self.por_tokens = {}          # mismas palabras en cualquier orden: "Zheng Qinwen" = "Qinwen Zheng"
         for c in self.claves:
             n = _norm(c)
             self.por_norm[n] = c
             t = n.split()
             if t:
                 self.por_apellido.setdefault(t[-1], []).append((t[0], c))
+                self.por_tokens.setdefault(" ".join(sorted(t)), []).append(c)
 
     def buscar(self, nombre):
         n = _norm(nombre)
@@ -133,6 +135,9 @@ class EmparejadorJugadores:
         t = n.split()
         if not t:
             return None, 0.0
+        og = self.por_tokens.get(" ".join(sorted(t)), [])
+        if len(og) == 1:
+            return og[0], 0.95
         cand = [c for ini, c in self.por_apellido.get(t[-1], []) if ini[:1] == t[0][:1]]
         if len(cand) == 1:
             return cand[0], 0.9

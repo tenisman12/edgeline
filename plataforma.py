@@ -385,7 +385,10 @@ def _ficha(rec, g, cache):
     marca("mercado", q.get("ml_home") is not None and q.get("ml_away") is not None, "ESPN aun no publica cuotas")
     marca("contexto", rec.get("contexto"), "ESPN no publico contexto (lesiones, ATS, H2H) para este partido")
     rec["bloques"] = bl
-    rec["validacion"] = {t: ("sin_validar" if (liga, t) in NO_PUBLICABLE else "publicable")
+    # estado de cada mercado: sin_modelo (no hay prediccion de ese mercado), sin_validar (no vence al baseline) o publicable
+    blq = {"Ganador": "prediccion", "Total": "totales", "Spread": "spread"}
+    rec["validacion"] = {t: ("sin_modelo" if not bl.get(blq[t], {}).get("ok")
+                             else ("sin_validar" if (liga, t) in NO_PUBLICABLE else "publicable"))
                          for t in ("Ganador", "Total", "Spread")}
 
 

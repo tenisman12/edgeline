@@ -437,11 +437,16 @@ class FormaTenis:
     def __init__(self):
         filas = _leer(io.DATOS("tenis.csv"))
         self.por = {}
+        vistos = set()                       # TML repite algunos partidos de torneos por equipos con otra fecha de torneo
         for r in filas:
             f = str(r.get("tourney_date") or "")
             w, l = r.get("winner_name"), r.get("loser_name")
             if not (f and w and l):
                 continue
+            k = (r.get("tourney_id"), r.get("round"), w, l, r.get("score"))
+            if k in vistos:
+                continue
+            vistos.add(k)
             ordn = (f, _f(r.get("match_num")) or 0.0)
             self.por.setdefault(w, []).append((ordn, True, r))
             self.por.setdefault(l, []).append((ordn, False, r))
