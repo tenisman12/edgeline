@@ -36,6 +36,9 @@ PRE_INICIO = {"nhl": "2026-10-07"}
 # VALOR ni se registran como pick. (liga, tipo) con tipo = Ganador | Total | Spread.
 _BEIS = ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl")
 NO_PUBLICABLE = set()
+for _l in ("ncaafb", "ncaamb"):          # universitario: con prediccion, pero sin validar hasta que lo confirme el walk-forward
+    for _t in ("Ganador", "Total", "Spread"):
+        NO_PUBLICABLE.add((_l, _t))
 for _l in _BEIS:
     NO_PUBLICABLE.add((_l, "Total")); NO_PUBLICABLE.add((_l, "Spread"))
 for _l in ("kbo", "lmp", "lvbp", "lidom", "abl"):      # ganador de beisbol: solo MLB y NPB superan al baseline
@@ -45,11 +48,61 @@ NO_PUBLICABLE.add(("nhl", "Total")); NO_PUBLICABLE.add(("nhl", "Spread"))
 # tenis: games totales sin ventaja (sesgo de games por set).
 for _l in ("ligamx", "mls", "seriea", "atp", "wta"):
     NO_PUBLICABLE.add((_l, "Total"))
+
+
+AJUSTE_GAMES = {}  # (liga, best_of) -> sesgo de games a corregir (lo calcula validar_mercados.py)
+BREAKS_OK = {}     # (liga, best_of) -> los mercados de breaks (totales y over/under) superan la validacion estricta
+
+
+def _aplicar_validacion():
+    """Si existen salida/validacion_mercados.json y validacion_futbol.json (los escriben los validadores walk-forward),
+    ellos deciden que mercados son publicables; lo escrito a mano arriba queda solo como respaldo."""
+    def cargar(nombre):
+        try:
+            with open(io.ruta("salida", nombre), encoding="utf-8") as fh:
+                return json.load(fh)
+        except Exception:
+            return {}
+    def pub(d, k):
+        return (d.get(k) or {}).get("estado") == "publicable"
+    def mayoria(d, claves):
+        v = [pub(d, k) for k in claves]
+        return bool(v) and sum(v) * 2 > len(v)
+    def poner(liga, tipo, ok):
+        (NO_PUBLICABLE.discard if ok else NO_PUBLICABLE.add)((liga, tipo))
+    vm = cargar("validacion_mercados.json")
+    for tour, d in (vm.get("ajustes_tenis") or {}).items():
+        for bo, v in d.items():
+            AJUSTE_GAMES[(tour.lower(), int(bo))] = float(v)
+    dep = vm.get("deportes", {})
+    for liga, clave in (("nhl", "hockey"), ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb")):
+        d = dep.get(clave)
+        if not d: continue
+        poner(liga, "Ganador", pub(d, "Ganador"))
+        poner(liga, "Total", pub(d, "Over/Under (lineas ~promedio)"))
+        poner(liga, "Spread", mayoria(d, [k for k in d if k.startswith(("Local cubre margen", "Puck line"))]))
+    for liga, clave in (("atp", "tenis_ATP"), ("wta", "tenis_WTA")):
+        d = dep.get(clave)
+        if not d: continue
+        poner(liga, "Ganador", pub(d, "Ganador"))
+        ou = [k for k in d if k.startswith("Over/Under games")]
+        poner(liga, "Total", bool(ou) and all(pub(d, k) for k in ou))
+        for bo in (3, 5):
+            ks = [k for k in d if k.startswith("Breaks") and "[%d sets]" % bo in k]
+            if ks: BREAKS_OK[(liga, bo)] = all(pub(d, k) for k in ks)
+    fut = cargar("validacion_futbol.json").get("ligas", {})
+    for nombre, d in fut.items():
+        liga = nombre.lower()
+        poner(liga, "Ganador", pub(d, "1") and pub(d, "2"))
+        poner(liga, "Total", pub(d, "over_2.5"))
+
+
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
+_aplicar_validacion()
 TZ = RP.TZ_MX
 
 DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol", "lvbp": "beisbol",
-           "lidom": "beisbol", "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba",
+           "lidom": "beisbol", "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba", "ncaamb": "nba",
            "premier": "futbol", "laliga": "futbol", "seriea": "futbol", "bundesliga": "futbol",
            "ligue1": "futbol", "ligamx": "futbol", "champions": "futbol", "mls": "futbol",
            "atp": "tenis", "wta": "tenis"}
@@ -93,7 +146,7 @@ class Cache:
             if dep == "futbol" and liga == "champions":
                 st = mod.entrenar(None)
                 nota = "Modelo entrenado con las 5 ligas europeas (sin historial propio de Champions)."
-            elif dep == "americano":
+            elif dep == "americano" and liga != "ncaafb":
                 st = mod.entrenar(None)
             if not st.get("eq"):
                 self.avisos.append("%s/%s: sin historial en datos\\%s.csv" % (dep, liga, dep)); return None
@@ -129,7 +182,8 @@ def _pred(g, c, fecha):
         if not j1 or not j2:
             return None, "jugador sin historial en tus datos: %s" % (g["home"]["nombre"] if not j1 else g["away"]["nombre"])
         bo = g.get("best_of", 3); linea = 22.5 if bo == 3 else 38.5
-        r = estado.tenis_predecir(c["st"], j1, j2, g.get("superficie", "Hard"), bo, linea)
+        r = estado.tenis_predecir(c["st"], j1, j2, g.get("superficie", "Hard"), bo, linea, tour=g["liga"],
+                                  ajuste_games=AJUSTE_GAMES.get((g["liga"], bo), 0.0))
         if not r:
             return None, "muestra insuficiente de saque/resto"
         return {"p_home": r["p1"], "p_away": r["p2"], "unidad": "games",
@@ -190,11 +244,28 @@ def _pred(g, c, fecha):
         if not r:
             return None, "equipo sin historial"
         top = max(r["p_home"], r["p_draw"], r["p_away"])
-        return {"p_home": r["p_home"], "p_draw": r["p_draw"], "p_away": r["p_away"], "unidad": "goles",
+        der = r.get("derivados")
+        if der:
+            vf = _val_futbol().get(liga, {})
+            der["_validacion"] = {k: vf[k]["estado"] for k in der if k in vf}
+        return {"derivados": der, "p_home": r["p_home"], "p_draw": r["p_draw"], "p_away": r["p_away"], "unidad": "goles",
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total_esperado"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
                 "confianza": _conf(top, tres=True), "extra": [], "nota": c.get("nota")}, None
     return None, "sin modelo para este deporte"
+
+
+_VF = {}
+def _val_futbol():
+    """Estado de cada mercado de futbol por liga (salida/validacion_futbol.json, lo escribe validar_futbol_mercados.py)."""
+    if not _VF:
+        try:
+            with open(io.ruta("salida", "validacion_futbol.json"), encoding="utf-8") as fh:
+                for lg, d in json.load(fh).get("ligas", {}).items():
+                    _VF[lg.lower()] = d
+        except Exception:
+            _VF["_vacio"] = {}
+    return _VF
 
 
 # ================================================================== mercado / edge
@@ -392,6 +463,10 @@ def _ficha(rec, g, cache):
     rec["validacion"] = {t: ("sin_modelo" if not bl.get(blq[t], {}).get("ok")
                              else ("sin_validar" if (liga, t) in NO_PUBLICABLE else "publicable"))
                          for t in ("Ganador", "Total", "Spread")}
+    if g.get("tipo") == "tenis":
+        bo = 5 if str(g.get("best_of", 3)) == "5" else 3
+        rec["validacion"]["Breaks"] = ("sin_modelo" if not bl.get("prediccion", {}).get("ok")
+                                       else ("publicable" if BREAKS_OK.get((liga, bo)) else "sin_validar"))
 
 
 def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
@@ -518,6 +593,7 @@ def main():
             juegos += PB.recolectar(extra, a.dias)
         RP.guardar(juegos)
     if not juegos:
+        print("::warning::No hay partidos por jugar en ese rango (o ESPN no respondio). Se conserva el proximos.json anterior.")
         print("No hay partidos por jugar en ese rango."); return
 
     print("\n2/3  Prediciendo con tus modelos ...")

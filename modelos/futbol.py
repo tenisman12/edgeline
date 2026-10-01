@@ -54,6 +54,7 @@ def entrenar(liga=None, w=W_ENS):
         if gh is None or ga_ is None: continue
         sh+=gh; sa+=ga_; n+=1
     lg_home=sh/n if n else 1.5; lg_away=sa/n if n else 1.15; lg=(lg_home+lg_away)/2
+    cnt={"c":{},"t":{},"c_h":0.0,"c_a":0.0,"nc":0,"t_h":0.0,"t_a":0.0,"nt":0,"ht_g":0.0,"ht_t":0.0}
     for f,gp,h,a in juegos:
         gh=_pri(_f(h.get("goals")),_f(h.get("runs"))); ga_=_pri(_f(h.get("goals_opp")),_f(h.get("runs_opp")))
         if gh is None or ga_ is None: continue
@@ -62,7 +63,34 @@ def entrenar(liga=None, w=W_ENS):
         res=1.0 if gh>ga_ else (0.5 if gh==ga_ else 0.0)
         d=K_ELO*(res-exp); th.elo+=d; ta.elo-=d
         th.gf+=gh; th.ga+=ga_; th.n+=1; ta.gf+=ga_; ta.ga+=gh; ta.n+=1
-    return {"eq":eq,"lg":lg,"lg_home":lg_home,"lg_away":lg_away,"w":w}
+        _acum_conteos(cnt,h,a,gh,ga_)
+    return {"eq":eq,"lg":lg,"lg_home":lg_home,"lg_away":lg_away,"w":w,"cnt":cnt}
+
+def _acum_conteos(cnt,h,a,gh,ga_):
+    """Tasas por equipo de corners, tarjetas y fraccion de goles del 1T (para los mercados derivados)."""
+    ch,ca=_f(h.get("corners")),_f(a.get("corners"))
+    if ch is not None and ca is not None:
+        for tm,fo,co in ((h.get("team"),ch,ca),(a.get("team"),ca,ch)):
+            c=cnt["c"].setdefault(tm,[0.0,0.0,0]); c[0]+=fo; c[1]+=co; c[2]+=1
+        cnt["c_h"]+=ch; cnt["c_a"]+=ca; cnt["nc"]+=1
+    yh,ya=_f(h.get("yellow")),_f(a.get("yellow"))
+    if yh is not None and ya is not None:
+        th_=yh+(_f(h.get("red")) or 0); ta_=ya+(_f(a.get("red")) or 0)
+        for tm,fo,co in ((h.get("team"),th_,ta_),(a.get("team"),ta_,th_)):
+            c=cnt["t"].setdefault(tm,[0.0,0.0,0]); c[0]+=fo; c[1]+=co; c[2]+=1
+        cnt["t_h"]+=th_; cnt["t_a"]+=ta_; cnt["nt"]+=1
+    g1,g2=_f(h.get("goals_ht")),_f(h.get("goals_ht_opp"))
+    if g1 is not None and g2 is not None:
+        cnt["ht_g"]+=g1+g2; cnt["ht_t"]+=gh+ga_
+
+def _esp_conteo(cnt,k,home,away,S=6):
+    """Media esperada (local+visita) de corners ('c') o tarjetas ('t'); None si no hay datos suficientes."""
+    nn=cnt["nc" if k=="c" else "nt"]
+    if nn<200: return None
+    sh=cnt["%s_h"%k]/nn; sa=cnt["%s_a"%k]/nn; lg=(sh+sa)/2
+    a=cnt[k].get(home,[0.0,0.0,0]); b=cnt[k].get(away,[0.0,0.0,0])
+    def r(v,n): return ((v+S*lg)/(n+S))/lg if n else 1.0
+    return sh*r(a[0],a[2])*r(b[1],b[2])+sa*r(b[0],b[2])*r(a[1],a[2])
 
 def _dc(i,j,xh,xa):
     if i==0 and j==0: return 1-xh*xa*RHO
@@ -97,7 +125,20 @@ def predecir(estado, home, away, linea_total=2.5, handicap=0.0, w=None):
     kmax=len(P); piso=int(math.floor(linea_total))
     p_over=1-sum(P[i][j] for i in range(kmax) for j in range(kmax) if i+j<=piso)
     p_hand=sum(P[i][j] for i in range(kmax) for j in range(kmax) if (i-j)+handicap>0)
-    return {"p_home":round(ph,4),"p_draw":round(pd,4),"p_away":round(pa,4),
+    der=None
+    try:
+        from modelos import futbol_mercados as FM
+        der=FM.desde_matriz(P,ph,pd,pa)
+        cnt=estado.get("cnt")
+        if cnt:
+            if cnt["ht_t"]>500: der.update(FM.primer_tiempo(xh,xa,cnt["ht_g"]/cnt["ht_t"]))
+            mc=_esp_conteo(cnt,"c",home,away)
+            if mc: der.update({"corners_"+k:v for k,v in FM.conteo(mc,[8.5,9.5,10.5,11.5]).items()}); der["corners_esperados"]=mc
+            mt=_esp_conteo(cnt,"t",home,away)
+            if mt: der.update({"tarjetas_"+k:v for k,v in FM.conteo(mt,[2.5,3.5,4.5,5.5]).items()}); der["tarjetas_esperadas"]=mt
+    except Exception:
+        der=None
+    return {"derivados":der,"p_home":round(ph,4),"p_draw":round(pd,4),"p_away":round(pa,4),
             "xg_home":round(xh,2),"xg_away":round(xa,2),"total_esperado":round(xh+xa,2),
             "p_over":round(p_over,4),"linea_total":linea_total,
             "p_handicap_home":round(p_hand,4),"handicap":handicap,

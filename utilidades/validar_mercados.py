@@ -42,6 +42,10 @@ def _f(x):
         return None
 
 
+RESULT = {}
+Z_MIN = 2.0; CAL_MAX = 0.04
+
+
 def brier(P):  return sum((p - y) ** 2 for p, y, *_ in P) / len(P)
 def brier_base(P): return sum((b - y) ** 2 for _, y, b in P) / len(P)
 
@@ -66,7 +70,41 @@ class Rep:
     def add_multi(self, m, ps, idx, base):
         self._reg(m); self.multi.setdefault(m, []).append((ps, idx, base))
 
-    def imprimir(self, titulo):
+    def resultados(self):
+        """Estado de cada mercado con el criterio estricto: n>=300, mejora a la base, z>=2.0 (error pareado),
+        mejora en las DOS mitades de la ventana, y calibrado (prob.) / sin sesgo grande (conteos)."""
+        out = {}
+        def est(d, n, extra_ok=True):
+            md = sum(d) / n; sd = math.sqrt(sum((x - md) ** 2 for x in d) / max(n - 1, 1))
+            z = md / (sd / math.sqrt(n)) if sd > 0 else 0.0
+            h = n // 2; m1 = sum(d[:h]) / max(h, 1); m2 = sum(d[h:]) / max(n - h, 1)
+            ok = n >= 300 and md > 0 and z >= Z_MIN and m1 > 0 and m2 > 0 and extra_ok
+            return round(z, 2), ("publicable" if ok else "sin_validar"), m1 > 0 and m2 > 0
+        for m in self.orden:
+            if m in self.prob:
+                P = self.prob[m]; n = len(P)
+                d = [(b - y) ** 2 - (p - y) ** 2 for p, y, b in P]
+                bm, bb = brier(P), brier_base(P)
+                pm = sum(p for p, _, _ in P) / n; fr = sum(y for _, y, _ in P) / n
+                z, e, dos = est(d, n, abs(pm - fr) <= CAL_MAX)
+                out[m] = {"tipo": "prob", "n": n, "skill": round(1 - bm / bb, 4) if bb else 0, "z": z,
+                          "p_media": round(pm, 3), "tasa_real": round(fr, 3), "dos_mitades": dos, "estado": e}
+            elif m in self.val:
+                V = self.val[m]; n = len(V)
+                d = [abs(b - r) - abs(a - r) for a, r, b in V]
+                mm = sum(abs(a - r) for a, r, _ in V) / n; mb = sum(abs(b - r) for _, r, b in V) / n
+                sesgo = sum(a - r for a, r, _ in V) / n
+                sd = math.sqrt(sum((a - r - sesgo) ** 2 for a, r, _ in V) / max(n - 1, 1))
+                z, e, dos = est(d, n, abs(sesgo) <= 0.10 * sd)
+                out[m] = {"tipo": "conteo", "n": n, "skill": round(1 - mm / mb, 4) if mb else 0, "z": z,
+                          "sesgo": round(sesgo, 3), "dos_mitades": dos, "estado": e}
+        return out
+
+    def imprimir(self, titulo, clave=None):
+        ST = {}
+        if clave:
+            RESULT[clave] = self.resultados()
+            ST = {m: r["estado"] for m, r in RESULT[clave].items()}
         print("\n" + "=" * 92); print(titulo); print("=" * 92)
         print("%-34s %6s %9s %9s %9s   %s" % ("MERCADO", "n", "MODELO", "BASE", "MEJORA", "detalle"))
         print("-" * 92)
@@ -76,15 +114,15 @@ class Rep:
                 bm, bb = brier(P), brier_base(P)
                 acc = sum(1 for p, y, _ in P if (p >= .5) == (y == 1)) / n
                 pm = sum(p for p, _, _ in P) / n; fr = sum(y for _, y, _ in P) / n
-                print("%-34s %6d %9.4f %9.4f %8.1f%%   acierto %.1f%% | p prom %.3f vs real %.3f" % (
-                    m + " (Brier)", n, bm, bb, 100 * (bb - bm) / bb if bb else 0, 100 * acc, pm, fr))
+                print("%-34s %6d %9.4f %9.4f %8.1f%%   acierto %.1f%% | p prom %.3f vs real %.3f | %s" % (
+                    m + " (Brier)", n, bm, bb, 100 * (bb - bm) / bb if bb else 0, 100 * acc, pm, fr, ST.get(m, "")))
             elif m in self.val:
                 V = self.val[m]; n = len(V)
                 mm = sum(abs(a - r) for a, r, _ in V) / n; mb = sum(abs(b - r) for _, r, b in V) / n
                 sesgo = sum(a - r for a, r, _ in V) / n
                 sd = math.sqrt(sum((a - r - sesgo) ** 2 for a, r, _ in V) / max(n - 1, 1))
-                print("%-34s %6d %9.3f %9.3f %8.1f%%   sesgo %+.3f | desv. residual %.2f" % (
-                    m + " (MAE)", n, mm, mb, 100 * (mb - mm) / mb if mb else 0, sesgo, sd))
+                print("%-34s %6d %9.3f %9.3f %8.1f%%   sesgo %+.3f | desv. residual %.2f | %s" % (
+                    m + " (MAE)", n, mm, mb, 100 * (mb - mm) / mb if mb else 0, sesgo, sd, ST.get(m, "")))
             elif m in self.multi:
                 M = self.multi[m]; n = len(M)
                 def br(ps, i): return sum((p - (1 if k == i else 0)) ** 2 for k, p in enumerate(ps))
@@ -100,6 +138,8 @@ CFG = {
     "hockey":  {"mod": hockey,   "dep": "hockey",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "HOCKEY (NHL)"},
     "nfl":     {"mod": americano, "dep": "americano", "ms": (("points", "points_opp"),), "total_step": 6.0, "spread": (-6.5, -2.5, 2.5, 6.5), "titulo": "NFL"},
     "nba":     {"mod": nba,      "dep": "nba",       "ms": (("points", "points_opp"),), "total_step": 8.0, "spread": (-8.5, -4.5, 0.5, 4.5, 8.5), "titulo": "NBA"},
+    "ncaafb":  {"mod": americano, "dep": "americano", "ms": (("points", "points_opp"),), "total_step": 6.0, "spread": (-10.5, -6.5, -2.5, 2.5, 6.5, 10.5), "titulo": "NCAA FUTBOL AMERICANO", "liga": "NCAAFB"},
+    "ncaamb":  {"mod": nba,      "dep": "nba",       "ms": (("points", "points_opp"),), "total_step": 8.0, "spread": (-8.5, -4.5, 0.5, 4.5, 8.5), "titulo": "NCAA BASQUET", "liga": "NCAAMB"},
     "futbol":  {"mod": futbol,   "dep": "futbol",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "FUTBOL (5 ligas)"},
 }
 
@@ -117,7 +157,9 @@ def medio(x): return math.floor(x) + 0.5
 
 def validar_equipos(clave, meses, bloque, liga=None):
     c = dict(CFG[clave]); mod = c["mod"]
-    if liga: c["titulo"] = "FUTBOL %s" % liga.upper()
+    clave_json = clave if clave != "futbol" else "futbol_" + str(liga).lower()
+    liga = liga or c.get("liga")
+    if liga and clave == "futbol": c["titulo"] = "FUTBOL %s" % liga.upper()
     todos = mod._juegos(liga)
     G = []
     for f, gp, h, a in todos:
@@ -199,7 +241,7 @@ def validar_equipos(clave, meses, bloque, liga=None):
                     rep.add_prob("Local cubre margen > %+g" % s, rr["p_cubre_home"], 1 if mar > s else 0, fb)
         d0 = d1
     rep.imprimir("%s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior" % (
-        c["titulo"], meses, nbl, bloque))
+        c["titulo"], meses, nbl, bloque), clave=clave_json)
 
 
 # ------------------------------------------------------------------ tenis
@@ -234,7 +276,7 @@ def validar_tenis(meses, min_j=10):
     J = {}
     def g(n): return J.setdefault(n, {"sp": 0., "spw": 0., "rp": 0., "rpw": 0., "elo": {}})
     tsp = {}                      # circuito -> [puntos al saque, ganados]
-    hist = {"g3": [], "g5": [], "ss3": [], "ss5": [], "br": [], "win": []}   # para lineas base (solo pasado)
+    HH = {}   # lineas base (solo pasado) POR CIRCUITO: ATP y WTA tienen niveles de breaks muy distintos
     for r in rows:
         w, l = r.get("winner_name"), r.get("loser_name")
         sup = (r.get("surface") or "Hard").strip() or "Hard"
@@ -249,6 +291,7 @@ def validar_tenis(meses, min_j=10):
         ew = jw["elo"].get(sup, 1500.0); el = jl["elo"].get(sup, 1500.0)
         tour = (r.get("tour") or "TOUR").upper()
         tt = tsp.setdefault(tour, [0.0, 0.0])
+        hist = HH.setdefault(tour, {"g3": [], "g5": [], "ss3": [], "ss5": [], "br3": [], "br5": [], "win": []})
         tour_spw = (tt[1] / tt[0]) if tt[0] else 0.635
         games, nsets, ok = _games_sets(r.get("score"))
         bpw, bpl = _f(r.get("w_bpFaced")), _f(r.get("l_bpFaced"))
@@ -283,8 +326,8 @@ def validar_tenis(meses, min_j=10):
                         pcor = pr.get("p_sets_corridos", ps ** n_need + (1 - ps) ** n_need)
                         rp_.add_prob("Ganador en sets corridos [%s]" % tag, pcor,
                                      1 if nsets == n_need else 0, sum(S) / len(S))
-            if brk is not None and len(hist["br"]) > 200:
-                B = hist["br"]
+            if brk is not None and len(hist["br%d" % bo]) > 200:
+                B = hist["br%d" % bo]
                 rp_.add_val("Breaks totales [%s]" % tag, pr["breaks_esperados"], brk, sum(B) / len(B))
                 mu_b = pr["breaks_esperados"]
                 for L in (medio(sum(B) / len(B)) - 1, medio(sum(B) / len(B)), medio(sum(B) / len(B)) + 1):
@@ -293,7 +336,7 @@ def validar_tenis(meses, min_j=10):
                                  sum(1 for x in B if x > L) / len(B))
         # historia para lineas base (siempre despues de predecir)
         if ok and games: hist["g%d" % bo].append(games); hist["ss%d" % bo].append(1 if nsets == (2 if bo == 3 else 3) else 0)
-        if brk is not None: hist["br"].append(brk)
+        if brk is not None: hist["br%d" % bo].append(brk)
         jw["sp"] += wsv; jw["spw"] += wsw; jw["rp"] += lsv; jw["rpw"] += (lsv - lsw)
         jl["sp"] += lsv; jl["spw"] += lsw; jl["rp"] += wsv; jl["rpw"] += (wsv - wsw)
         exp = 1 / (1 + 10 ** (-(ew - el) / 400)); jw["elo"][sup] = ew + 24 * (1 - exp); jl["elo"][sup] = el - 24 * (1 - exp)
@@ -301,7 +344,24 @@ def validar_tenis(meses, min_j=10):
     if not reps:
         print("\nTENIS: sin partidos en la ventana."); return
     for tour, rp_ in sorted(reps.items()):
-        rp_.imprimir("TENIS %s | ultimos %d meses (as-of partido a partido)" % (tour, meses))
+        rp_.imprimir("TENIS %s | ultimos %d meses (as-of partido a partido)" % (tour, meses), clave="tenis_" + tour)
+
+
+def guardar():
+    """Escribe salida/validacion_mercados.json (la lee plataforma.py). Mezcla con lo que ya habia: una corrida
+    parcial (--deporte nba) solo actualiza ese deporte."""
+    import json
+    ruta = io.ruta("salida", "validacion_mercados.json"); d = {"deportes": {}}
+    try:
+        d = json.load(open(ruta, encoding="utf-8"))
+    except Exception:
+        pass
+    d["generado"] = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+    d["criterio"] = "n>=300, mejora a la base, z>=%.1f, mejora en las dos mitades, calibrado (prob |p media - tasa|<=%.2f) o sesgo<=0.10 desv. (conteos)" % (Z_MIN, CAL_MAX)
+    d.setdefault("deportes", {}).update({k: v for k, v in RESULT.items() if not k.startswith("futbol_")})
+    os.makedirs(os.path.dirname(ruta), exist_ok=True)
+    json.dump(d, open(ruta, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("\nEscrito:", ruta)
 
 
 # ------------------------------------------------------------------ main
@@ -319,8 +379,11 @@ def main():
         elif d == "futbol":
             for lg in [x.strip() for x in a.ligas.split(",") if x.strip()]:
                 validar_equipos(d, a.meses, a.bloque, lg)
+        elif d == "ncaa":
+            for x in ("ncaafb", "ncaamb"): validar_equipos(x, a.meses, a.bloque)
         elif d in CFG: validar_equipos(d, a.meses, a.bloque)
         else: print("deporte desconocido:", d)
+    guardar()
     if a.beisbol:
         from nucleo import evaluar
         from modelos import beisbol

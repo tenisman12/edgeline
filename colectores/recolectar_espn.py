@@ -72,7 +72,23 @@ def _como_json(texto, origen):
         raise ValueError("%s: no es JSON (%s)" % (origen, " ".join(t[:90].split())))
 
 
+_SEGUIDOS = [0]      # llamadas seguidas que fallaron por completo; con 6 se deja de insistir (corta las esperas de horas en Actions)
+MAX_SEGUIDOS = 6
+
+
 def get(url, reintentos=3):
+    if _SEGUIDOS[0] >= MAX_SEGUIDOS:
+        raise RuntimeError("ESPN no responde (%d llamadas seguidas fallaron; se omiten reintentos en esta corrida)" % _SEGUIDOS[0])
+    try:
+        r = _get(url, reintentos)
+        _SEGUIDOS[0] = 0
+        return r
+    except Exception:
+        _SEGUIDOS[0] += 1
+        raise
+
+
+def _get(url, reintentos=3):
     """GET JSON. ESPN responde 403 o paginas vacias a algunos User-Agent y a veces desde servidores en la nube:
     se prueba urllib con UA de navegador y, si falla, curl, en los dos hosts de ESPN; con reintentos.
     El error final dice que contesto ESPN (codigo o primeras letras del cuerpo)."""

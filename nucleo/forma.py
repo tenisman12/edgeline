@@ -443,7 +443,7 @@ class FormaTenis:
             w, l = r.get("winner_name"), r.get("loser_name")
             if not (f and w and l):
                 continue
-            k = (r.get("tourney_id"), r.get("round"), w, l, r.get("score"))
+            k = (r.get("tourney_id"), r.get("round"), w, l)
             if k in vistos:
                 continue
             vistos.add(k)

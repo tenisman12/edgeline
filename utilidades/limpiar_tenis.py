@@ -21,7 +21,7 @@ def main():
         rd = csv.DictReader(fh); cols = rd.fieldnames; filas = list(rd)
     vistos, quedan, quitadas = set(), [], []
     for r in filas:
-        k = (r.get("tourney_id"), r.get("round"), r.get("winner_name"), r.get("loser_name"), r.get("score"))
+        k = (r.get("tourney_id"), r.get("round"), r.get("winner_name"), r.get("loser_name"))
         if all(k) and k in vistos:
             quitadas.append(r); continue
         vistos.add(k); quedan.append(r)

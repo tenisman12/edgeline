@@ -189,6 +189,7 @@ def main():
     print("Modo: %s" % ("COMPLETO (historial largo)" if a.completo else "DIARIO (solo lo reciente)"))
     resumen = []
     for dep in elegidos:
+        if dep == "ncaa": continue          # se corre aparte, mas abajo
         if dep not in P:
             resumen.append((dep, "deporte desconocido")); continue
         print("\n=== %s ===" % dep.upper()); t0 = time.time(); ok = True
@@ -202,6 +203,11 @@ def main():
         origen, destino = P[dep]["copia"]
         msg = publicar(origen, destino, P[dep]["filtro"])
         resumen.append((dep, ("" if ok else "CON AVISOS - ") + msg + "  [%ds]" % (time.time() - t0)))
+    if not a.solo_publicar and not a.solo_jugadores and (not a.solo or "ncaa" in elegidos):
+        print("\n=== NCAA (futbol americano y basquet, resultados ESPN; solo lo nuevo) ===")
+        t0 = time.time()
+        r = subprocess.run([PY, os.path.join(COL, "historial_ncaa.py")], env=env)
+        resumen.append(("ncaa", ("ok" if r.returncode == 0 else "CON AVISOS (error %d)" % r.returncode) + "  [%ds]" % (time.time() - t0)))
     if a.proximos:
         print("\n=== PROXIMOS (ESPN) ===")
         subprocess.run([PY, os.path.join(COL, "recolectar_proximos.py"), "--dias", "3"], env=env)

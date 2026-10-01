@@ -173,7 +173,7 @@ def imprimir_bloques(p, completo=False):
     h, v = p["home"], p["away"]
     val = p.get("validacion") or {}
     if val:
-        print("      VALIDACION  " + " | ".join("%s %s" % (k, val[k].replace("_", " ")) for k in ("Ganador", "Total", "Spread") if k in val))
+        print("      VALIDACION  " + " | ".join("%s %s" % (k, val[k].replace("_", " ")) for k in ("Ganador", "Total", "Spread", "Breaks") if k in val))
     em = p.get("emparejado") or {}
     if em:
         print("      NOMBRES EN TUS DATOS  %s = %s | %s = %s" % (ab(v), em.get("away") or "SIN EMPATE", ab(h), em.get("home") or "SIN EMPATE"))
@@ -211,6 +211,31 @@ def imprimir_bloques(p, completo=False):
     falt = ["%s (%s)" % (k, x.get("motivo")) for k, x in bl.items() if not x.get("ok")]
     print("      BLOQUES %d/%d disponibles%s" % (sum(1 for x in bl.values() if x.get("ok")), len(bl),
           ("  | no disponibles: " + "; ".join(falt)) if falt else ""))
+
+
+def _mercados_futbol(d, h, v):
+    """Todos los mercados derivados del modelo de futbol, cada uno con su estado de validacion."""
+    val = d.get("_validacion") or {}
+    def f(k, nombre):
+        if d.get(k) is None: return None
+        return "%-24s %6s  %s" % (nombre, pct(d[k]).strip(), "" if val.get(k) == "publicable" else "(sin validar)")
+    filas = [("1X", "Doble oport. %s o empate" % ab(h)), ("X2", "Doble oport. %s o empate" % ab(v)), ("12", "Doble oport. sin empate"),
+             ("aa_si", "Ambos anotan SI"), ("aa_no", "Ambos anotan NO"),
+             ("over_1.5", "Over 1.5"), ("over_2.5", "Over 2.5"), ("over_3.5", "Over 3.5"),
+             ("local_gana_por_2", "%s gana por 2+" % ab(h)), ("visita_gana_por_2", "%s gana por 2+" % ab(v)),
+             ("1T_1", "1er tiempo: gana %s" % ab(h)), ("1T_X", "1er tiempo: empate"), ("1T_2", "1er tiempo: gana %s" % ab(v)),
+             ("1T_over_0.5", "1er tiempo Over 0.5"), ("1T_over_1.5", "1er tiempo Over 1.5")]
+    print("      MERCADOS DE FUTBOL (del mismo modelo; cada uno con su validacion)")
+    for k, n in filas:
+        t = f(k, n)
+        if t: print("        " + t)
+    if d.get("marcadores_top"):
+        print("        Marcadores mas probables: " + ", ".join("%s (%s)" % (x["marcador"], pct(x["p"]).strip()) for x in d["marcadores_top"]))
+    if d.get("corners_esperados"):
+        print("        CORNERS esperados %.1f:  " % d["corners_esperados"] + "  ".join("O%s %s%s" % (l, pct(d["corners_over_%s" % l]).strip(), "" if val.get("corners_over_%s" % l) == "publicable" else "*") for l in ("8.5", "9.5", "10.5", "11.5")))
+    if d.get("tarjetas_esperadas"):
+        print("        TARJETAS esperadas %.1f: " % d["tarjetas_esperadas"] + "  ".join("O%s %s%s" % (l, pct(d["tarjetas_over_%s" % l]).strip(), "" if val.get("tarjetas_over_%s" % l) == "publicable" else "*") for l in ("2.5", "3.5", "4.5", "5.5")))
+    print("        (* o '(sin validar)' = no supera a la linea base en esa liga)")
 
 
 def main():
@@ -257,6 +282,7 @@ def main():
                 for nom, pr in m.get("extra") or []:
                     es_prob = isinstance(pr, float) and 0 <= pr <= 1 and ("rob" in nom or "%" in nom)
                     print("      %-26s %s" % (nom, pct(pr).strip() if es_prob else pr))
+                if m.get("derivados"): _mercados_futbol(m["derivados"], h, v)
                 if m.get("nota"): print("      nota: %s" % m["nota"])
                 c = p.get("cuotas")
                 if c:
