@@ -54,28 +54,49 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
       "Chrome/124.0 Safari/537.36")
 
 
+def _variantes(url):
+    """ESPN tiene dos hosts equivalentes para el scoreboard; si uno bloquea la IP del servidor se prueba el otro."""
+    v = [url]
+    if "://site.api.espn.com/" in url:
+        v.append(url.replace("://site.api.espn.com/", "://site.web.api.espn.com/"))
+    return v
+
+
+def _como_json(texto, origen):
+    t = (texto or "").strip()
+    if not t:
+        raise ValueError("%s: respuesta vacia" % origen)
+    try:
+        return json.loads(t)
+    except ValueError:
+        raise ValueError("%s: no es JSON (%s)" % (origen, " ".join(t[:90].split())))
+
+
 def get(url, reintentos=3):
-    """GET JSON. ESPN responde 403 a algunos User-Agent (y a veces desde servidores en la nube):
-    se prueba urllib con UA de navegador y, si falla, curl; con reintentos."""
+    """GET JSON. ESPN responde 403 o paginas vacias a algunos User-Agent y a veces desde servidores en la nube:
+    se prueba urllib con UA de navegador y, si falla, curl, en los dos hosts de ESPN; con reintentos.
+    El error final dice que contesto ESPN (codigo o primeras letras del cuerpo)."""
     import subprocess
-    ult = None
+    fallos = []
     for i in range(reintentos):
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json,*/*"})
-            with urllib.request.urlopen(req, timeout=35) as r:
-                return json.load(r)
-        except Exception as e:
-            ult = e
-        try:
-            exe = "curl.exe" if os.name == "nt" else "curl"
-            out = subprocess.run([exe, "-sSL", "--max-time", "40", "-A", UA, "-H", "Accept: application/json,*/*", url],
-                                 capture_output=True, timeout=60)
-            if out.returncode == 0 and out.stdout:
-                return json.loads(out.stdout.decode("utf-8", "replace"))
-        except Exception as e2:
-            ult = e2
+        for u in _variantes(url):
+            host = u.split("/")[2]
+            try:
+                req = urllib.request.Request(u, headers={"User-Agent": UA, "Accept": "application/json,*/*"})
+                with urllib.request.urlopen(req, timeout=35) as r:
+                    return _como_json(r.read().decode("utf-8", "replace"), "urllib " + host)
+            except Exception as e:
+                fallos.append("%s" % str(e)[:110])
+            try:
+                exe = "curl.exe" if os.name == "nt" else "curl"
+                out = subprocess.run([exe, "-sSL", "--max-time", "40", "-A", UA, "-H", "Accept: application/json,*/*", u],
+                                     capture_output=True, timeout=60)
+                return _como_json(out.stdout.decode("utf-8", "replace"), "curl " + host)
+            except Exception as e2:
+                fallos.append("%s" % str(e2)[:110])
         time.sleep(1.5 * (i + 1))
-    raise RuntimeError("%s" % ult)
+    raise RuntimeError(" | ".join(dict.fromkeys(fallos))[:400])
+
 
 def _num(x):
     try: return float(x)

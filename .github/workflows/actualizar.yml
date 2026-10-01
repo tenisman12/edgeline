@@ -50,6 +50,14 @@ jobs:
         timeout-minutes: 120
         run: python utilidades/jugadores_recientes.py diario
 
+      - name: Diagnostico ESPN (que contesta al servidor)
+        continue-on-error: true
+        run: |
+          for h in site.api.espn.com site.web.api.espn.com; do
+            echo "== $h"
+            curl -sS -o /tmp/espn.txt -w "HTTP %{http_code} tipo %{content_type} bytes %{size_download}\n" -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36" "https://$h/apis/site/v2/sports/basketball/nba/scoreboard?dates=20261001" || true
+            head -c 200 /tmp/espn.txt; echo
+          done
       - name: Predecir proximos dias
         run: python plataforma.py --dias 3
 
