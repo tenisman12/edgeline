@@ -50,10 +50,32 @@ LIGAS = {
 }
 
 
-def get(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
-    with urllib.request.urlopen(req, timeout=35) as r:
-        return json.load(r)
+UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+      "Chrome/124.0 Safari/537.36")
+
+
+def get(url, reintentos=3):
+    """GET JSON. ESPN responde 403 a algunos User-Agent (y a veces desde servidores en la nube):
+    se prueba urllib con UA de navegador y, si falla, curl; con reintentos."""
+    import subprocess
+    ult = None
+    for i in range(reintentos):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json,*/*"})
+            with urllib.request.urlopen(req, timeout=35) as r:
+                return json.load(r)
+        except Exception as e:
+            ult = e
+        try:
+            exe = "curl.exe" if os.name == "nt" else "curl"
+            out = subprocess.run([exe, "-sSL", "--max-time", "40", "-A", UA, "-H", "Accept: application/json,*/*", url],
+                                 capture_output=True, timeout=60)
+            if out.returncode == 0 and out.stdout:
+                return json.loads(out.stdout.decode("utf-8", "replace"))
+        except Exception as e2:
+            ult = e2
+        time.sleep(1.5 * (i + 1))
+    raise RuntimeError("%s" % ult)
 
 def _num(x):
     try: return float(x)

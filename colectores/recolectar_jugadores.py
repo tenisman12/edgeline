@@ -745,7 +745,7 @@ def cmd_estado():
             print("  %-30s %8d filas  %6d %s  %3d columnas  %s -> %s" % (
                 n, len(filas), ent, "jugadores" if carpeta == DIR else "equipos", len(cols), fs[0] if fs else "?", fs[-1] if fs else "?"))
         print()
-    n_raw = sum(len(fs) for _, _, fs in os.walk(RAW)) if os.path.isdir(RAW) else 0
+    n_raw = sum(1 for _, _, fs in os.walk(RAW) for f in fs if f.endswith(".json.gz")) if os.path.isdir(RAW) else 0
     print("Copias crudas comprimidas en %s: %d partidos" % (RAW, n_raw))
 
 
