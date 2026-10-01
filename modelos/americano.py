@@ -21,6 +21,7 @@ except ImportError:
 BASE_ELO=1500.0; K=20.0; HFA=48.0; REGR=0.75; ESCALA=400.0
 ELO_POR_PUNTO=25.0; SD_MARGEN=13.5; SHRINK=6; HFA_PTS=1.9
 SD_TOT=13.0   # respaldo si no hay muestra; entrenar() la aprende de los residuos
+VENT_TOT=300  # juegos recientes para corregir el sesgo del total
 W_ENS=1.0      # peso de la vista ELO; validar() con datos reales: mejor w=1.0 (NFL, 2026-09-29)
 
 
@@ -91,7 +92,7 @@ def entrenar(liga=None, min_j=4, w=W_ENS):
     def _ms(v,sd0):
         if len(v)<150: return 0.0, sd0
         m=sum(v)/len(v); return m, math.sqrt(sum((x-m)**2 for x in v)/(len(v)-1))
-    sesgo_m,sd_m=_ms(rm,SD_MARGEN); sesgo_t,sd_t=_ms(rt,SD_TOT)
+    sesgo_m,sd_m=_ms(rm,SD_MARGEN); sesgo_t,sd_t=_ms(rt[-VENT_TOT:],SD_TOT)   # sesgo del total: solo lo reciente (el nivel de anotacion cambia entre temporadas)
     return {"eq":eq,"lg":lg,"platt":platt,"cal":cal,"w":w,
             "sesgo_m":sesgo_m,"sd_m":sd_m,"sesgo_t":sesgo_t,"sd_t":sd_t}
 

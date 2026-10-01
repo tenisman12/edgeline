@@ -3,26 +3,33 @@
 #     cd C:\Edgeline_repo
 #     powershell -ExecutionPolicy Bypass -File utilidades\publicar_datos.ps1
 # Que hace:
-#   1. recorta tus jugadores a los ultimos 60 dias (datos\jugadores_recientes) con las columnas que usa la pagina
+#   1. (solo con -ConJugadores) recorta tus jugadores a los ultimos 60 dias (datos\jugadores_recientes) con las columnas que usa la pagina
 #   2. copia datos\ (sin jugadores completos ni _respaldo) a C:\Edgeline_pub
 #   3. revisa que ningun archivo pase de 90 MB (GitHub rechaza mas de 100 MB)
 #   4. sube todo como un solo commit a la rama datos
 param(
     [string]$Repo = "C:\Edgeline_repo",
     [string]$Pub  = "C:\Edgeline_pub",
-    [string]$Remoto = "https://github.com/tenisman12/edgeline.git"
+    [string]$Remoto = "https://github.com/tenisman12/edgeline.git",
+    [switch]$ConJugadores   # por defecto NO se publican jugadores (ni los recientes)
 )
 $ErrorActionPreference = "Stop"
 Set-Location $Repo
 $env:EDGELINE_BASE = $Repo
 
-Write-Host "1/4 Recortando jugadores recientes ..."
-python utilidades\jugadores_recientes.py recortar
+if ($ConJugadores) {
+    Write-Host "1/4 Recortando jugadores recientes ..."
+    python utilidades\jugadores_recientes.py recortar
+} else {
+    Write-Host "1/4 Jugadores omitidos (usa -ConJugadores para incluirlos)."
+}
 
 Write-Host "2/4 Copiando datos a $Pub ..."
 if (Test-Path $Pub) { Remove-Item $Pub -Recurse -Force }
 New-Item -ItemType Directory -Path "$Pub\datos" | Out-Null
-robocopy "$Repo\datos" "$Pub\datos" /E /XD jugadores _respaldo /NFL /NDL /NJH /NJS | Out-Null
+$excluir = @("jugadores", "_respaldo")
+if (-not $ConJugadores) { $excluir += "jugadores_recientes" }
+robocopy "$Repo\datos" "$Pub\datos" /E /XD $excluir /NFL /NDL /NJH /NJS | Out-Null
 
 Write-Host "3/4 Revisando tamanos ..."
 $grandes = Get-ChildItem $Pub -Recurse -File | Where-Object { $_.Length -gt 90MB }

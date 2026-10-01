@@ -9,7 +9,7 @@ Guarda una copia en salida\\historial_picks.respaldo.csv antes de cambiar nada.
 import argparse, csv, os, shutil, sys
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PRE_INICIO = {"nhl": "2026-10-07"}
+PRE_INICIO = {"nhl": "2026-09-29"}
 
 
 def main():

@@ -38,17 +38,11 @@ jobs:
           git archive FETCH_HEAD datos | tar -x -C .
           ls datos | head -30
 
-      - name: Sembrar jugadores recientes
-        run: python utilidades/jugadores_recientes.py sembrar
+      # Jugadores: desactivado por ahora (se activa cuando se cierre su descarga y validacion).
 
       - name: Actualizar datos (solo lo nuevo)
         continue-on-error: true
         run: python actualizar_todo.py
-
-      - name: Actualizar jugadores recientes (solo lo nuevo)
-        continue-on-error: true
-        timeout-minutes: 120
-        run: python utilidades/jugadores_recientes.py diario
 
       - name: Diagnostico ESPN (que contesta al servidor)
         continue-on-error: true
@@ -85,7 +79,7 @@ jobs:
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |
           rm -rf /tmp/pub && mkdir -p /tmp/pub
-          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          rsync -a --exclude jugadores --exclude jugadores_recientes --exclude _respaldo datos /tmp/pub/
           cd /tmp/pub
           git init -q -b datos
           git config user.name "edgeline-bot"

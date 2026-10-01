@@ -157,7 +157,7 @@ def punto_saque(j1, j2, tour_spw):
     return clip(p1), clip(p2)
 
 # ---------------- firma ----------------
-def predecir(j1, j2, superficie="Hard", best_of=3, tour_spw=0.635, linea_games=22.5, elo1=1500, elo2=1500):
+def predecir(j1, j2, superficie="Hard", best_of=3, tour_spw=0.635, linea_games=22.5, elo1=1500, elo2=1500, ajuste_games=0.0):
     ps1, ps2 = punto_saque(j1, j2, tour_spw)
     h1, h2 = p_game(ps1), p_game(ps2)
     pset = p_set(h1, h2, ps1, 1 - ps2)
@@ -169,13 +169,15 @@ def predecir(j1, j2, superficie="Hard", best_of=3, tour_spw=0.635, linea_games=2
     gtot = games_esperados(h1, h2, best_of, pset=pset_c)
     # break: prob de que un game al saque termine en break = 1-hold
     breaks_esp = (2 - h1 - h2) * (gtot / 2)   # games al saque ~ mitad del total
+    gtot_modelo = gtot
+    gtot = gtot + ajuste_games                 # correccion de sesgo aprendida en validacion (por circuito y formato)
     p_break = 1 - (h1 * h2) ** (gtot / 4)     # aprox: al menos un break en el partido
     return {
         "p1": round(p1, 4), "p2": round(1 - p1, 4),
         "best_of": best_of, "superficie": superficie,
         "hold_j1": round(h1, 3), "hold_j2": round(h2, 3),
         "p_set_j1": round(pset_c, 3),
-        "games_esperados": round(gtot, 1),
+        "games_esperados": round(gtot, 1), "games_sin_ajuste": round(gtot_modelo, 1),
         "p_over_games": round(_p_over_games(gtot, linea_games, SD_GAMES[best_of]), 3),
         "linea_games": linea_games,
         "breaks_esperados": round(breaks_esp, 1),

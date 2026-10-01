@@ -72,6 +72,17 @@ def ultimo(clave):
     return mx
 
 
+def fechas_guardadas(clave):
+    """fechas (iso) que ya tienen partidos de esta liga en el archivo; sirven para no repetir dias al reanudar"""
+    ruta = os.path.join(BASE, "datos", CFG[clave]["archivo"])
+    out = set()
+    if not os.path.exists(ruta): return out
+    with io.open(ruta, encoding="utf-8-sig", newline="") as fh:
+        for r in csv.DictReader(fh):
+            if r.get("league") == CFG[clave]["liga"] and r.get("game_date"): out.add(r["game_date"])
+    return out
+
+
 def guardar(clave, nuevas):
     ruta = os.path.join(BASE, "datos", CFG[clave]["archivo"])
     if not nuevas: return 0
@@ -102,22 +113,41 @@ def correr(clave, desde=None, hasta=None):
         d0 = dt.datetime.strptime(CFG[clave]["inicio"], "%Y%m%d").date()
     d1 = dt.datetime.strptime(hasta, "%Y%m%d").date() if hasta else dt.date.today()
     print("%s: desde %s hasta %s (ultimo en tus datos: %s)" % (clave.upper(), d0, d1, ult or "ninguno"))
-    acum, n_dias, fallos = [], 0, 0
+    acum, n_dias, total, malos, seguidos = [], 0, 0, [], 0
+    ya = fechas_guardadas(clave); hoy = dt.date.today()
     f = d0
-    while f <= d1:
-        try:
-            acum += dia(clave, f)
-        except Exception as e:
-            fallos += 1
-            if fallos <= 3: print("   %s: %s" % (f, str(e)[:100]))
-        n_dias += 1
-        if n_dias % 60 == 0:
-            print("   ... %s, %d filas" % (f, len(acum)))
-        f += dt.timedelta(days=1); time.sleep(0.12)
-    n = guardar(clave, acum)
-    print("  %s: %d filas nuevas en datos\\%s%s" % (clave.upper(), n, CFG[clave]["archivo"],
-                                                   ("  (%d dias con error de ESPN)" % fallos) if fallos else ""))
-    return n
+    try:
+        while f <= d1:
+            if f.isoformat() in ya and f < hoy - dt.timedelta(days=3):
+                f += dt.timedelta(days=1); continue      # dia ya descargado
+            ok = False
+            for espera in (0, 3, 8, 20):          # reintenta el dia antes de darlo por fallido
+                if espera: time.sleep(espera)
+                try:
+                    acum += dia(clave, f); ok = True; break
+                except Exception as e:
+                    err = str(e)[:100]
+            if ok:
+                seguidos = 0
+            else:
+                malos.append(f.isoformat()); seguidos += 1
+                if len(malos) <= 3: print("   %s: %s" % (f, err))
+                if seguidos >= 5:                 # caida larga (internet/ESPN): se detiene, no se salta nada
+                    print("   Se detuvo en %s por fallos seguidos. Lo descargado se guarda; vuelve a correr el mismo comando." % f)
+                    malos = [m for m in malos if m < (f - dt.timedelta(days=4)).isoformat()]
+                    break
+            n_dias += 1
+            if n_dias % 60 == 0:
+                print("   ... %s, %d filas en memoria, %d guardadas" % (f, len(acum), total))
+            if n_dias % 30 == 0 and acum:         # guardado incremental: un corte ya no pierde todo
+                total += guardar(clave, acum); acum = []
+            f += dt.timedelta(days=1); time.sleep(0.12)
+    except KeyboardInterrupt:
+        print("   Interrumpido por ti en %s: se guarda lo descargado. Vuelve a correr el mismo comando para continuar." % f)
+    total += guardar(clave, acum) if acum else 0
+    print("  %s: %d filas nuevas en datos\\%s%s" % (clave.upper(), total, CFG[clave]["archivo"],
+                                                   ("  (dias con error: %s)" % ", ".join(malos)) if malos else ""))
+    return total
 
 
 def main():

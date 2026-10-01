@@ -144,7 +144,7 @@ def tenis(min_j=10):
             "nombres": list(J), "n_partidos": n}
 
 
-def tenis_predecir(est, n1, n2, superficie="Hard", best_of=3, linea_games=22.5, tour=None):
+def tenis_predecir(est, n1, n2, superficie="Hard", best_of=3, linea_games=22.5, tour=None, ajuste_games=0.0):
     j1, j2 = est["J"].get(n1), est["J"].get(n2)
     minimo = est["min_j"] * 50
     if not j1 or not j2 or j1["sp"] < minimo or j2["sp"] < minimo:
@@ -153,4 +153,4 @@ def tenis_predecir(est, n1, n2, superficie="Hard", best_of=3, linea_games=22.5, 
     d2 = {"spw": j2["spw"] / j2["sp"], "rpw": j2["rpw"] / max(j2["rp"], 1)}
     e1 = j1["elo"].get(superficie, 1500.0); e2 = j2["elo"].get(superficie, 1500.0)
     tsp = (est.get("tour_spw_por_tour") or {}).get((tour or "").upper(), est["tour_spw"])
-    return T.predecir(d1, d2, superficie, best_of, tsp, linea_games, e1, e2)
+    return T.predecir(d1, d2, superficie, best_of, tsp, linea_games, e1, e2, ajuste_games)

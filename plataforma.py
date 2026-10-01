@@ -31,7 +31,7 @@ import pagina_plataforma as PAG
 BASE = io.BASE
 UMBRAL_EDGE = 0.03        # edge minimo para marcar VALOR
 # Pretemporada: ESPN no la marca en NHL, se detecta por fecha de inicio de la temporada regular.
-PRE_INICIO = {"nhl": "2026-10-07"}
+PRE_INICIO = {"nhl": "2026-09-29"}
 # Mercados que NO superaron al baseline en walk-forward: se muestran TODOS los datos, pero no se marcan
 # VALOR ni se registran como pick. (liga, tipo) con tipo = Ganador | Total | Spread.
 _BEIS = ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl")

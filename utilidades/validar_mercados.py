@@ -43,6 +43,7 @@ def _f(x):
 
 
 RESULT = {}
+AJUSTES = {}      # circuito -> {formato: sesgo de games vigente al final de la validacion}
 Z_MIN = 2.0; CAL_MAX = 0.04
 
 
@@ -306,7 +307,11 @@ def validar_tenis(meses, min_j=10):
             d2 = {"spw": j2["spw"] / j2["sp"], "rpw": j2["rpw"] / max(j2["rp"], 1)}
             e1 = j1["elo"].get(sup, 1500.0); e2 = j2["elo"].get(sup, 1500.0)
             lineas = (20.5, 22.5, 24.5) if bo == 3 else (34.5, 38.5, 42.5)
-            pr = T.predecir(d1, d2, sup, bo, tour_spw, lineas[1], e1, e2)
+            RES = hist.setdefault("res%d" % bo, [])
+            aj = (sum(RES[-400:]) / len(RES[-400:])) if len(RES) >= 150 else 0.0     # sesgo de games, solo con el pasado
+            pr = T.predecir(d1, d2, sup, bo, tour_spw, lineas[1], e1, e2, aj)
+            if ok and games: RES.append(games - pr["games_sin_ajuste"])
+            AJUSTES.setdefault(tour, {})[str(bo)] = round(aj, 2)
             rp_ = reps.setdefault(tour, Rep()); tag = "%d sets" % bo
             y = 1 if p1n == w else 0
             fw = 0.5
@@ -356,6 +361,7 @@ def guardar():
         d = json.load(open(ruta, encoding="utf-8"))
     except Exception:
         pass
+    if AJUSTES: d["ajustes_tenis"] = AJUSTES
     d["generado"] = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
     d["criterio"] = "n>=300, mejora a la base, z>=%.1f, mejora en las dos mitades, calibrado (prob |p media - tasa|<=%.2f) o sesgo<=0.10 desv. (conteos)" % (Z_MIN, CAL_MAX)
     d.setdefault("deportes", {}).update({k: v for k, v in RESULT.items() if not k.startswith("futbol_")})

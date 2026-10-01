@@ -347,7 +347,7 @@ def e_pred(por_partido):
     if inc:
         alerta("AVISO", "%d partidos sin modelo muestran algun mercado como 'publicable' (debe decir sin_modelo)" % len(inc))
     # pretemporada que se colo
-    pre_ini = {"nhl": "2026-10-07"}
+    pre_ini = {"nhl": "2026-09-29"}
     for x in ps:
         pi = pre_ini.get(x["liga"])
         if pi and x["fecha"] < pi and not x.get("pretemporada"):
@@ -397,10 +397,10 @@ def f_snap():
         alerta("FALLO", "historial_picks.csv tiene %d partidos repetidos" % len(dup))
     por = collections.Counter(r["liga"] for r in filas)
     p("  por liga: " + ", ".join("%s %d" % (a, b) for a, b in sorted(por.items())))
-    pre = [r for r in filas if r["liga"] == "nhl" and r["fecha"] < "2026-10-07"]
+    pre = [r for r in filas if r["liga"] == "nhl" and r["fecha"] < "2026-09-29"]
     if pre:
-        alerta("FALLO", "historial_picks.csv contiene %d juegos de NHL anteriores al 2026-10-07 (pretemporada)" % len(pre))
-        p("  NHL antes del 2026-10-07 en el historial: %d" % len(pre))
+        alerta("FALLO", "historial_picks.csv contiene %d juegos de NHL anteriores al 2026-09-29 (pretemporada)" % len(pre))
+        p("  NHL antes del 2026-09-29 en el historial: %d" % len(pre))
     ya = [r for r in filas if r["fecha"] and r["fecha"] < HOY.isoformat()]
     p("  picks de dias anteriores (ya deberian poder calificarse con el resultado): %d" % len(ya))
     p("  nota: este archivo guarda el pick y la probabilidad; la calificacion contra el resultado real aun no esta automatizada.")
