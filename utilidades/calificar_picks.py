@@ -31,7 +31,7 @@ DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol
            "ligamx": "futbol", "champions": "futbol", "mls": "futbol"}
 COLS = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza", "estado", "marcador",
         "ganador_real", "acierto", "brier", "valor_mercado", "valor_lado", "valor_cuota", "valor_edge",
-        "valor_resultado", "valor_unidades"]
+        "valor_resultado", "valor_unidades", "con_precio"]
 
 
 def num(x):
@@ -222,8 +222,12 @@ def resumen(cal):
             d["valor"] = {"apuestas": len(v), "ganadas": sum(1 for x in v if x["valor_resultado"] == "gano"),
                           "unidades": round(u, 2), "roi_pct": round(100.0 * u / len(v), 1)}
         return d
+    sin_precio = [x for x in cal if x.get("con_precio") == "no"]      # lecturas del modelo sin cuota (NPB, KBO...)
+    cal = [x for x in cal if x.get("con_precio") != "no"]
     por = {}
     for x in cal: por.setdefault(x["liga"], []).append(x)
+    por_sp = {}
+    for x in sin_precio: por_sp.setdefault(x["liga"], []).append(x)
     cub = []
     c = [x for x in cal if x["estado"] == "calificado" and x["acierto"] != "" and num(x["prob"]) is not None]
     for lo, hi in ((0.5, 0.55), (0.55, 0.6), (0.6, 0.65), (0.65, 0.7), (0.7, 1.01)):
@@ -233,7 +237,8 @@ def resumen(cal):
                         "prob_media_pct": round(100.0 * sum(num(x["prob"]) for x in b) / len(b), 1),
                         "acierto_pct": round(100.0 * sum(int(x["acierto"]) for x in b) / len(b), 1)})
     return {"generado": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "total": grupo(cal),
-            "por_liga": {k: grupo(v) for k, v in sorted(por.items())}, "calibracion": cub}
+            "por_liga": {k: grupo(v) for k, v in sorted(por.items())}, "calibracion": cub,
+            "sin_precio": {"total": grupo(sin_precio), "por_liga": {k: grupo(v) for k, v in sorted(por_sp.items())}}}
 
 
 def main():
@@ -262,6 +267,12 @@ def main():
     if t.get("calificados"):
         print("TOTAL    %6d %6d %7s%% %7s%% %8s" % (t["picks"], t["calificados"], t["acierto_pct"], t.get("prob_media_pct", "-"), t["brier"]))
         print("Calibracion:", "; ".join("%s: n=%d, esperado %s%%, real %s%%" % (b["rango"], b["n"], b["prob_media_pct"], b["acierto_pct"]) for b in rs["calibracion"]))
+    sp = rs.get("sin_precio", {})
+    if sp.get("total", {}).get("picks"):
+        print("\nLECTURAS SIN PRECIO (modelo sin cuotas; no cuentan en el track record de picks)")
+        for lg, d in sp["por_liga"].items():
+            print("%-8s %6d %6d %7s%% %7s%% %8s" % (lg, d["picks"], d["calificados"], d.get("acierto_pct", "-"),
+                  d.get("prob_media_pct", "-"), d.get("brier", "-")))
     sr = [x for x in cal if x["estado"] == "sin_resultado"]
     for x in sr[:10]:
         print("  sin resultado:", x["liga"], x["fecha"], x["away"], "@", x["home"], "|", x["marcador"])

@@ -3,7 +3,8 @@
 colectores/proximos_beisbol.py - PARTIDOS POR JUGAR de NPB, KBO, LMP, LVBP, LIDOM y ABL.
 
 ESPN no publica estas ligas. Calendario:
-  NPB, LMP, LVBP, LIDOM, ABL  ->  MLB Stats API  /schedule (con abridor probable cuando lo hay)
+  LMP, LVBP, LIDOM, ABL       ->  MLB Stats API  /schedule (con abridor probable cuando lo hay)
+  NPB                         ->  npb.jp calendario oficial por mes (la MLB Stats API no trae NPB)
   KBO                         ->  koreabaseball.com GetKboGameList (el mismo endpoint de recolectar_kbo.py)
 
 Devuelve los juegos con el MISMO esquema que colectores/recolectar_proximos.py (id, liga, tipo, fecha_utc,
@@ -19,7 +20,7 @@ Solo stdlib.
 import argparse, datetime as dt, json, sys, urllib.parse, urllib.request
 
 API = "https://statsapi.mlb.com/api/v1"
-LIGAS_API = {"npb": (31, None), "lmp": (17, 132), "lvbp": (17, 135), "lidom": (17, 131), "abl": (17, 595)}
+LIGAS_API = {"lmp": (17, 132), "lvbp": (17, 135), "lidom": (17, 131), "abl": (17, 595)}
 DEFAULT = ["npb", "kbo", "lmp", "lvbp", "lidom", "abl"]
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 KBO_LIST = "https://www.koreabaseball.com/ws/Main.asmx/GetKboGameList"
@@ -75,6 +76,71 @@ def juegos_api(liga, desde, hasta, texto=None):
     return out
 
 
+NPB_EQ = {"阪神": "Tigers", "巨人": "Giants", "広島": "Carp", "中日": "Dragons", "ヤクルト": "Swallows",
+          "DeNA": "Bay Stars", "ソフトバンク": "Hawks", "日本ハム": "Fighters", "ロッテ": "Marines",
+          "西武": "Lions", "オリックス": "Buffaloes", "楽天": "Golden Eagles"}
+NPB_URL = "https://npb.jp/games/%d/schedule_%02d_detail.html"
+
+
+def juegos_npb_html(texto, anio, desde, hasta):
+    """Calendario mensual de npb.jp -> juegos sin jugar entre las fechas 'desde' y 'hasta' (date).
+    Estructura: <tr id="dateMMDD"> ... team1 (local) / team2 (visita), score1 vacio si no se ha jugado, hora JST."""
+    import re
+    out = []
+    filas = re.split(r'(?=<tr id="date\d{4}")', texto)
+    for fila in filas:
+        m = re.match(r'<tr id="date(\d{2})(\d{2})"', fila)
+        if not m:
+            continue
+        mes, dia = int(m.group(1)), int(m.group(2))
+        try:
+            fecha = dt.date(anio, mes, dia)
+        except ValueError:
+            continue
+        if fecha < desde or fecha > hasta:
+            continue
+        mt = re.search(r'<div class="team1">([^<]*)</div>.*?<div class="team2">([^<]*)</div>', fila, re.S)
+        if not mt:
+            continue
+        loc, vis = mt.group(1).strip(), mt.group(2).strip()
+        if loc not in NPB_EQ or vis not in NPB_EQ:
+            continue
+        sc = re.search(r'<div class="score1">(.*?)</div>', fila, re.S)
+        if sc and re.sub(r'(&nbsp;|\s)', "", sc.group(1)):
+            continue                                   # ya tiene marcador: jugado
+        com = (re.search(r'<div class="comment">(.*?)</div>', fila, re.S) or [None, ""])[1]
+        if any(k in com for k in ("中止", "ノーゲーム", "延期")):
+            continue                                   # suspendido o pospuesto
+        hr = re.search(r'<div class="time">\s*(\d{1,2}):(\d{2})', fila)
+        fu = None
+        if hr:
+            f = dt.datetime(anio, mes, dia, int(hr.group(1)), int(hr.group(2))) - dt.timedelta(hours=9)   # JST -> UTC
+            fu = f.strftime("%Y-%m-%dT%H:%MZ")
+        else:
+            fu = "%s-%02d-%02dT09:00Z" % (anio, mes, dia)
+        est = (re.search(r'<div class="place">\s*(.*?)\s*</div>', fila, re.S) or [None, None])[1]
+        sp = re.findall(r'<div class="pit">\s*先発：([^<\s]+)', fila)
+        pl, pv = (sp[0] if len(sp) > 0 else None), (sp[1] if len(sp) > 1 else None)
+        out.append({"id": "npb-%s%02d%02d-%s-%s" % (anio, mes, dia, loc, vis), "liga": "npb", "tipo": "equipos",
+                    "fecha_utc": fu, "estado": "Programado",
+                    "home": _equipo({"name": NPB_EQ[loc], "teamName": NPB_EQ[loc]}, pl),
+                    "away": _equipo({"name": NPB_EQ[vis], "teamName": NPB_EQ[vis]}, pv),
+                    "cuotas": {}, "contexto": {}, "nota": None, "serie": None, "estadio": est})
+    return out
+
+
+def juegos_npb(desde, hasta):
+    out, vistos = [], set()
+    m = dt.date(desde.year, desde.month, 1)
+    while m <= hasta:
+        texto = _get(NPB_URL % (m.year, m.month))
+        for g in juegos_npb_html(texto, m.year, desde, hasta):
+            if g["id"] not in vistos:
+                vistos.add(g["id"]); out.append(g)
+        m = dt.date(m.year + (m.month == 12), m.month % 12 + 1, 1)
+    return out
+
+
 def juegos_kbo(fecha, texto=None):
     """fecha AAAAMMDD. Calendario de la KBO -> juegos por jugar (sin hora si el sitio no la publica)."""
     if texto is None:
@@ -124,6 +190,9 @@ def recolectar(ligas, dias, hoy=None, verbose=True):
                     f = (hoy + dt.timedelta(days=i)).strftime("%Y%m%d")
                     js = juegos_kbo(f)
                     res += js; n += len(js)
+            elif lg == "npb":
+                js = juegos_npb(hoy, hoy + dt.timedelta(days=dias))
+                res += js; n += len(js)
             elif lg in LIGAS_API:
                 js = juegos_api(lg, d1, d2)
                 res += js; n += len(js)

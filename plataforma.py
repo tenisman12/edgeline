@@ -97,6 +97,7 @@ def _aplicar_validacion():
         poner(liga, "Total", pub(d, "over_2.5"))
 
 
+CUOTA_MIN = 1.80           # cuota decimal minima para marcar VALOR/pick (1.80 = -125 americano)
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
 _aplicar_validacion()
 TZ = RP.TZ_MX
@@ -300,6 +301,8 @@ def _fila(mkt, lado, cuota, p, pf, umbral, liga=None):
     tipo = mkt.split()[0]
     if est in ("valor", "revisar") and (liga, tipo) in NO_PUBLICABLE:
         est = "sin_validar"      # hay diferencia con el mercado, pero este mercado no vence al baseline
+    if est in ("valor", "revisar") and mercado.american_a_decimal(cuota) < CUOTA_MIN:
+        est = "cuota_baja"       # edge positivo, pero la cuota paga menos que el minimo (1.80)
     return {"mercado": mkt, "lado": lado, "cuota": cuota, "p_modelo": round(p, 4), "p_mercado": round(pf, 4),
             "edge": round(e, 4), "kelly": round(mercado.kelly(p, cuota), 4) if est == "valor" else 0.0, "estado": est}
 
@@ -547,7 +550,7 @@ def _cerca(p):
     """True si el partido empieza dentro de HORAS_REGISTRO horas (hora de CDMX). Sin hora, se toma el final del dia."""
     try:
         ini = dt.datetime.strptime("%s %s" % (p["fecha"], p.get("hora") or "23:59"), "%Y-%m-%d %H:%M")
-        ahora = dt.datetime.utcnow() + dt.timedelta(hours=TZ)      # hora de CDMX
+        ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=TZ)      # hora de CDMX
         return ini <= ahora + dt.timedelta(hours=HORAS_REGISTRO)
     except Exception:
         return True
@@ -555,11 +558,17 @@ def _cerca(p):
 
 def registrar(partidos, ruta):
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza",
-            "valor_mercado", "valor_lado", "valor_cuota", "valor_edge"]
+            "valor_mercado", "valor_lado", "valor_cuota", "valor_edge", "con_precio"]
     existentes = set()
     if os.path.exists(ruta):
         with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
-            existentes = {(r["liga"], r["id"]) for r in csv.DictReader(f)}
+            previas = list(csv.DictReader(f))
+        existentes = {(r["liga"], r["id"]) for r in previas}
+        if previas and "con_precio" not in previas[0]:        # archivo con el formato anterior: se agrega la columna
+            for r in previas:
+                r["con_precio"] = "si" if r.get("valor_cuota") else ""
+            with _io.open(ruta, "w", encoding="utf-8-sig", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(previas)
     nuevos = []
     for p in partidos:
         if not p["pick"] or p.get("pretemporada") or (p["liga"], "Ganador") in NO_PUBLICABLE or (p["liga"], p["id"]) in existentes:
@@ -573,7 +582,8 @@ def registrar(partidos, ruta):
                        "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
                        "pick": p["pick"]["texto"], "prob": p["pick"]["prob"], "confianza": p["pick"]["confianza"],
                        "valor_mercado": v.get("mercado", ""), "valor_lado": v.get("lado", ""),
-                       "valor_cuota": v.get("cuota", ""), "valor_edge": v.get("edge", "")})
+                       "valor_cuota": v.get("cuota", ""), "valor_edge": v.get("edge", ""),
+                       "con_precio": "si" if p.get("cuotas") else "no"})
     if nuevos:
         nuevo_archivo = not os.path.exists(ruta)
         with _io.open(ruta, "a", encoding="utf-8-sig", newline="") as f:
