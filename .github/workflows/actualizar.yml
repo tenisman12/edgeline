@@ -2,7 +2,8 @@ name: actualizar datos y predicciones
 
 on:
   schedule:
-    - cron: "17 11 * * *"        # todos los dias 11:17 UTC = 05:17 CDMX
+    - cron: "17 11,18 * * *"     # dos veces al dia: 11:17 UTC = 05:17 CDMX (resultados de la noche en America)
+                                 #                   18:17 UTC = 12:17 CDMX (resultados de Asia: NPB, KBO; lineas y picks de la tarde)
   workflow_dispatch:
 
 concurrency:
@@ -60,21 +61,36 @@ jobs:
         continue-on-error: true
         timeout-minutes: 40
         run: |
-          if [ "$(date -u +%u)" = "1" ] || [ ! -f salida/validacion_mercados.json ]; then
-            python utilidades/validar_mercados.py --deporte hockey,nfl,nba,tenis | tail -5
+          if [ "$(date -u +%u)" = "1" ] || [ ! -f salida/validacion_mercados.json ] || ! grep -q beisbol_mlb salida/validacion_mercados.json; then
+            python utilidades/validar_mercados.py --deporte hockey,nfl,nba,tenis,beisbol | tail -5
           else
             echo "No es lunes y ya existe validacion_mercados.json: se reutiliza."
           fi
 
+      - name: Cuotas de todas las casas (The Odds API)
+        env:
+          EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
+          EDGELINE_ODDS_PRESUPUESTO: "72"       # plan de pago (20,000/mes): 16 deportes por foto, us+eu
+          EDGELINE_ODDS_REGIONES: us,eu
+        continue-on-error: true
+        run: python colectores/recolectar_cuotas.py --solo-compacto
+
       - name: Predecir proximos dias
         run: python plataforma.py --dias 7
+
+      - name: Picks IA (lectura razonada; se salta si no hay ANTHROPIC_API_KEY)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        continue-on-error: true
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then python utilidades/picks_ia.py --dias 2; else echo "Sin ANTHROPIC_API_KEY: se omite Picks IA"; fi
 
       - name: Calificar picks contra resultados reales
         continue-on-error: true
         run: python utilidades/calificar_picks.py
 
       - name: Guardar predicciones en main
-        run: bash utilidades/subir_a_main.sh "predicciones" salida/proximos.json salida/historial_picks.csv salida/validacion_futbol.json salida/validacion_mercados.json salida/historial_calificado.csv salida/track_record.json
+        run: bash utilidades/subir_a_main.sh "predicciones" salida/proximos.json salida/historial_picks.csv salida/validacion_futbol.json salida/validacion_mercados.json salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/picks_ia.json salida/historial_ia.csv
 
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |

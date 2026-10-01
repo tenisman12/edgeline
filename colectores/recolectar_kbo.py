@@ -106,11 +106,35 @@ def scoreboard(sr_id, season_id, game_id):
     return resp if isinstance(resp, dict) else None
 
 
-def recolectar(desde, hasta):
+def conocidos():
+    """(gamePk ya guardados, ultima fecha guardada por temporada) leyendo data_maestra y datos/beisbol.csv.
+    Sirve para bajar solo lo nuevo: no se vuelve a pedir el scoreboard de juegos que ya estan."""
+    gids, ultima = set(), {}
+    for ruta in (OUT, os.path.join(BASE, "datos", "beisbol.csv")):
+        if not os.path.exists(ruta):
+            continue
+        with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+            for r in csv.DictReader(f):
+                if (r.get("league") or "").upper() != "KBO":
+                    continue
+                gids.add(str(r.get("gamePk")))
+                try:
+                    fch = dt.date.fromisoformat((r.get("game_date") or "")[:10])
+                except ValueError:
+                    continue
+                if fch > ultima.get(fch.year, dt.date.min):
+                    ultima[fch.year] = fch
+    return gids, ultima
+
+
+def recolectar(desde, hasta, completo=False):
     filas = []
     hoy = dt.date.today()
+    gids, ultima = (set(), {}) if completo else conocidos()
     for season in range(desde, hasta + 1):
         d = dt.date(season, 3, 1)
+        if season in ultima:
+            d = max(d, ultima[season] - dt.timedelta(days=3))     # solo desde el ultimo dia guardado (con 3 de margen)
         fin = min(dt.date(season, 11, 30), hoy)
         n = 0
         while d <= fin:
@@ -126,6 +150,8 @@ def recolectar(desde, hasta):
                 # solo juegos terminados y normales (no cancelados/suspendidos)
                 if str(g.get("GAME_STATE_SC")) != "3" or str(g.get("CANCEL_SC_ID", "0")) != "0":
                     continue
+                if str(gid) in gids:
+                    continue                    # ya esta guardado: no se vuelve a bajar
                 # carreras directo de la lista: T=visitante(top), B=local(bottom)
                 runs = {"away": num(g.get("T_SCORE_CN")), "home": num(g.get("B_SCORE_CN"))}
                 ac = g.get("AWAY_ID") or equipos_de_gid(gid)[0]
@@ -159,6 +185,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desde", type=int, default=2024)
     ap.add_argument("--hasta", type=int, default=2026)
+    ap.add_argument("--todo", action="store_true", help="vuelve a bajar todo el rango (por defecto solo lo nuevo)")
     ap.add_argument("--debug", metavar="YYYYMMDD", help="imprime el JSON crudo de ese dia y sale")
     args = ap.parse_args()
 
@@ -177,7 +204,7 @@ def main():
         return
 
     print("Bajando KBO %d-%d (sin navegador)..." % (args.desde, args.hasta))
-    filas = recolectar(args.desde, args.hasta)
+    filas = recolectar(args.desde, args.hasta, args.todo)
     if not filas:
         print("Sin datos. Corre --debug 20260927 y pega la salida para ajustar el mapeo."); return
 

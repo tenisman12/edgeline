@@ -5,6 +5,11 @@ Uso:  python utilidades\\ver_predicciones.py --ligas mlb,nhl --fecha 2026-09-30 
 Cada juego: probabilidades de ambos lados, pick (siempre el favorito), carreras/goles esperados, total con Over/Under,
 run line / puck line, cuotas y edge de TODOS los mercados con cuota, probables ESPN (contexto) y avisos.
 * = pretemporada (aprox. por fecha; no cuenta para el historial). Sin ajuste por abridor/portero/lesiones."""
+import sys as _sys
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 import argparse, datetime as dt, io, json, os
 
 BASE = os.environ.get("EDGELINE_BASE", r"C:\Edgeline_repo")
@@ -279,8 +284,15 @@ def main():
                         pct(m.get("p_over")).strip(), pct(1 - m["p_over"] if m.get("p_over") is not None else None).strip()))
                 else:
                     print("      TOTAL sin linea publicada todavia (modelo %.2f)" % m["total"])
+                sp = m.get("spread")
+                if sp and sp.get("linea_home") is not None:
+                    nom = {"beisbol": "RUN LINE", "hockey": "PUCK LINE", "futbol": "HANDICAP"}.get(p.get("deporte"), "SPREAD")
+                    print("      %s %+g %s (%s%s)   %s %s   %s %s" % (
+                        nom, sp["linea_home"], ab(h), "linea de mercado" if sp.get("linea_es_mercado") else "linea de referencia",
+                        ", sin validar" if (p.get("validacion") or {}).get("Spread") == "sin_validar" else "",
+                        ab(h), pct(sp.get("p_home")).strip(), ab(v), pct(sp.get("p_away")).strip()))
                 for nom, pr in m.get("extra") or []:
-                    es_prob = isinstance(pr, float) and 0 <= pr <= 1 and ("rob" in nom or "%" in nom)
+                    es_prob = isinstance(pr, float) and 0 <= pr <= 1 and ("rob" in nom or "%" in nom or "line" in nom.lower())
                     print("      %-26s %s" % (nom, pct(pr).strip() if es_prob else pr))
                 if m.get("derivados"): _mercados_futbol(m["derivados"], h, v)
                 if m.get("nota"): print("      nota: %s" % m["nota"])
@@ -300,6 +312,17 @@ def main():
                                 "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else ("  (cuota < 1.80: no se marca)" if x.get("estado") == "cuota_baja" else ""))))
                 else:
                     print("      CUOTAS: aun no publicadas")
+                if a.valor and p.get("picks"):
+                    print("      PICK PREMIUM (puntaje 0-100: precio, modelo, forma/osciladores, movimiento, consenso, H2H, contexto)")
+                    print("      %-7s %5s %-22s %-18s %8s %-10s %7s %7s %5s  %s" % ("NIVEL", "pts", "MERCADO", "pick", "cuota", "casa", "p final", "EV", "stake", "senales / razones"))
+                    for k in sorted(p["picks"], key=lambda z: -z["puntaje"]):
+                        if k["nivel"] == "pasar" and not a.completo: continue
+                        print("      %-7s %5.1f %-22s %-18s %8s %-10s %6.1f%% %7s %4.1f%%  %s%s" % (
+                            k["nivel"], k["puntaje"], k["mercado"], k["texto"][:18],
+                            cuota(k["cuota"]) if k["cuota"] is not None else ("min %.2f" % (k["cuota_min"] or 0)), (k["casa"] or "")[:10],
+                            100 * k["p_final"], ("%+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "-", 100 * k["stake"],
+                            " ".join("%s=%s" % (x, y) for x, y in k["senales"].items() if y is not None),
+                            ("  | " + "; ".join(k["razones"])) if k["razones"] else ""))
                 pj = [x for x in (v.get("probable"), h.get("probable")) if x]
                 if pj: print("      probables ESPN (contexto, no se aplican): %s / %s" % (v.get("probable") or "?", h.get("probable") or "?"))
                 if p.get("alerta") and (a.valor or p.get("pretemporada")): print("      AVISO: %s" % p["alerta"])

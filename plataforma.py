@@ -22,7 +22,7 @@ import argparse, csv, io as _io, os, sys, json, datetime as dt
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 sys.path.insert(0, os.path.join(AQUI, "colectores"))
-from nucleo import io, mercado, calibrar, equipos, estado, forma, linea, jugadores
+from nucleo import io, mercado, calibrar, equipos, estado, forma, linea, jugadores, sharp
 from modelos import beisbol, hockey, americano, nba, futbol
 import recolectar_proximos as RP
 import proximos_beisbol as PB
@@ -75,12 +75,13 @@ def _aplicar_validacion():
         for bo, v in d.items():
             AJUSTE_GAMES[(tour.lower(), int(bo))] = float(v)
     dep = vm.get("deportes", {})
-    for liga, clave in (("nhl", "hockey"), ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb")):
+    for liga, clave in (("nhl", "hockey"), ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb"),
+                        ("mlb", "beisbol_mlb"), ("npb", "beisbol_npb"), ("kbo", "beisbol_kbo")):
         d = dep.get(clave)
         if not d: continue
         poner(liga, "Ganador", pub(d, "Ganador"))
         poner(liga, "Total", pub(d, "Over/Under (lineas ~promedio)"))
-        poner(liga, "Spread", mayoria(d, [k for k in d if k.startswith(("Local cubre margen", "Puck line"))]))
+        poner(liga, "Spread", mayoria(d, [k for k in d if k.startswith(("Local cubre margen", "Puck line", "Run line"))]))
     for liga, clave in (("atp", "tenis_ATP"), ("wta", "tenis_WTA")):
         d = dep.get(clave)
         if not d: continue
@@ -97,6 +98,12 @@ def _aplicar_validacion():
         poner(liga, "Total", pub(d, "over_2.5"))
 
 
+# ---- capas de decision de pick (ver decidir_picks). Backtest: futbol 20,633 partidos con Pinnacle 2018-2026 y NFL 2,220.
+EV_PICK, EV_FUERTE = 0.02, 0.04   # ventaja minima contra la MEJOR cuota: pick / fuerte
+CUOTA_MAX = 3.00                  # arriba de 3.00 los longshots pierden (-4% a -9% de ROI en el backtest)
+PESO_SHARP = 0.85                 # mezcla: 85% probabilidad sharp (Pinnacle/consenso) + 15% modelo (mas peso al modelo = menos ROI)
+EXTRA_SESGO = 0.02                # NFL/NCAAFB: local y over estan sobreapostados (-5% / -6%): piden 2 pts mas de EV
+EDGE_REVISAR = 0.10               # edge del modelo arriba de esto = informacion que el modelo no ve: "revisar", no pick
 CUOTA_MIN = 1.80           # cuota decimal minima para marcar VALOR/pick (1.80 = -125 americano)
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
 _aplicar_validacion()
@@ -173,6 +180,26 @@ def _conf(p, tres=False):
     return "alta" if top >= 0.65 else ("media" if top >= 0.57 else "baja")
 
 
+def _p_cubre(xh, xa, linea_home, pmf, kmax=20):
+    """P(local cubre la linea): margen local + linea_home > 0, con marcadores independientes (pmf(k, mu)).
+    linea_home = -1.5 -> local gana por 2+; +1.5 -> local pierde por 1 o gana. Sin push (lineas .5)."""
+    if xh is None or xa is None or linea_home is None:
+        return None
+    ph = [pmf(k, xh) for k in range(kmax)]; pa = [pmf(k, xa) for k in range(kmax)]
+    return sum(ph[i] * pa[j] for i in range(kmax) for j in range(kmax) if (i - j) + linea_home > 0)
+
+
+def _spread_mercado(q, p_home, xh, xa, pmf):
+    """Bloque 'spread' (run line / puck line) a la LINEA DEL MERCADO si existe; si no, -1.5 al favorito del modelo."""
+    sp = q.get("spread_home")
+    if sp is None:
+        sp = -1.5 if p_home >= 0.5 else 1.5
+    pc = _p_cubre(xh, xa, float(sp), pmf)
+    if pc is None:
+        return None
+    return {"linea_home": float(sp), "p_home": round(pc, 4), "p_away": round(1 - pc, 4), "linea_es_mercado": q.get("spread_home") is not None}
+
+
 def _pred(g, c, fecha):
     """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}
@@ -215,6 +242,7 @@ def _pred(g, c, fecha):
              "confianza": _conf(max(p, 1 - p)), "extra": []}
         if r.get("p_rl_home") is not None:
             m["extra"] += [("Run line local -1.5", r["p_rl_home"]), ("Run line visita +1.5", r["p_rl_away"])]
+        m["spread"] = _spread_mercado(q, p, r["esperado_home"], r["esperado_away"], beisbol._nb_pmf)
         return m, None
 
     if dep == "hockey":
@@ -226,6 +254,7 @@ def _pred(g, c, fecha):
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
                 "confianza": _conf(max(r["p_home"], r["p_away"])),
                 "extra": [("Puck line local -1.5", r["p_pl_home"]), ("Puck line visita +1.5", r["p_pl_away"])],
+                "spread": _spread_mercado(q, r["p_home"], r["xg_home"], r["xg_away"], lambda k, mu: hockey._pois(mu, k)),
                 "nota": "Sin ajuste por portero titular (ESPN no lo publica antes del juego)."}, None
 
     if dep in ("americano", "nba"):
@@ -251,10 +280,13 @@ def _pred(g, c, fecha):
         if der:
             vf = _val_futbol().get(liga, {})
             der["_validacion"] = {k: vf[k]["estado"] for k in der if k in vf}
+        spf = None
+        if hd is not None and r.get("p_handicap_home") is not None:
+            spf = {"linea_home": float(hd), "p_home": r["p_handicap_home"], "p_away": round(1 - r["p_handicap_home"], 4), "linea_es_mercado": True}
         return {"derivados": der, "p_home": r["p_home"], "p_draw": r["p_draw"], "p_away": r["p_away"], "unidad": "goles",
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total_esperado"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
-                "confianza": _conf(top, tres=True), "extra": [], "nota": c.get("nota")}, None
+                "spread": spf, "confianza": _conf(top, tres=True), "extra": [], "nota": c.get("nota")}, None
     return None, "sin modelo para este deporte"
 
 
@@ -287,7 +319,8 @@ def _mercados(g, m, umbral):
         fair = mercado.sin_vig([mercado.prob_implicita(q["over_odds"]), mercado.prob_implicita(q["under_odds"])])
         out.append(_fila("Total %.1f" % m["linea_total"], "over", q["over_odds"], m["p_over"], fair[0], umbral, liga))
         out.append(_fila("Total %.1f" % m["linea_total"], "under", q["under_odds"], 1 - m["p_over"], fair[1], umbral, liga))
-    if m.get("spread") and q.get("spread_home_odds") is not None and q.get("spread_away_odds") is not None:
+    if m.get("spread") and q.get("spread_home_odds") is not None and q.get("spread_away_odds") is not None \
+            and q.get("spread_home") is not None and abs(float(q["spread_home"]) - float(m["spread"]["linea_home"])) < 1e-6:
         fair = mercado.sin_vig([mercado.prob_implicita(q["spread_home_odds"]), mercado.prob_implicita(q["spread_away_odds"])])
         sp = m["spread"]["linea_home"]
         out.append(_fila("Spread %+g" % sp, "home", q["spread_home_odds"], m["spread"]["p_home"], fair[0], umbral, liga))
@@ -474,9 +507,20 @@ def _ficha(rec, g, cache):
                                        else ("publicable" if BREAKS_OK.get((liga, bo)) else "sin_validar"))
 
 
-def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
+def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
     res, sin = [], []
+    eventos = eventos if eventos is not None else sharp.cargar(os.path.join(BASE, "salida", "cuotas_casas.json"))[0]
     for g in juegos:
+        if not (g.get("cuotas") or {}).get("ml_home") and eventos:
+            # NPB, KBO, tenis: ESPN no publica cuotas; se toman de The Odds API (mejor cuota por lado, linea mas comun)
+            try:
+                prx = sharp.precios(eventos, g["liga"], g.get("fecha_utc"), g["home"]["nombre"], g["away"]["nombre"],
+                                    tres_vias=DEPORTE.get(g["liga"]) == "futbol")
+                q = sharp.cuotas_desde_sharp(prx)
+                if q:
+                    g["cuotas"] = q
+            except Exception:
+                pass
         utc = dt.datetime.fromisoformat((g["fecha_utc"] or "").replace("Z", "+00:00")).replace(tzinfo=None)
         loc = utc + dt.timedelta(hours=TZ)
         rec = {"id": g["id"], "liga": g["liga"], "liga_nombre": NOMBRE.get(g["liga"], g["liga"]),
@@ -535,11 +579,302 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE):
         except Exception as ex:                     # un bloque roto no tumba el partido
             rec.setdefault("bloques", {})["error"] = {"ok": False, "motivo": "ficha: %s" % str(ex)[:100]}
             cache.avisos.append("ficha %s %s: %s" % (g["liga"], g["id"], str(ex)[:80]))
+        try:
+            decidir_picks(rec, g, eventos)
+        except Exception as ex:
+            rec["picks"] = []; rec["pick_top"] = None
+            cache.avisos.append("picks %s %s: %s" % (g["liga"], g["id"], str(ex)[:80]))
         if not rec["modelo"]:
             sin.append("%s: %s @ %s -> %s" % (g["liga"].upper(), g["away"]["nombre"], g["home"]["nombre"], rec["motivo"]))
         res.append(rec)
     res.sort(key=lambda r: (r["fecha"], r["hora"], r["liga"]))
     return res, sin
+
+
+# ================================================================== capas de decision de pick
+_NIVEL = {"premium": 4, "pick": 3, "lean": 2, "revisar": 1, "pasar": 0}
+_LIGAS_SESGO = ("nfl", "ncaafb")
+# PICK PREMIUM: puntaje 0-100 que junta las capas. Pesos iniciales (se recalibran con el historial: cada pick guarda sus senales).
+PESOS = {"precio": 30, "modelo": 20, "forma": 20, "movimiento": 10, "consenso": 10, "h2h": 5, "contexto": 5}
+CORTE = {"premium": 75, "pick": 60, "lean": 45}
+_STATUS = {"Burning Hot": 1.0, "Hot": 0.6, "Average Up": 0.3, "Average": 0.0, "New": 0.0, "Average Down": -0.3, "Cold": -0.6, "Dead": -1.0}
+_TEND = {"Subiendo": 1.0, "Estable": 0.0, "Bajando": -1.0}
+
+
+def _bajar(nivel):
+    return {"premium": "pick", "pick": "lean", "lean": "pasar"}.get(nivel, nivel)
+
+
+def _lin(x, x0, x1, tope):
+    """x0 -> 0, x1 -> tope, lineal y acotado."""
+    if x is None:
+        return tope / 2.0
+    return max(0.0, min(tope, tope * (x - x0) / float(x1 - x0)))
+
+
+def _senal_forma(rec, tipo, lado):
+    """-1..1: que tan a favor del lado estan la forma reciente, los osciladores, la tendencia y el status."""
+    import math
+    f = rec.get("forma") or {}
+    H, A = f.get("home") or {}, f.get("away") or {}
+    if not H or not A:
+        return None
+    def osc(t, k):
+        return float(((t.get("osciladores") or {}).get(k)) or 0.0)
+    def l10(t, k):
+        v = ((t.get("ventanas") or {}).get("L10") or {})
+        return v.get(k)
+    if tipo == "Total":
+        # over: los dos equipos anotan/reciben mas en los ultimos 10 que en la temporada
+        def ritmo(t):
+            v = t.get("ventanas") or {}; a, b = v.get("L10") or {}, v.get("temp") or {}
+            if not a or not b or not (b.get("gf") or 0) + (b.get("ga") or 0):
+                return 0.0
+            return ((a.get("gf") or 0) + (a.get("ga") or 0)) / float((b.get("gf") or 0) + (b.get("ga") or 0)) - 1.0
+        r = (ritmo(H) + ritmo(A)) / 2.0 + 0.3 * (osc(H, "ataque") + osc(A, "ataque")) / 2.0
+        x = math.tanh(3.0 * r)
+        return x if lado == "over" else -x
+    if lado == "draw":
+        return None
+    me, op = (H, A) if lado == "home" else (A, H)
+    d = (osc(me, "forma") - osc(op, "forma"))
+    pm, po = l10(me, "pts"), l10(op, "pts")
+    if pm is not None and po is not None:
+        d += 0.5 * (pm - po)
+    d += 0.25 * (_TEND.get((me.get("osciladores") or {}).get("tendencia"), 0) - _TEND.get((op.get("osciladores") or {}).get("tendencia"), 0))
+    d += 0.15 * (_STATUS.get(me.get("status"), 0) - _STATUS.get(op.get("status"), 0))
+    return math.tanh(1.5 * d)
+
+
+def _senal_h2h(rec, tipo, lado):
+    h = rec.get("h2h_datos") or {}
+    ult = h.get("ultimos") or []
+    if tipo != "Ganador" or lado == "draw" or not ult:
+        return None
+    w = 0
+    for u in ult[:5]:
+        ma, mb = u.get("marcador_a"), u.get("marcador_b")
+        if ma is None or mb is None:
+            continue
+        gana_home = ma > mb
+        w += 1 if (gana_home == (lado == "home")) else 0
+    n = len([u for u in ult[:5] if u.get("marcador_a") is not None])
+    return (2.0 * w / n - 1.0) if n else None
+
+
+def _senal_mov(rec, tipo, lado):
+    mv = rec.get("movimiento") or {}
+    if tipo == "Ganador":
+        ml = mv.get("ml") or {}
+        pts = ml.get("desplaza_pts")
+        if pts is None or lado == "draw":
+            return None
+        hacia = ml.get("hacia")
+        x = min(1.0, abs(pts) / 3.0)
+        return x if hacia == lado else (-x if hacia in ("home", "away") else 0.0)
+    if tipo == "Total":
+        t = mv.get("total") or {}
+        c = t.get("cambio")
+        if c is None:
+            return None
+        x = min(1.0, abs(c) / 2.0)          # la linea sube = el mercado espera mas puntos (a favor del over)
+        return (x if c > 0 else -x) if lado == "over" else (-x if c > 0 else x) if c else 0.0
+    sp = mv.get("spread") or {}
+    c = sp.get("cambio")
+    if c is None:
+        return None
+    x = min(1.0, abs(c) / 2.0)              # spread del local baja (mas negativo) = mercado cree mas en el local
+    return (x if c < 0 else -x) if lado == "home" else (-x if c < 0 else x) if c else 0.0
+
+
+def _senal_consenso(rec, tipo, lado):
+    c = rec.get("consenso") or {}
+    f = c.get("fuentes") or {}
+    if tipo != "Ganador" or len(f) < 2:        # con el modelo solo no hay consenso que medir
+        return None
+    return 2.0 * sum(1 for v in f.values() if v == lado) / len(f) - 1.0
+
+
+def _senal_contexto(rec, tipo, lado):
+    les = (rec.get("contexto") or {}).get("lesiones") or {}
+    if tipo != "Ganador" or lado == "draw":
+        return None
+    me, op = ("home", "away") if lado == "home" else ("away", "home")
+    d = len(les.get(op) or []) - len(les.get(me) or [])
+    x = max(-1.0, min(1.0, d / 4.0))
+    if rec.get("deporte") == "beisbol" and not rec[me].get("probable"):
+        x -= 0.5
+    return max(-1.0, x)
+
+
+def _razonar(rec, k):
+    """Texto corto con el debate modelo vs forma vs mercado que lleva a la decision."""
+    tipo, lado = k["mercado"].split()[0], k["lado"]
+    f = rec.get("forma") or {}
+    H, A = f.get("home") or {}, f.get("away") or {}
+    me, op = (H, A) if lado == "home" else (A, H)
+    def desc(t):
+        if not t:
+            return ""
+        o = t.get("osciladores") or {}; l10 = (t.get("ventanas") or {}).get("L10") or {}
+        partes = [x for x in (t.get("racha"), ("L10 %d-%d" % (l10.get("w", 0), l10.get("l", 0))) if l10 else None,
+                              o.get("tendencia"), t.get("status")) if x and x not in ("Estable", "Average", "New")]
+        return ", ".join(partes)
+    fr = []
+    fr.append("Modelo %.0f%% a %s%s." % (100 * k["p_modelo"], k["texto"], "" if k["validado"] else " (mercado sin validar)"))
+    if tipo == "Ganador" and lado in ("home", "away") and (me or op):
+        a, b = desc(me), desc(op)
+        if a or b:
+            fr.append("Forma: %s (%s) contra %s (%s)." % (rec["home" if lado == "home" else "away"]["nombre"], a or "sin senal",
+                                                        rec["away" if lado == "home" else "home"]["nombre"], b or "sin senal"))
+    s_ = k["senales"]
+    if s_.get("forma") is not None:
+        fr.append("La forma %s." % ("apoya" if s_["forma"] >= 0.6 * PESOS["forma"] else ("va en contra" if s_["forma"] <= 0.3 * PESOS["forma"] else "no inclina")))
+    if s_.get("precio") is not None and k.get("ev") is not None:
+        fr.append("Precio %s a %s: EV %+.1f%%." % (k["cuota"], k["casa"] or "la casa", 100 * k["ev"]))
+    elif k.get("cuota_min"):
+        fr.append("Sin cuota: vale desde %.2f." % k["cuota_min"])
+    if s_.get("movimiento") is not None:
+        fr.append("Linea %s." % ("a favor" if s_["movimiento"] > 0.6 * PESOS["movimiento"] else ("en contra" if s_["movimiento"] < 0.4 * PESOS["movimiento"] else "quieta")))
+    if s_.get("consenso") is not None:
+        fr.append("Consenso %s." % ("a favor" if s_["consenso"] >= 0.75 * PESOS["consenso"] else ("dividido" if s_["consenso"] > 0.25 * PESOS["consenso"] else "en contra")))
+    fr.append("Decision: %s (%.0f pts)%s." % (k["nivel"].upper(), k["puntaje"], (": " + "; ".join(k["razones"])) if k["razones"] else ""))
+    return " ".join(fr)
+
+
+def puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado):
+    """Puntaje PICK PREMIUM 0-100 y sus senales. Devuelve (puntaje, senales, condicion)."""
+    sen = {}
+    # precio: con varias casas = EV sharp; con una casa = edge del modelo validado contra esa casa; sin cuota = no aplica
+    if fuente == "sin_cuota":
+        sen["precio"] = None
+    elif fuente == "una_casa":
+        sen["precio"] = _lin(p_mod - p_sharp, 0.0, 0.08, PESOS["precio"]) if validado else 0.0
+    else:
+        sen["precio"] = _lin(ev_sharp, -0.05, 0.05, PESOS["precio"])      # EV -5% = 0 pts, cuota justa = 15, +5% = 30
+    # modelo
+    tope_p = 0.65 if rec.get("deporte") in ("beisbol", "hockey") else 0.72     # en beisbol/hockey 60% ya es un favorito fuerte
+    if validado:
+        sen["modelo"] = _lin(p_mod - p_sharp, -0.05, 0.08, PESOS["modelo"]) if p_sharp is not None else _lin(p_mod, 0.45, tope_p, PESOS["modelo"])
+    else:
+        sen["modelo"] = _lin(p_mod, 0.45, tope_p, PESOS["modelo"] / 2.0)
+    for k, fn in (("forma", _senal_forma), ("movimiento", _senal_mov), ("consenso", _senal_consenso), ("h2h", _senal_h2h), ("contexto", _senal_contexto)):
+        x = fn(rec, tipo, lado)
+        sen[k] = None if x is None else _lin(x, -1.0, 1.0, PESOS[k])
+    disponibles = {k: v for k, v in sen.items() if v is not None}
+    peso_disp = sum(PESOS[k] for k in disponibles)
+    bruto = sum(disponibles.values())
+    puntaje = 100.0 * bruto / peso_disp if peso_disp else 0.0
+    # exigencia minima para premium: precio favorable (si hay cuota), forma a favor, y nada fuertemente en contra
+    cond = []
+    if sen.get("precio") is not None and sen["precio"] < 0.5 * PESOS["precio"]:
+        cond.append("precio")
+    if sen.get("forma") is not None and sen["forma"] < 0.6 * PESOS["forma"]:
+        cond.append("forma")
+    if sen.get("movimiento") is not None and sen["movimiento"] < 0.25 * PESOS["movimiento"]:
+        cond.append("linea en contra")
+    return round(puntaje, 1), {k: (None if v is None else round(v, 1)) for k, v in sen.items()}, cond
+
+
+def decidir_picks(rec, g, eventos):
+    """PICK PREMIUM por mercado y lado: puntaje 0-100 que junta precio (sharp vs mejor cuota), modelo, forma/osciladores,
+    movimiento de linea, consenso, H2H y contexto. Vetos duros: pretemporada, empate, cuota fuera de 1.80-3.00,
+    modelo >15 pts arriba del mercado (revisar), linea movida >=2 pts en contra. Sin cuota (NPB, KBO, tenis) se
+    puntua sin la senal de precio y se entrega la CUOTA MINIMA para que el pick valga."""
+    m = rec.get("modelo") or {}
+    out = []
+    liga = rec["liga"]
+    tres = m.get("p_draw") is not None
+    pr = sharp.precios(eventos, liga, g.get("fecha_utc"), rec["home"]["nombre"], rec["away"]["nombre"], tres,
+                       total=m.get("linea_total") if m.get("linea_es_mercado") else None,
+                       spread_home=(m.get("spread") or {}).get("linea_home")) if eventos else {}
+    mv = rec.get("movimiento") or {}
+    # candidatos: con cuota, cada lado de cada mercado; sin cuota, el ganador segun el modelo
+    cand = [(x["mercado"], x["lado"], x) for x in rec.get("mercados") or []]
+    if not cand and m.get("p_home") is not None:
+        # sin cuota se puntuan LOS DOS lados: la forma puede voltear al favorito del modelo (se queda el que puntue mas)
+        lados = {k[2:]: m[k] for k in ("p_home", "p_draw", "p_away") if m.get(k) is not None}
+        cand = [("Ganador", l, {"mercado": "Ganador", "lado": l, "cuota": None, "p_modelo": pv, "p_mercado": None, "edge": 0.0, "estado": ""})
+                for l, pv in lados.items() if l != "draw"]
+    for mkt, lado, x in cand:
+        tipo = mkt.split()[0]
+        razones = []
+        validado = (liga, tipo) not in NO_PUBLICABLE
+        p_mod = x["p_modelo"]
+        sp = (pr.get(tipo) or {}).get(lado)
+        if sp:
+            p_sharp, dec, cuota, casa, fuente, n_casas, ev_sharp = sp["p_sharp"], sp["mejor_decimal"], sp["mejor_cuota"], sp["casa"], sp["fuente"], sp["n_casas"], sp["ev"]
+        elif x.get("cuota") is not None:
+            p_sharp, cuota, casa, fuente, n_casas = x["p_mercado"], x["cuota"], (rec.get("cuotas") or {}).get("casa") or "espn", "una_casa", 1
+            dec = mercado.american_a_decimal(cuota); ev_sharp = round(p_sharp * dec - 1, 4)
+        else:
+            p_sharp, cuota, casa, fuente, n_casas, dec, ev_sharp = None, None, "", "sin_cuota", 0, None, None
+        p_fin = (PESO_SHARP * p_sharp + (1 - PESO_SHARP) * p_mod if validado else p_sharp) if p_sharp is not None else p_mod
+        ev = (p_fin * dec - 1) if dec else None
+        puntaje, sen, cond = puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado)
+        nivel = "premium" if puntaje >= CORTE["premium"] else ("pick" if puntaje >= CORTE["pick"] else ("lean" if puntaje >= CORTE["lean"] else "pasar"))
+        if nivel == "premium" and cond:
+            nivel = "pick"; razones.append("sin premium: " + ", ".join(cond))
+        # ---- vetos duros
+        if rec.get("pretemporada"):
+            nivel = "pasar"; razones.append("pretemporada")
+        if lado == "draw":
+            nivel = "pasar"; razones.append("empate: -9% ROI en el backtest")
+        if dec is not None and (dec < CUOTA_MIN or dec > CUOTA_MAX):
+            if nivel != "pasar": razones.append("cuota %.2f fuera de %.2f-%.2f" % (dec, CUOTA_MIN, CUOTA_MAX))
+            nivel = "pasar"
+        if liga in _LIGAS_SESGO and nivel in ("pick", "premium") and ((tipo in ("Ganador", "Spread") and lado == "home") or (tipo == "Total" and lado == "over")):
+            if puntaje < CORTE[nivel] + 5:
+                nivel = _bajar(nivel); razones.append("local/over sobreapostado en %s: pide 5 pts mas" % liga.upper())
+        if not validado and nivel != "pasar":
+            razones.append("modelo sin validar en este mercado (pesa la mitad)")
+        if validado and p_sharp is not None and (p_mod - p_sharp) >= EDGE_SOSPECHOSO and nivel != "pasar":
+            nivel = "revisar"; razones.append("modelo %.0f pts arriba del mercado: revisar (lesion, abridor, portero)" % (100 * (p_mod - p_sharp)))
+        if nivel in ("pick", "premium") and tipo == "Ganador" and lado in ("home", "away"):
+            ml = mv.get("ml") or {}
+            if abs(ml.get("desplaza_pts") or 0) >= 2 and ml.get("hacia") not in (lado, "sin_cambio", None):
+                nivel = "pasar"; razones.append("la linea se movio %.1f pts en contra desde la apertura" % abs(ml["desplaza_pts"]))
+        if fuente == "una_casa" and nivel == "premium":
+            razones.append("una sola casa: el precio es contra DraftKings, no contra el mercado completo")
+        if ev is not None and ev < 0.01 and nivel in ("pick", "premium"):
+            nivel = "lean"; razones.append("EV %+.1f%%: sin margen contra la mejor cuota" % (100 * ev))
+        # sin cuota: el pick queda condicionado a la cuota minima
+        cuota_min = None
+        if fuente == "sin_cuota":
+            cuota_min = round(max(CUOTA_MIN, 1.05 / p_mod), 2)
+            if 1.0 / p_mod < CUOTA_MIN and nivel in ("pick", "premium"):
+                nivel = "lean"; razones.append("favorito claro: la cuota justa es %.2f y no llegara a %.2f" % (1.0 / p_mod, CUOTA_MIN))
+            elif nivel in ("pick", "premium"):
+                razones.append("sin cuota: vale solo si pagan %.2f o mas" % cuota_min)
+        stake = 0.0
+        if nivel in ("pick", "premium") and dec:
+            stake = min(0.02 if nivel == "premium" else 0.01, max(0.0, mercado.kelly(p_fin, cuota, fraccion=0.25, tope=0.02)))
+        elif nivel in ("pick", "premium"):
+            stake = 0.02 if nivel == "premium" else 0.01
+        texto = {"home": rec["home"]["nombre"], "away": rec["away"]["nombre"], "draw": "Empate", "over": "Over", "under": "Under"}[lado]
+        if tipo != "Ganador" and " " in mkt:
+            texto = "%s %s" % (texto, mkt.split(" ", 1)[1])
+        out.append({"mercado": mkt, "lado": lado, "texto": texto.strip(), "nivel": nivel, "puntaje": puntaje, "senales": sen,
+                    "cuota": cuota, "decimal": round(dec, 3) if dec else None, "cuota_min": cuota_min, "casa": casa, "fuente": fuente, "n_casas": n_casas,
+                    "p_sharp": None if p_sharp is None else round(p_sharp, 4), "p_modelo": round(p_mod, 4), "p_final": round(p_fin, 4),
+                    "ev_sharp": None if ev_sharp is None else round(ev_sharp, 4), "ev": None if ev is None else round(ev, 4),
+                    "validado": validado, "stake": round(stake, 4), "razones": razones})
+    # un solo lado por mercado: se queda el de mayor puntaje
+    mejor = {}
+    for k in out:
+        if k["nivel"] in ("pick", "premium") and (k["mercado"] not in mejor or k["puntaje"] > mejor[k["mercado"]]["puntaje"]):
+            mejor[k["mercado"]] = k
+    for k in out:
+        if k["nivel"] in ("pick", "premium") and mejor[k["mercado"]] is not k:
+            k["nivel"] = "lean"; k["stake"] = 0.0; k["razones"].append("el otro lado puntua mas")
+    for k in out:
+        try:
+            k["razonamiento"] = _razonar(rec, k)
+        except Exception:
+            k["razonamiento"] = ""
+    rec["picks"] = out
+    top = max(out, key=lambda z: (_NIVEL[z["nivel"]], z["puntaje"])) if out else None
+    rec["pick_top"] = top if top and top["nivel"] in ("premium", "pick", "lean") else None
 
 
 # ================================================================== historial (base del track record)
@@ -558,38 +893,102 @@ def _cerca(p):
 
 def registrar(partidos, ruta):
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza",
-            "valor_mercado", "valor_lado", "valor_cuota", "valor_edge", "con_precio"]
+            "valor_mercado", "valor_lado", "valor_cuota", "valor_edge", "con_precio",
+            "nivel", "p_sharp", "p_modelo", "ev", "casa", "fuente", "stake", "razones", "puntaje", "senales", "cuota_min", "razonamiento"]
     existentes = set()
     if os.path.exists(ruta):
         with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
             previas = list(csv.DictReader(f))
-        existentes = {(r["liga"], r["id"]) for r in previas}
-        if previas and "con_precio" not in previas[0]:        # archivo con el formato anterior: se agrega la columna
+        existentes = {(r["liga"], r["id"], r.get("valor_mercado") or "", r.get("valor_lado") or "") for r in previas}
+        existentes |= {(r["liga"], r["id"]) for r in previas if not r.get("nivel")}     # formato viejo: un pick por partido
+        if previas and "nivel" not in previas[0]:        # archivo con el formato anterior: se agregan columnas
             for r in previas:
-                r["con_precio"] = "si" if r.get("valor_cuota") else ""
+                r.setdefault("con_precio", "si" if r.get("valor_cuota") else "")
+                for k in cols[14:]:
+                    r.setdefault(k, "")
             with _io.open(ruta, "w", encoding="utf-8-sig", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(previas)
     nuevos = []
     for p in partidos:
-        if not p["pick"] or p.get("pretemporada") or (p["liga"], "Ganador") in NO_PUBLICABLE or (p["liga"], p["id"]) in existentes:
-            continue
-        if not _cerca(p):
-            continue                        # aun falta mucho: se registra en una corrida posterior
+        if p.get("pretemporada") or not _cerca(p):
+            continue                        # aun falta mucho: se registra en una corrida posterior (mas info: abridores, cuotas)
         if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
             continue                        # juego condicional: puede no jugarse; se registra cuando deja de decir "If Necessary"
-        v = p["valor"] or {}
-        nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
-                       "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
-                       "pick": p["pick"]["texto"], "prob": p["pick"]["prob"], "confianza": p["pick"]["confianza"],
-                       "valor_mercado": v.get("mercado", ""), "valor_lado": v.get("lado", ""),
-                       "valor_cuota": v.get("cuota", ""), "valor_edge": v.get("edge", ""),
-                       "con_precio": "si" if p.get("cuotas") else "no"})
+        # picks por mercado (fuerte y pick: los que llevan stake). Lean y revisar no entran al track record.
+        for k in p.get("picks") or []:
+            if k["nivel"] not in ("premium", "pick") or (p["liga"], p["id"], k["mercado"], k["lado"]) in existentes:
+                continue
+            nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
+                           "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
+                           "pick": k["texto"], "prob": k["p_final"], "confianza": k["nivel"],
+                           "valor_mercado": k["mercado"], "valor_lado": k["lado"], "valor_cuota": k["cuota"], "valor_edge": k["ev"],
+                           "con_precio": "si" if k["cuota"] is not None else "no", "nivel": k["nivel"], "p_sharp": k["p_sharp"], "p_modelo": k["p_modelo"],
+                           "ev": k["ev"], "casa": k["casa"], "fuente": k["fuente"], "stake": k["stake"], "razones": "; ".join(k["razones"]),
+                           "puntaje": k["puntaje"], "senales": json.dumps(k["senales"], ensure_ascii=False), "cuota_min": k["cuota_min"] or "",
+                           "razonamiento": k.get("razonamiento", "")})
+        # lectura del modelo sin precio (NPB, KBO...): aparte, solo para medir al modelo
+        if p.get("pick") and not p.get("cuotas") and (p["liga"], "Ganador") not in NO_PUBLICABLE and (p["liga"], p["id"], "", "") not in existentes:
+            nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
+                           "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
+                           "pick": p["pick"]["texto"], "prob": p["pick"]["prob"], "confianza": p["pick"]["confianza"],
+                           "valor_mercado": "", "valor_lado": "", "valor_cuota": "", "valor_edge": "",
+                           "con_precio": "no", "nivel": "lectura", "p_sharp": "", "p_modelo": p["pick"]["prob"], "ev": "",
+                           "casa": "", "fuente": "", "stake": 0, "razones": "sin cuotas", "puntaje": "", "senales": "", "cuota_min": "", "razonamiento": ""})
     if nuevos:
         nuevo_archivo = not os.path.exists(ruta)
         with _io.open(ruta, "a", encoding="utf-8-sig", newline="") as f:
             w = csv.DictWriter(f, fieldnames=cols)
             if nuevo_archivo:
                 w.writeheader()
+            w.writerows(nuevos)
+    return len(nuevos)
+
+
+def registrar_predicciones(partidos, ruta):
+    """Una fila por partido y mercado del MODELO (Ganador, Total/Games, Spread, Breaks), registrada antes del juego
+    (ventana de HORAS_REGISTRO). Mide al modelo contra la realidad aunque no haya cuota ni pick."""
+    cols = ["registrado", "liga", "id", "fecha", "home", "away", "mercado", "lado", "p_modelo", "valor_modelo", "linea",
+            "p_mercado", "cuota", "validacion"]
+    existentes = set()
+    if os.path.exists(ruta):
+        with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
+            existentes = {(r["liga"], r["id"], r["mercado"].split()[0]) for r in csv.DictReader(f)}
+    ahora = dt.datetime.now().isoformat(timespec="seconds"); nuevos = []
+    for p in partidos:
+        m = p.get("modelo")
+        if not m or p.get("pretemporada") or not _cerca(p):
+            continue
+        if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
+            continue
+        q = p.get("cuotas") or {}; val = p.get("validacion") or {}
+        mk = {x["mercado"].split()[0] + "|" + x["lado"]: x for x in p.get("mercados") or []}
+        def fila(mercado, lado, pm, vm=None, linea=None):
+            base = mercado.split()[0]; x = mk.get(base + "|" + lado) or {}
+            nuevos.append({"registrado": ahora, "liga": p["liga"], "id": p["id"], "fecha": p["fecha"], "home": p["home"]["nombre"],
+                           "away": p["away"]["nombre"], "mercado": mercado, "lado": lado, "p_modelo": "" if pm is None else round(pm, 4),
+                           "valor_modelo": "" if vm is None else round(vm, 3), "linea": "" if linea is None else linea,
+                           "p_mercado": x.get("p_mercado", ""), "cuota": x.get("cuota", ""), "validacion": val.get(base if base != "Games" else "Total", "")})
+        if (p["liga"], p["id"], "Ganador") not in existentes and m.get("p_home") is not None:
+            lados = {k[2:]: m[k] for k in ("p_home", "p_draw", "p_away") if m.get(k) is not None}
+            top = _lado_fav(lados); fila("Ganador", top, lados[top])
+        if m.get("p_over") is not None and m.get("linea_total") is not None:
+            nom = "Games" if p["tipo"] == "tenis" else "Total"
+            if (p["liga"], p["id"], nom) not in existentes:
+                fila("%s %s" % (nom, m["linea_total"]), "over" if m["p_over"] >= 0.5 else "under",
+                     m["p_over"] if m["p_over"] >= 0.5 else 1 - m["p_over"], linea=m["linea_total"])
+        sp = m.get("spread")
+        if sp and sp.get("linea_home") is not None and (p["liga"], p["id"], "Spread") not in existentes:
+            fila("Spread %+g" % sp["linea_home"], "home" if sp["p_home"] >= 0.5 else "away",
+                 sp["p_home"] if sp["p_home"] >= 0.5 else sp["p_away"], linea=sp["linea_home"] if sp["p_home"] >= 0.5 else -sp["linea_home"])
+        if p["tipo"] == "tenis" and (p["liga"], p["id"], "Breaks") not in existentes:
+            for nom, v in m.get("extra") or []:
+                if nom == "Breaks esperados" and isinstance(v, (int, float)):
+                    fila("Breaks", "total", None, vm=float(v))
+    if nuevos:
+        nuevo = not os.path.exists(ruta)
+        with _io.open(ruta, "a", encoding="utf-8-sig", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=cols)
+            if nuevo: w.writeheader()
             w.writerows(nuevos)
     return len(nuevos)
 
@@ -639,9 +1038,27 @@ def main():
     with _io.open(rh, "w", encoding="utf-8") as f:
         f.write(PAG.render(data))
     nuevos = registrar(partidos, os.path.join(a.salida, "historial_picks.csv"))
+    npred = registrar_predicciones(partidos, os.path.join(a.salida, "historial_predicciones.csv"))
 
     con = [p for p in partidos if p["modelo"]]
     val = [p for p in partidos if p["valor"]]
+    niv = {}
+    for p in partidos:
+        for k in p.get("picks") or []:
+            niv[k["nivel"]] = niv.get(k["nivel"], 0) + 1
+    ev_src, gen = sharp.cargar(os.path.join(BASE, "salida", "cuotas_casas.json"))
+    print("\nPICKS por capas: %s | precios multi-casa: %s" % (
+        ", ".join("%s %d" % (k, niv.get(k, 0)) for k in ("premium", "pick", "lean", "revisar", "pasar")),
+        ("%d eventos (foto %s)" % (len(ev_src), gen)) if ev_src else "NO (solo ESPN: el nivel maximo es lean hasta que corra recolectar_cuotas.py)"))
+    for p in partidos:
+        for k in p.get("picks") or []:
+            if k["nivel"] in ("premium", "pick"):
+                print("  %-7s %5.1f pts %s %s | %s @ %s | %s %s a %s (%s) modelo %.1f%% %s stake %.1f%%  senales %s%s" % (
+                    k["nivel"].upper(), k["puntaje"], p["fecha"], p["hora"], p["away"]["nombre"], p["home"]["nombre"], k["mercado"], k["texto"],
+                    k["cuota"] if k["cuota"] is not None else ("min %.2f" % k["cuota_min"]), k["casa"] or "-", 100 * k["p_modelo"],
+                    ("EV %+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "", 100 * k["stake"],
+                    " ".join("%s=%s" % (a, b) for a, b in k["senales"].items() if b is not None),
+                    ("  [" + "; ".join(k["razones"]) + "]") if k["razones"] else ""))
     print("\n%d partidos: %d con prediccion, %d sin modelo, %d con VALOR (edge >= %d%%)."
           % (len(partidos), len(con), len(partidos) - len(con), len(val), int(a.umbral * 100)))
     if val:
@@ -651,7 +1068,7 @@ def main():
     if sin:
         print("\nSin prediccion (%d):" % len(sin)); [print("  -", x) for x in sin[:25]]
         if len(sin) > 25: print("  ... y %d mas" % (len(sin) - 25))
-    print("\nPicks nuevos registrados en historial_picks.csv: %d" % nuevos)
+    print("\nPicks nuevos registrados en historial_picks.csv: %d | predicciones del modelo registradas: %d" % (nuevos, npred))
     print("Abre:  %s" % rh)
 
 

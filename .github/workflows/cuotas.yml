@@ -2,7 +2,7 @@ name: fotos de cuotas (movimiento de linea y CLV)
 
 on:
   schedule:
-    - cron: "5 */3 * * *"        # cada 3 horas
+    - cron: "5 */4 * * *"        # cada 4 horas (6 fotos al dia)
   workflow_dispatch:
 
 concurrency:
@@ -32,5 +32,32 @@ jobs:
       - name: Guardar foto de cuotas
         run: python colectores/snapshot_cuotas.py
 
+      # The Odds API, plan de pago (20,000 creditos/mes): 6 creditos por deporte (3 mercados x 2 regiones).
+      # Presupuesto 72 por foto = 12 deportes, priorizados por partidos en 60 h; 8 fotos al dia (6 + 2 corridas completas) = 576/dia = ~17,300/mes.
+      - name: Cuotas de todas las casas (The Odds API: Pinnacle, bet365, DraftKings...)
+        env:
+          EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
+          EDGELINE_ODDS_PRESUPUESTO: "72"
+          EDGELINE_ODDS_REGIONES: us,eu
+        continue-on-error: true
+        run: python colectores/recolectar_cuotas.py --solo-compacto
+
+      # Refresco intradia SIN gastar creditos: cuotas y movimiento (ESPN), abridores/porteros/QB probables, lesiones,
+      # contexto; re-puntua los picks con la foto multi-casa de la manana (salida/cuotas_casas.json) y registra los que
+      # entran en la ventana de 36 h. No baja datos historicos ni valida (eso es la corrida diaria).
+      - name: Datos historicos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+
+      - name: Re-predecir con cuotas y contexto frescos
+        continue-on-error: true
+        timeout-minutes: 20
+        run: python plataforma.py --dias 3
+
+      - name: Calificar picks
+        continue-on-error: true
+        run: python utilidades/calificar_picks.py | head -20
+
       - name: Subir a main
-        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv"
+        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv"

@@ -31,7 +31,7 @@ DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol
            "ligamx": "futbol", "champions": "futbol", "mls": "futbol"}
 COLS = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza", "estado", "marcador",
         "ganador_real", "acierto", "brier", "valor_mercado", "valor_lado", "valor_cuota", "valor_edge",
-        "valor_resultado", "valor_unidades", "con_precio"]
+        "valor_resultado", "valor_unidades", "con_precio", "nivel", "puntaje", "senales", "p_sharp", "cuota_cierre", "clv_pct"]
 
 
 def num(x):
@@ -141,7 +141,23 @@ class Tenis:
         sc = str(r.get("score") or "")
         if "W/O" in sc.upper() or "WALK" in sc.upper():
             return {"anulado": True, "marcador": sc}, None
-        return {"marcador": sc, "ganador": "home" if w == j1 else "away"}, None
+        out = {"marcador": sc, "ganador": "home" if w == j1 else "away"}
+        # games totales (solo marcadores completos) y breaks (bp enfrentados - bp salvados, de ambos)
+        g = 0; ok = bool(sc) and not any(ch.isalpha() for ch in sc)
+        for tok in sc.split():
+            tok = tok.split("(")[0]
+            try:
+                a, b = tok.split("-", 1); g += int(a) + int(b)
+            except ValueError:
+                ok = False
+        if ok and g:
+            out["games"] = g
+        try:
+            bw = float(r.get("w_bpFaced")) - float(r.get("w_bpSaved")); bl = float(r.get("l_bpFaced")) - float(r.get("l_bpSaved"))
+            out["breaks"] = bw + bl
+        except (TypeError, ValueError):
+            pass
+        return out, None
 
 
 # ------------------------------------------------------------------ calificacion
@@ -172,12 +188,55 @@ def calificar_valor(r, res):
     return out, ("" if u is None else round(u, 3))
 
 
+def _cierres():
+    """Ultima foto sharp por (liga, home, away, mercado, lado) desde salida/cuotas_sharp_*.csv: la linea de cierre."""
+    import glob
+    from nucleo import sharp
+    out = {}
+    for ruta in sorted(glob.glob(io.ruta("salida", "cuotas_sharp_*.csv"))):
+        try:
+            with open(ruta, encoding="utf-8-sig", newline="") as f:
+                for r in csv.DictReader(f):
+                    lg = sharp.liga_de(r.get("sport") or "")
+                    if not lg or (r.get("ts_utc") or "") > (r.get("commence_time") or ""):
+                        continue
+                    mk = {"h2h": "Ganador", "totals": "Total", "spreads": "Spread"}.get(r.get("mercado"), r.get("mercado"))
+                    k = (lg, sharp._norm(r.get("home")) and " ".join(sorted(sharp._norm(r.get("home")))),
+                         " ".join(sorted(sharp._norm(r.get("away")))), mk, r.get("lado"))
+                    if k not in out or r["ts_utc"] > out[k]["ts_utc"]:
+                        out[k] = r
+        except Exception:
+            continue
+    return out
+
+
+def _clv(r, cierres):
+    """CLV = cuota tomada / cuota sharp de cierre - 1 (en %). Positivo = le ganaste a la linea de cierre."""
+    if not cierres or not r.get("valor_cuota") or not r.get("nivel") or r["nivel"] == "lectura":
+        return "", ""
+    from nucleo import sharp
+    mk = (r.get("valor_mercado") or "").split()[0] if r.get("valor_mercado") else ""
+    k = (r["liga"], " ".join(sorted(sharp._norm(r["home"]))), " ".join(sorted(sharp._norm(r["away"]))), mk, r.get("valor_lado"))
+    c = cierres.get(k)
+    if not c or not c.get("ref_cuota") and not c.get("mejor_cuota"):
+        return "", ""
+    try:
+        from nucleo import mercado
+        cierre = float(c.get("ref_cuota") or c.get("mejor_cuota"))
+        tom = mercado.american_a_decimal(float(r["valor_cuota"])); cie = mercado.american_a_decimal(cierre)
+        return cierre, round(100 * (tom / cie - 1), 2)
+    except Exception:
+        return "", ""
+
+
 def procesar(filas, hoy=None):
     hoy = hoy or dt.date.today()
+    cierres = _cierres()
     E, T = Equipos(), Tenis()
     out = []
     for r in filas:
         o = {k: r.get(k, "") for k in COLS}
+        o["cuota_cierre"], o["clv_pct"] = _clv(r, cierres)
         liga = r["liga"]
         fuente = T if liga in TENIS else E
         try:
@@ -226,6 +285,9 @@ def resumen(cal):
     cal = [x for x in cal if x.get("con_precio") != "no"]
     por = {}
     for x in cal: por.setdefault(x["liga"], []).append(x)
+    por_niv = {}
+    for x in cal: por_niv.setdefault(x.get("nivel") or "pick", []).append(x)
+    clv = [float(x["clv_pct"]) for x in cal if x.get("clv_pct") not in ("", None)]
     por_sp = {}
     for x in sin_precio: por_sp.setdefault(x["liga"], []).append(x)
     cub = []
@@ -238,7 +300,81 @@ def resumen(cal):
                         "acierto_pct": round(100.0 * sum(int(x["acierto"]) for x in b) / len(b), 1)})
     return {"generado": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "total": grupo(cal),
             "por_liga": {k: grupo(v) for k, v in sorted(por.items())}, "calibracion": cub,
+            "por_nivel": {k: grupo(v) for k, v in sorted(por_niv.items())},
+            "clv": {"n": len(clv), "medio_pct": round(sum(clv) / len(clv), 2) if clv else None,
+                    "positivos_pct": round(100 * sum(1 for c in clv if c > 0) / len(clv), 1) if clv else None},
             "sin_precio": {"total": grupo(sin_precio), "por_liga": {k: grupo(v) for k, v in sorted(por_sp.items())}}}
+
+
+# ------------------------------------------------------------------ TODAS las predicciones del modelo (no solo picks)
+PCOLS = ["registrado", "liga", "id", "fecha", "home", "away", "mercado", "lado", "p_modelo", "valor_modelo", "linea",
+         "p_mercado", "cuota", "validacion", "estado", "marcador", "real", "acierto", "brier", "error_abs"]
+
+
+def calificar_predicciones(hoy=None):
+    """salida/historial_predicciones.csv -> historial_predicciones_calificado.csv + resumen por liga x mercado.
+    Mercados: Ganador (prob), Total/Games <linea> (prob de over), Spread <linea> (prob de que cubra el local),
+    Breaks (conteo esperado). Mide al MODELO contra la realidad, con o sin cuota."""
+    hoy = hoy or dt.date.today()
+    ruta = io.ruta("salida", "historial_predicciones.csv")
+    if not os.path.exists(ruta):
+        return None
+    with open(ruta, encoding="utf-8-sig", newline="") as f:
+        filas = list(csv.DictReader(f))
+    E, T = Equipos(), Tenis(); out = []
+    for r in filas:
+        o = {k: r.get(k, "") for k in PCOLS}
+        fuente = T if r["liga"] in TENIS else E
+        try:
+            res, aviso = fuente.resultado(r["liga"], r["fecha"], r["home"], r["away"])
+        except Exception as e:
+            res, aviso = None, "error: %s" % e
+        if res is None:
+            f = dia(r["fecha"]); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
+        if res.get("anulado"):
+            o["estado"] = "anulado"; out.append(o); continue
+        o["marcador"] = res.get("marcador", ""); base = (r["mercado"] or "").split()[0]
+        p = num(r.get("p_modelo")); L = num(r.get("linea")); y = None
+        if base == "Ganador":
+            y = 1 if res["ganador"] == r["lado"] else 0; o["real"] = res["ganador"]
+        elif base in ("Total", "Games"):
+            t = res.get("games") if base == "Games" else (None if res.get("gh") is None else res["gh"] + res["ga"])
+            if t is None or L is None: o["estado"] = "sin_dato"; out.append(o); continue
+            o["real"] = t
+            if t == L: o["estado"] = "push"; out.append(o); continue
+            y = 1 if (t > L) == (r["lado"] == "over") else 0
+        elif base == "Spread":
+            if res.get("gh") is None or L is None: o["estado"] = "sin_dato"; out.append(o); continue
+            m = (res["gh"] - res["ga"]) if r["lado"] == "home" else (res["ga"] - res["gh"]); o["real"] = res["gh"] - res["ga"]
+            if m + L == 0: o["estado"] = "push"; out.append(o); continue
+            y = 1 if m + L > 0 else 0
+        elif base == "Breaks":
+            b = res.get("breaks"); v = num(r.get("valor_modelo"))
+            if b is None or v is None: o["estado"] = "sin_dato"; out.append(o); continue
+            o["real"] = b; o["error_abs"] = round(abs(v - b), 3); o["estado"] = "calificado"; out.append(o); continue
+        else:
+            o["estado"] = "sin_dato"; out.append(o); continue
+        o["estado"] = "calificado"; o["acierto"] = y
+        if p is not None: o["brier"] = round((p - y) ** 2, 4)
+        out.append(o)
+    with open(io.ruta("salida", "historial_predicciones_calificado.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PCOLS); w.writeheader(); w.writerows(out)
+    res = {}
+    for o in out:
+        if o["estado"] != "calificado": continue
+        k = (o["liga"], (o["mercado"] or "").split()[0]); g = res.setdefault(k, {"n": 0, "ac": 0, "br": 0.0, "nb": 0, "ea": 0.0, "ne": 0, "p": 0.0})
+        g["n"] += 1
+        if o["acierto"] != "": g["ac"] += int(o["acierto"]); g["p"] += float(o["p_modelo"] or 0)
+        if o["brier"] != "": g["br"] += float(o["brier"]); g["nb"] += 1
+        if o["error_abs"] != "": g["ea"] += float(o["error_abs"]); g["ne"] += 1
+    tabla = {}
+    for (lg, mk), g in sorted(res.items()):
+        tabla["%s|%s" % (lg, mk)] = {"n": g["n"], "acierto_pct": round(100 * g["ac"] / g["nb"], 1) if g["nb"] else None,
+                                     "p_media_pct": round(100 * g["p"] / g["nb"], 1) if g["nb"] else None,
+                                     "brier": round(g["br"] / g["nb"], 4) if g["nb"] else None,
+                                     "mae": round(g["ea"] / g["ne"], 3) if g["ne"] else None}
+    pend = sum(1 for o in out if o["estado"] == "pendiente")
+    return {"total": len(out), "calificadas": sum(1 for o in out if o["estado"] == "calificado"), "pendientes": pend, "por_liga_mercado": tabla}
 
 
 def main():
@@ -267,12 +403,30 @@ def main():
     if t.get("calificados"):
         print("TOTAL    %6d %6d %7s%% %7s%% %8s" % (t["picks"], t["calificados"], t["acierto_pct"], t.get("prob_media_pct", "-"), t["brier"]))
         print("Calibracion:", "; ".join("%s: n=%d, esperado %s%%, real %s%%" % (b["rango"], b["n"], b["prob_media_pct"], b["acierto_pct"]) for b in rs["calibracion"]))
+    print("\nPOR NIVEL (premium / pick): acierto y ROI del VALOR")
+    for nv, d in rs.get("por_nivel", {}).items():
+        v = d.get("valor")
+        print("%-8s %6d %6d %7s%% %7s%%   %s" % (nv, d["picks"], d["calificados"], d.get("acierto_pct", "-"), d.get("prob_media_pct", "-"),
+              ("%d apuestas, %+.2fu, ROI %+.1f%%" % (v["apuestas"], v["unidades"], v["roi_pct"])) if v else "-"))
+    c = rs.get("clv") or {}
+    if c.get("n"):
+        print("CLV (cuota tomada vs cierre sharp): n=%d, medio %+.2f%%, con CLV positivo %.0f%%" % (c["n"], c["medio_pct"], c["positivos_pct"]))
     sp = rs.get("sin_precio", {})
     if sp.get("total", {}).get("picks"):
         print("\nLECTURAS SIN PRECIO (modelo sin cuotas; no cuentan en el track record de picks)")
         for lg, d in sp["por_liga"].items():
             print("%-8s %6d %6d %7s%% %7s%% %8s" % (lg, d["picks"], d["calificados"], d.get("acierto_pct", "-"),
                   d.get("prob_media_pct", "-"), d.get("brier", "-")))
+    rp = calificar_predicciones()
+    if rp:
+        rs["predicciones_modelo"] = rp
+        json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print("\nPREDICCIONES DEL MODELO (todos los mercados, con o sin cuota): %d registradas, %d calificadas, %d pendientes" % (rp["total"], rp["calificadas"], rp["pendientes"]))
+        print("%-8s %-8s %6s %8s %8s %8s %6s" % ("LIGA", "MERCADO", "n", "acierto", "p media", "brier", "MAE"))
+        for k, d in rp["por_liga_mercado"].items():
+            lg, mk = k.split("|")
+            print("%-8s %-8s %6d %7s%% %7s%% %8s %6s" % (lg, mk, d["n"], d["acierto_pct"] if d["acierto_pct"] is not None else "-",
+                  d["p_media_pct"] if d["p_media_pct"] is not None else "-", d["brier"] if d["brier"] is not None else "-", d["mae"] if d["mae"] is not None else "-"))
     sr = [x for x in cal if x["estado"] == "sin_resultado"]
     for x in sr[:10]:
         print("  sin resultado:", x["liga"], x["fecha"], x["away"], "@", x["home"], "|", x["marcador"])

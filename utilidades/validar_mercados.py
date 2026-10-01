@@ -245,6 +245,63 @@ def validar_equipos(clave, meses, bloque, liga=None):
         c["titulo"], meses, nbl, bloque), clave=clave_json)
 
 
+# ------------------------------------------------------------------ beisbol (MLB, NPB, KBO, ligas de invierno)
+def validar_beisbol(liga, meses, bloque):
+    """Walk-forward de beisbol con el mismo criterio que los demas deportes: Ganador (logistica entrenada solo con lo
+    anterior), Total esperado, Over/Under en lineas ~promedio, Run line local -1.5 / visita +1.5 y run line a la linea
+    del favorito. Escribe RESULT["beisbol_<liga>"]; plataforma lo lee para MLB/NPB/KBO."""
+    from nucleo import features as F
+    from modelos import beisbol as B
+    feats, _ = F.construir("beisbol", liga, 5)
+    lg = io.norm(liga)
+    G = [r for r in feats if r["league"] == lg and r.get("y_home") is not None and r.get("total") is not None]
+    G.sort(key=lambda r: r["game_date"])
+    if len(G) < 500:
+        print("\nBEISBOL %s: muestra insuficiente (%d juegos)." % (liga, len(G))); return
+    ultimo = dt.date.fromisoformat(G[-1]["game_date"][:10]); ini = ultimo - dt.timedelta(days=int(meses * 30.4))
+    rep = Rep(); d0 = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0
+    while d0 <= ultimo:
+        d1 = d0 + dt.timedelta(days=bloque)
+        blk = [r for r in G if d0.isoformat() <= r["game_date"][:10] < d1.isoformat()]
+        prev = [r for r in G if r["game_date"][:10] < d0.isoformat()]
+        if blk and len(prev) >= 300:
+            modelo = B.entrenar_logistica(prev)
+            if modelo:
+                nbl += 1
+                tot_prev = [r["total"] for r in prev]; mar_prev = [r["marg_home"] for r in prev]
+                base_tot = sum(tot_prev) / len(tot_prev); hw = sum(r["y_home"] for r in prev) / len(prev)
+                lineas = [medio(base_tot + k) for k in (-1, 0, 1)]
+                fr_over = {L: sum(1 for t in tot_prev if t > L) / len(tot_prev) for L in lineas}
+                fb_rl = sum(1 for m_ in mar_prev if m_ >= 2) / len(mar_prev)
+                for r in blk:
+                    p = B.prob(modelo, r)
+                    xh, xa = B.carreras_esperadas(r)
+                    if xh is None: continue
+                    if B.COHERENTE:
+                        xh, xa = B.ajustar_carreras(xh, xa, p)
+                    tot, mar = r["total"], r["marg_home"]
+                    rep.add_prob("Ganador", p, r["y_home"], hw)
+                    rep.add_val("Total esperado", xh + xa, tot, base_tot)
+                    for L in lineas:
+                        po, _ = B.prob_over(r, L)
+                        if po is not None and tot != L:
+                            rep.add_prob("Over/Under (lineas ~promedio)", po, 1 if tot > L else 0, fr_over[L])
+                    rlh, rla = B.prob_run_line(r, 1.5, xh=xh, xa=xa)
+                    if rlh is not None:
+                        rep.add_prob("Run line local -1.5", rlh, 1 if mar >= 2 else 0, fb_rl)
+                        rep.add_prob("Run line visita +1.5", rla, 1 if mar < 2 else 0, 1 - fb_rl)
+                        # run line del FAVORITO del modelo (lo que cotiza la casa): -1.5 al favorito
+                        if p >= 0.5:
+                            rep.add_prob("Run line favorito -1.5", rlh, 1 if mar >= 2 else 0, fb_rl)
+                        else:
+                            fa = sum(1 for m_ in mar_prev if m_ <= -2) / len(mar_prev)
+                            pf = sum(B._nb_pmf(i, xa) * B._nb_pmf(j, xh) for i in range(20) for j in range(20) if i - j >= 2)
+                            rep.add_prob("Run line favorito -1.5", pf, 1 if mar <= -2 else 0, fa)
+        d0 = d1
+    rep.imprimir("BEISBOL %s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior" % (
+        liga.upper(), meses, nbl, bloque), clave="beisbol_" + lg.lower())
+
+
 # ------------------------------------------------------------------ tenis
 def _games_sets(score):
     """-> (games, sets, completo). Marcadores con RET/W/O/DEF no se usan."""
@@ -385,6 +442,9 @@ def main():
         elif d == "futbol":
             for lg in [x.strip() for x in a.ligas.split(",") if x.strip()]:
                 validar_equipos(d, a.meses, a.bloque, lg)
+        elif d == "beisbol":
+            for lg in ("MLB", "NPB", "KBO"):
+                validar_beisbol(lg, a.meses, a.bloque)
         elif d == "ncaa":
             for x in ("ncaafb", "ncaamb"): validar_equipos(x, a.meses, a.bloque)
         elif d in CFG: validar_equipos(d, a.meses, a.bloque)
