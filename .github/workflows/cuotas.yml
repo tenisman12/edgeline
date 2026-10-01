@@ -34,7 +34,7 @@ jobs:
 
       # The Odds API, plan de pago (20,000 creditos/mes): 6 creditos por deporte (3 mercados x 2 regiones).
       # Presupuesto 72 por foto = 12 deportes, priorizados por partidos en 60 h; 8 fotos al dia (6 + 2 corridas completas) = 576/dia = ~17,300/mes.
-      - name: Cuotas de todas las casas (The Odds API: Pinnacle, bet365, DraftKings...)
+      - name: Cuotas de todas las casas (The Odds API)
         env:
           EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
           EDGELINE_ODDS_PRESUPUESTO: "72"
