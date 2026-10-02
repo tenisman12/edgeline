@@ -441,23 +441,11 @@ def calificar_ia(hoy=None):
             "por_decision": {k: {"n": v["n"], "acierto_pct": round(100 * v["gano"] / v["n"], 1), "unidades": round(v["u"], 2), "roi_pct": round(100 * v["u"] / v["n"], 1)} for k, v in res.items()}}
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--historial", default=io.ruta("salida", "historial_picks.csv"))
-    a = ap.parse_args()
-    if not os.path.exists(a.historial):
-        print("No existe", a.historial); return
-    with open(a.historial, encoding="utf-8-sig", newline="") as f:
-        filas = list(csv.DictReader(f))
-    cal = procesar(filas)
-    ruta = io.ruta("salida", "historial_calificado.csv")
-    with open(ruta, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(cal)
-    rs = resumen(cal)
-    json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+def imprimir(rs):
+    """Imprime el track record (general, por liga, por deporte, por nivel, CLV, sin precio, predicciones, IA) de un dict rs."""
     t = rs["total"]
-    print("TRACK RECORD | %d picks: %d calificados, %d pendientes, %d sin resultado, %d anulados" % (
-        t["picks"], t["calificados"], t["pendientes"], t["sin_resultado"], t["anulados"]))
+    print("TRACK RECORD (%s) | %d picks: %d calificados, %d pendientes, %d sin resultado, %d anulados" % (
+        rs.get("generado", ""), t["picks"], t["calificados"], t["pendientes"], t["sin_resultado"], t["anulados"]))
     print("%-8s %6s %6s %8s %8s %8s   %s" % ("LIGA", "picks", "calif", "acierto", "p media", "brier", "VALOR (apuestas, unidades, ROI)"))
     for lg, d in rs["por_liga"].items():
         v = d.get("valor")
@@ -486,23 +474,52 @@ def main():
         for lg, d in sp["por_liga"].items():
             print("%-8s %6d %6d %7s%% %7s%% %8s" % (lg, d["picks"], d["calificados"], d.get("acierto_pct", "-"),
                   d.get("prob_media_pct", "-"), d.get("brier", "-")))
-    rp = calificar_predicciones()
+    rp = rs.get("predicciones_modelo")
     if rp:
-        rs["predicciones_modelo"] = rp
-        json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("\nPREDICCIONES DEL MODELO (todos los mercados, con o sin cuota): %d registradas, %d calificadas, %d pendientes" % (rp["total"], rp["calificadas"], rp["pendientes"]))
         print("%-8s %-8s %6s %8s %8s %8s %6s" % ("LIGA", "MERCADO", "n", "acierto", "p media", "brier", "MAE"))
         for k, d in rp["por_liga_mercado"].items():
             lg, mk = k.split("|")
             print("%-8s %-8s %6d %7s%% %7s%% %8s %6s" % (lg, mk, d["n"], d["acierto_pct"] if d["acierto_pct"] is not None else "-",
                   d["p_media_pct"] if d["p_media_pct"] is not None else "-", d["brier"] if d["brier"] is not None else "-", d["mae"] if d["mae"] is not None else "-"))
-    ria = calificar_ia()
+    ria = rs.get("picks_ia")
     if ria:
-        rs["picks_ia"] = ria
-        json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("\nPICKS IA (API + manuales en ia/lecturas): %d lecturas, %d apuestas, %d pendientes" % (ria["lecturas"], ria["apuestas"], ria["pendientes"]))
         for k, d in ria["por_decision"].items():
             print("  %-8s n=%d acierto %.1f%% unidades %+.2f ROI %+.1f%%" % (k, d["n"], d["acierto_pct"], d["unidades"], d["roi_pct"]))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--historial", default=io.ruta("salida", "historial_picks.csv"))
+    ap.add_argument("--ver", action="store_true",
+                    help="solo mostrar salida/track_record.json tal como lo dejo el bot (despues de git pull), sin recalcular con los datos locales")
+    a = ap.parse_args()
+    if a.ver:
+        rt = io.ruta("salida", "track_record.json")
+        if not os.path.exists(rt):
+            print("No existe", rt, "(haz git pull)"); return
+        with open(rt, encoding="utf-8") as f:
+            imprimir(json.load(f))
+        return
+    if not os.path.exists(a.historial):
+        print("No existe", a.historial); return
+    with open(a.historial, encoding="utf-8-sig", newline="") as f:
+        filas = list(csv.DictReader(f))
+    cal = procesar(filas)
+    ruta = io.ruta("salida", "historial_calificado.csv")
+    with open(ruta, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(cal)
+    rs = resumen(cal)
+    rs["generado"] = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+    rp = calificar_predicciones()
+    if rp:
+        rs["predicciones_modelo"] = rp
+    ria = calificar_ia()
+    if ria:
+        rs["picks_ia"] = ria
+    json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    imprimir(rs)
     sr = [x for x in cal if x["estado"] == "sin_resultado"]
     for x in sr[:10]:
         print("  sin resultado:", x["liga"], x["fecha"], x["away"], "@", x["home"], "|", x["marcador"])
