@@ -39,7 +39,13 @@ jobs:
           git archive FETCH_HEAD datos | tar -x -C .
           ls datos | head -30
 
-      # Jugadores: desactivado por ahora (se activa cuando se cierre su descarga y validacion).
+      - name: Jugadores (sembrar desde datos/jugadores_recientes y bajar solo lo nuevo)
+        continue-on-error: true
+        timeout-minutes: 60
+        run: |
+          python utilidades/jugadores_recientes.py sembrar
+          python utilidades/jugadores_recientes.py diario --dias-max 14
+          python utilidades/jugadores_recientes.py estado | tail -25
 
       - name: Actualizar datos (solo lo nuevo)
         continue-on-error: true
@@ -95,7 +101,7 @@ jobs:
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |
           rm -rf /tmp/pub && mkdir -p /tmp/pub
-          rsync -a --exclude jugadores --exclude jugadores_recientes --exclude _respaldo datos /tmp/pub/
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/   # jugadores_recientes SI se publica
           cd /tmp/pub
           git init -q -b datos
           git config user.name "edgeline-bot"

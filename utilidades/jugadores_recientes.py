@@ -37,10 +37,10 @@ NFL_STATS = ["completions", "attempts", "passing_yards", "passing_tds", "passing
              "receiving_yards", "receiving_tds", "fantasy_points", "fantasy_points_ppr"]
 # columnas que se conservan; los archivos que no aparecen aqui se guardan completos
 CORE = {
-    "mlb_lanzadores.csv": FIJAS_BB + ["abridor", "orden_salida", "ip", "outs", "h", "r", "er", "bb", "k", "hr", "bf",
+    "mlb_lanzadores.csv": FIJAS_BB + ["jugador_jp", "abridor", "orden_salida", "ip", "outs", "h", "r", "er", "bb", "k", "hr", "bf",
                                       "pitches", "strikes", "balls", "hbp", "ganado", "perdido", "salvado", "hold",
                                       "blown_save", "inherited", "inherited_scored"],
-    "mlb_bateadores.csv": FIJAS_BB + ["orden_bate", "titular", "pa", "ab", "r", "h", "d2", "d3", "hr", "rbi", "bb", "k",
+    "mlb_bateadores.csv": FIJAS_BB + ["jugador_jp", "orden_bate", "titular", "pa", "ab", "r", "h", "d2", "d3", "hr", "rbi", "bb", "k",
                                       "sb", "cs", "hbp", "sf", "lob", "tb"],
     "nhl_patinadores.csv": FIJAS_NHL + ["toi_min", "goles", "asist", "puntos", "mas_menos", "pim", "hits", "pp_goles",
                                         "tiros", "bloqueos", "shifts", "giveaways", "takeaways", "faceoff_pct"],
@@ -130,7 +130,10 @@ def _correr(args):
 def diario(dias_max=30):
     hoy = dt.date.today()
     d = _desde(os.path.join(DIR, "mlb_lanzadores.csv"), dias_max, hoy)
-    _correr(["todas", "--desde", d.isoformat(), "--sin-raw"])
+    _correr(["mlb", "--desde", d.isoformat(), "--sin-raw"])
+    _correr(["invierno", "--desde", d.isoformat(), "--sin-raw"])
+    _correr(["npb", "--desde", d.isoformat()])          # repositorio publico (box scores NPB)
+    _correr(["kbo", "--desde", d.isoformat()])          # abridores por juego (puede fallar desde Actions; sigue)
     d = _desde(os.path.join(DIR, "nhl_porteros.csv"), dias_max, hoy)
     _correr(["nhl", "--desde", d.isoformat(), "--sin-raw"])
     _correr(["nfl", "--sin-raw"])
