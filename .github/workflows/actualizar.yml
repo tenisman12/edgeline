@@ -2,8 +2,9 @@ name: actualizar datos y predicciones
 
 on:
   schedule:
-    - cron: "17 11,18 * * *"     # dos veces al dia: 11:17 UTC = 05:17 CDMX (resultados de la noche en America)
-                                 #                   18:17 UTC = 12:17 CDMX (resultados de Asia: NPB, KBO; lineas y picks de la tarde)
+    - cron: "17 5,11,18 * * *"   # tres veces al dia: 05:17 UTC = 23:17 CDMX (cierre del dia: resultados de la tarde-noche, SIN foto de cuotas)
+                                 #                    11:17 UTC = 05:17 CDMX (resultados de la noche en America)
+                                 #                    18:17 UTC = 12:17 CDMX (resultados de Asia: NPB, KBO; lineas y picks de la tarde)
   workflow_dispatch:
 
 concurrency:
@@ -67,7 +68,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 40
         run: |
-          if [ "$(date -u +%u)" = "1" ] || [ ! -f salida/validacion_mercados.json ] || ! grep -q beisbol_mlb salida/validacion_mercados.json; then
+          if { [ "$(date -u +%u)" = "1" ] && [ "$(date -u +%H)" = "11" ]; } || [ ! -f salida/validacion_mercados.json ] || ! grep -q beisbol_mlb salida/validacion_mercados.json; then
             python utilidades/validar_mercados.py --deporte hockey,nfl,nba,tenis,beisbol | tail -5
           else
             echo "No es lunes y ya existe validacion_mercados.json: se reutiliza."
@@ -79,7 +80,12 @@ jobs:
           EDGELINE_ODDS_PRESUPUESTO: "72"       # plan de pago (20,000/mes): 16 deportes por foto, us+eu
           EDGELINE_ODDS_REGIONES: us,eu
         continue-on-error: true
-        run: python colectores/recolectar_cuotas.py --solo-compacto
+        run: |
+          if [ "$(date -u +%H)" = "05" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "Corrida de cierre (23:17 CDMX): sin foto de cuotas, 0 creditos."
+          else
+            python colectores/recolectar_cuotas.py --solo-compacto
+          fi
 
       - name: Predecir proximos dias
         run: python plataforma.py --dias 7
@@ -90,6 +96,10 @@ jobs:
         continue-on-error: true
         run: |
           if [ -n "$ANTHROPIC_API_KEY" ]; then python utilidades/picks_ia.py --dias 2; else echo "Sin ANTHROPIC_API_KEY: se omite Picks IA"; fi
+
+      - name: Limpiar historial (pretemporada y formato viejo)
+        continue-on-error: true
+        run: python utilidades/limpiar_historial.py --aplicar
 
       - name: Calificar picks contra resultados reales
         continue-on-error: true

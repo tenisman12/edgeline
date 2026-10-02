@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-utilidades/limpiar_historial.py - quita de salida\\historial_picks.csv los picks de PRETEMPORADA que se colaron.
+utilidades/limpiar_historial.py - quita de salida\\historial_picks.csv los picks que no deben contar:
+  - PRETEMPORADA que se colo (PRE_INICIO por liga)
+  - FORMATO VIEJO (sin nivel Pick Premium) en ligas que entonces no estaban validadas (FORMATO_VIEJO)
+Es idempotente: el bot lo corre en cada corrida antes de calificar.
 Guarda una copia en salida\\historial_picks.respaldo.csv antes de cambiar nada.
 
     python utilidades\\limpiar_historial.py            (solo muestra que quitaria)
@@ -10,6 +13,7 @@ import argparse, csv, os, shutil, sys
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 PRE_INICIO = {"nhl": "2026-09-29"}
+FORMATO_VIEJO = {"ncaafb"}        # picks registrados antes del Pick Premium (columna nivel vacia) en estas ligas
 
 
 def main():
@@ -20,9 +24,10 @@ def main():
         print("No existe %s" % ruta); return 1
     with open(ruta, encoding="utf-8-sig", newline="") as fh:
         rd = csv.DictReader(fh); cols = rd.fieldnames; filas = list(rd)
-    quitar = [r for r in filas if PRE_INICIO.get(r["liga"]) and r["fecha"] < PRE_INICIO[r["liga"]]]
+    quitar = [r for r in filas if (PRE_INICIO.get(r["liga"]) and r["fecha"] < PRE_INICIO[r["liga"]])
+              or (r["liga"] in FORMATO_VIEJO and not (r.get("nivel") or "").strip())]
     quedan = [r for r in filas if r not in quitar]
-    print("Picks en el historial: %d | de pretemporada: %d | quedarian: %d" % (len(filas), len(quitar), len(quedan)))
+    print("Picks en el historial: %d | a quitar (pretemporada / formato viejo): %d | quedarian: %d" % (len(filas), len(quitar), len(quedan)))
     for r in quitar:
         print("  quitar: %s %s %s @ %s (%s)" % (r["liga"], r["fecha"], r["away"], r["home"], r["pick"]))
     if a.aplicar and quitar:
