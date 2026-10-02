@@ -104,7 +104,8 @@ def canon(nombre):
 csv.field_size_limit(min(2 ** 31 - 1, __import__("sys").maxsize))
 
 
-csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
+import sys as _sys
+csv.field_size_limit(min(2 ** 31 - 1, _sys.maxsize))
 
 
 def _leer_csv(path):
