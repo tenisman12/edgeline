@@ -377,6 +377,68 @@ def calificar_predicciones(hoy=None):
     return {"total": len(out), "calificadas": sum(1 for o in out if o["estado"] == "calificado"), "pendientes": pend, "por_liga_mercado": tabla}
 
 
+# ------------------------------------------------------------------ Picks IA (del API en salida/picks_ia.json o manuales en ia/lecturas/*.json)
+def calificar_ia(hoy=None):
+    """Junta las lecturas IA (API: salida/historial_ia.csv; manuales: ia/lecturas/*.json con el mismo formato) y las
+    califica por decision (PREMIUM/PICK/LEAN) y mercado. Escribe salida/historial_ia_calificado.csv."""
+    import glob
+    hoy = hoy or dt.date.today()
+    lect = []
+    rh = io.ruta("salida", "historial_ia.csv")
+    if os.path.exists(rh):
+        with open(rh, encoding="utf-8-sig", newline="") as f:
+            lect += [dict(r, fuente="api") for r in csv.DictReader(f)]
+    for ruta in sorted(glob.glob(io.ruta("ia", "lecturas", "*.json"))):
+        try:
+            d = json.load(open(ruta, encoding="utf-8"))
+            for l in (d.get("lecturas") if isinstance(d, dict) else d) or []:
+                lect.append(dict(l, fuente="manual", archivo=os.path.basename(ruta)))
+        except Exception as e:
+            print("  lectura IA ilegible %s: %s" % (ruta, e))
+    if not lect:
+        return None
+    vistos = set(); out = []
+    E, T = Equipos(), Tenis()
+    for l in lect:
+        k = (l.get("liga"), str(l.get("id")), l.get("mercado") or "", l.get("lado") or "")
+        if k in vistos:
+            continue
+        vistos.add(k)
+        partido = l.get("partido") or ""
+        home, away = (l.get("home"), l.get("away")) if l.get("home") else ((partido.split(" @ ")[1], partido.split(" @ ")[0]) if " @ " in partido else ("", ""))
+        o = {"fuente": l.get("fuente"), "liga": l.get("liga"), "id": l.get("id"), "fecha": l.get("fecha"), "home": home, "away": away,
+             "decision": (l.get("decision") or "").upper(), "mercado": l.get("mercado") or "", "lado": l.get("lado") or "",
+             "cuota": l.get("cuota") or "", "stake": l.get("stake") or "", "lectura": l.get("lectura") or "",
+             "estado": "", "marcador": "", "resultado": "", "unidades": ""}
+        if o["decision"] not in ("PREMIUM", "PICK") or not o["mercado"] or not o["lado"] or not home:
+            o["estado"] = "sin_apuesta"; out.append(o); continue
+        fuente = T if o["liga"] in TENIS else E
+        try:
+            res, _ = fuente.resultado(o["liga"], o["fecha"], home, away)
+        except Exception as e:
+            res = None
+        if res is None:
+            f = dia(o["fecha"] or ""); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
+        if res.get("anulado"):
+            o["estado"] = "anulado"; out.append(o); continue
+        o["marcador"] = res.get("marcador", "")
+        r2 = {"valor_mercado": o["mercado"], "valor_lado": o["lado"], "valor_cuota": o["cuota"]}
+        o["resultado"], o["unidades"] = calificar_valor(r2, res)
+        o["estado"] = "calificado" if o["resultado"] else "sin_dato"
+        out.append(o)
+    cols = ["fuente", "liga", "id", "fecha", "home", "away", "decision", "mercado", "lado", "cuota", "stake", "estado", "marcador", "resultado", "unidades", "lectura"]
+    with open(io.ruta("salida", "historial_ia_calificado.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(out)
+    res = {}
+    for o in out:
+        if o["estado"] != "calificado": continue
+        g = res.setdefault(o["decision"], {"n": 0, "gano": 0, "u": 0.0})
+        g["n"] += 1; g["gano"] += 1 if o["resultado"] == "gano" else 0; g["u"] += float(o["unidades"] or 0)
+    return {"lecturas": len(out), "apuestas": sum(1 for o in out if o["decision"] in ("PREMIUM", "PICK")),
+            "pendientes": sum(1 for o in out if o["estado"] == "pendiente"),
+            "por_decision": {k: {"n": v["n"], "acierto_pct": round(100 * v["gano"] / v["n"], 1), "unidades": round(v["u"], 2), "roi_pct": round(100 * v["u"] / v["n"], 1)} for k, v in res.items()}}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--historial", default=io.ruta("salida", "historial_picks.csv"))
@@ -427,6 +489,13 @@ def main():
             lg, mk = k.split("|")
             print("%-8s %-8s %6d %7s%% %7s%% %8s %6s" % (lg, mk, d["n"], d["acierto_pct"] if d["acierto_pct"] is not None else "-",
                   d["p_media_pct"] if d["p_media_pct"] is not None else "-", d["brier"] if d["brier"] is not None else "-", d["mae"] if d["mae"] is not None else "-"))
+    ria = calificar_ia()
+    if ria:
+        rs["picks_ia"] = ria
+        json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print("\nPICKS IA (API + manuales en ia/lecturas): %d lecturas, %d apuestas, %d pendientes" % (ria["lecturas"], ria["apuestas"], ria["pendientes"]))
+        for k, d in ria["por_decision"].items():
+            print("  %-8s n=%d acierto %.1f%% unidades %+.2f ROI %+.1f%%" % (k, d["n"], d["acierto_pct"], d["unidades"], d["roi_pct"]))
     sr = [x for x in cal if x["estado"] == "sin_resultado"]
     for x in sr[:10]:
         print("  sin resultado:", x["liga"], x["fecha"], x["away"], "@", x["home"], "|", x["marcador"])

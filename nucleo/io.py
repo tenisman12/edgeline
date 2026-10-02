@@ -20,7 +20,8 @@ Que ofrece:
 Solo stdlib. Colocar en:  C:\\Edgeline\\nucleo\\io.py
 
 Prueba rapida (en C:\\Edgeline):
-    python -c "from nucleo import io; io.diagnostico()"
+    python -c "from nucleo import sys
+import io; io.diagnostico()"
 """
 import io as _io, os, csv, json, re, unicodedata, datetime as _dt
 
@@ -100,11 +101,29 @@ def canon(nombre):
     return norm(nombre)
 
 # ------------------------------------------------------------------ carga de juegos
+csv.field_size_limit(min(2 ** 31 - 1, __import__("sys").maxsize))
+
+
+csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
+
+
 def _leer_csv(path):
+    """Lee el CSV; una fila rota (escritura simultanea, corte) se descarta y no tumba la lectura."""
     if not os.path.exists(path):
         return []
+    out = []
     with _io.open(path, encoding="utf-8-sig", errors="replace", newline="") as f:
-        return list(csv.DictReader(f))
+        rd = csv.DictReader(f)
+        while True:
+            try:
+                r = next(rd)
+            except StopIteration:
+                break
+            except csv.Error:
+                continue
+            if r.get(None) is None:
+                out.append(r)
+    return out
 
 def cargar_juegos(x, liga=None):
     """

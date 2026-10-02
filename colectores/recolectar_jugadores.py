@@ -153,12 +153,31 @@ def get_texto_cond(url, enc="utf-8"):
     return txt
 
 
+csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
+
+
 def leer_csv(ruta):
+    """Lee el CSV. Si una fila viene rota (dos procesos escribieron a la vez, corte de luz), la descarta y avisa:
+    el resto del archivo se conserva."""
     if not os.path.exists(ruta):
         return [], []
     with open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
         rd = csv.DictReader(f)
-        return rd.fieldnames or [], list(rd)
+        cols = rd.fieldnames or []
+        filas, rotas = [], 0
+        while True:
+            try:
+                r = next(rd)
+            except StopIteration:
+                break
+            except csv.Error:
+                rotas += 1; continue
+            if r.get(None) is not None or (len(cols) > 3 and sum(1 for v in r.values() if v is None) > len(cols) // 2):
+                rotas += 1; continue        # mas campos que columnas, o fila a medias
+            filas.append(r)
+        if rotas:
+            print("  AVISO %s: %d fila(s) rota(s) descartada(s)" % (os.path.basename(ruta), rotas))
+        return cols, filas
 
 
 def fusionar(nombre, filas, llave, fijas, carpeta=None):
@@ -285,6 +304,130 @@ def mlb_filas(box, meta, liga):
                         r["fld_" + k_in] = num(v)
                 bat.append(r)
     return lan, bat
+
+
+# ------------------------------------------------------------------ NPB (Nippon Baseball Data Repository: por jugador y partido)
+REL_NPB = "https://github.com/armstjc/Nippon-Baseball-Data-Repository/releases/download"
+
+
+def _csv_url(url):
+    try:
+        txt = get_texto(url)
+    except Exception as e:                      # el mes en curso suele no existir todavia (404): no es error
+        if "404" in str(e):
+            return []
+        raise
+    if not txt or txt.strip() == "Not Found":
+        return []
+    return list(csv.DictReader(io.StringIO(txt)))
+
+
+def cmd_npb_repo(a):
+    """NPB no tiene box scores en la MLB Stats API. El repositorio publico de armstjc trae stats por jugador y partido
+    (bateo y pitcheo, incl. orden de salida del lanzador): se convierten al MISMO esquema que mlb_lanzadores.csv y
+    mlb_bateadores.csv con liga = NPB. Pretemporada (game_kind_id != 1) se excluye.
+    Uso: python colectores\\recolectar_jugadores.py npb --desde 2024-03-01   (sin --desde: desde el ultimo dia guardado - 3)"""
+    f_lan, f_bat = "mlb_lanzadores.csv", "mlb_bateadores.csv"
+    d1 = a.desde or desde_modo_diario(f_lan, "2024-03-01")
+    d2 = a.hasta or dt.date.today().isoformat()
+    y1, y2 = int(d1[:4]), int(d2[:4])
+    print("NPB (repositorio): %s -> %s" % (d1, d2))
+    tl = tb = 0
+    for season in range(y1, y2 + 1):
+        sched = _csv_url("%s/schedule/%d_npb_schedule.csv" % (REL_NPB, season))
+        juegos = {}
+        for g in sched:
+            if str(g.get("game_kind_id")) != "1" or g.get("home_score") in (None, "", "NA"):
+                continue                       # solo temporada regular y juegos terminados
+            fecha = (g.get("game_date") or "")[:10]
+            if not (d1 <= fecha <= d2):
+                continue
+            juegos[str(g.get("game_id"))] = {"fecha": fecha, "season": season,
+                                             str(g.get("home_team_id")): (g.get("home_team_name_en"), g.get("away_team_name_en"), 1),
+                                             str(g.get("away_team_id")): (g.get("away_team_name_en"), g.get("home_team_name_en"), 0)}
+        if not juegos:
+            print("  %d: sin juegos en el rango" % season); continue
+        meses = sorted({j["fecha"][5:7] for j in juegos.values()})
+        lan, bat = [], []
+        for mm in meses:
+            rows = _csv_url("%s/player_game_stats/%d-%s_game_stats.csv" % (REL_NPB, season, mm))
+            for r in rows:
+                gid = str(r.get("game_id")); j = juegos.get(gid)
+                if not j or str(r.get("team_id")) not in j:
+                    continue
+                team, opp, is_home = j[str(r.get("team_id"))]
+                nombre = r.get("player_name") or r.get("player_name_jap") or ""
+                base = {"game_id": gid, "game_date": j["fecha"], "liga": "NPB", "season": season, "team": team, "opp": opp,
+                        "is_home": is_home, "player_id": r.get("player_id"), "jugador": nombre.strip(),
+                        "jugador_jp": (r.get("player_name_jap") or "").strip(), "posicion": r.get("position") or ""}
+                if r.get("pitching_IP") not in (None, "", "NA"):
+                    x = dict(base)
+                    orden = r.get("pitcher_order_number") or ""
+                    x["abridor"] = 1 if str(orden) == "1" or str(r.get("pitching_GS")) in ("1", "1.0") else 0
+                    x["orden_salida"] = orden
+                    x["ip"] = r.get("pitching_IP"); x["outs"] = ip_a_outs(r.get("pitching_IP_str") or r.get("pitching_IP"))
+                    for k_out, k_in in (("h", "pitching_H"), ("r", "pitching_R"), ("er", "pitching_ER"), ("bb", "pitching_BB"),
+                                        ("k", "pitching_SO"), ("hr", "pitching_HR"), ("bf", "pitching_BF"), ("pitches", "pitching_PI"),
+                                        ("hbp", "pitching_HBP"), ("ganado", "pitching_W"), ("perdido", "pitching_L"), ("salvado", "pitching_SV")):
+                        x[k_out] = num(r.get(k_in))
+                    lan.append(x)
+                if r.get("batting_PA") not in (None, "", "NA", "0") or num(r.get("batting_AB")):
+                    x = dict(base)
+                    x["titular"] = 1 if str(r.get("batting_GS")) in ("1", "1.0") else 0
+                    for k_out, k_in in (("pa", "batting_PA"), ("ab", "batting_AB"), ("r", "batting_R"), ("h", "batting_H"),
+                                        ("d2", "batting_2B"), ("d3", "batting_3B"), ("hr", "batting_HR"), ("rbi", "batting_RBI"),
+                                        ("bb", "batting_BB"), ("k", "batting_SO"), ("sb", "batting_SB"), ("cs", "batting_CS"),
+                                        ("hbp", "batting_HBP"), ("sf", "batting_SF")):
+                        x[k_out] = num(r.get(k_in))
+                    bat.append(x)
+        n1, _ = fusionar(f_lan, lan, lambda r: "%s|%s" % (r["game_id"], r["player_id"]), FIJAS_BB)
+        n2, _ = fusionar(f_bat, bat, lambda r: "%s|%s" % (r["game_id"], r["player_id"]), FIJAS_BB)
+        tl += n1; tb += n2
+        print("  %d: %d juegos, %d lanzador-juego, %d bateador-juego (%d y %d nuevos)" % (season, len(juegos), len(lan), len(bat), n1, n2))
+    print("Listo NPB: +%d lanzador-juego, +%d bateador-juego." % (tl, tb))
+
+
+# ------------------------------------------------------------------ KBO (koreabaseball.com: abridores por juego)
+def cmd_kbo_lista(a):
+    """KBO no tiene box score publico por jugador. GetKboGameList trae por juego el abridor de cada equipo (id y nombre),
+    el ganador, el perdedor y el salvador. Se guardan los dos abridores por juego en mlb_lanzadores.csv (liga KBO):
+    sirve para rotacion, descanso y para emparejar al probable del dia. IP/ER quedan vacios.
+    Uso: python colectores\\recolectar_jugadores.py kbo --desde 2026-03-20"""
+    sys.path.insert(0, os.path.join(BASE, "colectores"))
+    import recolectar_kbo as K
+    f_lan = "mlb_lanzadores.csv"
+    d1 = a.desde or desde_modo_diario(f_lan, "2026-03-20")
+    d2 = a.hasta or dt.date.today().isoformat()
+    print("KBO (abridores por juego): %s -> %s" % (d1, d2))
+    cur, fin = dt.date.fromisoformat(d1), dt.date.fromisoformat(d2)
+    filas, dias = [], 0
+    while cur <= fin:
+        if cur.month < 3 or cur.month > 11:
+            cur += dt.timedelta(days=1); continue
+        try:
+            juegos = K.lista_juegos(cur.year, cur.strftime("%Y%m%d"))
+        except Exception as e:
+            print("  %s: %s" % (cur, str(e)[:60])); juegos = []
+        for g in juegos:
+            if str(g.get("GAME_STATE_SC")) != "3" or str(g.get("CANCEL_SC_ID", "0")) != "0":
+                continue
+            gid = g.get("G_ID"); aw, hm = g.get("AWAY_ID"), g.get("HOME_ID")
+            na, nh = K.EQUIPOS.get(aw, aw), K.EQUIPOS.get(hm, hm)
+            ra, rh = num(g.get("T_SCORE_CN")), num(g.get("B_SCORE_CN"))
+            for lado, pid, nom, team, opp, r_contra in (("away", g.get("T_PIT_P_ID"), g.get("T_PIT_P_NM"), na, nh, rh),
+                                                      ("home", g.get("B_PIT_P_ID"), g.get("B_PIT_P_NM"), nh, na, ra)):
+                if not pid:
+                    continue
+                filas.append({"game_id": gid, "game_date": cur.isoformat(), "liga": "KBO", "season": cur.year,
+                              "team": team, "opp": opp, "is_home": 1 if lado == "home" else 0,
+                              "player_id": pid, "jugador": (nom or "").strip(), "posicion": "P", "abridor": 1, "orden_salida": 1,
+                              "ganado": 1 if g.get("W_PIT_P_ID") == pid else 0, "perdido": 1 if g.get("L_PIT_P_ID") == pid else 0,
+                              "r_equipo_permite": r_contra})
+        dias += 1
+        time.sleep(0.3)
+        cur += dt.timedelta(days=1)
+    n, tot = fusionar(f_lan, filas, lambda r: "%s|%s" % (r["game_id"], r["player_id"]), FIJAS_BB)
+    print("Listo KBO: %d dias, %d abridor-juego (%d nuevos; archivo con %d filas)." % (dias, len(filas), n, tot))
 
 
 def cmd_beisbol(nombre, a):
@@ -762,6 +905,8 @@ def main():
     ap.set_defaults(solo_nuevos=True, raw=True)
     a = ap.parse_args()
     if a.que == "estado": cmd_estado()
+    elif a.que == "npb": cmd_npb_repo(a)
+    elif a.que == "kbo": cmd_kbo_lista(a)
     elif a.que == "nhl": cmd_nhl(a)
     elif a.que == "nfl": cmd_nfl(a)
     elif a.que == "espn": cmd_espn(a)

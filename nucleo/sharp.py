@@ -109,6 +109,8 @@ def _ev_de_partido(eventos, liga, fecha_utc, home, away):
         if f and fe and abs((_dia(fe) - _dia(f)).days) > 1:
             continue
         s = _parecido(ev.get("home_team"), home) + _parecido(ev.get("away_team"), away)
+        if f and fe and fe == f:
+            s += 0.5          # misma fecha gana: dos juegos seguidos del mismo cruce (NPB, MLB) no deben compartir cuota
         if s > puntaje:
             mejor, puntaje = ev, s
     return mejor if puntaje >= 1.2 else None        # cada equipo al menos ~60% de coincidencia

@@ -16,6 +16,8 @@ Salida de clave(...): siempre un dict {"disponible": bool, "motivo": str, "fuent
 
 Solo stdlib.
 """
+import csv as _csv, sys as _sys
+_csv.field_size_limit(min(2 ** 31 - 1, _sys.maxsize))
 import os, datetime as dt
 
 try:
@@ -118,7 +120,11 @@ def beisbol(liga, team, probable=None):
 
     # probable
     if probable:
-        mios = [r for r in lan if _nombre_igual(r.get("jugador"), probable)]
+        # NPB: el probable viene de npb.jp solo con el apellido en japones (村上); se compara con jugador_jp
+        pr_ = probable.strip().replace(" ", "")
+        mios = [r for r in lan if _nombre_igual(r.get("jugador"), probable) or (pr_ and (r.get("jugador") or "").replace(" ", "") == pr_)
+                or (r.get("jugador_jp") and probable.strip() and (r["jugador_jp"].replace(" ", "").startswith(probable.strip().replace(" ", ""))
+                                                                  or probable.strip().replace(" ", "") in r["jugador_jp"].replace(" ", "")))]
         mios.sort(key=lambda r: (r.get("game_date") or "", str(r.get("game_id"))))
         salidas = [r for r in mios if str(r.get("abridor")) in ("1", "1.0")][-5:]
         if salidas:
