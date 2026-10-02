@@ -50,12 +50,28 @@ ESPN_LIGAS = ["nba", "ncaamb", "ncaafb", "premier", "laliga", "seriea", "bundesl
               "champions"]
 
 
+csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
+
+
 def _leer(ruta):
+    """Lector tolerante: una fila rota (campo gigante, comillas sin cerrar) se descarta y se sigue."""
     if not os.path.exists(ruta):
         return [], []
+    filas = []
     with open(ruta, encoding="utf-8-sig", errors="replace", newline="") as fh:
         rd = csv.DictReader(fh)
-        return rd.fieldnames or [], list(rd)
+        cols = rd.fieldnames or []
+        n = len(cols)
+        while True:
+            try:
+                r = next(rd)
+            except StopIteration:
+                break
+            except csv.Error:
+                continue
+            if r.get(None) is None and len(r) == n and all(len(v or "") < 2000 for v in r.values()):
+                filas.append(r)
+    return cols, filas
 
 
 def _escribir(ruta, cols, filas):
