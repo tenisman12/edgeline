@@ -317,10 +317,10 @@ def main():
                     print("      %-7s %5s %-22s %-18s %8s %-10s %7s %7s %5s  %s" % ("NIVEL", "pts", "MERCADO", "pick", "cuota", "casa", "p final", "EV", "stake", "senales / razones"))
                     for k in sorted(p["picks"], key=lambda z: -z["puntaje"]):
                         if k["nivel"] == "pasar" and not a.completo: continue
-                        print("      %-7s %5.1f %-22s %-18s %8s %-10s %6.1f%% %7s %4.1f%%  %s%s" % (
+                        print("      %-7s %5.1f %-22s %-18s %8s %-10s %6.1f%% %7s %4.1fu  %s%s" % (
                             k["nivel"], k["puntaje"], k["mercado"], k["texto"][:18],
                             cuota(k["cuota"]) if k["cuota"] is not None else ("min %.2f" % (k["cuota_min"] or 0)), (k["casa"] or "")[:10],
-                            100 * k["p_final"], ("%+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "-", 100 * k["stake"],
+                            100 * k["p_final"], ("%+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "-", k["stake"],
                             " ".join("%s=%s" % (x, y) for x, y in k["senales"].items() if y is not None),
                             ("  | " + "; ".join(k["razones"])) if k["razones"] else ""))
                 pj = [x for x in (v.get("probable"), h.get("probable")) if x]

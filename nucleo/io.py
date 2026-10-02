@@ -59,8 +59,10 @@ LIGAS = {
     "seriea":    {"deporte": "futbol", "nombre": "Serie A"},
     "bundesliga":{"deporte": "futbol", "nombre": "Bundesliga"},
     "ligue1":    {"deporte": "futbol", "nombre": "Ligue 1"},
+    "mls":       {"deporte": "futbol", "nombre": "MLS"},
     # --- nba (datos/nba.csv) ---
     "nba":       {"deporte": "nba",    "nombre": "NBA"},
+    "ncaamb":    {"deporte": "nba",    "nombre": "NCAA basquetbol"},
     # --- tenis (datos/tenis.csv, match-level) ---
     "atp":       {"deporte": "tenis",  "nombre": "ATP"},
     "wta":       {"deporte": "tenis",  "nombre": "WTA"},

@@ -69,7 +69,7 @@ def _simular(paquete):
         top = max(p["premium"], key=lambda q: q.get("puntaje") or 0) if p["premium"] else None
         out.append({"liga": p["liga"], "id": p["id"], "decision": (top["nivel"].upper() if top else "PASAR"),
                     "mercado": top["mercado"] if top else None, "lado": top["lado"] if top else None,
-                    "cuota": top["cuota"] if top else None, "stake": 0.01 if top and top["nivel"] == "pick" else 0.0,
+                    "cuota": top["cuota"] if top else None, "stake": 1.0 if top and top["nivel"] in ("pick", "premium") else 0.0,
                     "lectura": (top["razonamiento"] if top else "Sin candidatos con puntaje.") + " [simulado]"})
     return out
 

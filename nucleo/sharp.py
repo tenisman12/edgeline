@@ -25,6 +25,7 @@ from . import mercado
 SHARP = ("pinnacle", "pinnacle_eu")
 # Casas que NO cuentan para la "mejor cuota": exchanges (cobran comision y su precio no es apostable tal cual).
 EXCLUIR = set((os.environ.get("EDGELINE_CASAS_EXCLUIR") or "betfair_ex_eu,betfair_ex_uk,betfair_ex_au,matchbook,smarkets").split(","))
+DIARIAS = {"mlb", "npb", "kbo"}   # ligas con el mismo cruce varios dias seguidos: emparejar solo con la fecha exacta
 EV_MAX_CASA = 0.08      # una cuota con mas de 8% de EV contra Pinnacle es casi siempre una linea vieja o un mercado distinto: se ignora
 # sport key de The Odds API -> liga de Edgeline
 LIGA_DE = {"baseball_mlb": "mlb", "baseball_npb": "npb", "baseball_kbo": "kbo", "icehockey_nhl": "nhl",
@@ -108,6 +109,8 @@ def _ev_de_partido(eventos, liga, fecha_utc, home, away):
         fe = (ev.get("commence_time") or "")[:10]
         if f and fe and abs((_dia(fe) - _dia(f)).days) > 1:
             continue
+        if f and fe and fe != f and liga in DIARIAS:
+            continue          # series diarias (MLB, NPB, KBO): el juego de manana NO puede tomar la cuota del de hoy
         s = _parecido(ev.get("home_team"), home) + _parecido(ev.get("away_team"), away)
         if f and fe and fe == f:
             s += 0.5          # misma fecha gana: dos juegos seguidos del mismo cruce (NPB, MLB) no deben compartir cuota

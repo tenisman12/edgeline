@@ -285,6 +285,8 @@ def resumen(cal):
     cal = [x for x in cal if x.get("con_precio") != "no"]
     por = {}
     for x in cal: por.setdefault(x["liga"], []).append(x)
+    por_dep = {}
+    for x in cal: por_dep.setdefault(io.deporte_de(x["liga"]) or x["liga"], []).append(x)
     por_niv = {}
     for x in cal: por_niv.setdefault(x.get("nivel") or "pick", []).append(x)
     clv = [float(x["clv_pct"]) for x in cal if x.get("clv_pct") not in ("", None)]
@@ -299,7 +301,7 @@ def resumen(cal):
                         "prob_media_pct": round(100.0 * sum(num(x["prob"]) for x in b) / len(b), 1),
                         "acierto_pct": round(100.0 * sum(int(x["acierto"]) for x in b) / len(b), 1)})
     return {"generado": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "total": grupo(cal),
-            "por_liga": {k: grupo(v) for k, v in sorted(por.items())}, "calibracion": cub,
+            "por_liga": {k: grupo(v) for k, v in sorted(por.items())}, "por_deporte": {k: grupo(v) for k, v in sorted(por_dep.items())}, "calibracion": cub,
             "por_nivel": {k: grupo(v) for k, v in sorted(por_niv.items())},
             "clv": {"n": len(clv), "medio_pct": round(sum(clv) / len(clv), 2) if clv else None,
                     "positivos_pct": round(100 * sum(1 for c in clv if c > 0) / len(clv), 1) if clv else None},
@@ -465,6 +467,11 @@ def main():
     if t.get("calificados"):
         print("TOTAL    %6d %6d %7s%% %7s%% %8s" % (t["picks"], t["calificados"], t["acierto_pct"], t.get("prob_media_pct", "-"), t["brier"]))
         print("Calibracion:", "; ".join("%s: n=%d, esperado %s%%, real %s%%" % (b["rango"], b["n"], b["prob_media_pct"], b["acierto_pct"]) for b in rs["calibracion"]))
+    print("\nPOR DEPORTE")
+    for dp, d in rs.get("por_deporte", {}).items():
+        v = d.get("valor")
+        print("%-10s %6d %6d %7s%% %7s%% %8s   %s" % (dp, d["picks"], d["calificados"], d.get("acierto_pct", "-"), d.get("prob_media_pct", "-"),
+              d.get("brier", "-"), ("%d apuestas, %+.2fu, ROI %+.1f%%" % (v["apuestas"], v["unidades"], v["roi_pct"])) if v else "-"))
     print("\nPOR NIVEL (premium / pick): acierto y ROI del VALOR")
     for nv, d in rs.get("por_nivel", {}).items():
         v = d.get("valor")

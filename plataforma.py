@@ -105,6 +105,7 @@ PESO_SHARP = 0.85                 # mezcla: 85% probabilidad sharp (Pinnacle/con
 EXTRA_SESGO = 0.02                # NFL/NCAAFB: local y over estan sobreapostados (-5% / -6%): piden 2 pts mas de EV
 EDGE_REVISAR = 0.10               # edge del modelo arriba de esto = informacion que el modelo no ve: "revisar", no pick
 CUOTA_MIN = 1.80           # cuota decimal minima para marcar VALOR/pick (1.80 = -125 americano)
+STAKE_PLANO = 1.0      # unidades por pick (stake plano: el track record se mide a 1u por apuesta)
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
 _aplicar_validacion()
 TZ = RP.TZ_MX
@@ -846,11 +847,8 @@ def decidir_picks(rec, g, eventos):
                 nivel = "lean"; razones.append("favorito claro: la cuota justa es %.2f y no llegara a %.2f" % (1.0 / p_mod, CUOTA_MIN))
             elif nivel in ("pick", "premium"):
                 razones.append("sin cuota: vale solo si pagan %.2f o mas" % cuota_min)
-        stake = 0.0
-        if nivel in ("pick", "premium") and dec:
-            stake = min(0.02 if nivel == "premium" else 0.01, max(0.0, mercado.kelly(p_fin, cuota, fraccion=0.25, tope=0.02)))
-        elif nivel in ("pick", "premium"):
-            stake = 0.02 if nivel == "premium" else 0.01
+        # stake plano: 1 unidad por pick (premium y pick); lean/revisar/pasar no llevan stake.
+        stake = STAKE_PLANO if nivel in ("pick", "premium") else 0.0
         texto = {"home": rec["home"]["nombre"], "away": rec["away"]["nombre"], "draw": "Empate", "over": "Over", "under": "Under"}[lado]
         if tipo != "Ganador" and " " in mkt:
             texto = "%s %s" % (texto, mkt.split(" ", 1)[1])
@@ -1053,10 +1051,10 @@ def main():
     for p in partidos:
         for k in p.get("picks") or []:
             if k["nivel"] in ("premium", "pick"):
-                print("  %-7s %5.1f pts %s %s | %s @ %s | %s %s a %s (%s) modelo %.1f%% %s stake %.1f%%  senales %s%s" % (
+                print("  %-7s %5.1f pts %s %s | %s @ %s | %s %s a %s (%s) modelo %.1f%% %s stake %gu  senales %s%s" % (
                     k["nivel"].upper(), k["puntaje"], p["fecha"], p["hora"], p["away"]["nombre"], p["home"]["nombre"], k["mercado"], k["texto"],
                     k["cuota"] if k["cuota"] is not None else ("min %.2f" % k["cuota_min"]), k["casa"] or "-", 100 * k["p_modelo"],
-                    ("EV %+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "", 100 * k["stake"],
+                    ("EV %+.1f%%" % (100 * k["ev"])) if k["ev"] is not None else "", k["stake"],
                     " ".join("%s=%s" % (a, b) for a, b in k["senales"].items() if b is not None),
                     ("  [" + "; ".join(k["razones"]) + "]") if k["razones"] else ""))
     print("\n%d partidos: %d con prediccion, %d sin modelo, %d con VALOR (edge >= %d%%)."
