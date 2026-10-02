@@ -189,11 +189,31 @@ def guardar_compacto(eventos, ahora):
     print("Foto compacta: %d eventos en %s; %d filas sharp en %s" % (len(eventos), SALIDA, n, ruta))
 
 
+def _edad_foto_horas():
+    """horas desde 'generado' de salida/cuotas_casas.json; None si no hay foto legible."""
+    try:
+        with open(SALIDA, encoding="utf-8") as f:
+            gen = json.load(f).get("generado") or ""
+        t = dt.datetime.fromisoformat(gen.replace("Z", "+00:00"))
+        if not t.tzinfo:
+            t = t.replace(tzinfo=dt.timezone.utc)
+        return (dt.datetime.now(dt.timezone.utc) - t).total_seconds() / 3600.0
+    except Exception:
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--deportes", help="lista separada por comas (default: todos)")
     ap.add_argument("--solo-compacto", action="store_true", help="no acumular data_maestra/market_odds_history.csv (Actions)")
+    ap.add_argument("--min-horas", type=float, default=0, dest="min_horas",
+                    help="no gastar creditos si la ultima foto (salida/cuotas_casas.json) tiene menos de N horas")
     args = ap.parse_args()
+    if args.min_horas > 0:
+        edad = _edad_foto_horas()
+        if edad is not None and edad < args.min_horas:
+            print("Foto de cuotas de hace %.1f h (< %.1f h): no se piden cuotas, 0 creditos." % (edad, args.min_horas)); return
+        print("Ultima foto de cuotas: %s; se pide una nueva." % ("sin foto" if edad is None else "hace %.1f h" % edad))
     if not KEY:
         print("Falta la llave. Configura EDGELINE_ODDS_KEY (set EDGELINE_ODDS_KEY=tu_llave)."); return
     deportes = (args.deportes or os.environ.get("EDGELINE_ODDS_DEPORTES") or "").split(",")

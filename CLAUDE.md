@@ -19,7 +19,7 @@ salida/       proximos.json, historial_*.csv, track_record.json, validacion_*.js
 datos/        <deporte>.csv (rama "datos" en GitHub; no está en main)
 ```
 Flujo: `actualizar_todo.py` (datos) -> `plataforma.py --dias 7` (predice) -> `calificar_picks.py` (track record).
-GitHub Actions: `actualizar.yml` diario 11:17 UTC, `cuotas.yml` cada 3 h.
+GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion, Picks IA); `cuotas.yml` cada hora (resultados, cuotas si la foto tiene 3 h o mas, picks y calificacion). GitHub puede retrasar corridas horas: no depender de la hora exacta.
 
 ## Reglas que no se rompen
 1. **Ningún número se inventa.** Toda cifra sale de un archivo del repo o de una fuente de internet citada.

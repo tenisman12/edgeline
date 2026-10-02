@@ -1,8 +1,16 @@
-name: fotos de cuotas (movimiento de linea y CLV)
+name: corrida intradia (cuotas, resultados y calificacion)
 
+# GitHub retrasa o se salta corridas programadas cuando tiene carga (el 2-oct hubo retrasos de 4 a 6 h y
+# corridas que nunca salieron). Por eso esta corrida va CADA HORA y cada paso decide por si mismo:
+#   - The Odds API solo se pide si la ultima foto tiene 3 h o mas (--min-horas 3): maximo ~8 fotos al dia,
+#     el mismo gasto que antes, aunque se pierdan corridas.
+#   - Resultados recientes (actualizar_todo.py) en cada corrida: los juegos de Asia se califican en cuanto
+#     terminan, sin esperar a la corrida grande.
+#   - plataforma.py nunca registra picks de partidos ya empezados (bloque 1), asi que un retraso ya no ensucia
+#     el track record.
 on:
   schedule:
-    - cron: "5 */4 * * *"        # cada 4 horas (6 fotos al dia)
+    - cron: "23 0-4,6-12,14-18,20-23 * * *"   # cada hora, menos las horas de actualizar.yml (05, 13, 19 UTC)
   workflow_dispatch:
 
 concurrency:
@@ -15,10 +23,11 @@ permissions:
 jobs:
   cuotas:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       EDGELINE_BASE: ${{ github.workspace }}
       PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4
 
@@ -26,34 +35,42 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Bajar partidos por jugar y cuotas (ESPN)
-        run: python colectores/recolectar_proximos.py --dias 3 --sin-contexto
-
-      - name: Guardar foto de cuotas
-        run: python colectores/snapshot_cuotas.py
-
-      # The Odds API, plan de pago (20,000 creditos/mes): 6 creditos por deporte (3 mercados x 2 regiones).
-      # Presupuesto 72 por foto = 12 deportes, priorizados por partidos en 60 h; 8 fotos al dia (6 + 2 corridas completas) = 576/dia = ~17,300/mes.
-      - name: Cuotas de todas las casas (The Odds API)
-        env:
-          EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
-          EDGELINE_ODDS_PRESUPUESTO: "72"
-          EDGELINE_ODDS_REGIONES: us,eu
-        continue-on-error: true
-        run: python colectores/recolectar_cuotas.py --solo-compacto
-
-      # Refresco intradia SIN gastar creditos: cuotas y movimiento (ESPN), abridores/porteros/QB probables, lesiones,
-      # contexto; re-puntua los picks con la foto multi-casa de la manana (salida/cuotas_casas.json) y registra los que
-      # entran en la ventana de 36 h. No baja datos historicos ni valida (eso es la corrida diaria).
       - name: Datos historicos (rama datos)
         run: |
           git fetch --depth=1 origin datos
           git archive FETCH_HEAD datos | tar -x -C .
 
+      - name: Resultados recientes (solo lo nuevo)
+        continue-on-error: true
+        timeout-minutes: 20
+        run: python actualizar_todo.py
+
+      - name: Bajar partidos por jugar y cuotas (ESPN)
+        continue-on-error: true
+        run: python colectores/recolectar_proximos.py --dias 3 --sin-contexto
+
+      - name: Guardar foto de cuotas (ESPN)
+        continue-on-error: true
+        run: python colectores/snapshot_cuotas.py
+
+      # The Odds API, plan de pago (20,000 creditos/mes): 6 creditos por deporte (3 mercados x 2 regiones).
+      # Presupuesto 72 por foto; con --min-horas 3 salen como maximo 8 fotos al dia = 576/dia = ~17,300/mes.
+      - name: Cuotas de todas las casas (The Odds API, si la foto tiene 3 h o mas)
+        env:
+          EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
+          EDGELINE_ODDS_PRESUPUESTO: "72"
+          EDGELINE_ODDS_REGIONES: us,eu
+        continue-on-error: true
+        run: python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3
+
       - name: Re-predecir con cuotas y contexto frescos
         continue-on-error: true
         timeout-minutes: 20
         run: python plataforma.py --dias 3
+
+      - name: Limpiar historial
+        continue-on-error: true
+        run: python utilidades/limpiar_historial.py --aplicar
 
       - name: Calificar picks
         continue-on-error: true
@@ -61,3 +78,15 @@ jobs:
 
       - name: Subir a main
         run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv"
+
+      - name: Publicar datos en la rama datos (una sola version, sin historial)
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
