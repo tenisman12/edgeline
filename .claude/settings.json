@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python utilidades/*)",
+      "Bash(python3 utilidades/*)",
+      "Bash(python plataforma.py*)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git log*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git worktree add trabajo/*)",
+      "Read(**)",
+      "Write(trabajo/**)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
+    ]
+  }
+}
