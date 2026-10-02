@@ -596,7 +596,10 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
 _NIVEL = {"premium": 4, "pick": 3, "lean": 2, "revisar": 1, "pasar": 0}
 _LIGAS_SESGO = ("nfl", "ncaafb")
 # PICK PREMIUM: puntaje 0-100 que junta las capas. Pesos iniciales (se recalibran con el historial: cada pick guarda sus senales).
-PESOS = {"precio": 30, "modelo": 20, "forma": 20, "movimiento": 10, "consenso": 10, "h2h": 5, "contexto": 5}
+PESOS = {"precio": 30, "modelo": 20, "forma": 20, "movimiento": 10, "consenso": 10, "h2h": 5, "contexto": 5,
+         # capas agregadas (2026-10-02): todo lo que trae la ficha. Pesos iniciales, sin validar: se miden con /minar
+         # usando las senales que guarda historial_picks.csv. El puntaje se normaliza por el peso disponible.
+         "osciladores": 10, "fuerza": 10, "abridor": 10, "bullpen": 5, "racha": 5}
 CORTE = {"premium": 75, "pick": 60, "lean": 45}
 _STATUS = {"Burning Hot": 1.0, "Hot": 0.6, "Average Up": 0.3, "Average": 0.0, "New": 0.0, "Average Down": -0.3, "Cold": -0.6, "Dead": -1.0}
 _TEND = {"Subiendo": 1.0, "Estable": 0.0, "Bajando": -1.0}
@@ -708,6 +711,147 @@ def _senal_contexto(rec, tipo, lado):
     return max(-1.0, x)
 
 
+# ------------------------------------------------------------------ capas agregadas: todo lo disponible en la ficha
+def _num(x):
+    try:
+        return None if x is None else float(x)
+    except (TypeError, ValueError):
+        return None
+
+
+def _lados_forma(rec):
+    f = rec.get("forma") or {}
+    H, A = f.get("home") or {}, f.get("away") or {}
+    return (H, A) if H and A else (None, None)
+
+
+def _escala(t):
+    """carreras/goles/puntos por juego del equipo en la temporada (para normalizar diferenciales entre deportes)."""
+    v = ((t.get("ventanas") or {}).get("temp") or {})
+    s = (_num(v.get("gf")) or 0.0) + (_num(v.get("ga")) or 0.0)
+    return max(1.0, s / 2.0)
+
+
+def _senal_osciladores(rec, tipo, lado):
+    """-1..1 con los osciladores que la senal de forma no usa: ataque, defensa (negativo = permite menos), dif5 y O/U."""
+    import math
+    H, A = _lados_forma(rec)
+    if H is None:
+        return None
+    def o(t, k):
+        return _num((t.get("osciladores") or {}).get(k)) or 0.0
+    if tipo == "Total":
+        if lado not in ("over", "under"):
+            return None
+        r = (o(H, "ataque") + o(A, "ataque") + o(H, "defensa") + o(A, "defensa")) / 4.0
+        ou = [x for t in (H, A) for x in (t.get("ou4") or "").split("-") if x in ("O", "U")]
+        po = (sum(1 for x in ou if x == "O") / float(len(ou)) - 0.5) * 2.0 if ou else 0.0
+        x = 0.6 * math.tanh(3.0 * r) + 0.4 * po
+        return x if lado == "over" else -x
+    if lado not in ("home", "away"):
+        return None
+    me, op = (H, A) if lado == "home" else (A, H)
+    d = (o(me, "ataque") - o(op, "ataque")) - (o(me, "defensa") - o(op, "defensa"))
+    d += 0.5 * (o(me, "dif5") / _escala(me) - o(op, "dif5") / _escala(op))
+    return math.tanh(1.5 * d)
+
+
+def _senal_fuerza(rec, tipo, lado):
+    """-1..1: ELO descriptivo, diferencial de temporada y el split que aplica (local del local, visita del visitante)."""
+    import math
+    H, A = _lados_forma(rec)
+    if H is None or tipo == "Total" or lado not in ("home", "away"):
+        return None
+    me, op = (H, A) if lado == "home" else (A, H)
+    sme, sop = ("local", "visita") if lado == "home" else ("visita", "local")
+    def v(t, w, k):
+        return _num(((t.get("ventanas") or {}).get(w) or {}).get(k))
+    d = ((_num(me.get("elo")) or 1500.0) - (_num(op.get("elo")) or 1500.0)) / 200.0
+    dm, do = v(me, "temp", "dif"), v(op, "temp", "dif")
+    if dm is not None and do is not None:
+        d += 0.5 * (dm / _escala(me) - do / _escala(op))
+    pm, po = v(me, sme, "pts"), v(op, sop, "pts")
+    if pm is not None and po is not None:
+        d += (pm - po)
+    return math.tanh(1.2 * d)
+
+
+def _senal_racha(rec, tipo, lado):
+    """-1..1: racha actual y % de puntos en los ultimos 5."""
+    import math
+    H, A = _lados_forma(rec)
+    if H is None or tipo == "Total" or lado not in ("home", "away"):
+        return None
+    me, op = (H, A) if lado == "home" else (A, H)
+    def r(t):
+        s = t.get("racha") or ""
+        n = int(s[1:]) if len(s) > 1 and s[1:].isdigit() else 0
+        return n if s[:1] == "W" else (-n if s[:1] == "L" else 0)
+    def p5(t):
+        return _num(((t.get("ventanas") or {}).get("L5") or {}).get("pts"))
+    d = (r(me) - r(op)) / 6.0
+    if p5(me) is not None and p5(op) is not None:
+        d += p5(me) - p5(op)
+    return math.tanh(1.2 * d)
+
+
+def _abridor(rec, side):
+    j = ((rec.get("jugadores_clave") or {}).get(side) or {})
+    r5 = ((j.get("probable") or {}).get("resumen_ultimas5") or {})
+    era, whip = _num(r5.get("era")), _num(r5.get("whip"))
+    return (era, whip) if era is not None and whip is not None else (None, None)
+
+
+ERA_REF, WHIP_REF = 4.00, 1.30     # abridor promedio de referencia cuando falta el del rival
+
+
+def _senal_abridor(rec, tipo, lado):
+    """beisbol: -1..1 con ERA y WHIP de las ultimas 5 salidas del abridor anunciado. Sin datos de un abridor se compara
+    contra un abridor promedio; sin datos de ninguno no hay senal (KBO hoy)."""
+    import math
+    if rec.get("deporte") != "beisbol":
+        return None
+    eh, wh = _abridor(rec, "home")
+    ea, wa = _abridor(rec, "away")
+    if eh is None and ea is None:
+        return None
+    eh, wh = (eh, wh) if eh is not None else (ERA_REF, WHIP_REF)
+    ea, wa = (ea, wa) if ea is not None else (ERA_REF, WHIP_REF)
+    calidad = lambda e, w: (ERA_REF - e) / 2.0 + (WHIP_REF - w) / 0.30      # positivo = mejor que el promedio
+    qh, qa = calidad(eh, wh), calidad(ea, wa)
+    if tipo == "Total":
+        if lado not in ("over", "under"):
+            return None
+        x = math.tanh(-0.5 * (qh + qa))       # abridores buenos = under
+        return x if lado == "over" else -x
+    if lado not in ("home", "away"):
+        return None
+    d = (qh - qa) if lado == "home" else (qa - qh)
+    return math.tanh(0.6 * d)
+
+
+def _senal_bullpen(rec, tipo, lado):
+    """beisbol: -1..1 con los pitcheos del bullpen en los ultimos 3 juegos (mas pitcheos = mas cansado)."""
+    import math
+    if rec.get("deporte") != "beisbol":
+        return None
+    def bp(side):
+        b = (((rec.get("jugadores_clave") or {}).get(side) or {}).get("bullpen") or {})
+        return _num(b.get("pitches_total")) or None
+    bh, ba = bp("home"), bp("away")
+    if bh is None or ba is None:
+        return None
+    if tipo == "Total":
+        if lado not in ("over", "under"):
+            return None
+        x = math.tanh((bh + ba - 300.0) / 150.0)     # bullpens cargados = mas carreras tarde
+        return x if lado == "over" else -x
+    if lado not in ("home", "away"):
+        return None
+    d = (ba - bh) if lado == "home" else (bh - ba)
+    return math.tanh(d / 100.0)
+
+
 def _razonar(rec, k):
     """Texto corto con el debate modelo vs forma vs mercado que lleva a la decision."""
     tipo, lado = k["mercado"].split()[0], k["lado"]
@@ -731,6 +875,13 @@ def _razonar(rec, k):
     s_ = k["senales"]
     if s_.get("forma") is not None:
         fr.append("La forma %s." % ("apoya" if s_["forma"] >= 0.6 * PESOS["forma"] else ("va en contra" if s_["forma"] <= 0.3 * PESOS["forma"] else "no inclina")))
+    extra = []
+    for cap, nom in (("osciladores", "osciladores"), ("fuerza", "fuerza"), ("abridor", "abridor"), ("bullpen", "bullpen"), ("racha", "racha")):
+        v = s_.get(cap)
+        if v is not None:
+            extra.append("%s %s" % (nom, "a favor" if v >= 0.6 * PESOS[cap] else ("en contra" if v <= 0.4 * PESOS[cap] else "neutro")))
+    if extra:
+        fr.append("Capas: %s." % ", ".join(extra))
     if s_.get("precio") is not None and k.get("ev") is not None:
         fr.append("Precio %s a %s: EV %+.1f%%." % (k["cuota"], k["casa"] or "la casa", 100 * k["ev"]))
     elif k.get("cuota_min"):
@@ -759,7 +910,9 @@ def puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado)
         sen["modelo"] = _lin(p_mod - p_sharp, -0.05, 0.08, PESOS["modelo"]) if p_sharp is not None else _lin(p_mod, 0.45, tope_p, PESOS["modelo"])
     else:
         sen["modelo"] = _lin(p_mod, 0.45, tope_p, PESOS["modelo"] / 2.0)
-    for k, fn in (("forma", _senal_forma), ("movimiento", _senal_mov), ("consenso", _senal_consenso), ("h2h", _senal_h2h), ("contexto", _senal_contexto)):
+    for k, fn in (("forma", _senal_forma), ("movimiento", _senal_mov), ("consenso", _senal_consenso), ("h2h", _senal_h2h), ("contexto", _senal_contexto),
+                  ("osciladores", _senal_osciladores), ("fuerza", _senal_fuerza), ("abridor", _senal_abridor),
+                  ("bullpen", _senal_bullpen), ("racha", _senal_racha)):
         x = fn(rec, tipo, lado)
         sen[k] = None if x is None else _lin(x, -1.0, 1.0, PESOS[k])
     disponibles = {k: v for k, v in sen.items() if v is not None}
@@ -889,34 +1042,66 @@ def _cerca(p):
         return True
 
 
+MARGEN_INICIO_MIN = 5     # no se registra nada a menos de 5 min del inicio (ni despues)
+_EN_JUEGO = ("final", "en juego", "in progress", "en curso", "terminado", "suspendido", "pospuesto", "postponed", "canceled", "cancelado")
+
+
+def _inicio_utc(p):
+    """Hora de inicio en UTC a partir de fecha + hora de CDMX del partido. None si no hay hora."""
+    try:
+        if not p.get("hora"):
+            return None
+        ini = dt.datetime.strptime("%s %s" % (p["fecha"], p["hora"]), "%Y-%m-%d %H:%M")
+        return (ini - dt.timedelta(hours=TZ)).replace(tzinfo=dt.timezone.utc)
+    except Exception:
+        return None
+
+
+def _ya_empezo(p):
+    """True si el partido ya empezo (o empieza en menos de MARGEN_INICIO_MIN) o su estado dice que ya se juega/termino.
+    Un pick registrado despues del inicio no cuenta: la cuota ya es en vivo."""
+    est = (p.get("estado") or "").lower()
+    if any(x in est for x in _EN_JUEGO):
+        return True
+    ini = _inicio_utc(p)
+    if ini is None:
+        return False
+    return dt.datetime.now(dt.timezone.utc) >= ini - dt.timedelta(minutes=MARGEN_INICIO_MIN)
+
+
+def _ahora_utc():
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def registrar(partidos, ruta):
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza",
             "valor_mercado", "valor_lado", "valor_cuota", "valor_edge", "con_precio",
-            "nivel", "p_sharp", "p_modelo", "ev", "casa", "fuente", "stake", "razones", "puntaje", "senales", "cuota_min", "razonamiento"]
+            "nivel", "p_sharp", "p_modelo", "ev", "casa", "fuente", "stake", "razones", "puntaje", "senales", "cuota_min", "razonamiento",
+            "inicio_utc", "anulado"]
     existentes = set()
     if os.path.exists(ruta):
         with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
             previas = list(csv.DictReader(f))
         existentes = {(r["liga"], r["id"], r.get("valor_mercado") or "", r.get("valor_lado") or "") for r in previas}
         existentes |= {(r["liga"], r["id"]) for r in previas if not r.get("nivel")}     # formato viejo: un pick por partido
-        if previas and "nivel" not in previas[0]:        # archivo con el formato anterior: se agregan columnas
+        if previas and any(k not in previas[0] for k in cols):     # archivo con un formato anterior: se agregan columnas
             for r in previas:
                 r.setdefault("con_precio", "si" if r.get("valor_cuota") else "")
-                for k in cols[14:]:
+                for k in cols:
                     r.setdefault(k, "")
             with _io.open(ruta, "w", encoding="utf-8-sig", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(previas)
     nuevos = []
     for p in partidos:
-        if p.get("pretemporada") or not _cerca(p):
-            continue                        # aun falta mucho: se registra en una corrida posterior (mas info: abridores, cuotas)
+        if p.get("pretemporada") or not _cerca(p) or _ya_empezo(p):
+            continue                        # ya empezo (cuota en vivo: no cuenta) o aun falta mucho: se registra en una corrida posterior (mas info: abridores, cuotas)
         if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
             continue                        # juego condicional: puede no jugarse; se registra cuando deja de decir "If Necessary"
         # picks por mercado (fuerte y pick: los que llevan stake). Lean y revisar no entran al track record.
         for k in p.get("picks") or []:
             if k["nivel"] not in ("premium", "pick") or (p["liga"], p["id"], k["mercado"], k["lado"]) in existentes:
                 continue
-            nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
+            nuevos.append({"registrado": _ahora_utc(), "inicio_utc": (_inicio_utc(p).strftime("%Y-%m-%dT%H:%MZ") if _inicio_utc(p) else ""), "liga": p["liga"], "id": p["id"],
                            "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
                            "pick": k["texto"], "prob": k["p_final"], "confianza": k["nivel"],
                            "valor_mercado": k["mercado"], "valor_lado": k["lado"], "valor_cuota": k["cuota"], "valor_edge": k["ev"],
@@ -924,14 +1109,22 @@ def registrar(partidos, ruta):
                            "ev": k["ev"], "casa": k["casa"], "fuente": k["fuente"], "stake": k["stake"], "razones": "; ".join(k["razones"]),
                            "puntaje": k["puntaje"], "senales": json.dumps(k["senales"], ensure_ascii=False), "cuota_min": k["cuota_min"] or "",
                            "razonamiento": k.get("razonamiento", "")})
-        # lectura del modelo sin precio (NPB, KBO...): aparte, solo para medir al modelo
-        if p.get("pick") and not p.get("cuotas") and (p["liga"], "Ganador") not in NO_PUBLICABLE and (p["liga"], p["id"], "", "") not in existentes:
-            nuevos.append({"registrado": dt.datetime.now().isoformat(timespec="seconds"), "liga": p["liga"], "id": p["id"],
+        # LECTURA del modelo: TODOS los partidos de TODOS los deportes, con o sin cuota, validado o no (decision 2026-10-02).
+        # Sin stake: solo mide el acierto del ganador del modelo. VALOR / PICK / PREMIUM siguen con sus propias reglas.
+        if p.get("pick") and (p["liga"], p["id"], "", "") not in existentes:
+            c = p.get("cuotas") or {}
+            lado = p["pick"].get("lado")
+            ml = c.get("ml_home") if lado == "home" else (c.get("ml_away") if lado == "away" else None)
+            notas = []
+            if (p["liga"], "Ganador") in NO_PUBLICABLE:
+                notas.append("ganador sin validar")
+            notas.append(("cuota ML %+d (%s)" % (ml, c.get("casa", ""))) if ml is not None else "sin cuotas")
+            nuevos.append({"registrado": _ahora_utc(), "inicio_utc": (_inicio_utc(p).strftime("%Y-%m-%dT%H:%MZ") if _inicio_utc(p) else ""), "liga": p["liga"], "id": p["id"],
                            "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],
                            "pick": p["pick"]["texto"], "prob": p["pick"]["prob"], "confianza": p["pick"]["confianza"],
                            "valor_mercado": "", "valor_lado": "", "valor_cuota": "", "valor_edge": "",
-                           "con_precio": "no", "nivel": "lectura", "p_sharp": "", "p_modelo": p["pick"]["prob"], "ev": "",
-                           "casa": "", "fuente": "", "stake": 0, "razones": "sin cuotas", "puntaje": "", "senales": "", "cuota_min": "", "razonamiento": ""})
+                           "con_precio": "si" if ml is not None else "no", "nivel": "lectura", "p_sharp": "", "p_modelo": p["pick"]["prob"], "ev": "",
+                           "casa": "", "fuente": "", "stake": 0, "razones": "; ".join(notas), "puntaje": "", "senales": "", "cuota_min": "", "razonamiento": ""})
     if nuevos:
         nuevo_archivo = not os.path.exists(ruta)
         with _io.open(ruta, "a", encoding="utf-8-sig", newline="") as f:
@@ -951,10 +1144,10 @@ def registrar_predicciones(partidos, ruta):
     if os.path.exists(ruta):
         with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
             existentes = {(r["liga"], r["id"], r["mercado"].split()[0]) for r in csv.DictReader(f)}
-    ahora = dt.datetime.now().isoformat(timespec="seconds"); nuevos = []
+    ahora = _ahora_utc(); nuevos = []
     for p in partidos:
         m = p.get("modelo")
-        if not m or p.get("pretemporada") or not _cerca(p):
+        if not m or p.get("pretemporada") or not _cerca(p) or _ya_empezo(p):
             continue
         if "if necessary" in ((p.get("nota") or "") + " " + (p.get("serie") or "")).lower():
             continue

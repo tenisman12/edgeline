@@ -11,7 +11,12 @@ Es idempotente: se recalcula todo cada vez; un pick sin resultado todavia queda 
 Reglas
   - Ganador: acierto si el pick coincide con el ganador. Empate en futbol = fallo del pick.
   - Tenis: se empata por nombres de jugadores dentro de la ventana del torneo (TML fecha el partido con el
-    inicio del torneo). W/O = anulado. RET cuenta como resultado normal.
+    inicio del torneo). W/O = anulado. RET = anulado (RET_ANULA; la mayoria de las casas anula el ganador).
+  - Beisbol con empate (NPB/KBO): el pick de ganador no cuenta (ni acierto ni fallo) y el VALOR al ganador es push.
+  - Columna 'anulado' del historial (la llena limpiar_historial.py): el pick no cuenta (registrado tarde, etc.).
+  - Calendario: si un partido no aparece en su fecha y el juego de +-1 dia ya lo reclama otro registro en su fecha
+    exacta, se anula (partido inexistente en el calendario real).
+  - Tenis duplicado en ATP y WTA: si uno se califica, el otro se anula.
   - VALOR: Ganador (home/away/draw), Total X (over/under) y Spread (lado con su linea); +1u = cuota ganada
     (momio americano), -1u = perdido, 0 = push.
   - Juegos sin resultado en tus datos tras 4 dias quedan 'sin_resultado' (revisar nombres o datos).
@@ -25,6 +30,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from nucleo import io, equipos
 
 TENIS = ("atp", "wta")
+RET_ANULA = True      # tenis: retiro = apuesta anulada
 DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol", "lvbp": "beisbol", "lidom": "beisbol",
            "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba", "ncaamb": "nba",
            "premier": "futbol", "laliga": "futbol", "seriea": "futbol", "bundesliga": "futbol", "ligue1": "futbol",
@@ -85,6 +91,7 @@ class Equipos:
             if gh is None or ga is None or not f: continue
             juegos.append((f, h.get("team"), a.get("team"), gh, ga)); nombres.update((h.get("team"), a.get("team")))
         self.cache[liga] = (juegos, equipos.Emparejador(sorted(n for n in nombres if n)))
+        self.fechas = getattr(self, "fechas", {}); self.fechas[liga] = {j[0] for j in juegos}
         return self.cache[liga]
 
     def resultado(self, liga, fecha, home, away):
@@ -99,7 +106,8 @@ class Equipos:
         if len(cand) > 1 and abs((cand[0][0] - f0).days) == abs((cand[1][0] - f0).days):
             return None, "doble jornada: ambiguo"
         f, _, _, gh, ga = cand[0]
-        return {"gh": gh, "ga": ga, "marcador": "%g-%g" % (gh, ga),
+        return {"gh": gh, "ga": ga, "marcador": "%g-%g" % (gh, ga), "juego": (liga, str(f), h, a), "desfase": (f - f0).days,
+                "datos_del_dia": f0 in self.fechas.get(liga, set()),
                 "ganador": "home" if gh > ga else "away" if ga > gh else "draw"}, None
 
 
@@ -141,6 +149,8 @@ class Tenis:
         sc = str(r.get("score") or "")
         if "W/O" in sc.upper() or "WALK" in sc.upper():
             return {"anulado": True, "marcador": sc}, None
+        if RET_ANULA and ("RET" in sc.upper() or "DEF" in sc.upper().split()):
+            return {"anulado": True, "marcador": sc + " (retiro: anulado)"}, None
         out = {"marcador": sc, "ganador": "home" if w == j1 else "away"}
         # games totales (solo marcadores completos) y breaks (bp enfrentados - bp salvados, de ambos)
         g = 0; ok = bool(sc) and not any(ch.isalpha() for ch in sc)
@@ -169,14 +179,17 @@ def lado_pick(pick, home, away):
     return "home" if p and p in home.strip().lower() else "away" if p and p in away.strip().lower() else None
 
 
-def calificar_valor(r, res):
+def calificar_valor(r, res, liga=""):
     mk = (r.get("valor_mercado") or "").strip(); lado = (r.get("valor_lado") or "").strip()
     if not mk or not lado or res.get("gh") is None and mk.split()[0] != "Ganador":
         return "", ""
     base = mk.split()[0]
     out = None
     if base == "Ganador":
-        out = "gano" if res["ganador"] == lado else "perdio"
+        if res["ganador"] == "draw" and lado in ("home", "away") and DEPORTE.get(liga) == "beisbol":
+            out = "push"            # empate en beisbol (NPB/KBO): el moneyline de dos vias se devuelve
+        else:
+            out = "gano" if res["ganador"] == lado else "perdio"
     elif base == "Total":
         L = num(mk.split()[1]); t = res["gh"] + res["ga"]
         out = "push" if t == L else ("gano" if (t > L) == (lado == "over") else "perdio")
@@ -234,15 +247,22 @@ def procesar(filas, hoy=None):
     cierres = _cierres()
     E, T = Equipos(), Tenis()
     out = []
+    resultados = []
     for r in filas:
+        fuente = T if r["liga"] in TENIS else E
+        try:
+            resultados.append(fuente.resultado(r["liga"], r["fecha"], r["home"], r["away"]))
+        except Exception as e:
+            resultados.append((None, "error: %s" % e))
+    exactos = _reclamos_exactos(filas, resultados)
+    for r, (res, aviso) in zip(filas, resultados):
         o = {k: r.get(k, "") for k in COLS}
         o["cuota_cierre"], o["clv_pct"] = _clv(r, cierres)
         liga = r["liga"]
-        fuente = T if liga in TENIS else E
-        try:
-            res, aviso = fuente.resultado(liga, r["fecha"], r["home"], r["away"])
-        except Exception as e:
-            res, aviso = None, "error: %s" % e
+        if (r.get("anulado") or "").strip():
+            o["estado"] = "anulado"; o["marcador"] = r["anulado"]; out.append(o); continue
+        if _fantasma(r, res, exactos):
+            o["estado"] = "anulado"; o["marcador"] = "partido no encontrado en su fecha (calendario)"; out.append(o); continue
         if res is None:
             f = dia(r["fecha"])
             o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"
@@ -252,14 +272,53 @@ def procesar(filas, hoy=None):
             o["estado"] = "anulado"; o["marcador"] = res["marcador"]; out.append(o); continue
         o["estado"] = "calificado"; o["marcador"] = res["marcador"]; o["ganador_real"] = res["ganador"]
         lp = lado_pick(r.get("pick"), r["home"], r["away"])
-        if lp:
+        empate_beis = res["ganador"] == "draw" and DEPORTE.get(liga) == "beisbol"
+        if empate_beis:
+            o["marcador"] = res["marcador"] + " (empate: el ganador no cuenta)"
+        if lp and not empate_beis:
             ac = 1 if lp == res["ganador"] else 0
             o["acierto"] = ac
             p = num(r.get("prob"))
             if p is not None: o["brier"] = round((p - ac) ** 2, 4)
-        o["valor_resultado"], o["valor_unidades"] = calificar_valor(r, res)
+        o["valor_resultado"], o["valor_unidades"] = calificar_valor(r, res, liga)
         out.append(o)
+    _duplicados_tenis(out)
     return out
+
+
+def _reclamos_exactos(filas, resultados):
+    """{juego: set(ids)} de los registros cuyo partido se encontro en su FECHA EXACTA."""
+    rec = {}
+    for r, (res, _) in zip(filas, resultados):
+        if res and res.get("juego") and res.get("desfase") == 0:
+            rec.setdefault(res["juego"], set()).add(str(r.get("id")))
+    return rec
+
+
+def _fantasma(r, res, exactos):
+    """El registro se empato con un juego de +-1 dia que otro registro (otro id) ya tiene en su fecha exacta:
+    el partido del registro no existe en el calendario real (ej. Dragons @ Carp 2-oct que en realidad fue el 1-oct)."""
+    if not res or not res.get("juego") or res.get("desfase") in (0, None):
+        return False
+    if not res.get("datos_del_dia"):          # aun no hay juegos de esa liga en esa fecha en tus datos: esperar
+        return False
+    otros = exactos.get(res["juego"], set()) - {str(r.get("id"))}
+    return bool(otros)
+
+
+def _duplicados_tenis(out):
+    """El mismo partido de tenis registrado en ATP y en WTA: si uno ya se califico (o anulo), el otro se anula."""
+    grupos = {}
+    for o in out:
+        if o["liga"] in TENIS:
+            grupos.setdefault((o["id"], o.get("valor_mercado") or "", o.get("valor_lado") or ""), []).append(o)
+    for g in grupos.values():
+        if len({o["liga"] for o in g}) < 2:
+            continue
+        hecho = any(o["estado"] in ("calificado", "anulado") for o in g)
+        for o in g:
+            if hecho and o["estado"] in ("pendiente", "sin_resultado"):
+                o["estado"] = "anulado"; o["marcador"] = "duplicado ATP/WTA"
 
 
 def resumen(cal):
@@ -324,13 +383,18 @@ def calificar_predicciones(hoy=None):
     with open(ruta, encoding="utf-8-sig", newline="") as f:
         filas = list(csv.DictReader(f))
     E, T = Equipos(), Tenis(); out = []
+    resultados = []
     for r in filas:
-        o = {k: r.get(k, "") for k in PCOLS}
         fuente = T if r["liga"] in TENIS else E
         try:
-            res, aviso = fuente.resultado(r["liga"], r["fecha"], r["home"], r["away"])
+            resultados.append(fuente.resultado(r["liga"], r["fecha"], r["home"], r["away"]))
         except Exception as e:
-            res, aviso = None, "error: %s" % e
+            resultados.append((None, "error: %s" % e))
+    exactos = _reclamos_exactos(filas, resultados)
+    for r, (res, aviso) in zip(filas, resultados):
+        o = {k: r.get(k, "") for k in PCOLS}
+        if _fantasma(r, res, exactos):
+            o["estado"] = "anulado"; out.append(o); continue
         if res is None:
             f = dia(r["fecha"]); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
         if res.get("anulado"):
@@ -338,6 +402,8 @@ def calificar_predicciones(hoy=None):
         o["marcador"] = res.get("marcador", ""); base = (r["mercado"] or "").split()[0]
         p = num(r.get("p_modelo")); L = num(r.get("linea")); y = None
         if base == "Ganador":
+            if res["ganador"] == "draw" and DEPORTE.get(r["liga"]) == "beisbol":
+                o["estado"] = "push"; o["real"] = "draw"; out.append(o); continue
             y = 1 if res["ganador"] == r["lado"] else 0; o["real"] = res["ganador"]
         elif base in ("Total", "Games"):
             t = res.get("games") if base == "Games" else (None if res.get("gh") is None else res["gh"] + res["ga"])
@@ -425,7 +491,7 @@ def calificar_ia(hoy=None):
             o["estado"] = "anulado"; out.append(o); continue
         o["marcador"] = res.get("marcador", "")
         r2 = {"valor_mercado": o["mercado"], "valor_lado": o["lado"], "valor_cuota": o["cuota"]}
-        o["resultado"], o["unidades"] = calificar_valor(r2, res)
+        o["resultado"], o["unidades"] = calificar_valor(r2, res, o["liga"])
         o["estado"] = "calificado" if o["resultado"] else "sin_dato"
         out.append(o)
     cols = ["fuente", "liga", "id", "fecha", "home", "away", "decision", "mercado", "lado", "cuota", "stake", "estado", "marcador", "resultado", "unidades", "lectura"]
