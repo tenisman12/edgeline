@@ -1,6 +1,6 @@
 {
- "generado": "2026-10-03 17:08",
- "juegos": 15191,
+ "generado": "2026-10-03 17:07",
+ "juegos": 14760,
  "desde": "2022-01-01",
  "ligas": [
   "KBO",
@@ -13,9 +13,9 @@
    "dif"
   ],
   "beta": [
-   0.04534,
-   0.80698,
-   0.00633
+   0.03865,
+   0.84099,
+   -0.0023
   ],
   "nota": "logit(p_home) = b0 + b1*(elo_home+HFA-elo_away)/200 + b2*(dif_home-dif_away)"
  },
@@ -25,78 +25,78 @@
    "dif"
   ],
   "beta": [
-   -0.15527,
-   1.85108,
-   0.06278
+   -0.17347,
+   1.92678,
+   0.03857
   ],
-  "sd": 4.2897,
+  "sd": 4.3084,
   "nota": "margen esperado del local; residuos ~ normal(sd)"
  },
- "logit_por_carrera": 0.4013,
+ "logit_por_carrera": 0.40486,
  "walk_forward": {
-  "n": 11271,
-  "brier": 0.2449,
-  "brier_base": 0.2489,
-  "skill_pct": 1.64
+  "n": 10764,
+  "brier": 0.2447,
+  "brier_base": 0.249,
+  "skill_pct": 1.73
  },
  "run_line": {
   "KBO": {
-   "n": 642,
-   "local_gana": 0.5187,
-   "cubre_-1.5_real": 0.3692,
-   "cubre_+1.5_real": 0.6137,
+   "n": 647,
+   "local_gana": 0.5193,
+   "cubre_-1.5_real": 0.3709,
+   "cubre_+1.5_real": 0.6151,
    "mapa_-1.5": [
-    -0.7203,
-    1.2087
+    -0.7183,
+    1.2539
    ],
    "mapa_+1.5": [
-    0.3077,
-    1.1355
+    0.3141,
+    1.1422
    ],
    "nota": "logit(p_cubre) = a + b*logit(p_gana_local)"
   },
   "MLB": {
-   "n": 9490,
+   "n": 9491,
    "local_gana": 0.5321,
    "cubre_-1.5_real": 0.3594,
-   "cubre_+1.5_real": 0.6429,
+   "cubre_+1.5_real": 0.6428,
    "mapa_-1.5": [
-    -0.7267,
-    0.9803
+    -0.7233,
+    0.9726
    ],
    "mapa_+1.5": [
-    0.46,
-    0.9855
+    0.4633,
+    0.9775
    ],
    "nota": "logit(p_cubre) = a + b*logit(p_gana_local)"
   },
   "NPB": {
-   "n": 4507,
-   "local_gana": 0.5427,
-   "cubre_-1.5_real": 0.3483,
-   "cubre_+1.5_real": 0.6687,
+   "n": 4096,
+   "local_gana": 0.5413,
+   "cubre_-1.5_real": 0.3455,
+   "cubre_+1.5_real": 0.6665,
    "mapa_-1.5": [
-    -0.7549,
-    0.8531
+    -0.7676,
+    0.8656
    ],
    "mapa_+1.5": [
-    0.5673,
-    1.006
+    0.5573,
+    1.0344
    ],
    "nota": "logit(p_cubre) = a + b*logit(p_gana_local)"
   },
   "TODAS": {
-   "n": 14639,
-   "local_gana": 0.5348,
-   "cubre_-1.5_real": 0.3564,
-   "cubre_+1.5_real": 0.6496,
+   "n": 14234,
+   "local_gana": 0.5341,
+   "cubre_-1.5_real": 0.3559,
+   "cubre_+1.5_real": 0.6484,
    "mapa_-1.5": [
-    -0.7361,
-    0.9584
+    -0.7362,
+    0.9581
    ],
    "mapa_+1.5": [
-    0.4861,
-    0.9975
+    0.4838,
+    0.9973
    ],
    "nota": "logit(p_cubre) = a + b*logit(p_gana_local)"
   }

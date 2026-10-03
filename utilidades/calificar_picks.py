@@ -519,22 +519,33 @@ def calificar_ia(hoy=None):
 
 
 def calificar_decidir(hoy=None):
-    """Califica salida/historial_decidir.csv (sistema estimado de beisbol): resultado del pick por confianza, por banda
-    de EV y sistema+lectura (senales a favor > en contra) contra sistema solo. Unidades a 1u plana y con el stake del
-    sistema. Escribe salida/historial_decidir_calificado.csv."""
+    """Sistema estimado de beisbol (salida/historial_decidir.csv) -> historial_decidir_calificado.csv."""
+    return _calificar_lista("historial_decidir.csv", "historial_decidir_calificado.csv", hoy)
+
+
+def calificar_picks_dia(hoy=None):
+    """Picks oficiales del dia (salida/historial_picks_dia.csv, de picks_del_dia.py) -> historial_picks_dia_calificado.csv."""
+    return _calificar_lista("historial_picks_dia.csv", "historial_picks_dia_calificado.csv", hoy)
+
+
+def _calificar_lista(entrada, salida, hoy=None):
+    """Califica una lista de picks (liga, id, fecha, home, away, mercado, lado, pick, cuota, ev, confianza, stake, senales_*):
+    resultado por confianza, por banda de EV, sistema+lectura (senales a favor > en contra), liga y mercado.
+    Unidades a 1u plana y en % del bank con el stake registrado."""
     hoy = hoy or dt.date.today()
-    rh = io.ruta("salida", "historial_decidir.csv")
+    rh = io.ruta("salida", entrada)
     if not os.path.exists(rh):
         return None
     with open(rh, encoding="utf-8-sig", newline="") as f:
         filas = list(csv.DictReader(f))
     if not filas:
         return None
-    E = Equipos()
+    E, T = Equipos(), Tenis()
     resultados = []
     for r in filas:
         try:
-            resultados.append(E.resultado(r["liga"], r["fecha"], r["home"], r["away"]))
+            fuente = T if r["liga"] in TENIS else E
+            resultados.append(fuente.resultado(r["liga"], r["fecha"], r["home"], r["away"]))
         except Exception as e:
             resultados.append((None, "error: %s" % e))
     exactos = _reclamos_exactos(filas, resultados)
@@ -547,9 +558,12 @@ def calificar_decidir(hoy=None):
             f = dia(r.get("fecha") or ""); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
         if _fantasma(r, res, exactos):
             o["estado"] = "anulado"; out.append(o); continue
+        if res.get("anulado"):
+            o["estado"] = "anulado"; out.append(o); continue
         o["marcador"] = res.get("marcador", "")
-        linea = (r.get("pick") or "").split()[-1] if r.get("mercado") == "Run line" else ""
-        mk = "Ganador" if r.get("mercado") == "Ganador" else "Spread %s" % linea
+        mk = r.get("mercado") or ""
+        if mk == "Run line":
+            mk = "Spread %s" % (r.get("pick") or "").split()[-1]
         o["resultado"], o["unidades"] = calificar_valor({"valor_mercado": mk, "valor_lado": r["lado"], "valor_cuota": r.get("cuota")}, res, r["liga"])
         if o["resultado"]:
             st = num(r.get("stake")) or 0.0
@@ -557,7 +571,7 @@ def calificar_decidir(hoy=None):
         o["estado"] = "calificado" if o["resultado"] else "sin_dato"
         out.append(o)
     cols = list(filas[0].keys()) + ["estado", "marcador", "resultado", "unidades", "unidades_stake"]
-    with open(io.ruta("salida", "historial_decidir_calificado.csv"), "w", encoding="utf-8-sig", newline="") as f:
+    with open(io.ruta("salida", salida), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(out)
     cal = [o for o in out if o["estado"] == "calificado" and o["resultado"] in ("gano", "perdio", "push")]
     def grupo(rs):
@@ -570,7 +584,17 @@ def calificar_decidir(hoy=None):
         e = num(x.get("ev")) or 0
         return "ev>=8%" if e >= 0.08 else "4-8%" if e >= 0.04 else "1-4%" if e >= 0.01 else "<1%"
     def lectura(x):
-        a, c = num(x.get("senales_favor")) or 0, num(x.get("senales_contra")) or 0
+        a, c = num(x.get("senales_favor")), num(x.get("senales_contra"))
+        if a is None and c is None:
+            s_ = str(x.get("senales") or "")
+            if "a favor" in s_ and "en contra" in s_:
+                try:
+                    a, c = float(s_.split()[0]), float(s_.split("/")[1].split()[0])
+                except (ValueError, IndexError):
+                    return "sin lectura"
+            else:
+                return "sin lectura"
+        a, c = a or 0, c or 0
         return "lectura a favor" if a > c else "lectura en contra" if c > a else "lectura neutra"
     por = lambda fn: {k: grupo([x for x in cal if fn(x) == k]) for k in sorted({fn(x) for x in cal})}
     con_stake = [x for x in cal if (num(x.get("stake")) or 0) > 0]
@@ -578,7 +602,8 @@ def calificar_decidir(hoy=None):
             "pendientes": sum(1 for o in out if o["estado"] == "pendiente"), "anulados": sum(1 for o in out if o["estado"] == "anulado"),
             "total": grupo(cal), "con_stake": grupo(con_stake), "por_confianza": por(lambda x: x.get("confianza") or ""),
             "por_ev": por(banda), "por_lectura": por(lectura), "por_liga": por(lambda x: x.get("liga") or ""),
-            "por_mercado": por(lambda x: x.get("mercado") or "")}
+            "por_mercado": por(lambda x: "Spread" if (x.get("mercado") or "").startswith("Run") else ((x.get("mercado") or "").split()[0] if x.get("mercado") else "")),
+            "por_origen": por(lambda x: x.get("origen") or "")}
 
 
 def imprimir(rs):
@@ -622,19 +647,21 @@ def imprimir(rs):
             lg, mk = k.split("|")
             print("%-8s %-8s %6d %7s%% %7s%% %8s %6s" % (lg, mk, d["n"], d["acierto_pct"] if d["acierto_pct"] is not None else "-",
                   d["p_media_pct"] if d["p_media_pct"] is not None else "-", d["brier"] if d["brier"] is not None else "-", d["mae"] if d["mae"] is not None else "-"))
-    rd = rs.get("decidir")
-    if rd:
+    for clave_rs, encabezado in (("picks_dia", "PICKS DEL DIA (lista oficial, picks_del_dia.py)"), ("decidir", "SISTEMA ESTIMADO (beisbol, decidir.py; todas las decisiones, no solo las oficiales)")):
+        rd = rs.get(clave_rs)
+        if not rd:
+            continue
         t = rd.get("total") or {}
-        print("\nSISTEMA ESTIMADO (beisbol, decidir.py): %d registros, %d con pick, %d calificados, %d pendientes, %d anulados" % (
-            rd["registros"], rd["con_pick"], rd["calificados"], rd["pendientes"], rd["anulados"]))
+        print("\n%s: %d registros, %d con pick, %d calificados, %d pendientes, %d anulados" % (
+            encabezado, rd["registros"], rd["con_pick"], rd["calificados"], rd["pendientes"], rd["anulados"]))
         if t:
-            print("  todos los picks  n=%d acierto %.1f%% EV medio %+.1f%% | 1u plana: %+.2fu ROI %+.1f%% | con stake del sistema: %+.2f%% del bank" % (
+            print("  todos los picks  n=%d acierto %.1f%% EV medio %+.1f%% | 1u plana: %+.2fu ROI %+.1f%% | con stake: %+.2f%% del bank" % (
                 t["n"], t["acierto_pct"], t["ev_medio_pct"], t["unidades"], t["roi_pct"], t["bank_pct"]))
-            for titulo, clave in (("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
+            for titulo, clave in (("por origen", "por_origen"), ("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
                 for k, d in (rd.get(clave) or {}).items():
-                    if d:
+                    if d and k:
                         print("  %-18s %-18s n=%3d acierto %5.1f%% EV %+5.1f%% %+6.2fu ROI %+6.1f%%" % (titulo, k, d["n"], d["acierto_pct"], d["ev_medio_pct"], d["unidades"], d["roi_pct"]))
-                    titulo = ""
+                        titulo = ""
     ria = rs.get("picks_ia")
     if ria:
         print("\nPICKS IA (API + manuales en ia/lecturas): %d lecturas, %d apuestas, %d pendientes" % (ria["lecturas"], ria["apuestas"], ria["pendientes"]))
@@ -677,6 +704,12 @@ def main():
         rd = None; print("  decidir: no se pudo calificar (%s)" % e)
     if rd:
         rs["decidir"] = rd
+    try:
+        rp_ = calificar_picks_dia()
+    except Exception as e:
+        rp_ = None; print("  picks del dia: no se pudo calificar (%s)" % e)
+    if rp_:
+        rs["picks_dia"] = rp_
     json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     imprimir(rs)
     sr = [x for x in cal if x["estado"] == "sin_resultado"]
