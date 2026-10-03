@@ -59,4 +59,12 @@ B. Análisis por partido, uno por uno, en prosa y con números, siempre con esta
    1. Contexto: récords, sede, situación (playoff, home opener, revancha), lesiones, abridores o porteros (con fuente).
    2. Modelo: probabilidades, marcador o total esperado, spread / run line / puck line, confianza, estado de validación
       del mercado (skill, z, publicable o sin_validar) y sesgos conocidos.
-   3.
+   3. Osciladores y forma: osciladores, L10 y L5, splits local/visita, estadísticas de equipo relevantes, H2H y O/U
+      recientes. Si la forma es de la temporada pasada o hay menos de 5 juegos, decirlo.
+   4. Mercado: probabilidad sin vig (casa y sharp), movimiento desde la apertura, lectura sharp vs público y predictor ESPN.
+   5. Relación entre capas: conteo de señales a favor y en contra, con el número de cada una.
+   6. Decisión final y por qué: nivel, mercado, cuota y la regla que la define (validación, EV, cuota 1.70-3.00).
+      Si es PASAR, cuál es la mejor lectura y qué le falta para ser pick.
+Sin adjetivos ni juicios de valor cuando se pida. Partidos ya empezados: marcarlos y dejarlos al final.
+Sin stakes en pesos. Cierra con "Fuentes:" si usaste internet.
+No hagas commit de `salida/picks_ia.json` ni `historial_ia.csv` al repo público sin que el dueño lo pida.
