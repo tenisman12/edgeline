@@ -44,7 +44,14 @@ python utilidades/guardar_lecturas.py trabajo/lecturas_<fecha>.json --origen cla
 ```
 Corrige cualquier ERROR que marque el validador y vuelve a correr.
 
-## 6. Respuesta a Alejandro
-Primero la tabla de picks (PREMIUM y PICK: hora CDMX, partido, mercado, lado, cuota, nivel), luego LEAN y REVISAR,
-luego el análisis por partido. Sin stakes en pesos. Cierra con "Fuentes:" si usaste internet.
-No hagas commit de `salida/picks_ia.json` ni `historial_ia.csv` al repo público sin que Alejandro lo pida.
+## 6. Respuesta (formato obligatorio)
+Nunca entregar solo la tabla. Siempre las dos partes:
+
+A. Resumen: tabla con TODOS los partidos leídos: hora CDMX, partido, decisión (PREMIUM | PICK | LEAN | REVISAR | PASAR),
+   mercado, lado y cuota. Un pick por partido: si la decisión es PASAR, poner la mejor lectura marcada "sin valor".
+
+B. Análisis por partido, uno por uno, en prosa y con números, siempre con estas seis partes:
+   1. Contexto: récords, sede, situación (playoff, home opener, revancha), lesiones, abridores o porteros (con fuente).
+   2. Modelo: probabilidades, marcador o total esperado, spread / run line / puck line, confianza, estado de validación
+      del mercado (skill, z, publicable o sin_validar) y sesgos conocidos.
+   3.
