@@ -22,7 +22,7 @@ python utilidades/volcar_partidos.py --fecha <fecha> --ligas <ligas>
 Lee cada archivo de `trabajo/volcado/` completo. Si son muchas ligas, lanza un subagente por liga con estas mismas
 instrucciones y que te devuelva las lecturas en JSON; tú revisas y unificas.
 Por partido usa todos los bloques: contexto, modelo (+derivados), validacion, alerta, cuotas, mercados, valor,
-movimiento (con serie), consenso, forma (ventanas, ELO, power, status, osciladores, ou4), h2h_datos,
+movimiento (con serie), lectura sharp vs público de `salida/mercado_publico.json` (por partido), consenso, forma (ventanas, ELO, power, status, osciladores, ou4), h2h_datos,
 estadisticas_equipo, jugadores_clave, picks/pick_top (puntaje Pick Premium) y bloques (qué falta).
 
 ## 3. Completar con internet solo lo que falte y cambie la lectura

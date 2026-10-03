@@ -63,6 +63,10 @@ jobs:
         continue-on-error: true
         run: python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3
 
+      - name: Lectura sharp vs publico (casas sharp contra casas del publico)
+        continue-on-error: true
+        run: python utilidades/mercado_libros.py --actualizar --ver --horas 48 > /tmp/mercado.txt; head -5 /tmp/mercado.txt
+
       - name: Re-predecir con cuotas y contexto frescos
         continue-on-error: true
         timeout-minutes: 20
@@ -77,7 +81,7 @@ jobs:
         run: python utilidades/calificar_picks.py | head -20
 
       - name: Subir a main
-        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv"
+        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/mercado_libros.json salida/mercado_publico.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv"
 
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |

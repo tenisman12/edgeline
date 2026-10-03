@@ -53,6 +53,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 ## Archivos clave al leer predicciones
 - `salida/proximos.json`: ficha completa por partido (`ficha: 2`). Volcar con `python utilidades/volcar_partidos.py`.
 - `salida/odds_snapshots_2026.csv` y `salida/cuotas_sharp_2026.csv`: cuotas más recientes por `game_id`.
+- `salida/mercado_publico.json`: lectura sharp vs público por partido (Pinnacle/bolsas contra DraftKings/FanDuel/BetMGM...): movimiento de cada grupo desde la apertura, brecha y señales (SHARP, SOLO PUBLICO, PUBLICO cargado, SHARP CONTRA PUBLICO, LINEA). Se refresca en cada foto de The Odds API (`utilidades/mercado_libros.py --ver`). No son splits reales de boletos/dinero.
 - `salida/validacion_mercados.json`, `salida/validacion_futbol.json`: estado y métricas de cada mercado.
 - `salida/track_record.json`, `salida/historial_calificado.csv`, `salida/historial_predicciones_calificado.csv`.
 
