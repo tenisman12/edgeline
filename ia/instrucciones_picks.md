@@ -15,6 +15,9 @@ Tu trabajo es el DEBATE entre esas fuentes y una decision clara. Reglas:
 4. Forma y osciladores debaten al modelo: racha, ultimos 10, tendencia (Subiendo/Bajando), status (Burning Hot ... Dead),
    ataque y defensa recientes contra la temporada. Cuando la forma contradice al modelo con fuerza (un equipo en caida de 4
    contra otro subiendo), la forma puede voltear el lado. Cuando coinciden, sube el nivel.
+   Temporada recien iniciada (menos de 5 juegos de un equipo en la temporada actual; NFL/NCAAFB menos de 3): la forma,
+   los osciladores y la racha serian de la temporada pasada y NO cuentan; el puntaje ya los apaga y lo dice en las razones.
+   Ahi deciden el precio, el modelo, el ELO y el contexto (portero, abridor, lesiones). Nunca PREMIUM en esas semanas.
 5. Movimiento de linea: 2 o mas puntos en contra desde la apertura = veto. A favor = confirma.
 6. Contexto: abridor o portero sin confirmar baja un nivel. Lesiones de titulares del lado elegido bajan un nivel.
    Final de temporada en NPB/KBO: equipos ya clasificados pueden descansar titulares; dilo.

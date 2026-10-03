@@ -601,6 +601,9 @@ PESOS = {"precio": 30, "modelo": 20, "forma": 20, "movimiento": 10, "consenso": 
          # usando las senales que guarda historial_picks.csv. El puntaje se normaliza por el peso disponible.
          "osciladores": 10, "fuerza": 10, "abridor": 10, "bullpen": 5, "racha": 5}
 CORTE = {"premium": 75, "pick": 60, "lean": 45}
+# Con menos juegos que esto en la temporada actual, forma/osciladores/racha se apagan y fuerza usa solo el ELO.
+# NFL/NCAAFB juegan 12-17 partidos: 3 ya son forma. Tenis no aplica (la ficha es por jugador y por torneo).
+MIN_JUEGOS_TEMP = {"americano": 3, "tenis": 0, "default": 5}
 _STATUS = {"Burning Hot": 1.0, "Hot": 0.6, "Average Up": 0.3, "Average": 0.0, "New": 0.0, "Average Down": -0.3, "Cold": -0.6, "Dead": -1.0}
 _TEND = {"Subiendo": 1.0, "Estable": 0.0, "Bajando": -1.0}
 
@@ -616,12 +619,47 @@ def _lin(x, x0, x1, tope):
     return max(0.0, min(tope, tope * (x - x0) / float(x1 - x0)))
 
 
+DIAS_NUEVA_TEMP = 60   # si el ultimo juego del equipo es de hace mas de 60 dias respecto al partido, su "temporada" es la anterior
+
+
+def _juegos_temp(t, fecha=None):
+    """juegos del equipo en la temporada actual (ventana temp). Si su ultimo juego es de hace mas de DIAS_NUEVA_TEMP
+    dias respecto al partido (NBA en octubre con 82 juegos de abril), la temporada vigente aun no empieza: 0."""
+    if not t:
+        return None
+    n = ((t.get("ventanas") or {}).get("temp") or {}).get("n")
+    n = int(n) if n is not None else 0
+    u = (t.get("ultimo_juego") or "")[:10]
+    if fecha and u:
+        try:
+            import datetime as _dt
+            if (_dt.date.fromisoformat(fecha[:10]) - _dt.date.fromisoformat(u)).days > DIAS_NUEVA_TEMP:
+                return 0
+        except ValueError:
+            pass
+    return n
+
+
+def temporada_corta(rec):
+    """True si alguno de los dos equipos tiene menos de MIN_JUEGOS_TEMP juegos en la temporada actual: la forma reciente,
+    los osciladores y la racha serian de la temporada pasada (otro plantel) y no deben puntuar."""
+    f = rec.get("forma") or {}
+    H, A = f.get("home") or {}, f.get("away") or {}
+    if not H or not A:
+        return False
+    minimo = MIN_JUEGOS_TEMP.get(rec.get("deporte"), MIN_JUEGOS_TEMP["default"])
+    if not minimo:
+        return False
+    nh, na = _juegos_temp(H, rec.get("fecha")), _juegos_temp(A, rec.get("fecha"))
+    return min(nh, na) < minimo
+
+
 def _senal_forma(rec, tipo, lado):
     """-1..1: que tan a favor del lado estan la forma reciente, los osciladores, la tendencia y el status."""
     import math
     f = rec.get("forma") or {}
     H, A = f.get("home") or {}, f.get("away") or {}
-    if not H or not A:
+    if not H or not A or temporada_corta(rec):
         return None
     def osc(t, k):
         return float(((t.get("osciladores") or {}).get(k)) or 0.0)
@@ -736,7 +774,7 @@ def _senal_osciladores(rec, tipo, lado):
     """-1..1 con los osciladores que la senal de forma no usa: ataque, defensa (negativo = permite menos), dif5 y O/U."""
     import math
     H, A = _lados_forma(rec)
-    if H is None:
+    if H is None or temporada_corta(rec):
         return None
     def o(t, k):
         return _num((t.get("osciladores") or {}).get(k)) or 0.0
@@ -767,6 +805,8 @@ def _senal_fuerza(rec, tipo, lado):
     def v(t, w, k):
         return _num(((t.get("ventanas") or {}).get(w) or {}).get(k))
     d = ((_num(me.get("elo")) or 1500.0) - (_num(op.get("elo")) or 1500.0)) / 200.0
+    if temporada_corta(rec):
+        return math.tanh(1.2 * d)          # temporada recien iniciada: solo el ELO (arrastra la fuerza del cierre anterior)
     dm, do = v(me, "temp", "dif"), v(op, "temp", "dif")
     if dm is not None and do is not None:
         d += 0.5 * (dm / _escala(me) - do / _escala(op))
@@ -780,7 +820,7 @@ def _senal_racha(rec, tipo, lado):
     """-1..1: racha actual y % de puntos en los ultimos 5."""
     import math
     H, A = _lados_forma(rec)
-    if H is None or tipo == "Total" or lado not in ("home", "away"):
+    if H is None or tipo == "Total" or lado not in ("home", "away") or temporada_corta(rec):
         return None
     me, op = (H, A) if lado == "home" else (A, H)
     def r(t):
@@ -873,6 +913,8 @@ def _razonar(rec, k):
             fr.append("Forma: %s (%s) contra %s (%s)." % (rec["home" if lado == "home" else "away"]["nombre"], a or "sin senal",
                                                         rec["away" if lado == "home" else "home"]["nombre"], b or "sin senal"))
     s_ = k["senales"]
+    if temporada_corta(rec):
+        fr.append("Temporada recien iniciada: la forma reciente seria de la temporada pasada y no puntua; cuenta el precio, el modelo, el ELO y el contexto.")
     if s_.get("forma") is not None:
         fr.append("La forma %s." % ("apoya" if s_["forma"] >= 0.6 * PESOS["forma"] else ("va en contra" if s_["forma"] <= 0.3 * PESOS["forma"] else "no inclina")))
     extra = []
@@ -927,6 +969,10 @@ def puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado)
         cond.append("forma")
     if sen.get("movimiento") is not None and sen["movimiento"] < 0.25 * PESOS["movimiento"]:
         cond.append("linea en contra")
+    if temporada_corta(rec):
+        f = rec.get("forma") or {}
+        cond.append("temporada recien iniciada (%s %s j, %s %s j): forma, osciladores y racha apagados" % (
+            rec["home"]["nombre"], _juegos_temp(f.get("home"), rec.get("fecha")), rec["away"]["nombre"], _juegos_temp(f.get("away"), rec.get("fecha"))))
     return round(puntaje, 1), {k: (None if v is None else round(v, 1)) for k, v in sen.items()}, cond
 
 
@@ -969,6 +1015,8 @@ def decidir_picks(rec, g, eventos):
         nivel = "premium" if puntaje >= CORTE["premium"] else ("pick" if puntaje >= CORTE["pick"] else ("lean" if puntaje >= CORTE["lean"] else "pasar"))
         if nivel == "premium" and cond:
             nivel = "pick"; razones.append("sin premium: " + ", ".join(cond))
+        elif cond and any(c.startswith("temporada recien iniciada") for c in cond):
+            razones.append([c for c in cond if c.startswith("temporada recien iniciada")][0])
         # ---- vetos duros
         if rec.get("pretemporada"):
             nivel = "pasar"; razones.append("pretemporada")

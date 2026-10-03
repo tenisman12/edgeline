@@ -56,11 +56,16 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `salida/mercado_publico.json`: lectura sharp vs público por partido (Pinnacle/bolsas contra DraftKings/FanDuel/BetMGM...): movimiento de cada grupo desde la apertura, brecha y señales (SHARP, SOLO PUBLICO, PUBLICO cargado, SHARP CONTRA PUBLICO, LINEA). Se refresca en cada foto de The Odds API (`utilidades/mercado_libros.py --ver`). No son splits reales de boletos/dinero.
 - `salida/validacion_mercados.json`, `salida/validacion_futbol.json`: estado y métricas de cada mercado.
 - `salida/track_record.json`, `salida/historial_calificado.csv`, `salida/historial_predicciones_calificado.csv`.
+- `salida/decidir.json` y `salida/historial_decidir.csv`: sistema estimado de béisbol (`utilidades/decidir.py`): p_modelo (ELO + diferencial + abridor),
+  p_final (Pinnacle 75% + modelo 25% en logit), pick de mayor EV (ML o run line, cuota 1.70–3.00), confianza alta/media/baja/mínima (stake 3/2/1/0%)
+  y conteo de señales de la lectura a favor / en contra. Coeficientes en `modelos/decidir_beisbol.json` (`utilidades/pesos_capas.py`).
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.
 - Con menos de 5 juegos en la temporada los osciladores salen en 0: "sin señal".
+- Pick Premium con temporada recién iniciada (`plataforma.temporada_corta`: menos de 5 juegos en la temporada actual, NFL/NCAAFB menos de 3,
+  o último juego hace más de 60 días): forma, osciladores y racha no puntúan, fuerza usa solo el ELO, nunca premium; la razón lo dice.
 - NHL: ganador `sin_validar`; no usar el total del modelo como argumento.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.
 
