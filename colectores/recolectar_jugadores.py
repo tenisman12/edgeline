@@ -308,6 +308,7 @@ def mlb_filas(box, meta, liga):
 
 # ------------------------------------------------------------------ NPB (Nippon Baseball Data Repository: por jugador y partido)
 REL_NPB = "https://github.com/armstjc/Nippon-Baseball-Data-Repository/releases/download"
+NPB_KIND_FUERA = {"4", "5"}     # game_kind_id: 4 = Juego de Estrellas, 5 = pretemporada (open-sen)
 
 
 def _csv_url(url):
@@ -325,7 +326,8 @@ def _csv_url(url):
 def cmd_npb_repo(a):
     """NPB no tiene box scores en la MLB Stats API. El repositorio publico de armstjc trae stats por jugador y partido
     (bateo y pitcheo, incl. orden de salida del lanzador): se convierten al MISMO esquema que mlb_lanzadores.csv y
-    mlb_bateadores.csv con liga = NPB. Pretemporada (game_kind_id != 1) se excluye.
+    mlb_bateadores.csv con liga = NPB. Se excluyen pretemporada (game_kind_id 5) y Juego de Estrellas (4); entran Liga Central (1),
+    Liga del Pacifico (2), interliga (26), Climax Series (35-38) y Serie de Japon (3).
     Uso: python colectores\\recolectar_jugadores.py npb --desde 2024-03-01   (sin --desde: desde el ultimo dia guardado - 3)"""
     f_lan, f_bat = "mlb_lanzadores.csv", "mlb_bateadores.csv"
     d1 = a.desde or desde_modo_diario(f_lan, "2024-03-01")
@@ -337,8 +339,8 @@ def cmd_npb_repo(a):
         sched = _csv_url("%s/schedule/%d_npb_schedule.csv" % (REL_NPB, season))
         juegos = {}
         for g in sched:
-            if str(g.get("game_kind_id")) != "1" or g.get("home_score") in (None, "", "NA"):
-                continue                       # solo temporada regular y juegos terminados
+            if str(g.get("game_kind_id")) in NPB_KIND_FUERA or g.get("home_score") in (None, "", "NA"):
+                continue                       # sin pretemporada ni Juego de Estrellas; solo juegos terminados
             fecha = (g.get("game_date") or "")[:10]
             if not (d1 <= fecha <= d2):
                 continue
@@ -379,6 +381,8 @@ def cmd_npb_repo(a):
                                         ("bb", "batting_BB"), ("k", "batting_SO"), ("sb", "batting_SB"), ("cs", "batting_CS"),
                                         ("hbp", "batting_HBP"), ("sf", "batting_SF")):
                         x[k_out] = num(r.get(k_in))
+                    _n = lambda k: x[k] if isinstance(x[k], (int, float)) else 0
+                    x["tb"] = _n("h") + _n("d2") + 2 * _n("d3") + 3 * _n("hr")     # la fuente no trae bases totales
                     bat.append(x)
         n1, _ = fusionar(f_lan, lan, lambda r: "%s|%s" % (r["game_id"], r["player_id"]), FIJAS_BB)
         n2, _ = fusionar(f_bat, bat, lambda r: "%s|%s" % (r["game_id"], r["player_id"]), FIJAS_BB)

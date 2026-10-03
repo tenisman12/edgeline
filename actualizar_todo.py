@@ -31,6 +31,28 @@ def _sin_pretemporada_nhl(fila):
     return not (len(g) == 10 and g[4:6] == "01")
 
 
+_NPB_FUERA = {}
+
+
+def _sin_pretemporada_npb(fila):
+    """NPB: quita pretemporada y Juego de Estrellas (game_kind_id 5 y 4 del calendario del repositorio NPB).
+    Si no se puede leer el calendario de una temporada, esa temporada se deja como esta."""
+    if fila.get("league") != "NPB":
+        return True
+    season = str(fila.get("season") or (fila.get("game_date") or "")[:4]).replace(".0", "")
+    if season not in _NPB_FUERA:
+        try:
+            sys.path.insert(0, COL)
+            import recolectar_npb
+            _NPB_FUERA[season] = recolectar_npb.ids_excluidos([season]) or set()
+        except Exception:
+            _NPB_FUERA[season] = set()
+    gp = str(fila.get("gamePk") or "")
+    if gp.endswith(".0"):
+        gp = gp[:-2]
+    return gp not in _NPB_FUERA[season]
+
+
 def _dias_mlb():
     """dias a pedir de MLB en modo diario: desde el ultimo juego guardado menos 3 de solape (minimo 4, maximo 45)."""
     try:
@@ -72,7 +94,7 @@ def pasos(completo):
                              ["recolectar_boxscores.py", "--liga", "mlb", "--desde", bb_mlb],
                              ["recolectar_npb.py", "--desde", str(y_bb), "--hasta", str(HOY.year)],
                              ["recolectar_kbo.py", "--desde", str(y_bb), "--hasta", str(HOY.year)]],
-                    "copia": ("baseball_boxscores.csv", "beisbol.csv"), "filtro": None},
+                    "copia": ("baseball_boxscores.csv", "beisbol.csv"), "filtro": _sin_pretemporada_npb},
         "futbol": {"cmds": [["recolectar_futbol.py", "--desde", fut]],
                    "copia": ("futbol_games.csv", "futbol.csv"), "filtro": None},
         # Liga MX y MLS (football-data.co.uk /new/MEX.csv y USA.csv): una peticion por liga, mezcla por upsert.

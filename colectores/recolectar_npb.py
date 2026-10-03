@@ -66,6 +66,22 @@ def _ip(x):
     return ent + (outs / 3.0 if outs in (1, 2) else 0.0)
 
 
+KIND_FUERA = {"4", "5"}     # game_kind_id: 4 = Juego de Estrellas, 5 = pretemporada (open-sen). 1/2 = Central/Pacifico,
+                           # 26 = interliga, 35-38 = Climax Series, 3 = Serie de Japon: esos SI cuentan.
+
+
+def ids_excluidos(seasons):
+    """{game_id} de pretemporada y Juego de Estrellas de esas temporadas. None si no se pudo leer algun calendario
+    (quien lo use debe dejar las filas como estan)."""
+    fuera = set()
+    for season in sorted(set(int(x) for x in seasons)):
+        sched = bajar_csv("%s/schedule/%d_npb_schedule.csv" % (REL, season))
+        if not sched:
+            return None
+        fuera |= {str(g.get("game_id")) for g in sched if str(g.get("game_kind_id")) in KIND_FUERA}
+    return fuera
+
+
 def recolectar(desde, hasta):
     filas = []
     for season in range(desde, hasta + 1):
@@ -78,6 +94,8 @@ def recolectar(desde, hasta):
             hs, as_ = g.get("home_score"), g.get("away_score")
             if hs in (None, "", "NA") or as_ in (None, "", "NA"):
                 continue
+            if str(g.get("game_kind_id")) in KIND_FUERA:
+                continue                     # pretemporada y Juego de Estrellas no cuentan para el record
             gid = str(g.get("game_id"))
             juegos[gid] = {
                 "fecha": (g.get("game_date") or "")[:10],

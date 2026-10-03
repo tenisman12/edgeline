@@ -88,6 +88,25 @@ def ultima_fecha(ruta):
     return fs[-1] if fs else None
 
 
+MIN_JUEGOS_EQUIPO = 10      # ademas de los ultimos N dias, cada equipo conserva sus ultimos 10 juegos (inicio de temporada:
+                            # el equipo que aun no juega conserva el final de la temporada pasada en vez de desaparecer)
+
+
+def _ultimos_por_equipo(filas, n=MIN_JUEGOS_EQUIPO):
+    """{(game_id, team)} de los ultimos n juegos de cada equipo (por liga si hay columna liga)."""
+    por = {}
+    for r in filas:
+        t = r.get("team")
+        if not t or not r.get("game_id"):
+            continue
+        por.setdefault((r.get("liga") or "", t), set()).add(((r.get("game_date") or "")[:10], str(r["game_id"])))
+    keep = set()
+    for (lg, t), js in por.items():
+        for _, gid in sorted(js)[-n:]:
+            keep.add((gid, t))
+    return keep
+
+
 def recortar(dias=60):
     if not os.path.isdir(DIR):
         print("No existe %s: nada que recortar." % DIR); return 1
@@ -102,7 +121,8 @@ def recortar(dias=60):
         if not fmax:
             continue
         lim = (dt.date.fromisoformat(fmax) - dt.timedelta(days=dias)).isoformat()
-        rec = [r for r in filas if (r.get("game_date") or "")[:10] >= lim]
+        ult = _ultimos_por_equipo(filas)
+        rec = [r for r in filas if (r.get("game_date") or "")[:10] >= lim or (str(r.get("game_id")), r.get("team")) in ult]
         cols = [c for c in CORE[n] if c in cols0] if n in CORE else cols0
         _escribir(os.path.join(REC, n), cols, rec)
         kb = os.path.getsize(os.path.join(REC, n)) / 1024
@@ -143,14 +163,39 @@ def _correr(args):
         print("    (fallo: %s; se sigue con las demas fuentes)" % ex)
 
 
+def _relleno_nhl(hoy):
+    """Si en nhl_porteros.csv faltan equipos que si estan en datos/hockey.csv, devuelve la fecha desde la que hay que
+    bajar para tener sus ultimos MIN_JUEGOS_EQUIPO juegos (normalmente el final de la temporada pasada). None si no falta nadie."""
+    _, hockey = _leer(os.path.join(BASE, "datos", "hockey.csv"))
+    _, porteros = _leer(os.path.join(DIR, "nhl_porteros.csv"))
+    if not hockey:
+        return None
+    lim = (hoy - dt.timedelta(days=400)).isoformat()
+    fechas = {}
+    for r in hockey:
+        f = (r.get("game_date") or "")[:10]
+        if f >= lim and r.get("team"):
+            fechas.setdefault(r["team"], set()).add(f)
+    tienen = {r.get("team") for r in porteros}
+    faltan = [t for t in fechas if t not in tienen]
+    if not faltan:
+        return None
+    desde = min(sorted(fechas[t])[-MIN_JUEGOS_EQUIPO:][0] for t in faltan)
+    print("NHL: faltan %d equipos en porteros (%s); se rellena desde %s" % (len(faltan), ", ".join(sorted(faltan)), desde))
+    return dt.date.fromisoformat(desde)
+
+
 def diario(dias_max=30):
     hoy = dt.date.today()
     d = _desde(os.path.join(DIR, "mlb_lanzadores.csv"), dias_max, hoy)
     _correr(["mlb", "--desde", d.isoformat(), "--sin-raw"])
     _correr(["invierno", "--desde", d.isoformat(), "--sin-raw"])
-    _correr(["npb", "--desde", d.isoformat()])          # repositorio publico (box scores NPB)
+    # NPB: siempre los ultimos 60 dias (el repositorio son unos pocos CSV por mes y la fusion no duplica). Asi se
+    # rellena sola la Liga del Pacifico, que antes se descartaba, y cualquier hueco que deje una corrida perdida.
+    _correr(["npb", "--desde", min(d, hoy - dt.timedelta(days=60)).isoformat()])
     _correr(["kbo", "--desde", d.isoformat()])          # abridores por juego (puede fallar desde Actions; sigue)
     d = _desde(os.path.join(DIR, "nhl_porteros.csv"), dias_max, hoy)
+    d = min(d, _relleno_nhl(hoy) or d)
     _correr(["nhl", "--desde", d.isoformat(), "--sin-raw"])
     _correr(["nfl", "--sin-raw"])
     for lg in ESPN_LIGAS:

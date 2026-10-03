@@ -169,7 +169,9 @@ def beisbol(liga, team, probable=None):
         bs = []
         for pid, rs in _por_jugador(rec).items():
             ab, h, bb, hbp, sf, pa = (_sum(rs, c) for c in ("ab", "h", "bb", "hbp", "sf", "pa"))
-            tbases = _sum(rs, "tb")
+            # bases totales: la columna tb si viene; si no (NPB del repositorio), H + 2B + 2x3B + 3xHR
+            tbases = sum(_sum([r], "tb") if str(r.get("tb") or "").strip() not in ("", "nan")
+                         else _sum([r], "h") + _sum([r], "d2") + 2 * _sum([r], "d3") + 3 * _sum([r], "hr") for r in rs)
             den = ab + bb + hbp + sf
             bs.append({"jugador": rs[-1].get("jugador"), "pos": rs[-1].get("posicion"), "juegos": len(rs),
                        "pa": pa, "avg": round(h / ab, 3) if ab else None,
