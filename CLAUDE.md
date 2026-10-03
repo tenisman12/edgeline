@@ -63,3 +63,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Con menos de 5 juegos en la temporada los osciladores salen en 0: "sin señal".
 - NHL: ganador `sin_validar`; no usar el total del modelo como argumento.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.
+
+## Datos históricos (rama "datos")
+Al inicio de cada sesión, antes de analizar, traer la rama de datos:
+git fetch origin datos && git worktree add trabajo/datos origin/datos
+Quedan en trabajo/datos/datos/ y se pueden leer libremente para cualquier análisis.
