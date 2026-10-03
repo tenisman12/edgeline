@@ -104,7 +104,7 @@ CUOTA_MAX = 3.00                  # arriba de 3.00 los longshots pierden (-4% a 
 PESO_SHARP = 0.85                 # mezcla: 85% probabilidad sharp (Pinnacle/consenso) + 15% modelo (mas peso al modelo = menos ROI)
 EXTRA_SESGO = 0.02                # NFL/NCAAFB: local y over estan sobreapostados (-5% / -6%): piden 2 pts mas de EV
 EDGE_REVISAR = 0.10               # edge del modelo arriba de esto = informacion que el modelo no ve: "revisar", no pick
-CUOTA_MIN = 1.80           # cuota decimal minima para marcar VALOR/pick (1.80 = -125 americano)
+CUOTA_MIN = 1.699          # cuota decimal minima para marcar VALOR/pick (1.70 = -143 americano)
 STAKE_PLANO = 1.0      # unidades por pick (stake plano: el track record se mide a 1u por apuesta)
 EDGE_SOSPECHOSO = 0.15    # arriba de esto se pide revisar (falta info: lesion, alineacion...)
 _aplicar_validacion()
@@ -336,7 +336,7 @@ def _fila(mkt, lado, cuota, p, pf, umbral, liga=None):
     if est in ("valor", "revisar") and (liga, tipo) in NO_PUBLICABLE:
         est = "sin_validar"      # hay diferencia con el mercado, pero este mercado no vence al baseline
     if est in ("valor", "revisar") and mercado.american_a_decimal(cuota) < CUOTA_MIN:
-        est = "cuota_baja"       # edge positivo, pero la cuota paga menos que el minimo (1.80)
+        est = "cuota_baja"       # edge positivo, pero la cuota paga menos que el minimo (1.70)
     return {"mercado": mkt, "lado": lado, "cuota": cuota, "p_modelo": round(p, 4), "p_mercado": round(pf, 4),
             "edge": round(e, 4), "kelly": round(mercado.kelly(p, cuota), 4) if est == "valor" else 0.0, "estado": est}
 
@@ -932,7 +932,7 @@ def puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado)
 
 def decidir_picks(rec, g, eventos):
     """PICK PREMIUM por mercado y lado: puntaje 0-100 que junta precio (sharp vs mejor cuota), modelo, forma/osciladores,
-    movimiento de linea, consenso, H2H y contexto. Vetos duros: pretemporada, empate, cuota fuera de 1.80-3.00,
+    movimiento de linea, consenso, H2H y contexto. Vetos duros: pretemporada, empate, cuota fuera de 1.70-3.00,
     modelo >15 pts arriba del mercado (revisar), linea movida >=2 pts en contra. Sin cuota (NPB, KBO, tenis) se
     puntua sin la senal de precio y se entrega la CUOTA MINIMA para que el pick valga."""
     m = rec.get("modelo") or {}

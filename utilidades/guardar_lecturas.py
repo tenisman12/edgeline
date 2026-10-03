@@ -59,8 +59,8 @@ def main():
         if dec in ("PREMIUM", "PICK"):
             if not l.get("mercado") or l.get("cuota") is None:
                 errores.append("%s %s: %s sin mercado o sin cuota" % (l["liga"], l["id"], dec)); continue
-            if float(l["cuota"]) < 1.80:
-                errores.append("%s %s: cuota %.2f < 1.80" % (l["liga"], l["id"], float(l["cuota"]))); continue
+            if float(l["cuota"]) < 1.699:
+                errores.append("%s %s: cuota %.2f < 1.70" % (l["liga"], l["id"], float(l["cuota"]))); continue
             l["stake"] = 1.0
         else:
             l["stake"] = 0.0

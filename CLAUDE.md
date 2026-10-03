@@ -31,7 +31,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 4. **Validación única y estricta** (walk-forward as-of contra línea base): n>=300, mejora a la base, z>=2.0
    (fútbol 1.64), mejora en ambas mitades, calibrado |p media - tasa real|<=0.04 (conteos: sesgo<=0.10 desv.).
    "Publicable" = supera la tasa histórica, NO a las casas. No hay edge demostrado contra el cierre (CLV pendiente).
-5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota >= 1.80 (-125) y <= 3.00. Stake plano 1 u.
+5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota >= 1.70 (-143) y <= 3.00 (+200). Stake plano 1 u.
    Sin cuota no hay pick. Criterio completo en `ia/instrucciones_picks.md`.
 6. **Pretemporada y juegos "If Necessary"** fuera de VALOR y track record.
 7. **Llaves** solo en variables de entorno / secretos (`EDGELINE_ODDS_KEY`, `ANTHROPIC_API_KEY`). Nunca en código ni chat.

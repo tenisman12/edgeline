@@ -309,7 +309,7 @@ def main():
                             print("      %-22s %-9s %8s %9s %9s %+7.1f%% %6.1f%%%s" % (
                                 x["mercado"], x["lado"], cuota(x["cuota"]), pct(x["p_modelo"]).strip(), pct(x["p_mercado"]).strip(),
                                 100 * x["edge"], 100 * (x.get("kelly") or 0.0),
-                                "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else ("  (cuota < 1.80: no se marca)" if x.get("estado") == "cuota_baja" else ""))))
+                                "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else ("  (cuota < 1.70: no se marca)" if x.get("estado") == "cuota_baja" else ""))))
                 else:
                     print("      CUOTAS: aun no publicadas")
                 if a.valor and p.get("picks"):
