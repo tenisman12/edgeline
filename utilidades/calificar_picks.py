@@ -263,6 +263,8 @@ def procesar(filas, hoy=None):
             o["estado"] = "anulado"; o["marcador"] = r["anulado"]; out.append(o); continue
         if _fantasma(r, res, exactos):
             o["estado"] = "anulado"; o["marcador"] = "partido no encontrado en su fecha (calendario)"; out.append(o); continue
+        if _siguiente_de_serie(res, exactos):
+            res, aviso = None, None
         if res is None:
             f = dia(r["fecha"])
             o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"
@@ -293,6 +295,13 @@ def _reclamos_exactos(filas, resultados):
         if res and res.get("juego") and res.get("desfase") == 0:
             rec.setdefault(res["juego"], set()).add(str(r.get("id")))
     return rec
+
+
+def _siguiente_de_serie(res, exactos):
+    """Empato con el juego del DIA ANTERIOR, que ya tiene su propio registro, y aun no hay datos del dia del registro:
+    es el siguiente juego de la serie (ej. Hawks @ Marines 2 y 3-oct). Hay que esperar, no calificarlo con el de ayer."""
+    return bool(res and res.get("desfase") is not None and res["desfase"] < 0 and not res.get("datos_del_dia")
+                and res.get("juego") in exactos)
 
 
 def _fantasma(r, res, exactos):
@@ -395,6 +404,8 @@ def calificar_predicciones(hoy=None):
         o = {k: r.get(k, "") for k in PCOLS}
         if _fantasma(r, res, exactos):
             o["estado"] = "anulado"; out.append(o); continue
+        if _siguiente_de_serie(res, exactos):
+            res = None
         if res is None:
             f = dia(r["fecha"]); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
         if res.get("anulado"):
