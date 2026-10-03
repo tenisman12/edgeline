@@ -12,7 +12,7 @@ Sigue `CLAUDE.md`. Objetivo: saber si una señal agrega información medible, co
 1. **Escribir la hipótesis antes de ver resultados**: deporte/liga, mercado, señal exacta, dirección esperada y
    métrica (Brier, log-loss, MAE). Guardarla en `trabajo/minar/<fecha>_<tema>.md`. Una hipótesis por corrida.
 2. **Datos**: `datos/<deporte>.csv` (si no está, traer la rama datos:
-   `git fetch origin datos && git worktree add trabajo/datos origin/datos` o pedirle a Alejandro que corra en su PC).
+   `git fetch origin datos:refs/remotes/origin/datos && git worktree add trabajo/datos origin/datos` o pedirle a Alejandro que corra en su PC).
    Para señales de predicciones ya hechas: `salida/historial_predicciones_calificado.csv`.
 3. **As-of estricto**: la señal de cada partido se calcula solo con información anterior a ese partido.
    Prohibido usar estadísticas de temporada completa, cierres de línea o resultados del mismo día.
