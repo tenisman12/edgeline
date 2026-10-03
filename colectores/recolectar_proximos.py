@@ -54,17 +54,22 @@ def _linea(x):
         return None
 
 
+def _dic(x):
+    return x if isinstance(x, dict) else {}
+
+
 def _cierre(bloque, lado, k="close", campo="odds"):
-    return ((bloque.get(lado) or {}).get(k) or {}).get(campo)
+    return _dic(_dic(_dic(bloque).get(lado)).get(k)).get(campo)
 
 
 def _cuotas(comp):
-    ods = comp.get("odds") or []
+    # ESPN a veces manda la lista de cuotas con elementos nulos (2-oct-2026: tumbo la corrida completa)
+    ods = [o for o in (comp.get("odds") or []) if isinstance(o, dict)]
     if not ods:
         return {}
     od = ods[0]
-    prov = od.get("provider") or {}
-    ml, tot, ps = od.get("moneyline") or {}, od.get("total") or {}, od.get("pointSpread") or {}
+    prov = _dic(od.get("provider"))
+    ml, tot, ps = _dic(od.get("moneyline")), _dic(od.get("total")), _dic(od.get("pointSpread"))
     q = {"casa": prov.get("displayName") or prov.get("name") or "",
          "ml_home": _am(_cierre(ml, "home")), "ml_away": _am(_cierre(ml, "away")),
          "ml_draw": _am(_cierre(ml, "draw")),
@@ -78,11 +83,11 @@ def _cuotas(comp):
          "spread_home_odds": _am(_cierre(ps, "home")), "spread_away_odds": _am(_cierre(ps, "away"))}
     # formato viejo (respaldo)
     if q["ml_home"] is None:
-        q["ml_home"] = _am((od.get("homeTeamOdds") or {}).get("moneyLine"))
+        q["ml_home"] = _am(_dic(od.get("homeTeamOdds")).get("moneyLine"))
     if q["ml_away"] is None:
-        q["ml_away"] = _am((od.get("awayTeamOdds") or {}).get("moneyLine"))
+        q["ml_away"] = _am(_dic(od.get("awayTeamOdds")).get("moneyLine"))
     if q["ml_draw"] is None:
-        q["ml_draw"] = _am((od.get("drawOdds") or {}).get("moneyLine"))
+        q["ml_draw"] = _am(_dic(od.get("drawOdds")).get("moneyLine"))
     if q["total"] is None:
         q["total"] = _linea(od.get("overUnder"))
     if q["over_odds"] is None:
@@ -257,7 +262,11 @@ def recolectar(ligas, dias, con_contexto=True, hoy=None, verbose=True):
                 if verbose: print("  %s %s: %s" % (lg, fecha, str(e)[:60]))
                 continue
             for ev in d.get("events", []):
-                filas = _tenis_pre(ev, lg) if ev.get("groupings") else [x for x in [_evento(ev, lg)] if x]
+                try:
+                    filas = _tenis_pre(ev, lg) if ev.get("groupings") else [x for x in [_evento(ev, lg)] if x]
+                except Exception as e:           # un evento raro de ESPN no debe tumbar toda la corrida
+                    print("  %s: evento %s omitido (%s: %s)" % (lg, ev.get("id"), type(e).__name__, str(e)[:80]))
+                    continue
                 for g in filas:
                     if (g["liga"], g["id"]) in vistos:
                         continue
