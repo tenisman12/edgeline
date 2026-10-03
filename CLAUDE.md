@@ -66,5 +66,5 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 
 ## Datos históricos (rama "datos")
 Al inicio de cada sesión, antes de analizar, traer la rama de datos:
-git fetch origin datos && git worktree add trabajo/datos origin/datos
+git fetch origin datos:refs/remotes/origin/datos && git worktree add trabajo/datos origin/datos
 Quedan en trabajo/datos/datos/ y se pueden leer libremente para cualquier análisis.
