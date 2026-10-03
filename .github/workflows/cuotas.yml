@@ -85,7 +85,7 @@ jobs:
         run: python utilidades/calificar_picks.py | head -20
 
       - name: Subir a main
-        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/mercado_libros.json salida/mercado_publico.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv salida/decidir.json salida/historial_decidir.csv"
+        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/mercado_libros.json salida/mercado_publico.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv salida/decidir.json salida/historial_decidir.csv salida/historial_decidir_calificado.csv"
 
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |
