@@ -25,10 +25,15 @@ Por partido usa todos los bloques: contexto, modelo (+derivados), validacion, al
 movimiento (con serie), lectura sharp vs público de `salida/mercado_publico.json` (por partido), consenso, forma (ventanas, ELO, power, status, osciladores, ou4), h2h_datos,
 estadisticas_equipo, jugadores_clave, picks/pick_top (puntaje Pick Premium) y bloques (qué falta).
 
-## 3. Completar con internet solo lo que falte y cambie la lectura
-Porteros titulares NHL, abridores MLB/KBO/NPB sin `probable`, QB y lesiones finales NFL/NCAA, clima NFL al aire libre,
-cuotas de tenis sin `cuotas`. Fuentes primarias (liga, ESPN, Daily Faceoff, Rotowire, casas). Cita cada dato.
-Si no se encuentra: "sin dato".
+   3. Osciladores y forma: osciladores, L10 y L5, splits local/visita, estadísticas de equipo relevantes, H2H y O/U
+      recientes. Si la forma es de la temporada pasada o hay menos de 5 juegos, decirlo.
+   4. Mercado: probabilidad sin vig (casa y sharp), movimiento desde la apertura, lectura sharp vs público y predictor ESPN.
+   5. Relación entre capas: conteo de señales a favor y en contra, con el número de cada una.
+   6. Decisión final y por qué: nivel, mercado, cuota y la regla que la define (validación, EV, cuota 1.70-3.00).
+      Si es PASAR, cuál es la mejor lectura y qué le falta para ser pick.
+Sin adjetivos ni juicios de valor cuando se pida. Partidos ya empezados: marcarlos y dejarlos al final.
+Sin stakes en pesos. Cierra con "Fuentes:" si usaste internet.
+No hagas commit de `salida/picks_ia.json` ni `historial_ia.csv` al repo público sin que el dueño lo pida.
 
 ## 4. Análisis por partido (en este orden)
 1. Contexto  2. Modelo (con estado de validación y sesgos)  3. Osciladores y forma  4. Mercado (prob. sin vig,
