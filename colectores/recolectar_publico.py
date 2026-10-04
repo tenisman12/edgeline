@@ -90,9 +90,19 @@ def _splits_de(game):
             a = (lados.get("a") or [(None, None)])[0]
             b = (lados.get("b") or [(None, None)])[0]
             for k, (va, vb) in (("tickets", (a[0], b[0])), ("money", (a[1], b[1]))):
-                if (va or 0) == 0 and (vb or 0) == 0:
-                    continue                          # ningun lado con accion en esta casa
-                valor = va if va is not None else (100.0 - vb if vb is not None else None)
+                # Un reparto solo vale si los dos lados suman ~100. Asi se conservan los 99/1 y 100/0 reales
+                # y se descartan las lecturas parciales de una casa (0/0 sin accion, o 0/25 incompleta),
+                # que de otro modo meten ceros falsos y parten la mediana a la mitad.
+                if va is not None and vb is not None:
+                    if not (95.0 <= va + vb <= 105.0):
+                        continue
+                    valor = va
+                elif va is not None:
+                    valor = va if va > 0 else None     # un 0 solo no dice nada sin su complemento
+                elif vb is not None:
+                    valor = 100.0 - vb if vb > 0 else None
+                else:
+                    continue
                 if valor is not None:
                     acum[nombre][k].append(valor); casas.add(casa)
     med = lambda xs: round(statistics.median(xs), 1) if xs else None
