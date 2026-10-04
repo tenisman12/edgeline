@@ -1,196 +1,8 @@
 {
- "generado": "2026-10-04T19:46:00",
+ "generado": "2026-10-04T21:12:12",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
-  {
-   "liga": "mlb",
-   "id": "401908003",
-   "fecha": "2026-10-04",
-   "hora": "14:00",
-   "home": "Milwaukee Brewers",
-   "away": "San Diego Padres",
-   "p_modelo": 0.5935,
-   "p_sharp": 0.5483,
-   "p_final": 0.5597,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.65,
-   "linea_home": "-1.5",
-   "p_runline_home": 0.3799,
-   "detalle_modelo": {
-    "elo_h": 1612.4,
-    "elo_a": 1568.4,
-    "dif_h": 1.319,
-    "dif_a": 0.309,
-    "p_base": 0.5799,
-    "abridor_h": {
-     "nombre": "Logan Henderson",
-     "era5": 2.17,
-     "ip5": 29.0,
-     "era_ajustada": 3.0,
-     "ga_equipo": 3.804
-    },
-    "abridor_a": {
-     "nombre": "Michael King",
-     "era5": 3.0,
-     "ip5": 30.0,
-     "era_ajustada": 3.58,
-     "ga_equipo": 4.152
-    },
-    "carreras_abridor": 0.14
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Milwaukee Brewers",
-     "p": 0.5597,
-     "cuota": -123.0,
-     "decimal": 1.813,
-     "casa": "betus",
-     "ev": 0.0148,
-     "cuota_min": 1.79,
-     "en_rango": true,
-     "senales_favor": 6,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "movimiento",
-       "consenso",
-       "fuerza",
-       "abridor",
-       "racha"
-      ],
-      "en_contra": [
-       "h2h",
-       "osciladores",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "lean",
-     "premium_pts": 64.7
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "San Diego Padres",
-     "p": 0.4403,
-     "cuota": 120.0,
-     "decimal": 2.2,
-     "casa": "tipico_de",
-     "ev": -0.0314,
-     "cuota_min": 2.27,
-     "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 6,
-     "senales": {
-      "a_favor": [
-       "h2h",
-       "osciladores",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "movimiento",
-       "consenso",
-       "fuerza",
-       "abridor",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 29.3
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Milwaukee Brewers -1.5",
-     "p": 0.3799,
-     "cuota": 171.0,
-     "decimal": 2.71,
-     "casa": "onexbet",
-     "ev": 0.0296,
-     "cuota_min": 2.63,
-     "en_rango": true,
-     "senales_favor": 4,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "fuerza",
-       "abridor",
-       "racha"
-      ],
-      "en_contra": [
-       "osciladores",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "lean",
-     "premium_pts": 46.5
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "San Diego Padres +1.5",
-     "p": 0.6201,
-     "cuota": -185.0,
-     "decimal": 1.541,
-     "casa": "mybookieag",
-     "ev": -0.0447,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 2,
-     "senales_contra": 4,
-     "senales": {
-      "a_favor": [
-       "osciladores",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "fuerza",
-       "abridor",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 32.3
-    }
-   ],
-   "pick": {
-    "mercado": "Run line",
-    "lado": "home",
-    "texto": "Milwaukee Brewers -1.5",
-    "p": 0.3799,
-    "cuota": 171.0,
-    "decimal": 2.71,
-    "casa": "onexbet",
-    "ev": 0.0296,
-    "cuota_min": 2.63,
-    "en_rango": true,
-    "senales_favor": 4,
-    "senales_contra": 2,
-    "senales": {
-     "a_favor": [
-      "forma",
-      "fuerza",
-      "abridor",
-      "racha"
-     ],
-     "en_contra": [
-      "osciladores",
-      "bullpen"
-     ]
-    },
-    "premium_nivel": "lean",
-    "premium_pts": 46.5
-   },
-   "confianza": "baja",
-   "stake": 0.01,
-   "pretemporada": false
-  },
   {
    "liga": "mlb",
    "id": "401908014",
@@ -250,7 +62,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 59.9
+     "premium_pts": 60.1
     },
     {
      "mercado": "Ganador",
@@ -280,7 +92,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.1
+     "premium_pts": 36.9
     },
     {
      "mercado": "Run line",
@@ -307,7 +119,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 51.3
+     "premium_pts": 51.5
     },
     {
      "mercado": "Run line",
@@ -334,7 +146,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 34.8
+     "premium_pts": 34.6
     }
    ],
    "pick": {
@@ -362,7 +174,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 51.3
+    "premium_pts": 51.5
    },
    "confianza": "baja",
    "stake": 0.01,
@@ -405,20 +217,19 @@
      "cuota_min": 2.05,
      "en_rango": true,
      "senales_favor": 0,
-     "senales_contra": 6,
+     "senales_contra": 5,
      "senales": {
       "a_favor": [],
       "en_contra": [
        "forma",
        "consenso",
        "h2h",
-       "osciladores",
        "fuerza",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 16.6
+     "premium_pts": 18.0
     },
     {
      "mercado": "Ganador",
@@ -431,21 +242,20 @@
      "ev": -0.0255,
      "cuota_min": 1.95,
      "en_rango": true,
-     "senales_favor": 6,
+     "senales_favor": 5,
      "senales_contra": 0,
      "senales": {
       "a_favor": [
        "forma",
        "consenso",
        "h2h",
-       "osciladores",
        "fuerza",
        "racha"
       ],
       "en_contra": []
      },
      "premium_nivel": "lean",
-     "premium_pts": 57.1
+     "premium_pts": 55.7
     },
     {
      "mercado": "Run line",
@@ -459,18 +269,17 @@
      "cuota_min": 1.77,
      "en_rango": false,
      "senales_favor": 0,
-     "senales_contra": 4,
+     "senales_contra": 3,
      "senales": {
       "a_favor": [],
       "en_contra": [
        "forma",
-       "osciladores",
        "fuerza",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 30.7
+     "premium_pts": 32.3
     },
     {
      "mercado": "Run line",
@@ -483,19 +292,18 @@
      "ev": 0.0819,
      "cuota_min": 2.29,
      "en_rango": true,
-     "senales_favor": 4,
+     "senales_favor": 3,
      "senales_contra": 0,
      "senales": {
       "a_favor": [
        "forma",
-       "osciladores",
        "fuerza",
        "racha"
       ],
       "en_contra": []
      },
-     "premium_nivel": "lean",
-     "premium_pts": 46.1
+     "premium_nivel": "pasar",
+     "premium_pts": 44.4
     }
    ],
    "pick": {
@@ -509,19 +317,18 @@
     "ev": 0.0819,
     "cuota_min": 2.29,
     "en_rango": true,
-    "senales_favor": 4,
+    "senales_favor": 3,
     "senales_contra": 0,
     "senales": {
      "a_favor": [
       "forma",
-      "osciladores",
       "fuerza",
       "racha"
      ],
      "en_contra": []
     },
-    "premium_nivel": "lean",
-    "premium_pts": 46.1
+    "premium_nivel": "pasar",
+    "premium_pts": 44.4
    },
    "confianza": "alta",
    "stake": 0.03,
@@ -563,10 +370,11 @@
      "ev": -0.0184,
      "cuota_min": 1.79,
      "en_rango": true,
-     "senales_favor": 2,
+     "senales_favor": 3,
      "senales_contra": 3,
      "senales": {
       "a_favor": [
+       "forma",
        "consenso",
        "fuerza"
       ],
@@ -577,7 +385,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 43.5
+     "premium_pts": 44.5
     },
     {
      "mercado": "Ganador",
@@ -591,7 +399,7 @@
      "cuota_min": 2.27,
      "en_rango": true,
      "senales_favor": 3,
-     "senales_contra": 2,
+     "senales_contra": 3,
      "senales": {
       "a_favor": [
        "h2h",
@@ -599,12 +407,13 @@
        "racha"
       ],
       "en_contra": [
+       "forma",
        "consenso",
        "fuerza"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 31.5
+     "premium_pts": 30.4
     },
     {
      "mercado": "Run line",
@@ -617,10 +426,11 @@
      "ev": -0.0227,
      "cuota_min": 2.53,
      "en_rango": true,
-     "senales_favor": 1,
+     "senales_favor": 2,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
+       "forma",
        "fuerza"
       ],
       "en_contra": [
@@ -629,7 +439,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 36.5
+     "premium_pts": 37.8
     },
     {
      "mercado": "Run line",
@@ -643,18 +453,19 @@
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 2,
-     "senales_contra": 1,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "osciladores",
        "racha"
       ],
       "en_contra": [
+       "forma",
        "fuerza"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 38.4
+     "premium_pts": 37.1
     }
    ],
    "pick": {
@@ -668,10 +479,11 @@
     "ev": -0.0184,
     "cuota_min": 1.79,
     "en_rango": true,
-    "senales_favor": 2,
+    "senales_favor": 3,
     "senales_contra": 3,
     "senales": {
      "a_favor": [
+      "forma",
       "consenso",
       "fuerza"
      ],
@@ -682,7 +494,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 43.5
+    "premium_pts": 44.5
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -739,7 +551,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 50.4
+     "premium_pts": 49.0
     },
     {
      "mercado": "Ganador",
@@ -767,7 +579,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 31.4
+     "premium_pts": 32.8
     },
     {
      "mercado": "Run line",
@@ -793,7 +605,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 27.9
+     "premium_pts": 26.1
     },
     {
      "mercado": "Run line",
@@ -819,7 +631,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.6
+     "premium_pts": 50.4
     }
    ],
    "pick": {
@@ -846,7 +658,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 27.9
+    "premium_pts": 26.1
    },
    "confianza": "alta",
    "stake": 0.03,
@@ -888,10 +700,12 @@
      "ev": 0.0414,
      "cuota_min": 2.35,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 4,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "osciladores"
+      ],
       "en_contra": [
        "forma",
        "consenso",
@@ -900,7 +714,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 20.3,
+     "premium_pts": 22.3,
      "nota_lectura": "modelo 12 pp arriba del mercado en el lado del pick: revisar, no pick"
     },
     {
@@ -915,7 +729,7 @@
      "cuota_min": 1.74,
      "en_rango": false,
      "senales_favor": 4,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
@@ -923,10 +737,12 @@
        "h2h",
        "racha"
       ],
-      "en_contra": []
+      "en_contra": [
+       "osciladores"
+      ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 53.4
+     "premium_pts": 51.3
     },
     {
      "mercado": "Run line",
@@ -939,17 +755,19 @@
      "ev": -0.0433,
      "cuota_min": 2.03,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 2,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "osciladores"
+      ],
       "en_contra": [
        "forma",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 34.4
+     "premium_pts": 36.9
     },
     {
      "mercado": "Run line",
@@ -963,16 +781,18 @@
      "cuota_min": 1.97,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
        "racha"
       ],
-      "en_contra": []
+      "en_contra": [
+       "osciladores"
+      ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 42.6
+     "premium_pts": 40.0
     }
    ],
    "pick": {
@@ -986,10 +806,12 @@
     "ev": 0.0414,
     "cuota_min": 2.35,
     "en_rango": true,
-    "senales_favor": 0,
+    "senales_favor": 1,
     "senales_contra": 4,
     "senales": {
-     "a_favor": [],
+     "a_favor": [
+      "osciladores"
+     ],
      "en_contra": [
       "forma",
       "consenso",
@@ -998,7 +820,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 20.3,
+    "premium_pts": 22.3,
     "nota_lectura": "modelo 12 pp arriba del mercado en el lado del pick: revisar, no pick"
    },
    "confianza": "minima",
@@ -1056,7 +878,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 30.3
+     "premium_pts": 30.8
     },
     {
      "mercado": "Ganador",
@@ -1084,7 +906,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.5
+     "premium_pts": 48.0
     },
     {
      "mercado": "Run line",
@@ -1110,7 +932,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 33.0
+     "premium_pts": 33.6
     },
     {
      "mercado": "Run line",
@@ -1136,7 +958,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 47.7
+     "premium_pts": 47.1
     }
    ],
    "pick": {
@@ -1165,7 +987,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 48.5
+    "premium_pts": 48.0
    },
    "confianza": "baja",
    "stake": 0.01,
@@ -1207,10 +1029,12 @@
      "ev": -0.0602,
      "cuota_min": 2.5,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 5,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "osciladores"
+      ],
       "en_contra": [
        "forma",
        "consenso",
@@ -1220,7 +1044,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 23.2
+     "premium_pts": 24.9
     },
     {
      "mercado": "Ganador",
@@ -1234,7 +1058,7 @@
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 5,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
@@ -1243,10 +1067,12 @@
        "fuerza",
        "bullpen"
       ],
-      "en_contra": []
+      "en_contra": [
+       "osciladores"
+      ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 61.2
+     "premium_pts": 59.5
     },
     {
      "mercado": "Run line",
@@ -1259,10 +1085,12 @@
      "ev": -0.0416,
      "cuota_min": 1.87,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 3,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "osciladores"
+      ],
       "en_contra": [
        "forma",
        "fuerza",
@@ -1270,7 +1098,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 25.4
+     "premium_pts": 27.5
     },
     {
      "mercado": "Run line",
@@ -1284,17 +1112,19 @@
      "cuota_min": 2.15,
      "en_rango": true,
      "senales_favor": 3,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
        "fuerza",
        "bullpen"
       ],
-      "en_contra": []
+      "en_contra": [
+       "osciladores"
+      ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 59.1
+     "premium_pts": 57.1
     }
    ],
    "pick": {
@@ -1309,17 +1139,19 @@
     "cuota_min": 2.15,
     "en_rango": true,
     "senales_favor": 3,
-    "senales_contra": 0,
+    "senales_contra": 1,
     "senales": {
      "a_favor": [
       "forma",
       "fuerza",
       "bullpen"
      ],
-     "en_contra": []
+     "en_contra": [
+      "osciladores"
+     ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 59.1
+    "premium_pts": 57.1
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -1361,11 +1193,10 @@
      "ev": -0.0338,
      "cuota_min": 2.08,
      "en_rango": true,
-     "senales_favor": 3,
+     "senales_favor": 2,
      "senales_contra": 4,
      "senales": {
       "a_favor": [
-       "forma",
        "osciladores",
        "bullpen"
       ],
@@ -1377,7 +1208,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.8
+     "premium_pts": 35.3
     },
     {
      "mercado": "Ganador",
@@ -1391,7 +1222,7 @@
      "cuota_min": 1.93,
      "en_rango": true,
      "senales_favor": 4,
-     "senales_contra": 3,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "consenso",
@@ -1400,13 +1231,12 @@
        "racha"
       ],
       "en_contra": [
-       "forma",
        "osciladores",
        "bullpen"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.9
+     "premium_pts": 51.5
     },
     {
      "mercado": "Run line",
@@ -1419,11 +1249,10 @@
      "ev": -0.0282,
      "cuota_min": 1.7,
      "en_rango": false,
-     "senales_favor": 3,
+     "senales_favor": 2,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
-       "forma",
        "osciladores",
        "bullpen"
       ],
@@ -1433,7 +1262,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 46.6
+     "premium_pts": 43.6
     },
     {
      "mercado": "Run line",
@@ -1447,20 +1276,19 @@
      "cuota_min": 2.61,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 3,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "fuerza",
        "racha"
       ],
       "en_contra": [
-       "forma",
        "osciladores",
        "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.6
+     "premium_pts": 40.7
     }
    ],
    "pick": {
@@ -1475,20 +1303,19 @@
     "cuota_min": 2.61,
     "en_rango": true,
     "senales_favor": 2,
-    "senales_contra": 3,
+    "senales_contra": 2,
     "senales": {
      "a_favor": [
       "fuerza",
       "racha"
      ],
      "en_contra": [
-      "forma",
       "osciladores",
       "bullpen"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 37.6
+    "premium_pts": 40.7
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -1554,7 +1381,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 40.9
+     "premium_pts": 40.7
     },
     {
      "mercado": "Ganador",
@@ -1585,7 +1412,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.2
+     "premium_pts": 48.4
     },
     {
      "mercado": "Run line",
@@ -1612,7 +1439,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 34.0
+     "premium_pts": 33.7
     },
     {
      "mercado": "Run line",
@@ -1639,7 +1466,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 47.3
+     "premium_pts": 47.5
     }
    ],
    "pick": {
@@ -1667,7 +1494,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 34.0
+    "premium_pts": 33.7
    },
    "confianza": "baja",
    "stake": 0.01,
@@ -1736,7 +1563,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 54.1,
+     "premium_pts": 53.9,
      "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
     },
     {
@@ -1765,7 +1592,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 43.9
+     "premium_pts": 44.1
     },
     {
      "mercado": "Run line",
@@ -1790,7 +1617,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 48.9
+     "premium_pts": 48.6
     },
     {
      "mercado": "Run line",
@@ -1815,7 +1642,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.6
+     "premium_pts": 37.9
     }
    ],
    "pick": {
@@ -1844,7 +1671,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 54.1,
+    "premium_pts": 53.9,
     "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
    },
    "confianza": "baja",
