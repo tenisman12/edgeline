@@ -182,6 +182,7 @@ def main():
     ind = indice(res)
     hoy = dt.date.today().isoformat()
     r1, r2, sin_res, sin_emparejar, poco = [], [], 0, 0, 0
+    emparejados, con_total, con_ml, dispara1, dispara2 = 0, 0, 0, 0, 0
     for (lg, _id, fecha), r in ult.items():
         rr = emparejar(ind, lg, fecha, r.get("home"), r.get("away"))
         if not rr:
@@ -191,6 +192,7 @@ def main():
             else:
                 sin_res += 1
             continue
+        emparejados += 1
         nb = num(r.get("num_bets"))
         if nb is not None and nb < MIN_APUESTAS:
             poco += 1; continue
@@ -198,6 +200,10 @@ def main():
         ov = num(r.get("total_tickets_over"))
         linea = num(r.get("total_publico")) or num(r.get("total"))
         tot = rr.get("total")
+        if ov is not None and linea is not None and tot is not None:
+            con_total += 1
+            if ov >= a.over:
+                dispara1 += 1
         if ov is not None and ov >= a.over and linea is not None and tot is not None and tot != linea:
             # precio real del under si el colector ya lo guarda; si no, -110
             cu = decimal(num(r.get("under_odds")))
@@ -212,10 +218,12 @@ def main():
         mh, ma = num(r.get("ml_home")), num(r.get("ml_away"))
         ph, pa = pi(mh), pi(ma)
         if bh is not None and ph is not None and pa is not None and rr.get("gan"):
+            con_ml += 1
             fav = "home" if ph > pa else "away"
             boletos_fav = bh if fav == "home" else 100.0 - bh
             dog = "away" if fav == "home" else "home"
             if boletos_fav >= a.fav:
+                dispara2 += 1
                 e = (pa if dog == "away" else ph) / (ph + pa)          # sin vig
                 c = decimal(ma if dog == "away" else mh)
                 if c and 0 < e < 1:
@@ -223,6 +231,8 @@ def main():
     print("CONTRA EL PUBLICO  (%s)" % os.path.basename(ruta))
     print("   partidos con foto del publico: %d | sin resultado todavia: %d | descartados por volumen bajo: %d" % (
         len(ult), sin_res, poco))
+    print("   emparejados con resultado: %d -> con total y linea %d (de esos, %d con el over al %.0f%%+), con cuotas de ML %d (de esos, %d con el favorito al %.0f%%+)" % (
+        emparejados, con_total, dispara1, a.over, con_ml, dispara2, a.fav))
     if sin_emparejar:
         print("   %d partidos ya jugados NO emparejaron con el historial (nombres distintos entre fuentes): revisar" % sin_emparejar)
     reporte("R1  UNDER con el over al %.0f%% o mas de los boletos" % a.over, r1,

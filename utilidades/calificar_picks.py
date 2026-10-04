@@ -597,6 +597,17 @@ def _calificar_lista(entrada, salida, hoy=None):
             return etiqueta
         return "publico repartido"
 
+    def movimiento(x):
+        """movimiento de la linea sharp EN EL LADO DEL PICK, en pp (lo guarda picks_del_dia.py)."""
+        m = num(x.get("mov_linea"))
+        if m is None:
+            return ""
+        if m >= 2:
+            return "linea a favor (>=2 pp)"
+        if m <= -2:
+            return "linea en contra (>=2 pp)"
+        return "linea quieta"
+
     def lectura(x):
         a, c = num(x.get("senales_favor")), num(x.get("senales_contra"))
         if a is None and c is None:
@@ -617,7 +628,8 @@ def _calificar_lista(entrada, salida, hoy=None):
             "total": grupo(cal), "con_stake": grupo(con_stake), "por_confianza": por(lambda x: x.get("confianza") or ""),
             "por_ev": por(banda), "por_lectura": por(lectura), "por_liga": por(lambda x: x.get("liga") or ""),
             "por_mercado": por(lambda x: "Spread" if (x.get("mercado") or "").startswith("Run") else ((x.get("mercado") or "").split()[0] if x.get("mercado") else "")),
-            "por_origen": por(lambda x: x.get("origen") or ""), "por_publico": por(publico)}
+            "por_origen": por(lambda x: x.get("origen") or ""), "por_publico": por(publico),
+            "por_movimiento": por(movimiento)}
 
 
 def imprimir(rs):
@@ -671,7 +683,7 @@ def imprimir(rs):
         if t:
             print("  todos los picks  n=%d acierto %.1f%% EV medio %+.1f%% | 1u plana: %+.2fu ROI %+.1f%% | con stake: %+.2f%% del bank" % (
                 t["n"], t["acierto_pct"], t["ev_medio_pct"], t["unidades"], t["roi_pct"], t["bank_pct"]))
-            for titulo, clave in (("por origen", "por_origen"), ("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("publico (boletos)", "por_publico"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
+            for titulo, clave in (("por origen", "por_origen"), ("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("publico (boletos)", "por_publico"), ("movimiento de linea", "por_movimiento"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
                 for k, d in (rd.get(clave) or {}).items():
                     if d and k:
                         print("  %-18s %-32s n=%3d acierto %5.1f%% EV %+5.1f%% %+6.2fu ROI %+6.1f%%" % (titulo, k, d["n"], d["acierto_pct"], d["ev_medio_pct"], d["unidades"], d["roi_pct"]))
