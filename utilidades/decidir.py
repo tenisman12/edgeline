@@ -97,13 +97,25 @@ def coeficientes():
 def abridor(rec, lado):
     """carreras que el abridor anunciado salva (o cuesta) contra el pitcheo de su equipo en IP_ABRIDOR innings; 0 sin datos."""
     j = ((rec.get("jugadores_clave") or {}).get(lado) or {}).get("probable") or {}
-    r5 = j.get("resumen_ultimas5") or {}
-    era = _num(r5.get("era")); ip = _num(r5.get("ip")); juegos = _num(r5.get("juegos")) or 0
-    if era is None or not ip or ip < 10 or juegos < 3:
-        return 0.0, None
     t = ((rec.get("forma") or {}).get(lado) or {})
     ga = _num(((t.get("ventanas") or {}).get("temp") or {}).get("ga"))
     if ga is None:
+        return 0.0, None
+    av = j.get("avanzadas") or {}
+    vt, v5 = av.get("temporada") or {}, av.get("ultimas5") or {}
+    if vt.get("fip") is not None:
+        # metricas avanzadas (nucleo/jugadores.py): FIP de la ventana y de las ultimas 5, encogidas al pitcheo del equipo
+        ip_t = _num(vt.get("ip")) or 0.0
+        fip = 0.5 * vt["fip"] + 0.5 * (v5.get("fip") if v5.get("fip") is not None else vt["fip"])
+        era_aj = (ip_t * fip + IP_PRIOR * ga) / (ip_t + IP_PRIOR)
+        innings = 3.0 if av.get("bullpen_game") else IP_ABRIDOR      # bullpen game: 3 IP del abridor, el resto es el equipo
+        return (ga - era_aj) * innings / 9.0, {"nombre": (j.get("jugador") or "").strip(), "fip_ventana": vt["fip"], "fip_ultimas5": v5.get("fip"),
+                                               "k_pct": vt.get("k_pct"), "bb_pct": vt.get("bb_pct"), "ip_ventana": vt.get("ip"),
+                                               "bullpen_game": bool(av.get("bullpen_game")), "innings": innings,
+                                               "era_ajustada": round(era_aj, 2), "ga_equipo": ga}
+    r5 = j.get("resumen_ultimas5") or {}
+    era = _num(r5.get("era")); ip = _num(r5.get("ip")); juegos = _num(r5.get("juegos")) or 0
+    if era is None or not ip or ip < 10 or juegos < 3:
         return 0.0, None
     era_aj = (ip * era + IP_PRIOR * ga) / (ip + IP_PRIOR)
     return (ga - era_aj) * IP_ABRIDOR / 9.0, {"nombre": (j.get("jugador") or "").strip(), "era5": era, "ip5": ip, "era_ajustada": round(era_aj, 2), "ga_equipo": ga}

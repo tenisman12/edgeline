@@ -103,6 +103,38 @@ def _linea_lanzador(rows):
             "pitches_por_juego": round(_sum(rows, "pitches") / len(rows), 1) if rows else None}
 
 
+_CFIP = {}
+
+
+def _cfip(lan, season):
+    """Constante de FIP de la liga-temporada, calculada de tus datos: ERA liga - (13HR + 3(BB+HBP) - 2K)/IP."""
+    k = (id(lan), season)
+    if k in _CFIP:
+        return _CFIP[k]
+    rows = [r for r in lan if str(r.get("season")) == str(season)]
+    outs = _sum(rows, "outs"); ip = outs / 3.0
+    if ip < 500:
+        _CFIP[k] = 3.10
+        return 3.10
+    er, k_, bb, hbp, hr = (_sum(rows, c) for c in ("er", "k", "bb", "hbp", "hr"))
+    c = 9 * er / ip - (13 * hr + 3 * (bb + hbp) - 2 * k_) / ip
+    _CFIP[k] = round(c, 3)
+    return _CFIP[k]
+
+
+def _avanzadas(rows, cfip):
+    """FIP, K%, BB%, HR/9, WHIP, ERA e IP de un conjunto de salidas (temporada o ultimas 5)."""
+    outs = _sum(rows, "outs"); ip = outs / 3.0
+    if not rows or ip <= 0:
+        return None
+    er, k, bb, hbp, hr, h, bf = (_sum(rows, c) for c in ("er", "k", "bb", "hbp", "hr", "h", "bf"))
+    return {"salidas": len(rows), "ip": _ip(outs), "ip_por_salida": round(ip / len(rows), 1),
+            "era": round(9 * er / ip, 2), "fip": round((13 * hr + 3 * (bb + hbp) - 2 * k) / ip + cfip, 2),
+            "whip": round((h + bb) / ip, 2), "k9": round(9 * k / ip, 2), "bb9": round(9 * bb / ip, 2),
+            "hr9": round(9 * hr / ip, 2), "k_pct": round(k / bf, 3) if bf else None, "bb_pct": round(bb / bf, 3) if bf else None,
+            "pitches_por_salida": round(_sum(rows, "pitches") / len(rows), 1)}
+
+
 def beisbol(liga, team, probable=None):
     lan, pl = _filas("mlb_lanzadores.csv")
     bat, pb = _filas("mlb_bateadores.csv")
@@ -128,8 +160,19 @@ def beisbol(liga, team, probable=None):
         mios.sort(key=lambda r: (r.get("game_date") or "", str(r.get("game_id"))))
         salidas = [r for r in mios if str(r.get("abridor")) in ("1", "1.0")][-5:]
         if salidas:
+            season = salidas[-1].get("season") or ""
+            temp = [r for r in mios if str(r.get("season")) == str(season)]
+            temp_ab = [r for r in temp if str(r.get("abridor")) in ("1", "1.0")]
+            cfip = _cfip(lan, season)
+            av_t = _avanzadas(temp, cfip); av_5 = _avanzadas(salidas, cfip)
+            # bullpen game / abridor de emergencia: relevista habitual (pocas aperturas) o salidas cortas
+            bullpen_game = bool(len(temp_ab) < 3 or (av_5 and av_5["ip_por_salida"] < 3.0) or
+                                (len(temp) >= 8 and len(temp_ab) / len(temp) < 0.5))
             out["probable"] = {"jugador": probable, "equipo_ultimo": salidas[-1].get("team"),
                                "resumen_ultimas5": _linea_lanzador(salidas),
+                               "avanzadas": {"temporada": av_t, "ultimas5": av_5, "constante_fip": cfip,
+                                             "aperturas_temporada": len(temp_ab), "apariciones_temporada": len(temp),
+                                             "bullpen_game": bullpen_game},
                                "salidas": [{"fecha": r["game_date"][:10], "rival": r.get("opp"), "ip": r.get("ip"),
                                             "h": _f(r.get("h")), "er": _f(r.get("er")), "bb": _f(r.get("bb")),
                                             "k": _f(r.get("k")), "hr": _f(r.get("hr")), "pitches": _f(r.get("pitches"))}

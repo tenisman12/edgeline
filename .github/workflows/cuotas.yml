@@ -67,6 +67,12 @@ jobs:
         continue-on-error: true
         run: python utilidades/mercado_libros.py --actualizar --ver --horas 48 > /tmp/mercado.txt; head -5 /tmp/mercado.txt
 
+      - name: Porteros titulares de NHL (Daily Faceoff) y xG por equipo (MoneyPuck)
+        continue-on-error: true
+        run: |
+          python colectores/recolectar_porteros.py || true
+          python colectores/recolectar_xg_nhl.py || true
+
       - name: Re-predecir con cuotas y contexto frescos
         continue-on-error: true
         timeout-minutes: 20

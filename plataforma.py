@@ -190,6 +190,69 @@ def _p_cubre(xh, xa, linea_home, pmf, kmax=20):
     return sum(ph[i] * pa[j] for i in range(kmax) for j in range(kmax) if (i - j) + linea_home > 0)
 
 
+# ------------------------------------------------------------------ porteros titulares (colectores/recolectar_porteros.py) y xG (recolectar_xg_nhl.py)
+_PORTEROS_DIA = {}
+_XG_NHL = None
+
+
+def _porteros_dia(fecha):
+    """{nombre de equipo: {portero, estado}} del archivo trabajo/porteros_<fecha>.json; {} si no existe."""
+    if fecha in _PORTEROS_DIA:
+        return _PORTEROS_DIA[fecha]
+    ruta = os.path.join(BASE, "trabajo", "porteros_%s.json" % fecha)
+    out = {}
+    try:
+        with _io.open(ruta, encoding="utf-8") as f:
+            out = (json.load(f) or {}).get("equipos") or {}
+    except Exception:
+        out = {}
+    _PORTEROS_DIA[fecha] = out
+    return out
+
+
+def _sv_portero(team, nombre_equipo, fecha):
+    """save% en la ventana de 10 juegos del portero anunciado para ese equipo (de nhl_porteros.csv); None sin dato."""
+    anuncio = _porteros_dia(fecha).get(nombre_equipo)
+    if not anuncio or not anuncio.get("portero"):
+        return None, None
+    apellido = anuncio["portero"].split()[-1].lower()
+    info = {"portero": anuncio["portero"], "estado": anuncio.get("estado"), "sv_ventana": None, "apariciones": None}
+    try:
+        j = jugadores.hockey(team) or {}
+        for q in ((j.get("porteros") or {}).get("jugadores") or []):
+            if (q.get("jugador") or "").split()[-1].lower() == apellido:
+                info["sv_ventana"] = q.get("sv_pct"); info["apariciones"] = q.get("apariciones"); info["gc_por_juego"] = q.get("gc_por_juego")
+                if q.get("sv_pct") is not None and (q.get("apariciones") or 0) >= 3:
+                    return float(q["sv_pct"]), info
+                break
+    except Exception:
+        pass
+    return None, info
+
+
+def _xg_nhl(abrev):
+    """filas de datos/equipos/nhl_xg.csv para el equipo (temporada actual y anterior, all y 5on5)."""
+    global _XG_NHL
+    if _XG_NHL is None:
+        _XG_NHL = {}
+        ruta = os.path.join(BASE, "datos", "equipos", "nhl_xg.csv")
+        try:
+            with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
+                for r in csv.DictReader(f):
+                    _XG_NHL.setdefault((r.get("team") or "").upper(), []).append(r)
+        except Exception:
+            pass
+    rows = _XG_NHL.get((abrev or "").upper()) or []
+    if not rows:
+        return None
+    out = {}
+    for r in rows:
+        k = "%s_%s" % (r.get("season"), r.get("situacion"))
+        out[k] = {c: (float(r[c]) if r.get(c) not in (None, "") and c not in ("team", "team_mp", "nombre", "situacion", "bajado") else r.get(c))
+                  for c in ("juegos", "xgf_60", "xga_60", "gf_60", "ga_60", "xg_pct", "corsi_pct", "hd_xgf_60", "hd_xga_60", "suerte_gf", "suerte_ga")}
+    return out
+
+
 def _spread_mercado(q, p_home, xh, xa, pmf):
     """Bloque 'spread' (run line / puck line) a la LINEA DEL MERCADO si existe; si no, -1.5 al favorito del modelo."""
     sp = q.get("spread_home")
@@ -247,11 +310,21 @@ def _pred(g, c, fecha):
         return m, None
 
     if dep == "hockey":
-        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, fecha=fecha)
+        sv_h, por_h = _sv_portero(h, g["home"]["nombre"], fecha)
+        sv_a, por_a = _sv_portero(a, g["away"]["nombre"], fecha)
+        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, sv_home=sv_h, sv_away=sv_a, fecha=fecha)
         if not r:
             return None, "equipo sin historial"
         d = r.get("descanso") or {}
-        nota = "Sin ajuste por portero titular (ESPN no lo publica antes del juego)."
+        if sv_h is not None or sv_a is not None:
+            nota = "Ajuste por portero titular (Daily Faceoff): %s." % "; ".join(
+                "%s %s (%s, sv %.3f en 10 juegos)" % (n, p["portero"], p.get("estado"), p["sv_ventana"])
+                for n, p, sv in ((g["home"]["nombre"], por_h, sv_h), (g["away"]["nombre"], por_a, sv_a)) if sv is not None and p)
+        elif por_h or por_a:
+            nota = "Porteros anunciados sin ventana suficiente para ajustar: %s." % "; ".join(
+                "%s %s (%s)" % (n, p["portero"], p.get("estado")) for n, p in ((g["home"]["nombre"], por_h), (g["away"]["nombre"], por_a)) if p)
+        else:
+            nota = "Sin ajuste por portero titular (sin trabajo/porteros_<fecha>.json; corre colectores/recolectar_porteros.py)."
         if d.get("home_b2b") or d.get("away_b2b"):
             nota += " Back-to-back: %s (ofensiva x%.2f, defensa x%.2f, estimado de los datos)." % (
                 " y ".join(n for n, k in ((g["home"]["nombre"], "home_b2b"), (g["away"]["nombre"], "away_b2b")) if d.get(k)),
@@ -262,7 +335,7 @@ def _pred(g, c, fecha):
                 "confianza": _conf(max(r["p_home"], r["p_away"])),
                 "extra": [("Puck line local -1.5", r["p_pl_home"]), ("Puck line visita +1.5", r["p_pl_away"])],
                 "spread": _spread_mercado(q, r["p_home"], r["xg_home"], r["xg_away"], lambda k, mu: hockey._pois(mu, k)),
-                "descanso": d, "nota": nota}, None
+                "descanso": d, "porteros": {"home": por_h, "away": por_a, "sv_home": sv_h, "sv_away": sv_a}, "nota": nota}, None
 
     if dep in ("americano", "nba"):
         sp = q.get("spread_home")
@@ -494,6 +567,9 @@ def _ficha(rec, g, cache):
         rec["jugadores_clave"] = jug
         marca("jugadores_clave", jug["home"].get("disponible") and jug["away"].get("disponible"),
               jug["home"].get("motivo") or jug["away"].get("motivo") or "sin datos de jugadores")
+        if liga == "nhl":
+            rec["xg_nhl"] = {"home": _xg_nhl(g["home"].get("abrev")), "away": _xg_nhl(g["away"].get("abrev")),
+                             "fuente": "MoneyPuck (datos/equipos/nhl_xg.csv)"}
 
     marca("prediccion", m, rec.get("motivo") or "sin prediccion")
     marca("totales", m and m.get("total") is not None, "sin modelo de totales")
