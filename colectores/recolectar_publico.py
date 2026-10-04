@@ -101,35 +101,46 @@ def _splits_de(game):
                         precios["over_odds" if es_a else "under_odds"] = o.get("odds")
             for linea, d in porlinea.items():
                 a, b = d.get("a", (None, None)), d.get("b", (None, None))
-                destino = acum[nombre].setdefault(linea, {"tickets": [], "money": [], "casas": set()})
+                destino = acum[nombre].setdefault(
+                    linea, {"tickets": [], "money": [], "tickets_d": [], "money_d": [], "casas": set()})
                 for k, (va, vb) in (("tickets", (a[0], b[0])), ("money", (a[1], b[1]))):
-                    if va is not None and vb is not None:
-                        if not (95.0 <= va + vb <= 105.0):
-                            continue                   # lectura parcial de esta casa
-                        valor = va
-                    elif va is not None:
-                        valor = va if va > 0 else None  # un 0 solo no dice nada sin su complemento
-                    elif vb is not None:
-                        valor = 100.0 - vb if vb > 0 else None
+                    # FUERTE: los dos lados estan y suman ~100 (el reparto completo de esa casa).
+                    # DEBIL: solo hay un lado, o los dos no cuadran; se guarda aparte y se usa
+                    #        unicamente si ninguna casa dio un reparto completo. Un 0 solo nunca vale:
+                    #        de ahi venia la mediana partida a la mitad (mediana([72, 0]) = 36).
+                    fuerte = None
+                    if va is not None and vb is not None and 95.0 <= va + vb <= 105.0:
+                        fuerte = va
+                    elif va is not None and va > 0:
+                        debil = va
+                    elif vb is not None and vb > 0 and va is None:
+                        debil = 100.0 - vb
                     else:
-                        continue
-                    if valor is not None:
-                        destino[k].append(valor); destino["casas"].add(casa); casas.add(casa)
+                        debil = None
+                    if fuerte is not None:
+                        destino[k].append(fuerte); destino["casas"].add(casa); casas.add(casa)
+                    elif debil is not None:
+                        destino[k + "_d"].append(debil); destino["casas"].add(casa); casas.add(casa)
     med = lambda xs: round(statistics.median(xs), 1) if xs else None
+    def valor(d, k):
+        """mediana de los repartos completos; si no hubo ninguno, mediana de las lecturas de un solo lado."""
+        return med(d.get(k) or d.get(k + "_d") or [])
     def mejor(mercado):
         """la linea con mas casas reportando (empate: la que tenga mas lecturas)."""
         d = acum[mercado]
-        candidatas = [(len(v["casas"]), len(v["tickets"]) + len(v["money"]), k) for k, v in d.items()
-                      if v["tickets"] or v["money"]]
+        vacio = {"tickets": [], "money": [], "tickets_d": [], "money_d": []}
+        candidatas = [(len(v["casas"]), len(v["tickets"]) + len(v["money"]),
+                       len(v["tickets_d"]) + len(v["money_d"]), k) for k, v in d.items()
+                      if v["tickets"] or v["money"] or v["tickets_d"] or v["money_d"]]
         if not candidatas:
-            return None, {"tickets": [], "money": []}
-        candidatas.sort(reverse=True)
-        k = candidatas[0][2]
+            return None, vacio
+        candidatas.sort(key=lambda c: (c[0], c[1], c[2], -9999.0 if c[3] is None else c[3]), reverse=True)
+        k = candidatas[0][3]
         return k, d[k]
     _, g = mejor("ml"); l_sp, sp = mejor("spread"); l_tt, tt = mejor("total")
-    out = {"ml": {"tickets_home": med(g["tickets"]), "money_home": med(g["money"])},
-           "spread": {"tickets_home": med(sp["tickets"]), "money_home": med(sp["money"])},
-           "total": {"tickets_over": med(tt["tickets"]), "money_over": med(tt["money"])},
+    out = {"ml": {"tickets_home": valor(g, "tickets"), "money_home": valor(g, "money")},
+           "spread": {"tickets_home": valor(sp, "tickets"), "money_home": valor(sp, "money")},
+           "total": {"tickets_over": valor(tt, "tickets"), "money_over": valor(tt, "money")},
            "casas": len(casas)}
     out.update(precios)
     if l_sp is not None:

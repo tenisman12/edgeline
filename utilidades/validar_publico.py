@@ -52,12 +52,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--anio", type=int, default=dt.date.today().year)
     ap.add_argument("--liga")
+    ap.add_argument("--desde", metavar="TS", help="ignora fotos con ts_utc anterior a este texto (ej. 2026-10-03T01:00)")
     a = ap.parse_args()
     ruta = os.path.join(BASE, "salida", "publico_%d.csv" % a.anio)
     if not os.path.exists(ruta):
         print("No existe %s: corre primero colectores\\recolectar_publico.py" % ruta); return 1
     with io.open(ruta, encoding="utf-8-sig", newline="") as f:
         filas = [r for r in csv.DictReader(f) if not a.liga or r.get("liga") == a.liga]
+    if a.desde:
+        antes = len(filas)
+        filas = [r for r in filas if (r.get("ts_utc") or "") >= a.desde]
+        print("(%d fotos anteriores a %s ignoradas)" % (antes - len(filas), a.desde))
     if not filas:
         print("Sin filas."); return 1
     # ultima foto por partido (la mas cercana al inicio)
@@ -93,6 +98,18 @@ def main():
     if con:
         tk = [num(r["ml_tickets_home"]) for r in con]
         print("   boletos en el local: mediana %.0f%%, rango %.0f-%.0f%%" % (statistics.median(tk), min(tk), max(tk)))
+
+    # El over no deberia cargarse siempre del mismo lado en toda una liga: si la mediana de una liga
+    # vive arriba de 80% (o abajo de 20%) en todos sus partidos, el dato del total de esa liga no sirve.
+    print("   total, boletos al over por liga (mediana):")
+    for lg in sorted(porliga):
+        ov = [num(r.get("total_tickets_over")) for r in ult if r.get("liga") == lg]
+        ov = [x for x in ov if x is not None]
+        if not ov:
+            continue
+        m = statistics.median(ov)
+        sesgo = "  <- toda la liga de un lado: no usar el total" if (len(ov) >= 5 and (m >= 80 or m <= 20)) else ""
+        print("     %-7s %2d partidos, over %3.0f%% (rango %.0f-%.0f%%)%s" % (lg, len(ov), m, min(ov), max(ov), sesgo))
 
     print("\n2. FAVORITISMO  (el publico apuesta favoritos)")
     xs, ys = [], []
