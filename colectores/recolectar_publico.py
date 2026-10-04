@@ -55,10 +55,14 @@ def _pct(d, lado):
 
 def _splits_de(game):
     """Los porcentajes del publico viven en game["markets"][<casa>]["event"][<mercado>]: una lista de salidas con
-    side (home/away/over/under) y bet_info {"tickets": {"percent": N}, "money": {"percent": N}}.
-    Regla: dentro de una casa y un mercado, si los DOS lados reportan 0 no hubo accion (se ignora); si uno reporta
-    100 y el otro 0, es un reparto real y se conserva (pasa en moneylines de favoritos enormes).
-    Como Action Network repite el mismo consenso en cada casa, se toma la mediana de las casas que si reportan.
+    side (home/away/over/under), value (la linea) y bet_info {"tickets": {"percent": N}, "money": {"percent": N}}.
+
+    Reglas, en orden:
+      - Se empareja POR LINEA: el over de 6.0 va con el under de 6.0 (en NHL el total se mueve entre 5.5, 6.0 y 6.5,
+        y mezclar lineas distintas tira el dato). En spreads, el -1.5 del local va con el +1.5 del visitante.
+      - Un reparto vale si los dos lados suman ~100: asi se conservan los 99/1 y 100/0 reales de los favoritos
+        enormes y se descartan las lecturas parciales de una casa (0/0 sin accion, 0/25 incompleta).
+      - Se queda la linea que mas casas reportan (la del consenso) y, dentro de ella, la mediana entre casas.
     -> {ml: {tickets_home, money_home}, spread: {...}, total: {tickets_over, money_over}, casas, precios...}"""
     import statistics
     def num(x):
@@ -68,49 +72,70 @@ def _splits_de(game):
             return None
         return None if v is None or v < 0 or v > 100 else v
     MERCADOS = (("ml", "moneyline", "home"), ("spread", "spread", "home"), ("total", "total", "over"))
-    acum = {m: {"tickets": [], "money": []} for m, _, _ in MERCADOS}
+    # acum[mercado][linea] = {"tickets": [...], "money": [...], "casas": set()}
+    acum = {m: {} for m, _, _ in MERCADOS}
     precios, casas = {}, set()
     for casa, m in (game.get("markets") or {}).items():
         ev = (m or {}).get("event") or {}
         for nombre, llave, lado_a in MERCADOS:
-            lados = {}
+            porlinea = {}
             for o in ev.get(llave) or []:
-                bi = o.get("bet_info") or {}
                 es_a = o.get("side") == lado_a
-                lados.setdefault("a" if es_a else "b", []).append(
-                    (num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent"))))
-                if str(casa) == "15":                 # precios de referencia del tablero
+                v = o.get("value")
+                if nombre == "ml":
+                    linea = None
+                elif v is None:
+                    continue
+                else:                                  # la clave es siempre la linea del lado A
+                    linea = float(v) if (es_a or nombre == "total") else -float(v)
+                bi = o.get("bet_info") or {}
+                porlinea.setdefault(linea, {})["a" if es_a else "b"] = (
+                    num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent")))
+                if str(casa) == "15":                  # precios de referencia del tablero
                     if nombre == "ml":
                         precios["ml_home" if es_a else "ml_away"] = o.get("odds")
-                    elif nombre == "spread" and es_a and o.get("value") is not None:
-                        precios["spread_home"] = o.get("value")
-                    elif nombre == "total" and o.get("value") is not None:
-                        precios["total_linea"] = o.get("value")
+                    elif nombre == "spread" and es_a:
+                        precios["spread_home"] = v
+                    elif nombre == "total":
+                        precios["total_linea"] = v
                         precios["over_odds" if es_a else "under_odds"] = o.get("odds")
-            a = (lados.get("a") or [(None, None)])[0]
-            b = (lados.get("b") or [(None, None)])[0]
-            for k, (va, vb) in (("tickets", (a[0], b[0])), ("money", (a[1], b[1]))):
-                # Un reparto solo vale si los dos lados suman ~100. Asi se conservan los 99/1 y 100/0 reales
-                # y se descartan las lecturas parciales de una casa (0/0 sin accion, o 0/25 incompleta),
-                # que de otro modo meten ceros falsos y parten la mediana a la mitad.
-                if va is not None and vb is not None:
-                    if not (95.0 <= va + vb <= 105.0):
+            for linea, d in porlinea.items():
+                a, b = d.get("a", (None, None)), d.get("b", (None, None))
+                destino = acum[nombre].setdefault(linea, {"tickets": [], "money": [], "casas": set()})
+                for k, (va, vb) in (("tickets", (a[0], b[0])), ("money", (a[1], b[1]))):
+                    if va is not None and vb is not None:
+                        if not (95.0 <= va + vb <= 105.0):
+                            continue                   # lectura parcial de esta casa
+                        valor = va
+                    elif va is not None:
+                        valor = va if va > 0 else None  # un 0 solo no dice nada sin su complemento
+                    elif vb is not None:
+                        valor = 100.0 - vb if vb > 0 else None
+                    else:
                         continue
-                    valor = va
-                elif va is not None:
-                    valor = va if va > 0 else None     # un 0 solo no dice nada sin su complemento
-                elif vb is not None:
-                    valor = 100.0 - vb if vb > 0 else None
-                else:
-                    continue
-                if valor is not None:
-                    acum[nombre][k].append(valor); casas.add(casa)
+                    if valor is not None:
+                        destino[k].append(valor); destino["casas"].add(casa); casas.add(casa)
     med = lambda xs: round(statistics.median(xs), 1) if xs else None
-    out = {"ml": {"tickets_home": med(acum["ml"]["tickets"]), "money_home": med(acum["ml"]["money"])},
-           "spread": {"tickets_home": med(acum["spread"]["tickets"]), "money_home": med(acum["spread"]["money"])},
-           "total": {"tickets_over": med(acum["total"]["tickets"]), "money_over": med(acum["total"]["money"])},
+    def mejor(mercado):
+        """la linea con mas casas reportando (empate: la que tenga mas lecturas)."""
+        d = acum[mercado]
+        candidatas = [(len(v["casas"]), len(v["tickets"]) + len(v["money"]), k) for k, v in d.items()
+                      if v["tickets"] or v["money"]]
+        if not candidatas:
+            return None, {"tickets": [], "money": []}
+        candidatas.sort(reverse=True)
+        k = candidatas[0][2]
+        return k, d[k]
+    _, g = mejor("ml"); l_sp, sp = mejor("spread"); l_tt, tt = mejor("total")
+    out = {"ml": {"tickets_home": med(g["tickets"]), "money_home": med(g["money"])},
+           "spread": {"tickets_home": med(sp["tickets"]), "money_home": med(sp["money"])},
+           "total": {"tickets_over": med(tt["tickets"]), "money_over": med(tt["money"])},
            "casas": len(casas)}
     out.update(precios)
+    if l_sp is not None:
+        out["spread_publico"] = l_sp                   # la linea a la que corresponde el reparto
+    if l_tt is not None:
+        out["total_publico"] = l_tt
     if all(v is None for mk in ("ml", "spread", "total") for v in out[mk].values()):
         return {}
     return out
@@ -262,7 +287,7 @@ def main():
     # 2) historial plano
     rc = os.path.join(BASE, "salida", "publico_%d.csv" % hoy.year)
     cols = ["ts_utc", "liga", "id", "fecha", "home", "away", "ml_tickets_home", "ml_money_home", "spread_tickets_home", "spread_money_home",
-            "total_tickets_over", "total_money_over", "ml_home", "ml_away", "spread_home", "total", "num_bets", "notas_home", "notas_away"]
+            "total_tickets_over", "total_money_over", "ml_home", "ml_away", "spread_home", "total", "spread_publico", "total_publico", "num_bets", "notas_home", "notas_away"]
     # Si el archivo existe con una cabecera distinta (se agregaron columnas), se reescribe con la nueva
     # cabecera rellenando lo que falte: de lo contrario las filas nuevas quedan corridas y el CSV se corrompe.
     if os.path.exists(rc):
@@ -291,7 +316,7 @@ def main():
                         "ml_tickets_home": (s.get("ml") or {}).get("tickets_home", ""), "ml_money_home": (s.get("ml") or {}).get("money_home", ""),
                         "spread_tickets_home": (s.get("spread") or {}).get("tickets_home", ""), "spread_money_home": (s.get("spread") or {}).get("money_home", ""),
                         "total_tickets_over": (s.get("total") or {}).get("tickets_over", ""), "total_money_over": (s.get("total") or {}).get("money_over", ""),
-                        "ml_home": s.get("ml_home", ""), "ml_away": s.get("ml_away", ""), "spread_home": s.get("spread_home", ""), "total": s.get("total_linea", ""), "num_bets": p.get("num_bets", ""),
+                        "ml_home": s.get("ml_home", ""), "ml_away": s.get("ml_away", ""), "spread_home": s.get("spread_home", ""), "total": s.get("total_linea", ""), "spread_publico": s.get("spread_publico", ""), "total_publico": s.get("total_publico", ""), "num_bets": p.get("num_bets", ""),
                         "notas_home": at.get("home", ""), "notas_away": at.get("away", "")})
     print("Publico: %d partidos, %d con boletos/dinero (Action Network), noticias %s -> salida/publico.json y %s" % (
         len(partidos), con_splits, "si" if a.noticias else "no", os.path.basename(rc)))
