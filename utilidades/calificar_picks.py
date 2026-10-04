@@ -456,6 +456,69 @@ def calificar_predicciones(hoy=None):
     return {"total": len(out), "calificadas": sum(1 for o in out if o["estado"] == "calificado"), "pendientes": pend, "por_liga_mercado": tabla}
 
 
+# ------------------------------------------------------------------ Breaks de tenis contra la linea de la casa (utilidades/breaks.py)
+BCOLS = ["registrado", "liga", "id", "fecha", "home", "away", "torneo", "breaks_modelo", "sesgo", "sd", "breaks_ajustado",
+         "linea", "cuota_over", "cuota_under", "p_over", "p_under", "ev_over", "ev_under", "pick", "cuota", "unidades", "motivo",
+         "estado", "marcador", "real", "acierto", "resultado_u", "error_modelo", "error_linea"]
+
+
+def calificar_breaks(hoy=None):
+    """salida/historial_breaks.csv (lineas de breaks cargadas a mano con breaks.py) -> historial_breaks_calificado.csv.
+    Mide dos cosas: (1) los picks (acierto, unidades, ROI) y (2) si el modelo ajustado le gana a la linea de la casa
+    prediciendo los breaks reales (MAE modelo vs MAE linea), con y sin pick."""
+    hoy = hoy or dt.date.today()
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sal = os.path.join(repo, "salida") if os.path.exists(os.path.join(repo, "salida", "proximos.json")) else io.ruta("salida")
+    ruta = os.path.join(sal, "historial_breaks.csv")
+    if not os.path.exists(ruta):
+        return None
+    with open(ruta, encoding="utf-8-sig", newline="") as f:
+        filas = list(csv.DictReader(f))
+    T = Tenis(); out = []
+    for r in filas:
+        o = {k: r.get(k, "") for k in BCOLS}
+        try:
+            res, aviso = T.resultado(r["liga"], r["fecha"], r["home"], r["away"])
+        except Exception as e:
+            res, aviso = None, "error: %s" % e
+        if res is None:
+            f = dia(r["fecha"]); o["estado"] = "sin_resultado" if (f and (hoy - f).days > 4) else "pendiente"; out.append(o); continue
+        if res.get("anulado"):
+            o["estado"] = "anulado"; o["marcador"] = res.get("marcador", ""); out.append(o); continue
+        o["marcador"] = res.get("marcador", "")
+        b = res.get("breaks"); L = num(r.get("linea")); aj = num(r.get("breaks_ajustado"))
+        if b is None or L is None:
+            o["estado"] = "sin_dato"; out.append(o); continue
+        o["real"] = b; o["estado"] = "calificado"
+        if aj is not None: o["error_modelo"] = round(abs(aj - b), 3)
+        o["error_linea"] = round(abs(L - b), 3)
+        if r.get("pick") in ("over", "under"):
+            c = num(r.get("cuota")); u = num(r.get("unidades")) or 1.0
+            if b == L:
+                o["estado"] = "push"; o["resultado_u"] = 0
+            else:
+                y = 1 if (b > L) == (r["pick"] == "over") else 0
+                o["acierto"] = y; o["resultado_u"] = round(u * (c - 1), 3) if y else round(-u, 3)
+        out.append(o)
+    with open(os.path.join(sal, "historial_breaks_calificado.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=BCOLS); w.writeheader(); w.writerows(out)
+    cal = [o for o in out if o["estado"] in ("calificado", "push")]
+    picks = [o for o in cal if o["acierto"] != "" or o["estado"] == "push"]
+    con_ac = [o for o in picks if o["acierto"] != ""]
+    em = [float(o["error_modelo"]) for o in cal if o["error_modelo"] != ""]
+    el = [float(o["error_linea"]) for o in cal if o["error_linea"] != ""]
+    # lado del modelo vs la linea, con o sin pick: cuantas veces la realidad cayo del lado del modelo
+    lado = [(float(o["breaks_ajustado"]) > float(o["linea"])) == (float(o["real"]) > float(o["linea"]))
+            for o in cal if o["estado"] == "calificado" and o["breaks_ajustado"] != "" and float(o["real"]) != float(o["linea"])]
+    u = sum(float(o["resultado_u"]) for o in picks if o["resultado_u"] != "")
+    st = sum(float(o["unidades"] or 0) for o in picks)
+    return {"registros": len(out), "calificados": len(cal), "pendientes": sum(1 for o in out if o["estado"] == "pendiente"),
+            "picks": {"n": len(picks), "acierto_pct": round(100 * sum(int(o["acierto"]) for o in con_ac) / len(con_ac), 1) if con_ac else None,
+                      "unidades": round(u, 2), "roi_pct": round(100 * u / st, 1) if st else None},
+            "mae_modelo": round(sum(em) / len(em), 3) if em else None, "mae_linea": round(sum(el) / len(el), 3) if el else None,
+            "lado_modelo_pct": round(100 * sum(lado) / len(lado), 1) if lado else None, "n_lado": len(lado)}
+
+
 # ------------------------------------------------------------------ Picks IA (del API en salida/picks_ia.json o manuales en ia/lecturas/*.json)
 def calificar_ia(hoy=None):
     """Junta las lecturas IA (API: salida/historial_ia.csv; manuales: ia/lecturas/*.json con el mismo formato) y las
@@ -673,6 +736,13 @@ def imprimir(rs):
             lg, mk = k.split("|")
             print("%-8s %-8s %6d %7s%% %7s%% %8s %6s" % (lg, mk, d["n"], d["acierto_pct"] if d["acierto_pct"] is not None else "-",
                   d["p_media_pct"] if d["p_media_pct"] is not None else "-", d["brier"] if d["brier"] is not None else "-", d["mae"] if d["mae"] is not None else "-"))
+    rb = rs.get("breaks")
+    if rb:
+        pk = rb["picks"]
+        print("\nBREAKS DE TENIS vs LINEA DE LA CASA (breaks.py): %d lineas, %d calificadas, %d pendientes" % (rb["registros"], rb["calificados"], rb["pendientes"]))
+        print("  picks: n=%d acierto %s%% unidades %+.2f ROI %s%%" % (pk["n"], pk["acierto_pct"] if pk["acierto_pct"] is not None else "-", pk["unidades"],
+              pk["roi_pct"] if pk["roi_pct"] is not None else "-"))
+        print("  MAE modelo ajustado %s vs MAE linea %s | realidad del lado del modelo %s%% (n=%d)" % (rb["mae_modelo"], rb["mae_linea"], rb["lado_modelo_pct"] or "-", rb["n_lado"]))
     for clave_rs, encabezado in (("picks_dia", "PICKS DEL DIA (lista oficial, picks_del_dia.py)"), ("decidir", "SISTEMA ESTIMADO (beisbol, decidir.py; todas las decisiones, no solo las oficiales)")):
         rd = rs.get(clave_rs)
         if not rd:
@@ -736,6 +806,12 @@ def main():
         rp_ = None; print("  picks del dia: no se pudo calificar (%s)" % e)
     if rp_:
         rs["picks_dia"] = rp_
+    try:
+        rb = calificar_breaks()
+    except Exception as e:
+        rb = None; print("  breaks: no se pudo calificar (%s)" % e)
+    if rb:
+        rs["breaks"] = rb
     json.dump(rs, open(io.ruta("salida", "track_record.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     imprimir(rs)
     sr = [x for x in cal if x["estado"] == "sin_resultado"]

@@ -167,7 +167,7 @@ def main():
     if a.fecha:
         fechas = [a.fecha]
     else:
-        hoy = (dt.datetime.utcnow() + dt.timedelta(hours=TZ)).date()
+        hoy = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=TZ)).date()
         fechas = [hoy.isoformat(), (hoy + dt.timedelta(days=1)).isoformat()]
     os.makedirs(TRABAJO, exist_ok=True)
     for f in fechas:
