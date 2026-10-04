@@ -110,29 +110,31 @@ def _es_nombre(s):
 
 
 def _buscar_texto(lineas):
-    """Respaldo sobre el texto visible. Daily Faceoff lista cada partido como tarjeta: los dos equipos juntos
-    (visitante, local) y despues los dos porteros en el mismo orden, cada uno con su estado. Se lee por tarjeta."""
+    """Respaldo sobre el texto visible. Estructura real de Daily Faceoff (vista 2026-10-04):
+        <Visitante> / at / <Local> / <hora ISO> / <portero visitante> / <Confirmed|Unconfirmed> / ... / <portero local> / <estado> / ...
+    Se lee por tarjeta: el encabezado es equipo, "at", equipo; dentro, cada portero es un nombre de persona seguido
+    inmediatamente por su estado. El primero es del visitante y el segundo del local."""
     out = {}
     n = len(lineas)
     i = 0
     while i < n:
-        if lineas[i] in EQUIPOS and i + 1 < n and lineas[i + 1] in EQUIPOS:
-            equipos = [lineas[i], lineas[i + 1]]
+        if lineas[i] in EQUIPOS and i + 2 < n and lineas[i + 1].lower() in ("at", "vs", "vs.", "@") and lineas[i + 2] in EQUIPOS:
+            away, home = lineas[i], lineas[i + 2]
             porteros = []
-            j = i + 2
-            while j < n and lineas[j] not in EQUIPOS and len(porteros) < 2:
-                s_ = lineas[j]
-                if _es_nombre(s_):
-                    estado = None
-                    for k in range(j + 1, min(j + 5, n)):
-                        if any(lineas[k].startswith(e) for e in ESTADOS):
-                            estado = next(e for e in ESTADOS if lineas[k].startswith(e)); break
-                        if _es_nombre(lineas[k]) or lineas[k] in EQUIPOS:
-                            break
-                    porteros.append({"portero": s_, "estado": estado or "Unconfirmed"})
+            j = i + 3
+            while j < n and len(porteros) < 2:
+                if lineas[j] in EQUIPOS and j + 2 < n and lineas[j + 1].lower() in ("at", "vs", "vs.", "@") and lineas[j + 2] in EQUIPOS:
+                    break                                   # siguiente tarjeta sin completar los dos porteros
+                if _es_nombre(lineas[j]) and j + 1 < n and any(lineas[j + 1].startswith(e) for e in ESTADOS):
+                    estado = next(e for e in ESTADOS if lineas[j + 1].startswith(e))
+                    porteros.append({"portero": lineas[j], "estado": estado})
+                    j += 2
+                    continue
                 j += 1
-            for eq, po in zip(equipos, porteros):
-                out.setdefault(eq, po)
+            if porteros:
+                out.setdefault(away, porteros[0])
+            if len(porteros) > 1:
+                out.setdefault(home, porteros[1])
             i = j
         else:
             i += 1
@@ -150,9 +152,9 @@ def recolectar(fecha, debug=False):
         os.makedirs(TRABAJO, exist_ok=True)
         with open(os.path.join(TRABAJO, "dailyfaceoff_%s.html" % fecha), "w", encoding="utf-8") as f:
             f.write(h)
-    eq = _buscar_json(h)
+    eq = _buscar_texto(_texto(h))          # estructura verificada (equipo / at / equipo / porteros)
     if len(eq) < 2:
-        eq = _buscar_texto(_texto(h))
+        eq = _buscar_json(h)
     res["equipos"] = eq
     if not eq:
         res["motivo"] = "la pagina respondio pero el parser no encontro porteros (corre con --debug y revisa el HTML)"
