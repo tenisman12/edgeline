@@ -22,12 +22,31 @@ Por equipo devuelve:
 Fuera de temporada (ultimo juego a mas de 60 dias) se marca fuera_de_temporada y la "temporada"
 es la ultima que jugo.
 
-OSCILADORES (todos comparan la forma reciente con la temporada del mismo equipo):
-  forma   = %puntos L10 - %puntos temporada (en fraccion; %puntos = (G + 0.5 E) / juegos)
-  ataque  = anotado por juego L10 / temporada - 1
-  defensa = permitido por juego L10 / temporada - 1   (negativo = esta permitiendo menos)
-  dif5    = diferencial por juego L5 - diferencial por juego de la temporada
+OSCILADORES (comparan la forma reciente con la BASE del mismo equipo):
+  La base son los ultimos BASE_N juegos del equipo (por deporte: beisbol 60, hockey 40, nba 40,
+  americano 17, futbol 20) cruzando temporadas si la actual no alcanza. Asi hay senal desde el
+  primer juego de la temporada; antes se comparaba contra la temporada en curso y al inicio todo
+  salia en 0. Las ventanas L10/L5/L3 tambien cruzan temporadas mientras la actual tenga menos de
+  5 juegos (se marca incluye_temporada_anterior).
+  forma   = %puntos L10 - %puntos base (en fraccion; %puntos = (G + 0.5 E) / juegos)
+  ataque  = anotado por juego L10 / base - 1
+  defensa = permitido por juego L10 / base - 1   (negativo = esta permitiendo menos)
+  dif5    = diferencial por juego L5 - diferencial por juego base
   tendencia: Subiendo si forma >= +0.15, Bajando si forma <= -0.15, si no Estable.
+
+OSCILADORES DETALLADOS (osciladores_detalle), mismas unidades:
+  forma3, forma5          %puntos L3 / L5 - base
+  ataque3, defensa3       anotado / permitido L3 contra base
+  dif10, dif3             diferencial por juego L10 / L3 - base
+  volatilidad10           desviacion estandar del diferencial en L10 (que tan erratico llega)
+  forma_local, forma_visita   %puntos de sus ultimos 10 como local / visita - base
+  ataque_local, defensa_visita   anotado de local / permitido de visita contra base
+  elo_mom10               cambio del ELO descriptivo en los ultimos 10 juegos (power momentum)
+  ou10                    fraccion de Over en L10 - fraccion de Over en base (contra el promedio de liga)
+  carga: juegos_7d (juegos en los 7 dias previos al ultimo), descanso_ultimo (dias entre sus dos
+         ultimos juegos), b2b_ultimo (jugo dos dias seguidos al final)
+  porteria5 (hockey)      save% L5 - save% base, cuando el CSV trae goalie_sv
+  n_base, n_temporada, incluye_temporada_anterior
 
 Solo stdlib.
 """
@@ -48,6 +67,8 @@ K_ELO = {"beisbol": 6.0, "hockey": 8.0, "nba": 5.0, "americano": 8.0, "futbol": 
 HFA = {"beisbol": 24.0, "hockey": 30.0, "nba": 70.0, "americano": 55.0, "futbol": 60.0}
 REGRESION = 0.70            # al cambiar de temporada el ELO regresa 30% a 1500
 DIAS_FUERA = 60
+BASE_N = {"beisbol": 60, "hockey": 40, "nba": 40, "americano": 17, "futbol": 20}
+MIN_TEMP_VENTANAS = 5       # con menos juegos en la temporada, L10/L5/L3 cruzan temporadas
 VENT = ("temp", "local", "visita", "L10", "L5", "L3")
 _NO_STATS = {"gamePk", "game_id", "season", "is_home", "week", "tipo", "marcador", "league", "liga",
              "season_type", "game_date", "source"}
@@ -120,8 +141,9 @@ def _res(j):
     return "W" if j["gf"] > j["ga"] else ("L" if j["gf"] < j["ga"] else "D")
 
 
-def _elos(eq, deporte):
-    """ELO descriptivo recorriendo todos los juegos en orden cronologico."""
+def _elos(eq, deporte, historial=False):
+    """ELO descriptivo recorriendo todos los juegos en orden cronologico.
+    Con historial=True devuelve tambien {equipo: [elo tras cada juego]}."""
     k, hfa = K_ELO[deporte], HFA[deporte]
     todos = []
     for t, lst in eq.items():
@@ -129,7 +151,7 @@ def _elos(eq, deporte):
             if j["home"]:
                 todos.append((j["f"], j["gp"], t, j["rival"], j["gf"], j["ga"], j["season"]))
     todos.sort()
-    elo, ult = {}, {}
+    elo, ult, hist = {}, {}, {}
     for f, gp, h, a, gh, ga, se in todos:
         for t in (h, a):
             elo.setdefault(t, 1500.0)
@@ -141,6 +163,10 @@ def _elos(eq, deporte):
         d = k * max(math.log(abs(gh - ga) + 1), 0.7) * (res - esp)
         elo[h] += d
         elo[a] -= d
+        hist.setdefault(h, []).append((se, elo[h]))
+        hist.setdefault(a, []).append((se, elo[a]))
+    if historial:
+        return elo, hist
     return elo
 
 
@@ -208,6 +234,17 @@ def _promedios_stats(filas):
     return out
 
 
+def _osc_stats(base, rec):
+    """Oscilador por estadistica: reciente / base - 1 (None si la base es 0 o falta)."""
+    out = {}
+    for k, v in (rec or {}).items():
+        b = (base or {}).get(k)
+        if b is None or v is None:
+            continue
+        out[k] = round(v / b - 1, 3) if b else None
+    return out
+
+
 # ================================================================== clase principal
 class Forma:
     """Forma de los equipos de una liga. Se construye una vez por (deporte, liga)."""
@@ -215,7 +252,7 @@ class Forma:
     def __init__(self, deporte, liga=None, eq=None):
         self.deporte, self.liga = deporte, liga
         self.eq = eq if eq is not None else _juegos_equipo(deporte, liga)
-        self.elo = _elos(self.eq, deporte)
+        self.elo, self.elo_hist = _elos(self.eq, deporte, historial=True)
         self.ultima = max((l[-1]["f"] for l in self.eq.values() if l), default="")
         lim = (dt.date.fromisoformat(self.ultima) - dt.timedelta(days=120)).isoformat() if self.ultima else ""
         self.activos = [t for t, l in self.eq.items() if l and l[-1]["f"] >= lim]
@@ -256,19 +293,11 @@ class Forma:
                 w["of_idx"] = round(w["gf"] / lgv["gf"], 3) if lgv.get("gf") else None
                 w["df_idx"] = round(w["ga"] / lgv["ga"], 3) if lgv.get("ga") else None
             vent[v] = w
-        t, l10, l5 = vent["temp"], vent["L10"], vent["L5"]
-
         def _rec(w):
             return ("%d-%d-%d" % (w["w"], w["d"], w["l"])) if self.deporte == "futbol" else "%d-%d" % (w["w"], w["l"])
         record = {k: (_rec(vent[k]) if vent[k]["n"] else "") for k in ("temp", "local", "visita")}
-        osc = {}
-        if t["n"] and l10["n"]:
-            osc["forma"] = round(l10["pts"] - t["pts"], 3)
-            osc["ataque"] = round(l10["gf"] / t["gf"] - 1, 3) if t["gf"] else None
-            osc["defensa"] = round(l10["ga"] / t["ga"] - 1, 3) if t["ga"] else None
-            osc["dif5"] = round(l5["dif"] - t["dif"], 3) if l5["n"] else None
-            osc["tendencia"] = "Subiendo" if osc["forma"] >= 0.15 else ("Bajando" if osc["forma"] <= -0.15 else "Estable")
         ts = [j for j in js if j["season"] == se]
+        osc, det = self._osciladores(nombre, js, ts)
         ou = []
         if self.lg_total:
             ou = ["O" if j["gf"] + j["ga"] > self.lg_total else "U" for j in ts[-4:]]
@@ -282,12 +311,95 @@ class Forma:
             "ventanas": vent, "elo": round(self.elo.get(nombre, 1500.0), 1),
             "power": {"rank": self.rank.get(nombre), "de": len(self.activos)},
             "status": _status(ts[-6:], self.rank.get(nombre, len(self.activos)), len(self.activos), len(ts)),
-            "osciladores": osc, "ou4": "-".join(ou),
+            "osciladores": osc, "osciladores_detalle": det, "ou4": "-".join(ou),
         }
         if con_stats:
+            nb = BASE_N.get(self.deporte, 40)
+            rec_js = js if len(ts) < MIN_TEMP_VENTANAS else ts
             out["stats"] = {"temp": _promedios_stats([j["fila"] for j in ts]),
-                            "L10": _promedios_stats([j["fila"] for j in ts[-10:]])}
+                            "L10": _promedios_stats([j["fila"] for j in rec_js[-10:]])}
+            # oscilador por estadistica: L10 contra la base (ultimos BASE_N juegos, cruzando temporadas)
+            out["stats"]["osc_L10"] = _osc_stats(_promedios_stats([j["fila"] for j in js[-nb:]]), out["stats"]["L10"])
         return out
+
+
+def _elo_mom(h, n):
+    """Cambio de ELO en los ultimos n juegos, sumando de vuelta la regresion de cambio de temporada
+    (si no, el salto artificial a 1500 aparece como caida de forma)."""
+    if len(h) < 2:
+        return None
+    seg = h[-(n + 1):]
+    mom = seg[-1][1] - seg[0][1]
+    for (s0, e0), (s1, _) in zip(seg, seg[1:]):
+        if s0 != s1:
+            mom += (e0 - 1500.0) * (1.0 - REGRESION)
+    return round(mom, 1)
+
+
+def _pstd(xs):
+    n = len(xs)
+    if n < 2:
+        return None
+    m = sum(xs) / n
+    return math.sqrt(sum((x - m) ** 2 for x in xs) / n)
+
+
+def _osciladores(self, nombre, js, ts):
+    """Osciladores basicos y detallados contra la BASE (ultimos BASE_N juegos, cruzando temporadas)."""
+    nb = BASE_N.get(self.deporte, 40)
+    base_js = js[-nb:]
+    cruza = len(ts) < MIN_TEMP_VENTANAS
+    rec_js = js if cruza else ts          # de donde salen L10/L5/L3
+    l10, l5, l3 = _ventana(rec_js[-10:]), _ventana(rec_js[-5:]), _ventana(rec_js[-3:])
+    b = _ventana(base_js)
+    osc, det = {}, {}
+    if not b["n"] or not l10["n"]:
+        return osc, det
+    def rel(x, y):
+        return round(x / y - 1, 3) if y else None
+    osc["forma"] = round(l10["pts"] - b["pts"], 3)
+    osc["ataque"] = rel(l10["gf"], b["gf"])
+    osc["defensa"] = rel(l10["ga"], b["ga"])
+    osc["dif5"] = round(l5["dif"] - b["dif"], 3) if l5["n"] else None
+    osc["tendencia"] = "Subiendo" if osc["forma"] >= 0.15 else ("Bajando" if osc["forma"] <= -0.15 else "Estable")
+    # detallados
+    det["forma5"] = round(l5["pts"] - b["pts"], 3) if l5["n"] else None
+    det["forma3"] = round(l3["pts"] - b["pts"], 3) if l3["n"] else None
+    det["ataque3"] = rel(l3["gf"], b["gf"]) if l3["n"] else None
+    det["defensa3"] = rel(l3["ga"], b["ga"]) if l3["n"] else None
+    det["dif10"] = round(l10["dif"] - b["dif"], 3)
+    det["dif3"] = round(l3["dif"] - b["dif"], 3) if l3["n"] else None
+    det["volatilidad10"] = (lambda v: round(v, 3) if v is not None else None)(_pstd([j["gf"] - j["ga"] for j in rec_js[-10:]]))
+    loc = [j for j in js if j["home"]][-10:]
+    vis = [j for j in js if not j["home"]][-10:]
+    wl, wv = _ventana(loc), _ventana(vis)
+    det["forma_local"] = round(wl["pts"] - b["pts"], 3) if wl["n"] else None
+    det["forma_visita"] = round(wv["pts"] - b["pts"], 3) if wv["n"] else None
+    det["ataque_local"] = rel(wl["gf"], b["gf"]) if wl["n"] else None
+    det["defensa_visita"] = rel(wv["ga"], b["ga"]) if wv["n"] else None
+    h = self.elo_hist.get(nombre) or []
+    det["elo_mom10"] = _elo_mom(h, 10)
+    if self.lg_total:
+        ov = lambda L: sum(1 for j in L if j["gf"] + j["ga"] > self.lg_total) / len(L)
+        det["ou10"] = round(ov(rec_js[-10:]) - ov(base_js), 3)
+    # carga
+    try:
+        fechas = [dt.date.fromisoformat(j["f"]) for j in js[-12:]]
+        ult = fechas[-1]
+        det["carga"] = {"juegos_7d": sum(1 for f in fechas if 0 <= (ult - f).days < 7),
+                        "descanso_ultimo": (fechas[-1] - fechas[-2]).days if len(fechas) >= 2 else None,
+                        "b2b_ultimo": bool(len(fechas) >= 2 and (fechas[-1] - fechas[-2]).days == 1)}
+    except (ValueError, TypeError):
+        det["carga"] = None
+    if self.deporte == "hockey":
+        sv = lambda L: [v for v in (_f(j["fila"].get("goalie_sv")) for j in L) if v is not None]
+        s5, sb = sv(rec_js[-5:]), sv(base_js)
+        det["porteria5"] = round(sum(s5) / len(s5) - sum(sb) / len(sb), 4) if s5 and sb else None
+    det["n_base"] = b["n"]; det["n_temporada"] = len(ts); det["incluye_temporada_anterior"] = cruza
+    return osc, det
+
+
+Forma._osciladores = _osciladores
 
 
 def _h2h(self, a, b, max_ult=5):
@@ -389,9 +501,15 @@ class EstadisticasEquipo:
             return None
         se = lst[-1].get("season")
         ts = [r for r in lst if r.get("season") == se]
+        # base: temporada en curso, o los ultimos 17/40 juegos cruzando temporadas si la actual va empezando
+        nb = 17 if self.liga in ("nfl", "ncaafb") else 40
+        base = ts if len(ts) >= min(nb, 8) else lst[-nb:]
+        temp, l5, l10 = _promedios_stats(ts), _promedios_stats(lst[-5:] if len(ts) < 5 else ts[-5:]), _promedios_stats(lst[-10:] if len(ts) < 10 else ts[-10:])
+        pb = _promedios_stats(base)
         return {"temporada": se, "juegos": len(ts), "ultimo_juego": (ts[-1].get("game_date") or "")[:10],
-                "temp": _promedios_stats(ts), "L5": _promedios_stats(ts[-5:]),
-                "L10": _promedios_stats(ts[-10:])}
+                "temp": temp, "L5": l5, "L10": l10,
+                "osciladores": {"L5": _osc_stats(pb, l5), "L10": _osc_stats(pb, l10),
+                                "n_base": len(base), "incluye_temporada_anterior": len(base) > len(ts)}}
 
 
 def estadisticas(liga):
