@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-04T10:00:11",
+ "generado": "2026-10-04T11:20:36",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -169,45 +169,33 @@
    "hora": "03:00",
    "home": "Swallows",
    "away": "Carp",
-   "p_modelo": 0.5593,
+   "p_modelo": 0.496,
    "p_sharp": 0.6348,
-   "p_final": 0.6164,
+   "p_final": 0.6012,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 1.28,
+   "margen_esperado": 1.11,
    "linea_home": "-1.5",
-   "p_runline_home": 0.4117,
+   "p_runline_home": 0.3984,
    "detalle_modelo": {
     "elo_h": 1408.3,
     "elo_a": 1445.4,
     "dif_h": -0.851,
     "dif_a": -0.643,
     "p_base": 0.496,
-    "abridor_h": {
-     "nombre": "吉村",
-     "era5": 4.5,
-     "ip5": 18.0,
-     "era_ajustada": 4.17,
-     "ga_equipo": 3.979
-    },
-    "abridor_a": {
-     "nombre": "栗林",
-     "era5": 6.46,
-     "ip5": 23.2,
-     "era_ajustada": 4.88,
-     "ga_equipo": 3.657
-    },
-    "carreras_abridor": 0.63
+    "abridor_h": null,
+    "abridor_a": null,
+    "carreras_abridor": 0.0
    },
    "lados": [
     {
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Swallows",
-     "p": 0.6164,
+     "p": 0.6012,
      "cuota": -204.0,
      "decimal": 1.49,
      "casa": "pinnacle",
-     "ev": -0.0815,
+     "ev": -0.104,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 2,
@@ -227,18 +215,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 23.1
+     "premium_pts": 23.5
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Carp",
-     "p": 0.3836,
+     "p": 0.3988,
      "cuota": 195.0,
      "decimal": 2.95,
      "casa": "pmu_fr",
-     "ev": 0.1317,
-     "cuota_min": 2.61,
+     "ev": 0.1763,
+     "cuota_min": 2.51,
      "en_rango": true,
      "senales_favor": 6,
      "senales_contra": 2,
@@ -257,18 +245,19 @@
       ]
      },
      "premium_nivel": "premium",
-     "premium_pts": 76.9
+     "premium_pts": 76.5,
+     "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Swallows -1.5",
-     "p": 0.4117,
+     "p": 0.3984,
      "cuota": 176.0,
      "decimal": 2.76,
      "casa": "pinnacle",
-     "ev": 0.1362,
-     "cuota_min": 2.43,
+     "ev": 0.0996,
+     "cuota_min": 2.51,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 5,
@@ -285,18 +274,17 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 16.0,
-     "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
+     "premium_pts": 16.5
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Carp +1.5",
-     "p": 0.5883,
+     "p": 0.6016,
      "cuota": -228.0,
      "decimal": 1.439,
      "casa": "pinnacle",
-     "ev": -0.1536,
+     "ev": -0.1345,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 5,
@@ -314,40 +302,42 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 52.5
+     "premium_pts": 52.1
     }
    ],
    "pick": {
-    "mercado": "Run line",
-    "lado": "home",
-    "texto": "Swallows -1.5",
-    "p": 0.4117,
-    "cuota": 176.0,
-    "decimal": 2.76,
-    "casa": "pinnacle",
-    "ev": 0.1362,
-    "cuota_min": 2.43,
+    "mercado": "Ganador",
+    "lado": "away",
+    "texto": "Carp",
+    "p": 0.3988,
+    "cuota": 195.0,
+    "decimal": 2.95,
+    "casa": "pmu_fr",
+    "ev": 0.1763,
+    "cuota_min": 2.51,
     "en_rango": true,
-    "senales_favor": 1,
-    "senales_contra": 5,
+    "senales_favor": 6,
+    "senales_contra": 2,
     "senales": {
      "a_favor": [
-      "abridor"
-     ],
-     "en_contra": [
       "forma",
+      "h2h",
       "osciladores",
       "fuerza",
       "bullpen",
       "racha"
+     ],
+     "en_contra": [
+      "consenso",
+      "abridor"
      ]
     },
-    "premium_nivel": "pasar",
-    "premium_pts": 16.0,
-    "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
+    "premium_nivel": "premium",
+    "premium_pts": 76.5,
+    "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
    },
-   "confianza": "media",
-   "stake": 0.02,
+   "confianza": "minima",
+   "stake": 0.0,
    "pretemporada": false
   },
   {
@@ -357,177 +347,165 @@
    "hora": "03:00",
    "home": "Bay Stars",
    "away": "Tigers",
-   "p_modelo": 0.5162,
+   "p_modelo": 0.5206,
    "p_sharp": 0.6624,
-   "p_final": 0.6275,
+   "p_final": 0.6286,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 1.4,
+   "margen_esperado": 1.41,
    "linea_home": "-1.5",
-   "p_runline_home": 0.4216,
+   "p_runline_home": 0.4226,
    "detalle_modelo": {
     "elo_h": 1526.7,
     "elo_a": 1540.4,
     "dif_h": 0.31,
     "dif_a": 0.59,
     "p_base": 0.5206,
-    "abridor_h": {
-     "nombre": "平良",
-     "era5": 2.35,
-     "ip5": 30.2,
-     "era_ajustada": 2.97,
-     "ga_equipo": 3.599
-    },
-    "abridor_a": {
-     "nombre": "伊藤将",
-     "era5": 1.1,
-     "ip5": 16.1,
-     "era_ajustada": 2.4,
-     "ga_equipo": 3.101
-    },
-    "carreras_abridor": -0.04
+    "abridor_h": null,
+    "abridor_a": null,
+    "carreras_abridor": 0.0
    },
    "lados": [
     {
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Bay Stars",
-     "p": 0.6275,
+     "p": 0.6286,
      "cuota": -240.0,
      "decimal": 1.417,
      "casa": "pinnacle",
-     "ev": -0.111,
+     "ev": -0.1095,
      "cuota_min": 1.7,
      "en_rango": false,
-     "senales_favor": 3,
-     "senales_contra": 4,
+     "senales_favor": 2,
+     "senales_contra": 5,
      "senales": {
       "a_favor": [
        "consenso",
-       "bullpen",
        "racha"
       ],
       "en_contra": [
        "forma",
        "h2h",
        "osciladores",
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 27.7
+     "premium_pts": 23.1
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Tigers",
-     "p": 0.3725,
+     "p": 0.3714,
      "cuota": 210.0,
      "decimal": 3.1,
      "casa": "mybookieag",
-     "ev": 0.1546,
-     "cuota_min": 2.68,
+     "ev": 0.1514,
+     "cuota_min": 2.69,
      "en_rango": false,
-     "senales_favor": 4,
-     "senales_contra": 3,
+     "senales_favor": 5,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "forma",
        "h2h",
        "osciladores",
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": [
        "consenso",
-       "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 71.5
+     "premium_pts": 76.1
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Bay Stars -1.5",
-     "p": 0.4216,
+     "p": 0.4226,
      "cuota": 113.0,
      "decimal": 2.13,
      "casa": "pinnacle",
-     "ev": -0.1019,
+     "ev": -0.0999,
      "cuota_min": 2.37,
      "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 3,
+     "senales_favor": 1,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
-       "bullpen",
        "racha"
       ],
       "en_contra": [
        "forma",
        "osciladores",
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 19.6
+     "premium_pts": 14.2
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Tigers +1.5",
-     "p": 0.5784,
+     "p": 0.5774,
      "cuota": -115.0,
      "decimal": 1.87,
      "casa": "fanduel",
-     "ev": 0.0813,
+     "ev": 0.0795,
      "cuota_min": 1.73,
      "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 2,
+     "senales_favor": 4,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
        "osciladores",
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": [
-       "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "premium",
-     "premium_pts": 79.4,
-     "nota_lectura": "modelo 15 pp arriba del mercado en el lado del pick: revisar, no pick"
+     "premium_pts": 84.9,
+     "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
     }
    ],
    "pick": {
     "mercado": "Run line",
     "lado": "away",
     "texto": "Tigers +1.5",
-    "p": 0.5784,
+    "p": 0.5774,
     "cuota": -115.0,
     "decimal": 1.87,
     "casa": "fanduel",
-    "ev": 0.0813,
+    "ev": 0.0795,
     "cuota_min": 1.73,
     "en_rango": true,
-    "senales_favor": 3,
-    "senales_contra": 2,
+    "senales_favor": 4,
+    "senales_contra": 1,
     "senales": {
      "a_favor": [
       "forma",
       "osciladores",
-      "abridor"
+      "abridor",
+      "bullpen"
      ],
      "en_contra": [
-      "bullpen",
       "racha"
      ]
     },
     "premium_nivel": "premium",
-    "premium_pts": 79.4,
-    "nota_lectura": "modelo 15 pp arriba del mercado en el lado del pick: revisar, no pick"
+    "premium_pts": 84.9,
+    "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -540,103 +518,34 @@
    "hora": "03:00",
    "home": "Marines",
    "away": "Golden Eagles",
-   "p_modelo": 0.4182,
+   "p_modelo": 0.5273,
    "p_sharp": 0.3668,
-   "p_final": 0.3794,
+   "p_final": 0.4056,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -1.32,
+   "margen_esperado": -1.03,
    "linea_home": "+1.5",
-   "p_runline_home": 0.5121,
+   "p_runline_home": 0.5404,
    "detalle_modelo": {
     "elo_h": 1461.5,
     "elo_a": 1468.7,
     "dif_h": -0.603,
     "dif_a": -0.589,
     "p_base": 0.5273,
-    "abridor_h": {
-     "nombre": "小島",
-     "era5": 4.7,
-     "ip5": 23.0,
-     "era_ajustada": 4.34,
-     "ga_equipo": 4.071
-    },
-    "abridor_a": {
-     "nombre": "早川",
-     "era5": 0.9,
-     "ip5": 30.0,
-     "era_ajustada": 2.4,
-     "ga_equipo": 3.908
-    },
-    "carreras_abridor": -1.09
+    "abridor_h": null,
+    "abridor_a": null,
+    "carreras_abridor": 0.0
    },
    "lados": [
     {
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Marines",
-     "p": 0.3794,
+     "p": 0.4056,
      "cuota": 185.0,
      "decimal": 2.85,
      "casa": "mybookieag",
-     "ev": 0.0813,
-     "cuota_min": 2.64,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "h2h",
-       "osciladores",
-       "abridor",
-       "racha"
-      ]
-     },
-     "premium_nivel": "revisar",
-     "premium_pts": 61.5,
-     "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "Golden Eagles",
-     "p": 0.6206,
-     "cuota": -200.0,
-     "decimal": 1.5,
-     "casa": "williamhill_us",
-     "ev": -0.0691,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 5,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "h2h",
-       "osciladores",
-       "abridor",
-       "racha"
-      ],
-      "en_contra": [
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 37.5
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Marines +1.5",
-     "p": 0.5121,
-     "cuota": -111.0,
-     "decimal": 1.901,
-     "casa": "mybookieag",
-     "ev": -0.0266,
-     "cuota_min": 1.95,
+     "ev": 0.156,
+     "cuota_min": 2.47,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 4,
@@ -646,32 +555,33 @@
       ],
       "en_contra": [
        "forma",
+       "h2h",
        "osciladores",
-       "abridor",
        "racha"
       ]
      },
-     "premium_nivel": "lean",
-     "premium_pts": 57.2
+     "premium_nivel": "revisar",
+     "premium_pts": 65.9,
+     "nota_lectura": "modelo 16 pp arriba del mercado en el lado del pick: revisar, no pick"
     },
     {
-     "mercado": "Run line",
+     "mercado": "Ganador",
      "lado": "away",
-     "texto": "Golden Eagles -1.5",
-     "p": 0.4879,
-     "cuota": 110.0,
-     "decimal": 2.1,
-     "casa": "unibet_se",
-     "ev": 0.0246,
-     "cuota_min": 2.05,
-     "en_rango": true,
+     "texto": "Golden Eagles",
+     "p": 0.5944,
+     "cuota": -200.0,
+     "decimal": 1.5,
+     "casa": "williamhill_us",
+     "ev": -0.1084,
+     "cuota_min": 1.7,
+     "en_rango": false,
      "senales_favor": 4,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
+       "h2h",
        "osciladores",
-       "abridor",
        "racha"
       ],
       "en_contra": [
@@ -679,22 +589,74 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 40.9
+     "premium_pts": 33.1
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Marines +1.5",
+     "p": 0.5404,
+     "cuota": -111.0,
+     "decimal": 1.901,
+     "casa": "mybookieag",
+     "ev": 0.0273,
+     "cuota_min": 1.85,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 3,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pick",
+     "premium_pts": 62.4
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Golden Eagles -1.5",
+     "p": 0.4596,
+     "cuota": 110.0,
+     "decimal": 2.1,
+     "casa": "unibet_se",
+     "ev": -0.0349,
+     "cuota_min": 2.18,
+     "en_rango": true,
+     "senales_favor": 3,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 35.8
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Marines",
-    "p": 0.3794,
+    "p": 0.4056,
     "cuota": 185.0,
     "decimal": 2.85,
     "casa": "mybookieag",
-    "ev": 0.0813,
-    "cuota_min": 2.64,
+    "ev": 0.156,
+    "cuota_min": 2.47,
     "en_rango": true,
     "senales_favor": 1,
-    "senales_contra": 5,
+    "senales_contra": 4,
     "senales": {
      "a_favor": [
       "bullpen"
@@ -703,16 +665,15 @@
       "forma",
       "h2h",
       "osciladores",
-      "abridor",
       "racha"
      ]
     },
     "premium_nivel": "revisar",
-    "premium_pts": 61.5,
-    "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
+    "premium_pts": 65.9,
+    "nota_lectura": "modelo 16 pp arriba del mercado en el lado del pick: revisar, no pick"
    },
-   "confianza": "media",
-   "stake": 0.02,
+   "confianza": "minima",
+   "stake": 0.0,
    "pretemporada": false
   },
   {
@@ -781,7 +742,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 64.7
+     "premium_pts": 64.4
     },
     {
      "mercado": "Ganador",
@@ -812,7 +773,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 30.4
+     "premium_pts": 30.8
     },
     {
      "mercado": "Run line",
@@ -840,7 +801,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 53.3
+     "premium_pts": 52.9
     },
     {
      "mercado": "Run line",
@@ -868,7 +829,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 33.0
+     "premium_pts": 33.4
     }
    ],
    "pick": {
@@ -897,7 +858,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 53.3
+    "premium_pts": 52.9
    },
    "confianza": "media",
    "stake": 0.02,
@@ -946,7 +907,7 @@
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 7,
-     "senales_contra": 2,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
@@ -958,12 +919,11 @@
        "racha"
       ],
       "en_contra": [
-       "h2h",
-       "bullpen"
+       "h2h"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 67.3
+     "premium_pts": 68.0
     },
     {
      "mercado": "Ganador",
@@ -976,12 +936,11 @@
      "ev": -0.0557,
      "cuota_min": 2.55,
      "en_rango": true,
-     "senales_favor": 2,
+     "senales_favor": 1,
      "senales_contra": 8,
      "senales": {
       "a_favor": [
-       "h2h",
-       "bullpen"
+       "h2h"
       ],
       "en_contra": [
        "forma",
@@ -995,7 +954,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 24.5
+     "premium_pts": 23.9
     },
     {
      "mercado": "Run line",
@@ -1009,7 +968,7 @@
      "cuota_min": 2.34,
      "en_rango": true,
      "senales_favor": 5,
-     "senales_contra": 1,
+     "senales_contra": 0,
      "senales": {
       "a_favor": [
        "forma",
@@ -1018,12 +977,10 @@
        "abridor",
        "racha"
       ],
-      "en_contra": [
-       "bullpen"
-      ]
+      "en_contra": []
      },
      "premium_nivel": "pick",
-     "premium_pts": 63.4
+     "premium_pts": 64.1
     },
     {
      "mercado": "Run line",
@@ -1036,12 +993,10 @@
      "ev": -0.0727,
      "cuota_min": 1.74,
      "en_rango": false,
-     "senales_favor": 1,
+     "senales_favor": 0,
      "senales_contra": 5,
      "senales": {
-      "a_favor": [
-       "bullpen"
-      ],
+      "a_favor": [],
       "en_contra": [
        "forma",
        "osciladores",
@@ -1051,7 +1006,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 22.5
+     "premium_pts": 21.8
     }
    ],
    "pick": {
@@ -1066,7 +1021,7 @@
     "cuota_min": 2.34,
     "en_rango": true,
     "senales_favor": 5,
-    "senales_contra": 1,
+    "senales_contra": 0,
     "senales": {
      "a_favor": [
       "forma",
@@ -1075,12 +1030,10 @@
       "abridor",
       "racha"
      ],
-     "en_contra": [
-      "bullpen"
-     ]
+     "en_contra": []
     },
     "premium_nivel": "pick",
-    "premium_pts": 63.4
+    "premium_pts": 64.1
    },
    "confianza": "alta",
    "stake": 0.03,
@@ -1311,22 +1264,23 @@
      "ev": 0.0602,
      "cuota_min": 2.08,
      "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 4,
+     "senales_favor": 1,
+     "senales_contra": 5,
      "senales": {
       "a_favor": [
-       "bullpen",
        "racha"
       ],
       "en_contra": [
        "consenso",
        "h2h",
        "contexto",
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 56.0
+     "premium_pts": 54.1,
+     "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
     },
     {
      "mercado": "Ganador",
@@ -1339,22 +1293,22 @@
      "ev": -0.0502,
      "cuota_min": 1.93,
      "en_rango": true,
-     "senales_favor": 4,
-     "senales_contra": 2,
+     "senales_favor": 5,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "consenso",
        "h2h",
        "contexto",
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": [
-       "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 42.0
+     "premium_pts": 43.9
     },
     {
      "mercado": "Run line",
@@ -1367,19 +1321,19 @@
      "ev": -0.0155,
      "cuota_min": 1.7,
      "en_rango": false,
-     "senales_favor": 2,
-     "senales_contra": 1,
+     "senales_favor": 1,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
-       "bullpen",
        "racha"
       ],
       "en_contra": [
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 51.1
+     "premium_pts": 48.9
     },
     {
      "mercado": "Run line",
@@ -1392,19 +1346,19 @@
      "ev": 0.0077,
      "cuota_min": 2.48,
      "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 2,
+     "senales_favor": 2,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": [
-       "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 35.4
+     "premium_pts": 37.6
     }
    ],
    "pick": {
@@ -1418,25 +1372,26 @@
     "ev": 0.0602,
     "cuota_min": 2.08,
     "en_rango": true,
-    "senales_favor": 2,
-    "senales_contra": 4,
+    "senales_favor": 1,
+    "senales_contra": 5,
     "senales": {
      "a_favor": [
-      "bullpen",
       "racha"
      ],
      "en_contra": [
       "consenso",
       "h2h",
       "contexto",
-      "abridor"
+      "abridor",
+      "bullpen"
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 56.0
+    "premium_pts": 54.1,
+    "nota_lectura": "lectura 5 en contra contra 1 a favor: baja un escalon"
    },
-   "confianza": "media",
-   "stake": 0.02,
+   "confianza": "baja",
+   "stake": 0.01,
    "pretemporada": false
   }
  ]
