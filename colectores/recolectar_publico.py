@@ -54,48 +54,49 @@ def _pct(d, lado):
 
 
 def _splits_de(game):
-    """Los porcentajes del publico viven en game["markets"][<book_id>]["event"][<mercado>], una lista de salidas con
-    side (home/away/over/under) y bet_info {"tickets": {"percent": N}, "money": {"percent": N}}. Action Network repite
-    el mismo consenso en cada casa: se toma la casa con mas porcentajes distintos de cero (preferencia por la 15).
+    """Los porcentajes del publico viven en game["markets"][<casa>]["event"][<mercado>]: una lista de salidas con
+    side (home/away/over/under) y bet_info {"tickets": {"percent": N}, "money": {"percent": N}}.
+    Cada casa reporta solo los mercados donde tuvo accion; un 0 significa "sin dato", no "nadie aposto".
+    Por eso se toma, POR MERCADO Y LADO, la MEDIANA de las casas que si reportan (asi una casa suelta no manda).
     -> {ml: {tickets_home, money_home}, spread: {...}, total: {tickets_over, money_over}, ...}"""
+    import statistics
     def num(x):
         try:
-            return None if x is None else float(x)
+            v = None if x is None else float(x)
         except (TypeError, ValueError):
             return None
+        return v if v and 0 < v < 100 else None      # 0 y 100 son "sin dato" en este tablero
     MERCADOS = (("ml", "moneyline", "home"), ("spread", "spread", "home"), ("total", "total", "over"))
-    mejor, out = -1, {}
-    for book, m in (game.get("markets") or {}).items():
+    acum = {m: {"tickets": [], "money": []} for m, _, _ in MERCADOS}
+    precios, casas = {}, set()
+    for casa, m in (game.get("markets") or {}).items():
         ev = (m or {}).get("event") or {}
-        cand, n = {"book_id": book}, 0
         for nombre, llave, lado_a in MERCADOS:
-            tk = mn = cuota_a = cuota_b = linea = None
             for o in ev.get(llave) or []:
                 bi = o.get("bet_info") or {}
-                t = num((bi.get("tickets") or {}).get("percent"))
-                d = num((bi.get("money") or {}).get("percent"))
-                if o.get("side") == lado_a:
-                    tk, mn, cuota_a = t, d, o.get("odds")
-                    if o.get("value") not in (None, 0):
-                        linea = o.get("value")
-                else:
-                    cuota_b = o.get("odds")
-                    if tk is None and t is not None:          # solo vino el otro lado: se complementa
-                        tk, mn = 100.0 - t, (None if d is None else 100.0 - d)
-            if nombre == "total":
-                cand["total"] = {"tickets_over": tk, "money_over": mn}
-                cand["total_linea"] = linea
-                cand["over_odds"], cand["under_odds"] = cuota_a, cuota_b
-            else:
-                cand[nombre] = {"tickets_home": tk, "money_home": mn}
-                if nombre == "ml":
-                    cand["ml_home"], cand["ml_away"] = cuota_a, cuota_b
-                else:
-                    cand["spread_home"] = linea
-            n += sum(1 for v in (tk, mn) if v)                 # cero no cuenta: mercado aun sin accion
-        if n > mejor or (n == mejor and str(book) == "15"):
-            mejor, out = n, cand
-    return out if mejor > 0 else {}
+                t, d = num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent"))
+                es_a = o.get("side") == lado_a
+                if t is not None:
+                    acum[nombre]["tickets"].append(t if es_a else 100.0 - t); casas.add(casa)
+                if d is not None:
+                    acum[nombre]["money"].append(d if es_a else 100.0 - d)
+                if str(casa) == "15":                 # precios de referencia del tablero
+                    if nombre == "ml":
+                        precios["ml_home" if es_a else "ml_away"] = o.get("odds")
+                    elif nombre == "spread" and es_a and o.get("value") is not None:
+                        precios["spread_home"] = o.get("value")
+                    elif nombre == "total" and o.get("value") is not None:
+                        precios["total_linea"] = o.get("value")
+                        precios["over_odds" if es_a else "under_odds"] = o.get("odds")
+    med = lambda xs: round(statistics.median(xs), 1) if xs else None
+    out = {"ml": {"tickets_home": med(acum["ml"]["tickets"]), "money_home": med(acum["ml"]["money"])},
+           "spread": {"tickets_home": med(acum["spread"]["tickets"]), "money_home": med(acum["spread"]["money"])},
+           "total": {"tickets_over": med(acum["total"]["tickets"]), "money_over": med(acum["total"]["money"])},
+           "casas": len(casas)}
+    out.update(precios)
+    if not any(v for mk in ("ml", "spread", "total") for v in out[mk].values()):
+        return {}
+    return out
 
 
 def action_network(deporte, fecha, debug=False):

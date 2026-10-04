@@ -65,7 +65,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   sin precio se miden pero no son picks. Es lo único que se recomienda y lo que mide el track record público.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
-  en 48 h. Cada pick oficial guarda `publico_boletos`, `publico_dinero` y las notas, para medir si "público cargado contra el pick" paga.
+  en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,
+  `publico_dinero` y las notas; `calificar_picks.py --ver` los agrupa en "público con el pick / contra el pick / contra pero el dinero con
+  el pick / repartido", que es la prueba de si ir contra el público paga.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
