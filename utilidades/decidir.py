@@ -216,6 +216,23 @@ def decidir(rec, C, PESOS):
             if pick["ev"] >= umbral:
                 conf, stake = nombre, st; break
         # la lectura solo mueve un escalon y solo si es unanime
+        # Regla 3 del criterio: el modelo 10+ pp arriba del mercado EN EL LADO DEL PICK es informacion que el
+        # modelo NO ve (abridor, lesion, clima). En KBO pasa seguido porque no hay datos de abridores: revisar, no pick.
+        BRECHA_REVISAR = 0.10
+        if pm is not None and ps is not None:
+            es_home = pick["lado"] == "home"
+            pm_l = pm if es_home else 1 - pm
+            ps_l = ps if es_home else 1 - ps
+            if pm_l - ps_l >= BRECHA_REVISAR:
+                conf, stake = "minima", 0.0
+                pick["nota_lectura"] = "modelo %.0f pp arriba del mercado en el lado del pick: revisar, no pick" % (
+                    100 * (pm_l - ps_l))
+        # La lectura en contra ya no pide unanimidad: 3+ en contra con a lo mas 1 a favor baja un escalon.
+        if pick["senales_contra"] >= 3 and pick["senales_favor"] <= 1 and conf in ("alta", "media"):
+            conf = {"alta": "media", "media": "baja"}[conf]
+            stake = {"media": 0.02, "baja": 0.01}[conf]
+            pick["nota_lectura"] = "lectura %d en contra contra %d a favor: baja un escalon" % (
+                pick["senales_contra"], pick["senales_favor"])
         if pick["senales_favor"] >= 3 and pick["senales_contra"] == 0 and conf in ("media", "baja"):
             conf = {"media": "alta", "baja": "media"}[conf]; stake = {"alta": 0.03, "media": 0.02}[conf]
             pick["nota_lectura"] = "lectura unanime a favor: sube un escalon"

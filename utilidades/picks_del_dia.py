@@ -58,12 +58,24 @@ def _hoy():
     return (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=TZ)).date()
 
 
-def decision(rec):
+def decision(rec, dec_bb=None):
     """Decision de ganador y de total del partido con la mejor probabilidad disponible."""
     m = rec.get("modelo") or {}
     picks = rec.get("picks") or []
+    # En beisbol manda el sistema estimado: la decision del partido y el pick tienen que salir de la MISMA mezcla,
+    # si no el reporte dice que gana un equipo y apuesta al otro.
+    g = None
+    d = (dec_bb or {}).get((rec["liga"], str(rec["id"]), rec["fecha"])) if dec_bb else None
+    if d and d.get("p_final") is not None:
+        pf = float(d["p_final"])
+        lado = "home" if pf >= 0.5 else "away"
+        g = {"lado": lado, "nombre": rec[lado]["nombre"], "p": pf if lado == "home" else 1 - pf,
+             "cuota": None, "fuente": "sistema estimado", "cuota_min": None}
+        picks = [k for k in picks if not (k["mercado"] == "Ganador")]
     gan = [k for k in picks if k["mercado"] == "Ganador" and k.get("p_final") is not None]
-    if gan:
+    if g is not None:
+        pass                                   # ya la puso el sistema estimado (beisbol)
+    elif gan:
         k = max(gan, key=lambda x: x["p_final"])
         g = {"lado": k["lado"], "nombre": k["texto"], "p": k["p_final"], "cuota": k.get("cuota"), "fuente": k.get("fuente"), "cuota_min": k.get("cuota_min")}
     elif m.get("p_home") is not None:
@@ -195,7 +207,7 @@ def main():
         return t, m
     partidos, cand = [], []
     for p in sel:
-        g, t = decision(p)
+        g, t = decision(p, dec_bb)
         q = publico.get((p["liga"], str(p["id"])))
         mv_g = movimiento(p, "Ganador", "home", g["nombre"])[0] if g else None
         mv_t, sen_mov = movimiento(p, "Total", (t or {}).get("lado") or "over")
