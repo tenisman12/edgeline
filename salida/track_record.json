@@ -1,15 +1,15 @@
 {
- "generado": "2026-10-04 15:33",
+ "generado": "2026-10-04 17:55",
  "total": {
-  "picks": 228,
-  "calificados": 137,
-  "pendientes": 53,
+  "picks": 231,
+  "calificados": 138,
+  "pendientes": 55,
   "sin_resultado": 0,
   "anulados": 33,
   "aciertos": 94,
-  "acierto_pct": 68.6,
+  "acierto_pct": 68.1,
   "prob_media_pct": 64.8,
-  "brier": 0.2051,
+  "brier": 0.206,
   "valor": {
    "apuestas": 17,
    "ganadas": 9,
@@ -105,14 +105,14 @@
   },
   "nfl": {
    "picks": 16,
-   "calificados": 1,
-   "pendientes": 15,
+   "calificados": 2,
+   "pendientes": 14,
    "sin_resultado": 0,
    "anulados": 0,
    "aciertos": 0,
    "acierto_pct": 0.0,
-   "prob_media_pct": 56.7,
-   "brier": 0.321,
+   "prob_media_pct": 57.4,
+   "brier": 0.3298,
    "valor": {
     "apuestas": 1,
     "ganadas": 1,
@@ -151,9 +151,9 @@
    }
   },
   "wta": {
-   "picks": 53,
+   "picks": 56,
    "calificados": 31,
-   "pendientes": 13,
+   "pendientes": 16,
    "sin_resultado": 0,
    "anulados": 9,
    "aciertos": 23,
@@ -171,14 +171,14 @@
  "por_deporte": {
   "americano": {
    "picks": 73,
-   "calificados": 56,
-   "pendientes": 15,
+   "calificados": 57,
+   "pendientes": 14,
    "sin_resultado": 0,
    "anulados": 0,
    "aciertos": 39,
-   "acierto_pct": 69.6,
-   "prob_media_pct": 71.7,
-   "brier": 0.1944,
+   "acierto_pct": 68.4,
+   "prob_media_pct": 71.5,
+   "brier": 0.1969,
    "valor": {
     "apuestas": 5,
     "ganadas": 4,
@@ -238,9 +238,9 @@
    }
   },
   "tenis": {
-   "picks": 110,
+   "picks": 113,
    "calificados": 59,
-   "pendientes": 22,
+   "pendientes": 25,
    "sin_resultado": 0,
    "anulados": 29,
    "aciertos": 40,
@@ -264,9 +264,9 @@
   },
   {
    "rango": "55-60%",
-   "n": 33,
+   "n": 34,
    "prob_media_pct": 57.6,
-   "acierto_pct": 57.6
+   "acierto_pct": 55.9
   },
   {
    "rango": "60-65%",
@@ -289,15 +289,15 @@
  ],
  "por_nivel": {
   "lectura": {
-   "picks": 107,
-   "calificados": 68,
-   "pendientes": 39,
+   "picks": 110,
+   "calificados": 69,
+   "pendientes": 41,
    "sin_resultado": 0,
    "anulados": 0,
    "aciertos": 48,
-   "acierto_pct": 70.6,
-   "prob_media_pct": 69.7,
-   "brier": 0.1907
+   "acierto_pct": 69.6,
+   "prob_media_pct": 69.6,
+   "brier": 0.1928
   },
   "pick": {
    "picks": 120,
@@ -331,15 +331,15 @@
  },
  "sin_precio": {
   "total": {
-   "picks": 102,
-   "calificados": 55,
-   "pendientes": 42,
+   "picks": 109,
+   "calificados": 56,
+   "pendientes": 48,
    "sin_resultado": 0,
    "anulados": 2,
-   "aciertos": 34,
-   "acierto_pct": 61.8,
-   "prob_media_pct": 63.5,
-   "brier": 0.2296,
+   "aciertos": 35,
+   "acierto_pct": 62.5,
+   "prob_media_pct": 63.6,
+   "brier": 0.2274,
    "valor": {
     "apuestas": 1,
     "ganadas": 0,
@@ -413,22 +413,22 @@
     "brier": 0.2442
    },
    "wta": {
-    "picks": 25,
-    "calificados": 20,
-    "pendientes": 5,
+    "picks": 32,
+    "calificados": 21,
+    "pendientes": 11,
     "sin_resultado": 0,
     "anulados": 0,
-    "aciertos": 13,
-    "acierto_pct": 65.0,
-    "prob_media_pct": 71.8,
-    "brier": 0.2364
+    "aciertos": 14,
+    "acierto_pct": 66.7,
+    "prob_media_pct": 71.6,
+    "brier": 0.2301
    }
   }
  },
  "predicciones_modelo": {
-  "total": 702,
-  "calificadas": 430,
-  "pendientes": 253,
+  "total": 732,
+  "calificadas": 436,
+  "pendientes": 277,
   "por_liga_mercado": {
    "atp|Breaks": {
     "n": 19,
@@ -514,6 +514,27 @@
     "brier": 0.2848,
     "mae": null
    },
+   "nfl|Ganador": {
+    "n": 1,
+    "acierto_pct": 0.0,
+    "p_media_pct": 58.2,
+    "brier": 0.3386,
+    "mae": null
+   },
+   "nfl|Spread": {
+    "n": 1,
+    "acierto_pct": 0.0,
+    "p_media_pct": 72.4,
+    "brier": 0.5242,
+    "mae": null
+   },
+   "nfl|Total": {
+    "n": 1,
+    "acierto_pct": 0.0,
+    "p_media_pct": 53.2,
+    "brier": 0.2826,
+    "mae": null
+   },
    "nhl|Ganador": {
     "n": 5,
     "acierto_pct": 80.0,
@@ -557,24 +578,24 @@
     "mae": null
    },
    "wta|Breaks": {
-    "n": 31,
+    "n": 32,
     "acierto_pct": null,
     "p_media_pct": null,
     "brier": null,
-    "mae": 1.635
+    "mae": 1.606
    },
    "wta|Games": {
-    "n": 39,
-    "acierto_pct": 41.0,
-    "p_media_pct": 58.9,
-    "brier": 0.2572,
+    "n": 40,
+    "acierto_pct": 40.0,
+    "p_media_pct": 58.8,
+    "brier": 0.2581,
     "mae": null
    },
    "wta|Ganador": {
-    "n": 39,
-    "acierto_pct": 66.7,
-    "p_media_pct": 68.9,
-    "brier": 0.2165,
+    "n": 40,
+    "acierto_pct": 67.5,
+    "p_media_pct": 68.8,
+    "brier": 0.2137,
     "mae": null
    }
   }
