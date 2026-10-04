@@ -68,6 +68,15 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,
   `publico_dinero` y las notas; `calificar_picks.py --ver` los agrupa en "público con el pick / contra el pick / contra pero el dinero con
   el pick / repartido", que es la prueba de si ir contra el público paga.
+- `salida/historial_picks_dia.csv` guarda, por pick, `mov_linea` (movimiento de la línea sharp EN EL LADO DEL PICK desde la apertura,
+  en puntos porcentuales; de `mercado_publico.json`) y `senales_mercado`. Es contexto que se mide: no cambia `p` ni el EV.
+  `utilidades/validar_movimiento.py` mide si ir con el movimiento paga (apertura vs cierre de `cuotas_sharp_<año>.csv` contra el
+  resultado real): n, esperado vs real, z, unidades, por liga y por mitades, con el veredicto del protocolo (n≥300, z≥2.0, las dos
+  mitades). Corre en cada actualización. Mientras diga `SIN VALIDAR` no decide nada.
+  `utilidades/validar_contrapublico.py` mide las reglas clasicas de ir contra el publico como apuestas sombra de 1 u:
+  R1 under cuando el over trae ≥80% de los boletos, R2 dog cuando el favorito trae ≥70%. Usa el precio sin vig como
+  esperado (del over/under cuando el colector lo guarda, −110 si no) y da n, z, unidades, por liga y por mitades.
+  Corre en cada actualización. R3 (el favorito no cubre) falta: el CSV no guarda precio de spread ni marcador por equipo.
   `utilidades/validar_publico.py` dice si ese dato sirve: cobertura, % de extremos, correlación entre boletos y probabilidad implícita
   (el público apuesta favoritos: r 0.6–0.9 = creíble) y la brecha dinero−boletos por partido.
 
@@ -78,6 +87,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Pick Premium con temporada recién iniciada (`plataforma.temporada_corta`: menos de 5 juegos en la temporada actual, NFL/NCAAFB menos de 3,
   o último juego hace más de 60 días): forma, osciladores y racha no puntúan, fuerza usa solo el ELO, nunca premium; la razón lo dice.
 - NHL: ganador `sin_validar`; no usar el total del modelo como argumento.
+- El público de NHL carga el over en toda la liga (mediana 92% de boletos). No es error de lectura: la línea de totales
+  se movió 5.5 → 6.0 en cinco partidos, o sea hacia el over. El dato se usa y se mide; `TOTAL_PUBLICO_VETADO` quedó vacío.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.
 
 ## Datos históricos (rama "datos")

@@ -298,7 +298,7 @@ def main():
     # 2) historial plano
     rc = os.path.join(BASE, "salida", "publico_%d.csv" % hoy.year)
     cols = ["ts_utc", "liga", "id", "fecha", "home", "away", "ml_tickets_home", "ml_money_home", "spread_tickets_home", "spread_money_home",
-            "total_tickets_over", "total_money_over", "ml_home", "ml_away", "spread_home", "total", "spread_publico", "total_publico", "num_bets", "notas_home", "notas_away"]
+            "total_tickets_over", "total_money_over", "ml_home", "ml_away", "spread_home", "total", "spread_publico", "total_publico", "over_odds", "under_odds", "num_bets", "notas_home", "notas_away"]
     # Si el archivo existe con una cabecera distinta (se agregaron columnas), se reescribe con la nueva
     # cabecera rellenando lo que falte: de lo contrario las filas nuevas quedan corridas y el CSV se corrompe.
     if os.path.exists(rc):
@@ -327,7 +327,7 @@ def main():
                         "ml_tickets_home": (s.get("ml") or {}).get("tickets_home", ""), "ml_money_home": (s.get("ml") or {}).get("money_home", ""),
                         "spread_tickets_home": (s.get("spread") or {}).get("tickets_home", ""), "spread_money_home": (s.get("spread") or {}).get("money_home", ""),
                         "total_tickets_over": (s.get("total") or {}).get("tickets_over", ""), "total_money_over": (s.get("total") or {}).get("money_over", ""),
-                        "ml_home": s.get("ml_home", ""), "ml_away": s.get("ml_away", ""), "spread_home": s.get("spread_home", ""), "total": s.get("total_linea", ""), "spread_publico": s.get("spread_publico", ""), "total_publico": s.get("total_publico", ""), "num_bets": p.get("num_bets", ""),
+                        "ml_home": s.get("ml_home", ""), "ml_away": s.get("ml_away", ""), "spread_home": s.get("spread_home", ""), "total": s.get("total_linea", ""), "spread_publico": s.get("spread_publico", ""), "total_publico": s.get("total_publico", ""), "over_odds": s.get("over_odds", ""), "under_odds": s.get("under_odds", ""), "num_bets": p.get("num_bets", ""),
                         "notas_home": at.get("home", ""), "notas_away": at.get("away", "")})
     print("Publico: %d partidos, %d con boletos/dinero (Action Network), noticias %s -> salida/publico.json y %s" % (
         len(partidos), con_splits, "si" if a.noticias else "no", os.path.basename(rc)))

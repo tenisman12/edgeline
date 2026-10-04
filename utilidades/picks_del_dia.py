@@ -24,10 +24,25 @@ BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.pat
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))
 TOPE_BANK = 0.10                      # suma de stakes del dia
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
-# Ligas donde el reparto del TOTAL no se usa: el tablero carga el over en TODOS sus partidos
-# (NHL: mediana 92% de boletos al over en 17 de 17 partidos, con la linea bajando de 6.5 a 6.0).
-# El ML de esas ligas si se usa. Para revisarlo: utilidades\validar_publico.py (over por liga).
-TOTAL_PUBLICO_VETADO = {"nhl"}
+# Ligas donde el reparto del TOTAL no se usa por sesgo de fuente. Vacio: NHL salio del veto porque la linea
+# de totales se movio HACIA el over (5.5 -> 6.0 en cinco partidos), o sea que el precio corrobora la carga del
+# publico en lugar de desmentirla. Que una liga cargue el over es un hecho conocido, no un error de lectura.
+# Para revisarlo: utilidades\validar_publico.py (over por liga) y validar_contrapublico.py (si el under paga).
+TOTAL_PUBLICO_VETADO = set()
+_IGN_NOM = {"the", "fc", "sc", "club", "de", "los", "las", "la", "el", "st", "state", "university"}
+
+
+def _clave(s):
+    """nombre de equipo -> conjunto de palabras comparable entre fuentes distintas."""
+    import re, unicodedata
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode().lower()
+    return frozenset(w for w in re.split(r"[^a-z0-9]+", s) if w and w not in _IGN_NOM)
+
+
+def _mismo(a, b):
+    """True si los dos nombres se refieren al mismo equipo (mitad de las palabras en comun)."""
+    A, B = _clave(a), _clave(b)
+    return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
 CUOTA_MIN, CUOTA_MAX = 1.70, 3.00
 STAKE = {"alta": 0.03, "media": 0.02, "premium": 0.02, "pick": 0.01}
@@ -119,6 +134,41 @@ def main():
                 publico[(q["liga"], str(q["id"]))] = q
     except Exception:
         pass
+    # movimiento de linea (salida/mercado_publico.json): cuanto se movio la probabilidad del grupo sharp
+    # desde la apertura, en puntos porcentuales. Es CONTEXTO que se guarda para medir; no cambia p ni EV.
+    movim = {}
+    try:
+        with io.open(os.path.join(BASE, "salida", "mercado_publico.json"), encoding="utf-8") as f:
+            for m in json.load(f).get("partidos") or []:
+                nom = (m.get("partido") or "").split(" @ ")
+                if len(nom) != 2:
+                    continue
+                movim[(m.get("liga"), _clave(nom[1]), _clave(nom[0]))] = m
+    except Exception:
+        pass
+
+    def movimiento(p, mercado, lado, nombre=None):
+        """(mov_pp del lado apostado, senales del partido). mov > 0 = la linea sharp se movio A FAVOR de ese lado."""
+        m = movim.get((p["liga"], _clave(p["home"]["nombre"]), _clave(p["away"]["nombre"])))
+        if not m:
+            return None, ""
+        quiere = "total" if mercado.startswith("Total") else ("handicap" if mercado.startswith("Spread") else "ganador")
+        for mk in m.get("mercados") or []:
+            if mk.get("mercado") != quiere:
+                continue
+            mov = mk.get("mov_sharp_pp")
+            if mov is None:
+                return None, "; ".join(mk.get("senales") or [])
+            lado_a = (mk.get("lado_a") or "")
+            if quiere == "total":
+                mismo = (lado == "over")
+            elif quiere == "ganador":
+                mismo = _mismo(nombre or "", lado_a)
+            else:                                   # handicap: lado_a trae el nombre del equipo con la linea
+                mismo = _mismo(p["home"]["nombre"], lado_a) if lado == "home" else not _mismo(p["home"]["nombre"], lado_a)
+            return (round(mov if mismo else -mov, 2), "; ".join(mk.get("senales") or []))
+        return None, ""
+
     def lado_publico(q, mercado, lado):
         """% de boletos y dinero del publico en el lado del pick (None si no hay o si el volumen es ruido)."""
         s = (q or {}).get("splits") or {}
@@ -147,15 +197,20 @@ def main():
     for p in sel:
         g, t = decision(p)
         q = publico.get((p["liga"], str(p["id"])))
+        mv_g = movimiento(p, "Ganador", "home", g["nombre"])[0] if g else None
+        mv_t, sen_mov = movimiento(p, "Total", (t or {}).get("lado") or "over")
         fila = {"liga": p["liga"], "id": str(p["id"]), "fecha": p["fecha"], "hora": p.get("hora"), "home": p["home"]["nombre"], "away": p["away"]["nombre"],
                 "pretemporada": bool(p.get("pretemporada")), "ganador": g, "total": t, "sin_modelo": not p.get("modelo"),
+                "mov_ganador": mv_g, "mov_total": mv_t, "senales_mercado": sen_mov,
                 "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None}
         partidos.append(fila)
         for c in candidatos(p, dec_bb):
             tk, mn = lado_publico(q, c["mercado"], c["lado"])
             at = (q or {}).get("atencion") or {}
+            mv, sen = movimiento(p, c["mercado"], c["lado"], c.get("pick"))
             cand.append(dict(c, liga=p["liga"], id=str(p["id"]), fecha=p["fecha"], hora=p.get("hora"), home=p["home"]["nombre"], away=p["away"]["nombre"],
-                             publico_boletos=tk, publico_dinero=mn, notas_home=at.get("home"), notas_away=at.get("away")))
+                             publico_boletos=tk, publico_dinero=mn, notas_home=at.get("home"), notas_away=at.get("away"),
+                             mov_linea=mv, senales_mercado=sen))
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
@@ -169,6 +224,8 @@ def main():
     print("PICKS DEL DIA %s | %d partidos analizados | %d candidatos | %d picks (tope %d, bank %.0f%%)" % (hoy, len(partidos), len(cand), len(picks), a.max, 100 * bank))
     for i, c in enumerate(picks, 1):
         pub = ("" if c.get("publico_boletos") is None else " | publico %s%% boletos / %s%% dinero" % (c["publico_boletos"], c["publico_dinero"] if c.get("publico_dinero") is not None else "-"))
+        if c.get("mov_linea") is not None:
+            pub += " | linea %+.1f pp %s" % (c["mov_linea"], "a favor" if c["mov_linea"] > 0 else "en contra")
         print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s%s" % (
             i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub))
     if descartados:
@@ -179,17 +236,32 @@ def main():
         print("  %-6s %s %s %-34s | GANA %-24s %s | %s" % (
             f["liga"], f["fecha"], (f["hora"] or "")[:5], ("%s @ %s" % (f["away"], f["home"]))[:34],
             (g["nombre"][:24] if g else "sin modelo"), ("%.0f%%" % (100 * g["p"]) if g else ""),
-            ("%s %s %.0f%%" % (t["lado"].upper(), t["linea"], 100 * t["p"]) if t else "total: sin linea")) + ("  [pretemporada]" if f["pretemporada"] else ""))
+            ("%s %s %.0f%%" % (t["lado"].upper(), t["linea"], 100 * t["p"]) if t else "total: sin linea"))
+            + ("" if f.get("mov_ganador") is None else " | linea %+.1f pp" % f["mov_ganador"])
+            + ("  [pretemporada]" if f["pretemporada"] else ""))
     with io.open(os.path.join(BASE, "salida", "picks_del_dia.json"), "w", encoding="utf-8") as f:
         json.dump({"generado": ahora, "fecha": hoy.isoformat(), "max_picks": a.max, "tope_bank": TOPE_BANK, "picks": picks, "candidatos_fuera": descartados,
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
-            "publico_boletos", "publico_dinero", "notas_home", "notas_away"]
+            "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
-            vistos = {(x["liga"], x["id"], x["fecha"]) for x in csv.DictReader(f)}
+            r = csv.DictReader(f); previas = list(r); cab = r.fieldnames or []
+            vistos = {(x["liga"], x["id"], x["fecha"]) for x in previas}
+        # cabecera vieja: agregar filas con mas campos corre los valores de columna. Se reescribe antes de anexar.
+        if cab and cab != cols:
+            faltan = [c for c in cab if c not in cols]
+            nueva = cols + faltan
+            with io.open(rh, "w", encoding="utf-8-sig", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=nueva, extrasaction="ignore")
+                w.writeheader()
+                for x in previas:
+                    w.writerow(x)
+            cols = nueva
+            print("   (cabecera de historial_picks_dia.csv migrada: %d columnas -> %d, %d filas reescritas)" % (
+                len(cab), len(nueva), len(previas)))
     nuevos = 0
     with io.open(rh, "a", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")

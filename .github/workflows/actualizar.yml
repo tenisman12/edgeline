@@ -100,6 +100,14 @@ jobs:
         timeout-minutes: 15
         run: python colectores/recolectar_publico.py --dias 2
 
+      - name: Medir las reglas de ir contra el publico (se acumula, no decide)
+        continue-on-error: true
+        run: python utilidades/validar_contrapublico.py
+
+      - name: Medir el movimiento de linea contra el resultado (se acumula, no decide)
+        continue-on-error: true
+        run: python utilidades/validar_movimiento.py
+
       - name: Picks del dia (decision por partido y lista oficial, tope 4)
         continue-on-error: true
         run: python utilidades/picks_del_dia.py --dias 2
