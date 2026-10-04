@@ -48,6 +48,27 @@ OSCILADORES DETALLADOS (osciladores_detalle), mismas unidades:
   porteria5 (hockey)      save% L5 - save% base, cuando el CSV trae goalie_sv
   n_base, n_temporada, incluye_temporada_anterior
 
+OSCILADORES TECNICOS (osciladores_tecnicos): indicadores bursatiles traducidos a la serie del equipo
+(diferencial de anotacion por partido, cruzando temporadas; ELO descriptivo tras cada juego).
+Todos son descriptivos hasta que pesos_capas mida su peso; la literatura (Moskowitz 2021, Miller &
+Sanjurjo 2018) advierte que el momentum sobre secuencias cortas y binarias esta sesgado, por eso
+aqui se calculan sobre el margen (continuo), no sobre ganar/perder.
+  rsi5, rsi10, rsi15      RSI de Wilder sobre el diferencial: 100 * subidas / (subidas + bajadas),
+                          donde subida = diferencial positivo (ponderado por margen). 50 = neutro;
+                          >70 "sobrecomprado" (racha de margenes altos), <30 "sobrevendido".
+  macd, macd_senal, macd_hist   EMA(5) - EMA(20) del diferencial; senal = EMA(9) del MACD;
+                          histograma = macd - senal (aceleracion de la forma).
+  elo_macd                ELO con K alto (x2) - ELO con K bajo (x0.5): forma reciente contra fuerza de fondo.
+  bb_pct_b, bb_ancho      %B de Bollinger del diferencial contra su media movil de 20 (+-2 DE): 0.5 = en la
+                          media, >1 arriba de la banda superior, <0 debajo de la inferior; ancho = 4 DE / |media|.
+  estocastico_k, estocastico_d   posicion del ELO actual en su rango de 14 juegos (0-100); %D = media de 3.
+  roc_elo10               cambio porcentual del ELO en 10 juegos (momentum de rating).
+  pitagorico              % victorias esperado por anotado/permitido (exponente por deporte: beisbol
+                          pythagenpat RPG^0.287, hockey 1.93, nba 14, americano 2.37, futbol 1.3 sobre
+                          puntos con empates); residuo_pitagorico = % real - % esperado en la base
+                          (positivo = ha ganado mas de lo que su anotacion justifica: senal de reversion).
+  ventana_tecnica         juegos usados (hasta BASE_N, cruzando temporadas)
+
 Solo stdlib.
 """
 import csv, io as _io, math, os, datetime as dt
@@ -68,6 +89,7 @@ HFA = {"beisbol": 24.0, "hockey": 30.0, "nba": 70.0, "americano": 55.0, "futbol"
 REGRESION = 0.70            # al cambiar de temporada el ELO regresa 30% a 1500
 DIAS_FUERA = 60
 BASE_N = {"beisbol": 60, "hockey": 40, "nba": 40, "americano": 17, "futbol": 20}
+PITAGORAS = {"hockey": 1.93, "nba": 14.0, "americano": 2.37, "futbol": 1.3}   # beisbol: pythagenpat
 MIN_TEMP_VENTANAS = 5       # con menos juegos en la temporada, L10/L5/L3 cruzan temporadas
 VENT = ("temp", "local", "visita", "L10", "L5", "L3")
 _NO_STATS = {"gamePk", "game_id", "season", "is_home", "week", "tipo", "marcador", "league", "liga",
@@ -141,10 +163,11 @@ def _res(j):
     return "W" if j["gf"] > j["ga"] else ("L" if j["gf"] < j["ga"] else "D")
 
 
-def _elos(eq, deporte, historial=False):
+def _elos(eq, deporte, historial=False, k_mult=1.0):
     """ELO descriptivo recorriendo todos los juegos en orden cronologico.
-    Con historial=True devuelve tambien {equipo: [elo tras cada juego]}."""
-    k, hfa = K_ELO[deporte], HFA[deporte]
+    Con historial=True devuelve tambien {equipo: [(temporada, elo tras cada juego)]}.
+    k_mult escala la K (K alta = reacciona rapido, K baja = fuerza de fondo)."""
+    k, hfa = K_ELO[deporte] * k_mult, HFA[deporte]
     todos = []
     for t, lst in eq.items():
         for j in lst:
@@ -253,6 +276,8 @@ class Forma:
         self.deporte, self.liga = deporte, liga
         self.eq = eq if eq is not None else _juegos_equipo(deporte, liga)
         self.elo, self.elo_hist = _elos(self.eq, deporte, historial=True)
+        self.elo_alto = _elos(self.eq, deporte, k_mult=2.0)
+        self.elo_bajo = _elos(self.eq, deporte, k_mult=0.5)
         self.ultima = max((l[-1]["f"] for l in self.eq.values() if l), default="")
         lim = (dt.date.fromisoformat(self.ultima) - dt.timedelta(days=120)).isoformat() if self.ultima else ""
         self.activos = [t for t, l in self.eq.items() if l and l[-1]["f"] >= lim]
@@ -311,7 +336,8 @@ class Forma:
             "ventanas": vent, "elo": round(self.elo.get(nombre, 1500.0), 1),
             "power": {"rank": self.rank.get(nombre), "de": len(self.activos)},
             "status": _status(ts[-6:], self.rank.get(nombre, len(self.activos)), len(self.activos), len(ts)),
-            "osciladores": osc, "osciladores_detalle": det, "ou4": "-".join(ou),
+            "osciladores": osc, "osciladores_detalle": det, "osciladores_tecnicos": self._tecnicos(nombre, js),
+            "ou4": "-".join(ou),
         }
         if con_stats:
             nb = BASE_N.get(self.deporte, 40)
@@ -321,6 +347,16 @@ class Forma:
             # oscilador por estadistica: L10 contra la base (ultimos BASE_N juegos, cruzando temporadas)
             out["stats"]["osc_L10"] = _osc_stats(_promedios_stats([j["fila"] for j in js[-nb:]]), out["stats"]["L10"])
         return out
+
+
+def _elo_corregido(h):
+    """Serie de ELO sin el salto artificial del cambio de temporada (se suma de vuelta la regresion)."""
+    out, off = [], 0.0
+    for i, (se, e) in enumerate(h):
+        if i and h[i - 1][0] != se:
+            off += (h[i - 1][1] - 1500.0) * (1.0 - REGRESION)
+        out.append(e + off)
+    return out
 
 
 def _elo_mom(h, n):
@@ -334,6 +370,94 @@ def _elo_mom(h, n):
         if s0 != s1:
             mom += (e0 - 1500.0) * (1.0 - REGRESION)
     return round(mom, 1)
+
+
+def _ema(xs, n):
+    if not xs:
+        return None
+    a = 2.0 / (n + 1)
+    e = xs[0]
+    for x in xs[1:]:
+        e = a * x + (1 - a) * e
+    return e
+
+
+def _ema_serie(xs, n):
+    out = []
+    if not xs:
+        return out
+    a = 2.0 / (n + 1)
+    e = xs[0]
+    out.append(e)
+    for x in xs[1:]:
+        e = a * x + (1 - a) * e
+        out.append(e)
+    return out
+
+
+def _rsi(difs, n):
+    """RSI de Wilder sobre el diferencial por partido (margen positivo = subida, negativo = bajada)."""
+    seg = difs[-n:]
+    if len(seg) < max(3, n // 2):
+        return None
+    up = sum(d for d in seg if d > 0)
+    dn = sum(-d for d in seg if d < 0)
+    if up + dn == 0:
+        return 50.0
+    return round(100.0 * up / (up + dn), 1)
+
+
+def _pitagorico(deporte, gf, ga, n, empates=0):
+    if not n or gf <= 0 or ga <= 0:
+        return None
+    if deporte == "beisbol":
+        rpg = (gf + ga) / n
+        ex = max(rpg, 1.0) ** 0.287
+    else:
+        ex = PITAGORAS.get(deporte, 2.0)
+    return gf ** ex / (gf ** ex + ga ** ex)
+
+
+def _tecnicos(self, nombre, js):
+    """Osciladores bursatiles sobre la serie del equipo (diferencial por partido y ELO)."""
+    nb = BASE_N.get(self.deporte, 40)
+    seg = js[-nb:]
+    difs = [j["gf"] - j["ga"] for j in seg]
+    t = {"ventana_tecnica": len(difs)}
+    if len(difs) < 5:
+        return t
+    for n in (5, 10, 15):
+        t["rsi%d" % n] = _rsi(difs, n)
+    e5, e20 = _ema_serie(difs, 5), _ema_serie(difs, 20)
+    macd = [a - b for a, b in zip(e5, e20)]
+    senal = _ema_serie(macd, 9)
+    t["macd"] = round(macd[-1], 3); t["macd_senal"] = round(senal[-1], 3); t["macd_hist"] = round(macd[-1] - senal[-1], 3)
+    ea, eb = self.elo_alto.get(nombre), self.elo_bajo.get(nombre)
+    t["elo_macd"] = round(ea - eb, 1) if ea is not None and eb is not None else None
+    w = difs[-20:]
+    m = sum(w) / len(w); sd = _pstd(w) or 0.0
+    t["bb_pct_b"] = round((difs[-1] - (m - 2 * sd)) / (4 * sd), 3) if sd else None
+    t["bb_ancho"] = round(4 * sd / abs(m), 3) if m else None
+    h = _elo_corregido(self.elo_hist.get(nombre) or [])
+    if len(h) >= 5:
+        r = h[-14:]
+        lo, hi = min(r), max(r)
+        ks = []
+        for i in range(max(1, len(h) - 2), len(h) + 1):
+            rr = h[max(0, i - 14):i]
+            l2, h2 = min(rr), max(rr)
+            ks.append(100.0 * (rr[-1] - l2) / (h2 - l2) if h2 > l2 else 50.0)
+        t["estocastico_k"] = round(ks[-1], 1); t["estocastico_d"] = round(sum(ks) / len(ks), 1)
+        t["roc_elo10"] = round(100.0 * (h[-1] - h[-11]) / h[-11], 2) if len(h) >= 11 else None
+    gf = sum(j["gf"] for j in seg); ga = sum(j["ga"] for j in seg); n = len(seg)
+    pit = _pitagorico(self.deporte, gf, ga, n)
+    if pit is not None:
+        wpct = sum(1.0 if j["gf"] > j["ga"] else (0.5 if j["gf"] == j["ga"] else 0.0) for j in seg) / n
+        t["pitagorico"] = round(pit, 3); t["residuo_pitagorico"] = round(wpct - pit, 3)
+    return t
+
+
+Forma._tecnicos = _tecnicos
 
 
 def _pstd(xs):
