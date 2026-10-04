@@ -95,6 +95,29 @@ def resultados():
     return out
 
 
+def indice(res):
+    """{(liga, fecha): [(clave_home, clave_away, resultado)]} para emparejar por nombre tolerante."""
+    ind = {}
+    for (lg, fecha, ch, ca), v in res.items():
+        ind.setdefault((lg, fecha), []).append((ch, ca, v))
+    return ind
+
+def emparejar(ind, liga, fecha, home, away):
+    """Busca el partido en el indice {(liga, fecha): [(clave_home, clave_away, valor)]} tolerando nombres
+    distintos entre fuentes (Action Network escribe 'Montreal Canadiens', ESPN escribe otra cosa).
+    Primero intenta la coincidencia exacta de conjuntos; si falla, pide 50% de palabras en comun en los dos lados."""
+    ch, ca = clave(home), clave(away)
+    for a, b, v in ind.get((liga, fecha), ()):
+        if a == ch and b == ca:
+            return v
+    def parecido(A, B):
+        return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
+    for a, b, v in ind.get((liga, fecha), ()):
+        if parecido(a, ch) and parecido(b, ca):
+            return v
+    return None
+
+
 def medir(filas):
     """filas = [(esperado, gano, cuota, liga, fecha)] -> (n, esperado, real, z, unidades)."""
     n = len(filas)
@@ -156,12 +179,18 @@ def main():
         print("No existe o esta vacio %s: corre colectores\\recolectar_publico.py" % ruta)
         return 1
     res = resultados()
-    r1, r2, sin_res, poco = [], [], 0, 0
+    ind = indice(res)
+    hoy = dt.date.today().isoformat()
+    r1, r2, sin_res, sin_emparejar, poco = [], [], 0, 0, 0
     for (lg, _id, fecha), r in ult.items():
-        k = (lg, fecha, clave(r.get("home")), clave(r.get("away")))
-        rr = res.get(k)
+        rr = emparejar(ind, lg, fecha, r.get("home"), r.get("away"))
         if not rr:
-            sin_res += 1; continue
+            # un partido de hace dias sin resultado no esta pendiente: no empareja con el historial
+            if fecha and fecha < hoy:
+                sin_emparejar += 1
+            else:
+                sin_res += 1
+            continue
         nb = num(r.get("num_bets"))
         if nb is not None and nb < MIN_APUESTAS:
             poco += 1; continue
@@ -194,6 +223,8 @@ def main():
     print("CONTRA EL PUBLICO  (%s)" % os.path.basename(ruta))
     print("   partidos con foto del publico: %d | sin resultado todavia: %d | descartados por volumen bajo: %d" % (
         len(ult), sin_res, poco))
+    if sin_emparejar:
+        print("   %d partidos ya jugados NO emparejaron con el historial (nombres distintos entre fuentes): revisar" % sin_emparejar)
     reporte("R1  UNDER con el over al %.0f%% o mas de los boletos" % a.over, r1,
             "precio asumido -110; punto de equilibrio 52.4%")
     reporte("R2  DOG con el favorito al %.0f%% o mas de los boletos" % a.fav, r2,
