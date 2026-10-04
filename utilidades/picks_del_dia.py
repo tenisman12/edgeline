@@ -24,6 +24,10 @@ BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.pat
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))
 TOPE_BANK = 0.10                      # suma de stakes del dia
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
+# Ligas donde el reparto del TOTAL no se usa: el tablero carga el over en TODOS sus partidos
+# (NHL: mediana 92% de boletos al over en 17 de 17 partidos, con la linea bajando de 6.5 a 6.0).
+# El ML de esas ligas si se usa. Para revisarlo: utilidades\validar_publico.py (over por liga).
+TOTAL_PUBLICO_VETADO = {"nhl"}
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
 CUOTA_MIN, CUOTA_MAX = 1.70, 3.00
 STAKE = {"alta": 0.03, "media": 0.02, "premium": 0.02, "pick": 0.01}
@@ -125,6 +129,8 @@ def main():
         except (TypeError, ValueError):
             pass
         if mercado.startswith("Total"):
+            if (q or {}).get("liga") in TOTAL_PUBLICO_VETADO:
+                return None, None      # la fuente carga el over de toda la liga: ese dato no es el publico
             d = s.get("total") or {}; t, m = d.get("tickets_over"), d.get("money_over")
             if lado == "under":
                 t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
