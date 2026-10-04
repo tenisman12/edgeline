@@ -7,14 +7,16 @@ stats de portero). Todo as-of. Predice:
   - GANADOR (regulacion + OT),
   - TOTAL de goles (over/under),
   - PUCK LINE (-1.5 / +1.5),
-  - ajuste por PORTERO titular cuando hay save% disponible.
+  - ajuste por PORTERO titular cuando hay save% disponible,
+  - ajuste por DESCANSO (back-to-back): el factor se estima as-of de los propios datos
+    (goles reales / goles esperados de los equipos que jugaron el dia anterior).
 
 Metodo: ELO por goles + tasas ofensiva/defensiva as-of -> goles esperados (Log5) ->
 dos Poisson -> todos los mercados. Calibracion Platt sobre las predicciones as-of.
 
 Solo stdlib.
 """
-import math, sys, os
+import math, sys, os, datetime as _dt
 
 try:
     from nucleo import io
@@ -24,6 +26,18 @@ except ImportError:
 
 BASE_ELO = 1500.0; K = 6.0; HFA = 35.0; REGR = 0.75; ESCALA = 400.0
 VENT_LOCAL = 0.04; SHRINK = 12; OT_LOCAL = 0.55   # ventaja local en OT
+B2B_MIN = 100                                      # juegos back-to-back minimos antes de usar el factor estimado
+
+
+def _dia(f):
+    try: return _dt.date.fromisoformat(str(f)[:10])
+    except (TypeError, ValueError): return None
+
+
+def _es_b2b(fecha_ult, fecha):
+    """True si el equipo jugo el dia anterior."""
+    a, b = _dia(fecha_ult), _dia(fecha)
+    return bool(a and b and (b - a).days == 1)
 
 
 def _f(x):
@@ -55,14 +69,34 @@ def _juegos(liga=None):
     return juegos
 
 class Eq:
-    __slots__=("elo","gf","ga","n","sv","s0","ult")
-    def __init__(s): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None
+    __slots__=("elo","gf","ga","n","sv","s0","ult","fecha_ult")
+    def __init__(s): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None; s.fecha_ult=None
     def of(s,lg): return (s.gf+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
     def df(s,lg): return (s.ga+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
 
+class _B2B:
+    """Acumula goles reales y esperados de los equipos en back-to-back para estimar el factor as-of."""
+    __slots__=("gf","xgf","ga","xga","n")
+    def __init__(s): s.gf=s.xgf=s.ga=s.xga=0.0; s.n=0
+    def factores(s):
+        if s.n < B2B_MIN or s.xgf <= 0 or s.xga <= 0: return 1.0, 1.0
+        return s.gf/s.xgf, s.ga/s.xga     # (ofensiva del cansado, defensa del cansado)
+
+
+def _xg_base(th, ta, lg):
+    return max(th.of(lg)*ta.df(lg)/lg*(1+VENT_LOCAL), .3), max(ta.of(lg)*th.df(lg)/lg*(1-VENT_LOCAL), .3)
+
+
+def _aplicar_b2b(xh, xa, b2b_home, b2b_away, fac):
+    f_of, f_df = fac
+    if b2b_home: xh *= f_of; xa *= f_df
+    if b2b_away: xa *= f_of; xh *= f_df
+    return max(xh,.3), max(xa,.3)
+
+
 def entrenar(liga=None, min_j=8):
     juegos=_juegos(liga)
-    eq={}; tot=0.0; ng=0; lg=3.0; cal=[]
+    eq={}; tot=0.0; ng=0; lg=3.0; cal=[]; b2b=_B2B()
     season=lambda f: f[:4]
     for f,gp,h,a in juegos:
         gh,ga_=_f(h.get("goals")),_f(h.get("goals_opp"))
@@ -75,26 +109,38 @@ def entrenar(liga=None, min_j=8):
         for t in (th,ta):
             if t.ult and t.ult!=season(f): t.elo=BASE_ELO+(t.elo-BASE_ELO)*REGR
             t.ult=season(f)
-        # prediccion as-of
+        bh, ba = _es_b2b(th.fecha_ult, f), _es_b2b(ta.fecha_ult, f)
+        # prediccion as-of (con el factor de descanso estimado hasta ayer)
         if th.n>=min_j and ta.n>=min_j:
-            p=_pred_p(th,ta,lg)
-            cal.append((p, 1 if gh>ga_ else 0))
+            xh0, xa0 = _xg_base(th, ta, lg)
+            xh1, xa1 = _aplicar_b2b(xh0, xa0, bh, ba, b2b.factores())
+            cal.append((_prob_home(xh1, xa1), 1 if gh>ga_ else 0))
+            if bh: b2b.gf+=gh; b2b.xgf+=xh0; b2b.ga+=ga_; b2b.xga+=xa0; b2b.n+=1
+            if ba: b2b.gf+=ga_; b2b.xgf+=xa0; b2b.ga+=gh; b2b.xga+=xh0; b2b.n+=1
         # ELO update
         esp=_sig((th.elo+HFA-ta.elo)/(ESCALA/math.log(10)))
         res=1.0 if gh>ga_ else 0.0
         mov=math.log(abs(gh-ga_)+1)
         d=K*mov*(res-esp); th.elo+=d; ta.elo-=d
         th.gf+=gh; th.ga+=ga_; th.n+=1; ta.gf+=ga_; ta.ga+=gh; ta.n+=1
+        th.fecha_ult=f; ta.fecha_ult=f
         tot+=gh+ga_; ng+=2; lg=tot/ng
     a,b=_platt(cal)
-    return {"eq":eq,"lg":lg,"platt":(a,b),"cal":cal}
+    f_of, f_df = b2b.factores()
+    return {"eq":eq,"lg":lg,"platt":(a,b),"cal":cal,
+            "b2b":{"n":b2b.n,"factor_of":round(f_of,4),"factor_df":round(f_df,4)}}
 
-def _xg(estado, home, away, sv_home=None, sv_away=None):
+def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None):
     eq,lg=estado["eq"],estado["lg"]
     th,ta=eq.get(home),eq.get(away)
     if not th or not ta: return None,None
     xh=th.of(lg)*ta.df(lg)/lg*(1+VENT_LOCAL)
     xa=ta.of(lg)*th.df(lg)/lg*(1-VENT_LOCAL)
+    # descanso: factor estimado de los datos (goles reales / esperados de equipos en back-to-back)
+    if fecha:
+        b=estado.get("b2b") or {}
+        fac=(b.get("factor_of",1.0), b.get("factor_df",1.0))
+        xh,xa=_aplicar_b2b(xh, xa, _es_b2b(getattr(th,"fecha_ult",None), fecha), _es_b2b(getattr(ta,"fecha_ult",None), fecha), fac)
     # ajuste por portero: save% del titular vs liga (~.905). Mejor portero -> menos goles en contra.
     if sv_away is not None: xh *= (1-(sv_away-0.905))/(1)   # portero visitante frena al local
     if sv_home is not None: xa *= (1-(sv_home-0.905))/(1)
@@ -122,9 +168,12 @@ def _platt(cal, iters=600, lr=0.05):
     return a,b
 
 # ---------------- firma comun ----------------
-def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None):
-    xh,xa=_xg(estado,home,away,sv_home,sv_away)
+def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fecha=None):
+    xh,xa=_xg(estado,home,away,sv_home,sv_away,fecha)
     if xh is None: return None
+    th,ta=estado["eq"].get(home),estado["eq"].get(away)
+    b2b_h=_es_b2b(getattr(th,"fecha_ult",None), fecha) if fecha else False
+    b2b_a=_es_b2b(getattr(ta,"fecha_ult",None), fecha) if fecha else False
     a,b=estado["platt"]
     lo=lambda p:math.log(min(max(p,1e-6),1-1e-6)/(1-min(max(p,1e-6),1-1e-6)))
     p=_sig(a*lo(_prob_home(xh,xa))+b)
@@ -138,7 +187,10 @@ def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None):
             "xg_home":round(xh,2),"xg_away":round(xa,2),"total":round(mu,2),
             "p_over":round(p_over,4),"linea_total":linea_total,
             "p_pl_home":round(p_pl_home,4),"p_pl_away":round(1-p_pl_home,4),
-            "confianza":conf}
+            "confianza":conf,
+            "descanso":{"home_b2b":b2b_h,"away_b2b":b2b_a,
+                        "factor_of":(estado.get("b2b") or {}).get("factor_of",1.0),
+                        "factor_df":(estado.get("b2b") or {}).get("factor_df",1.0)}}
 
 def validar(liga=None):
     """Backtest as-of: entrena viendo solo el pasado y evalua las predicciones que
@@ -164,6 +216,8 @@ def validar(liga=None):
     print("modelo        %8.3f %8.3f %8.3f"%(acc(cal),brier(cal),logl(cal)))
     print("calibrado     %8.3f %8.3f %8.3f"%(acc(cal_c),brier(cal_c),logl(cal_c)))
     print("siempre local %8.3f %8.3f      -"%(base,sum((base-y)**2 for _,y in cal)/len(cal)))
+    b=est.get("b2b") or {}
+    print("descanso: %d juegos back-to-back | factor ofensiva x%.3f | factor defensa x%.3f"%(b.get("n",0),b.get("factor_of",1),b.get("factor_df",1)))
     print("-"*52)
     print("Techo realista hockey ganador ~0.55-0.58. El valor real esta en total y edge.")
     return est

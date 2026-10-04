@@ -247,16 +247,22 @@ def _pred(g, c, fecha):
         return m, None
 
     if dep == "hockey":
-        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5)
+        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, fecha=fecha)
         if not r:
             return None, "equipo sin historial"
+        d = r.get("descanso") or {}
+        nota = "Sin ajuste por portero titular (ESPN no lo publica antes del juego)."
+        if d.get("home_b2b") or d.get("away_b2b"):
+            nota += " Back-to-back: %s (ofensiva x%.2f, defensa x%.2f, estimado de los datos)." % (
+                " y ".join(n for n, k in ((g["home"]["nombre"], "home_b2b"), (g["away"]["nombre"], "away_b2b")) if d.get(k)),
+                d.get("factor_of", 1.0), d.get("factor_df", 1.0))
         return {"p_home": r["p_home"], "p_away": r["p_away"], "unidad": "goles",
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
                 "confianza": _conf(max(r["p_home"], r["p_away"])),
                 "extra": [("Puck line local -1.5", r["p_pl_home"]), ("Puck line visita +1.5", r["p_pl_away"])],
                 "spread": _spread_mercado(q, r["p_home"], r["xg_home"], r["xg_away"], lambda k, mu: hockey._pois(mu, k)),
-                "nota": "Sin ajuste por portero titular (ESPN no lo publica antes del juego)."}, None
+                "descanso": d, "nota": nota}, None
 
     if dep in ("americano", "nba"):
         sp = q.get("spread_home")
