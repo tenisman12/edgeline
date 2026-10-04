@@ -56,30 +56,29 @@ def _pct(d, lado):
 def _splits_de(game):
     """Los porcentajes del publico viven en game["markets"][<casa>]["event"][<mercado>]: una lista de salidas con
     side (home/away/over/under) y bet_info {"tickets": {"percent": N}, "money": {"percent": N}}.
-    Cada casa reporta solo los mercados donde tuvo accion; un 0 significa "sin dato", no "nadie aposto".
-    Por eso se toma, POR MERCADO Y LADO, la MEDIANA de las casas que si reportan (asi una casa suelta no manda).
-    -> {ml: {tickets_home, money_home}, spread: {...}, total: {tickets_over, money_over}, ...}"""
+    Regla: dentro de una casa y un mercado, si los DOS lados reportan 0 no hubo accion (se ignora); si uno reporta
+    100 y el otro 0, es un reparto real y se conserva (pasa en moneylines de favoritos enormes).
+    Como Action Network repite el mismo consenso en cada casa, se toma la mediana de las casas que si reportan.
+    -> {ml: {tickets_home, money_home}, spread: {...}, total: {tickets_over, money_over}, casas, precios...}"""
     import statistics
     def num(x):
         try:
             v = None if x is None else float(x)
         except (TypeError, ValueError):
             return None
-        return v if v and 0 < v < 100 else None      # 0 y 100 son "sin dato" en este tablero
+        return None if v is None or v < 0 or v > 100 else v
     MERCADOS = (("ml", "moneyline", "home"), ("spread", "spread", "home"), ("total", "total", "over"))
     acum = {m: {"tickets": [], "money": []} for m, _, _ in MERCADOS}
     precios, casas = {}, set()
     for casa, m in (game.get("markets") or {}).items():
         ev = (m or {}).get("event") or {}
         for nombre, llave, lado_a in MERCADOS:
+            lados = {}
             for o in ev.get(llave) or []:
                 bi = o.get("bet_info") or {}
-                t, d = num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent"))
                 es_a = o.get("side") == lado_a
-                if t is not None:
-                    acum[nombre]["tickets"].append(t if es_a else 100.0 - t); casas.add(casa)
-                if d is not None:
-                    acum[nombre]["money"].append(d if es_a else 100.0 - d)
+                lados.setdefault("a" if es_a else "b", []).append(
+                    (num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent"))))
                 if str(casa) == "15":                 # precios de referencia del tablero
                     if nombre == "ml":
                         precios["ml_home" if es_a else "ml_away"] = o.get("odds")
@@ -88,13 +87,21 @@ def _splits_de(game):
                     elif nombre == "total" and o.get("value") is not None:
                         precios["total_linea"] = o.get("value")
                         precios["over_odds" if es_a else "under_odds"] = o.get("odds")
+            a = (lados.get("a") or [(None, None)])[0]
+            b = (lados.get("b") or [(None, None)])[0]
+            for k, (va, vb) in (("tickets", (a[0], b[0])), ("money", (a[1], b[1]))):
+                if (va or 0) == 0 and (vb or 0) == 0:
+                    continue                          # ningun lado con accion en esta casa
+                valor = va if va is not None else (100.0 - vb if vb is not None else None)
+                if valor is not None:
+                    acum[nombre][k].append(valor); casas.add(casa)
     med = lambda xs: round(statistics.median(xs), 1) if xs else None
     out = {"ml": {"tickets_home": med(acum["ml"]["tickets"]), "money_home": med(acum["ml"]["money"])},
            "spread": {"tickets_home": med(acum["spread"]["tickets"]), "money_home": med(acum["spread"]["money"])},
            "total": {"tickets_over": med(acum["total"]["tickets"]), "money_over": med(acum["total"]["money"])},
            "casas": len(casas)}
     out.update(precios)
-    if not any(v for mk in ("ml", "spread", "total") for v in out[mk].values()):
+    if all(v is None for mk in ("ml", "spread", "total") for v in out[mk].values()):
         return {}
     return out
 
@@ -246,9 +253,24 @@ def main():
     rc = os.path.join(BASE, "salida", "publico_%d.csv" % hoy.year)
     cols = ["ts_utc", "liga", "id", "fecha", "home", "away", "ml_tickets_home", "ml_money_home", "spread_tickets_home", "spread_money_home",
             "total_tickets_over", "total_money_over", "ml_home", "ml_away", "spread_home", "total", "num_bets", "notas_home", "notas_away"]
+    # Si el archivo existe con una cabecera distinta (se agregaron columnas), se reescribe con la nueva
+    # cabecera rellenando lo que falte: de lo contrario las filas nuevas quedan corridas y el CSV se corrompe.
+    if os.path.exists(rc):
+        with io.open(rc, encoding="utf-8-sig", newline="") as f:
+            rd = csv.DictReader(f); viejas = list(rd); cab = rd.fieldnames or []
+        if cab != cols:
+            faltan = [c for c in cab if c not in cols]
+            with io.open(rc, "w", encoding="utf-8-sig", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=cols + faltan, extrasaction="ignore")
+                w.writeheader()
+                for r in viejas:
+                    w.writerow({k: r.get(k, "") for k in cols + faltan})
+            print("   (cabecera de %s migrada: %d columnas -> %d, %d filas reescritas)" % (
+                os.path.basename(rc), len(cab), len(cols + faltan), len(viejas)))
+            cols = cols + faltan
     nuevo = not os.path.exists(rc)
     with io.open(rc, "a", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=cols)
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         if nuevo:
             w.writeheader()
         for p in partidos:

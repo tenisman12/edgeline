@@ -23,6 +23,7 @@ import argparse, csv, datetime as dt, io, json, os, sys
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))
 TOPE_BANK = 0.10                      # suma de stakes del dia
+MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
 CUOTA_MIN, CUOTA_MAX = 1.70, 3.00
 STAKE = {"alta": 0.03, "media": 0.02, "premium": 0.02, "pick": 0.01}
@@ -115,8 +116,14 @@ def main():
     except Exception:
         pass
     def lado_publico(q, mercado, lado):
-        """% de boletos y dinero del publico en el lado del pick (None si no hay)."""
+        """% de boletos y dinero del publico en el lado del pick (None si no hay o si el volumen es ruido)."""
         s = (q or {}).get("splits") or {}
+        nb = (q or {}).get("num_bets")
+        try:
+            if nb is not None and float(nb) < MIN_APUESTAS_PUBLICO:
+                return None, None
+        except (TypeError, ValueError):
+            pass
         if mercado.startswith("Total"):
             d = s.get("total") or {}; t, m = d.get("tickets_over"), d.get("money_over")
             if lado == "under":
