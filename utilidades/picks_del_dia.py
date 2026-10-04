@@ -107,14 +107,42 @@ def main():
         pass
     hoy = _hoy(); lim = (hoy + dt.timedelta(days=a.dias - 1)).isoformat()
     sel = [p for p in D["partidos"] if hoy.isoformat() <= p["fecha"] <= lim]
+    publico = {}
+    try:
+        with io.open(os.path.join(BASE, "salida", "publico.json"), encoding="utf-8") as f:
+            for q in json.load(f).get("partidos") or []:
+                publico[(q["liga"], str(q["id"]))] = q
+    except Exception:
+        pass
+    def lado_publico(q, mercado, lado):
+        """% de boletos y dinero del publico en el lado del pick (None si no hay)."""
+        s = (q or {}).get("splits") or {}
+        if mercado.startswith("Total"):
+            d = s.get("total") or {}; t, m = d.get("tickets_over"), d.get("money_over")
+            if lado == "under":
+                t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
+        elif mercado.startswith("Spread"):
+            d = s.get("spread") or {}; t, m = d.get("tickets_home"), d.get("money_home")
+            if lado == "away":
+                t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
+        else:
+            d = s.get("ml") or {}; t, m = d.get("tickets_home"), d.get("money_home")
+            if lado == "away":
+                t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
+        return t, m
     partidos, cand = [], []
     for p in sel:
         g, t = decision(p)
+        q = publico.get((p["liga"], str(p["id"])))
         fila = {"liga": p["liga"], "id": str(p["id"]), "fecha": p["fecha"], "hora": p.get("hora"), "home": p["home"]["nombre"], "away": p["away"]["nombre"],
-                "pretemporada": bool(p.get("pretemporada")), "ganador": g, "total": t, "sin_modelo": not p.get("modelo")}
+                "pretemporada": bool(p.get("pretemporada")), "ganador": g, "total": t, "sin_modelo": not p.get("modelo"),
+                "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None}
         partidos.append(fila)
         for c in candidatos(p, dec_bb):
-            cand.append(dict(c, liga=p["liga"], id=str(p["id"]), fecha=p["fecha"], hora=p.get("hora"), home=p["home"]["nombre"], away=p["away"]["nombre"]))
+            tk, mn = lado_publico(q, c["mercado"], c["lado"])
+            at = (q or {}).get("atencion") or {}
+            cand.append(dict(c, liga=p["liga"], id=str(p["id"]), fecha=p["fecha"], hora=p.get("hora"), home=p["home"]["nombre"], away=p["away"]["nombre"],
+                             publico_boletos=tk, publico_dinero=mn, notas_home=at.get("home"), notas_away=at.get("away")))
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
@@ -127,8 +155,9 @@ def main():
     # consola
     print("PICKS DEL DIA %s | %d partidos analizados | %d candidatos | %d picks (tope %d, bank %.0f%%)" % (hoy, len(partidos), len(cand), len(picks), a.max, 100 * bank))
     for i, c in enumerate(picks, 1):
-        print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s" % (
-            i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"]))
+        pub = ("" if c.get("publico_boletos") is None else " | publico %s%% boletos / %s%% dinero" % (c["publico_boletos"], c["publico_dinero"] if c.get("publico_dinero") is not None else "-"))
+        print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s%s" % (
+            i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub))
     if descartados:
         print("  candidatos fuera del tope: " + "; ".join("%s %s EV %+.1f%%" % (c["liga"], c["pick"], 100 * c["ev"]) for c in descartados[:6]))
     print("\nDECISION POR PARTIDO (ganador y total):")
@@ -142,7 +171,8 @@ def main():
         json.dump({"generado": ahora, "fecha": hoy.isoformat(), "max_picks": a.max, "tope_bank": TOPE_BANK, "picks": picks, "candidatos_fuera": descartados,
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
-    cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales"]
+    cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
+            "publico_boletos", "publico_dinero", "notas_home", "notas_away"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:

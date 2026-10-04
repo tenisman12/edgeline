@@ -63,6 +63,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   para todos los partidos, y los mejores picks del día (beisbol: sistema estimado con confianza alta/media; demás deportes: Pick Premium
   premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 4 al día y 10% del bank). Leans, mínima, revisar y lecturas
   sin precio se miden pero no son picks. Es lo único que se recomienda y lo que mide el track record público.
+- `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
+  por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
+  en 48 h. Cada pick oficial guarda `publico_boletos`, `publico_dinero` y las notas, para medir si "público cargado contra el pick" paga.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
