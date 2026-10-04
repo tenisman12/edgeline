@@ -74,7 +74,7 @@ def _splits_de(game):
     MERCADOS = (("ml", "moneyline", "home"), ("spread", "spread", "home"), ("total", "total", "over"))
     # acum[mercado][linea] = {"tickets": [...], "money": [...], "casas": set()}
     acum = {m: {} for m, _, _ in MERCADOS}
-    precios, casas = {}, set()
+    precios, precios_libro, casas = {}, {}, set()
     for casa, m in (game.get("markets") or {}).items():
         ev = (m or {}).get("event") or {}
         for nombre, llave, lado_a in MERCADOS:
@@ -91,14 +91,14 @@ def _splits_de(game):
                 bi = o.get("bet_info") or {}
                 porlinea.setdefault(linea, {})["a" if es_a else "b"] = (
                     num((bi.get("tickets") or {}).get("percent")), num((bi.get("money") or {}).get("percent")))
-                if str(casa) == "15":                  # precios de referencia del tablero
-                    if nombre == "ml":
-                        precios["ml_home" if es_a else "ml_away"] = o.get("odds")
-                    elif nombre == "spread" and es_a:
-                        precios["spread_home"] = v
-                    elif nombre == "total":
-                        precios["total_linea"] = v
-                        precios["over_odds" if es_a else "under_odds"] = o.get("odds")
+                pl = precios_libro.setdefault(str(casa), {})   # precios de referencia, por casa
+                if nombre == "ml":
+                    pl["ml_home" if es_a else "ml_away"] = o.get("odds")
+                elif nombre == "spread" and es_a:
+                    pl["spread_home"] = v
+                elif nombre == "total":
+                    pl["total_linea"] = v
+                    pl["over_odds" if es_a else "under_odds"] = o.get("odds")
             for linea, d in porlinea.items():
                 a, b = d.get("a", (None, None)), d.get("b", (None, None))
                 destino = acum[nombre].setdefault(
@@ -121,6 +121,13 @@ def _splits_de(game):
                         destino[k].append(fuerte); destino["casas"].add(casa); casas.add(casa)
                     elif debil is not None:
                         destino[k + "_d"].append(debil); destino["casas"].add(casa); casas.add(casa)
+    # Antes los precios salian solo de la casa 15 y los partidos donde esa casa no reporta quedaban sin cuota,
+    # o sea sin forma de calcular el esperado. Se prefiere la 15 y, si no esta, la casa que mas mercados trae.
+    if precios_libro:
+        pref = precios_libro.get("15") or {}
+        if len(pref) < 2:
+            pref = max(precios_libro.values(), key=len)
+        precios.update({k: v for k, v in pref.items() if v is not None})
     med = lambda xs: round(statistics.median(xs), 1) if xs else None
     def valor(d, k):
         """mediana de los repartos completos; si no hubo ninguno, mediana de las lecturas de un solo lado."""
