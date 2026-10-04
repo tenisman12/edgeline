@@ -44,7 +44,7 @@ def _mismo(a, b):
     A, B = _clave(a), _clave(b)
     return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
-CUOTA_MIN, CUOTA_MAX = 1.70, 3.00
+CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdo 4-oct)
 STAKE = {"alta": 0.03, "media": 0.02, "premium": 0.02, "pick": 0.01}
 TZ = -6
 
@@ -104,8 +104,8 @@ def candidatos(rec, dec_bb):
     if rec.get("deporte") == "beisbol":
         d = dec_bb.get((rec["liga"], str(rec["id"]), rec["fecha"]))
         k = (d or {}).get("pick")
-        if d and k and d.get("confianza") in ("alta", "media"):
-            mercado = "Ganador" if k["mercado"] == "Ganador" else "Spread %s" % k["texto"].split()[-1]
+        if d and k and d.get("confianza") in ("alta", "media") and k["mercado"] == "Ganador":   # sin run line (acuerdo 4-oct)
+            mercado = "Ganador"
             out.append({"origen": "sistema estimado", "mercado": mercado, "lado": k["lado"], "pick": k["texto"], "cuota": k["cuota"], "decimal": k["decimal"],
                         "casa": k.get("casa"), "p": k["p"], "ev": k["ev"], "confianza": d["confianza"], "stake": STAKE[d["confianza"]],
                         "senales": "%d a favor / %d en contra" % (k.get("senales_favor", 0), k.get("senales_contra", 0)),
@@ -113,6 +113,8 @@ def candidatos(rec, dec_bb):
         return out
     for k in rec.get("picks") or []:
         if k.get("nivel") not in ("premium", "pick") or k.get("ev") is None or k.get("cuota") is None:
+            continue
+        if str(k.get("mercado", "")).startswith("Spread"):   # solo ganador y totales (acuerdo 4-oct)
             continue
         dec = k.get("decimal") or _dec(k["cuota"])
         if k["ev"] < EV_MIN or not (CUOTA_MIN <= dec <= CUOTA_MAX):

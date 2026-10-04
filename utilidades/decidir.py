@@ -32,7 +32,8 @@ PESO_MODELO = float(os.environ.get("EDGELINE_PESO_MODELO", "0.25"))
 HFA = 24.0                     # igual que nucleo/forma.py (beisbol)
 IP_ABRIDOR = 5.5
 IP_PRIOR = 30.0                # la ERA de 5 salidas es ruidosa: se encoge hacia el pitcheo del equipo con 30 IP de prior (fijo hasta estimarlo, punto 20)
-CUOTA_MIN, CUOTA_MAX = 1.70, 3.00
+CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdo 4-oct): el EV decide; solo queda el minimo 1.70
+MERCADOS_PICK = tuple((os.environ.get("EDGELINE_MERCADOS_PICK") or "Ganador").split(","))   # el run line se calcula pero no es pick (acuerdo 4-oct)
 CONFIANZA = (("alta", 0.08, 0.03), ("media", 0.04, 0.02), ("baja", 0.01, 0.01), ("minima", -9.0, 0.0))
 LIGAS = ("mlb", "npb", "kbo")
 TZ = -6
@@ -208,7 +209,7 @@ def decidir(rec, C, PESOS):
     lado("Ganador", "home", pf, g_h); lado("Ganador", "away", 1 - pf, g_a)
     if p_rl_h is not None:
         lado("Run line", "home", p_rl_h, sp_h); lado("Run line", "away", 1 - p_rl_h, sp_a)
-    cand = [l for l in lados if l["en_rango"]]
+    cand = [l for l in lados if l["en_rango"] and l["mercado"] in MERCADOS_PICK]
     pick = max(cand, key=lambda l: l["ev"]) if cand else None
     conf, stake = "sin pick", 0.0
     if pick:
