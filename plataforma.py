@@ -285,15 +285,17 @@ _CAPAS_NFL = None
 
 
 def _capas_nfl(team):
-    """datos/americano.csv (NFL): % de victorias en los ultimos 5 juegos (cruza temporadas) y diferencial de puntos por
-    juego de la temporada (solo con >= 5 juegos). Medidas as-of sobre 808 juegos por encima del ELO del modelo:
-    l5 +7.5 y diferencial +4.0 milesimas de log-loss (juntas +8.8)."""
+    """NFL, as-of: % de victorias en los ultimos 5 juegos (cruza temporadas; datos/americano.csv) y EPA neto por jugada
+    de la temporada (ofensiva propia menos la que permite la defensa; datos/equipos/nfl_equipos.csv, nflverse; solo con
+    >= 4 juegos). Medido sobre 808 juegos por encima del ELO K=20 del modelo: L5 +7.5, EPA neto de temporada +4.3,
+    juntos +9.8 milesimas de log-loss (mejor que L5 + diferencial de puntos, +8.8). Yardas por jugada, turnovers,
+    CPOE, sacks y EPA de 10 juegos no agregan nada sobre esas dos."""
     global _CAPAS_NFL
     if _CAPAS_NFL is None:
         _CAPAS_NFL = {}
+        por = {}
         ruta = os.path.join(BASE, "datos", "americano.csv")
         if os.path.exists(ruta):
-            por = {}
             with _io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
                 for r in csv.DictReader(f):
                     if (r.get("league") or "").upper() != "NFL":
@@ -305,14 +307,33 @@ def _capas_nfl(team):
                     if pf == pa:
                         continue
                     por.setdefault(r.get("team"), []).append((r.get("game_date") or "", str(r.get("season") or "")[:4], pf, pa))
-            for t, rows in por.items():
-                rows.sort()
-                u5 = rows[-5:]
-                se = rows[-1][1]
-                temp = [x for x in rows if x[1] == se]
-                _CAPAS_NFL[t] = {"l5": round(sum(1.0 for x in u5 if x[2] > x[3]) / len(u5), 2) if u5 else None, "n_l5": len(u5),
-                                 "n_temp": len(temp), "dif_temp": round(sum(x[2] - x[3] for x in temp) / len(temp), 2) if len(temp) >= 5 else None,
-                                 "ultimo": rows[-1][0]}
+        # EPA por juego (propio) por (game_id, team), para armar propio y permitido
+        epa = {}
+        ruta2 = os.path.join(BASE, "datos", "equipos", "nfl_equipos.csv")
+        if os.path.exists(ruta2):
+            with _io.open(ruta2, encoding="utf-8-sig", errors="replace", newline="") as f:
+                for r in csv.DictReader(f):
+                    def fl(k):
+                        try: return float(r.get(k) or 0)
+                        except ValueError: return 0.0
+                    jug = fl("attempts") + fl("carries") + fl("sacks_suffered")
+                    epa[(str(r.get("game_id")), r.get("team"))] = {"season": str(r.get("season") or "")[:4], "fecha": r.get("game_date") or "",
+                                                                    "opp": r.get("opp"), "jug": jug, "epa": fl("passing_epa") + fl("rushing_epa")}
+        for t, rows in por.items():
+            rows.sort()
+            u5 = rows[-5:]
+            se = rows[-1][1]
+            temp = [x for x in rows if x[1] == se]
+            prop = [v for (gid, tm), v in epa.items() if tm == t and v["season"] == se]
+            of = sum(v["epa"] for v in prop); jo = sum(v["jug"] for v in prop)
+            perm = [epa.get((gid, v["opp"])) for (gid, tm), v in epa.items() if tm == t and v["season"] == se]
+            perm = [x for x in perm if x]
+            df = sum(v["epa"] for v in perm); jd = sum(v["jug"] for v in perm)
+            epa_net = ((of / jo) - (df / jd)) if (len(prop) >= 4 and jo and jd) else None
+            _CAPAS_NFL[t] = {"l5": round(sum(1.0 for x in u5 if x[2] > x[3]) / len(u5), 2) if u5 else None, "n_l5": len(u5),
+                             "n_temp": len(temp), "dif_temp": round(sum(x[2] - x[3] for x in temp) / len(temp), 2) if len(temp) >= 5 else None,
+                             "epa_of_jugada": round(of / jo, 4) if jo else None, "epa_permitido_jugada": round(df / jd, 4) if jd else None,
+                             "epa_neto_jugada": None if epa_net is None else round(epa_net, 4), "n_epa": len(prop), "ultimo": rows[-1][0]}
     return _CAPAS_NFL.get(team)
 
 
@@ -320,17 +341,86 @@ def _ajuste_capas_nfl(p_home, h, a):
     ch, ca = _capas_nfl(h), _capas_nfl(a)
     if not ch or not ca or ch["l5"] is None or ca["l5"] is None:
         return p_home, {"aplicado": False, "motivo": "sin ultimos 5 juegos de ambos equipos", "home": ch, "away": ca}
-    B_L5, B_DIF = 1.021, 0.043
+    B_L5, B_EPA, B_DIF = 0.93, 0.187, 0.043          # EPA: por 0.1 EPA/jugada de diferencia neta
     dl5 = ch["l5"] - ca["l5"]
-    ddif = (ch["dif_temp"] - ca["dif_temp"]) if (ch["dif_temp"] is not None and ca["dif_temp"] is not None) else 0.0
-    shift = B_L5 * dl5 + B_DIF * ddif
+    if ch.get("epa_neto_jugada") is not None and ca.get("epa_neto_jugada") is not None:
+        ddif = (ch["epa_neto_jugada"] - ca["epa_neto_jugada"]) * 10.0; capa2 = "epa_neto"
+        shift = B_L5 * dl5 + B_EPA * ddif
+    else:                                              # sin EPA (archivo viejo): diferencial de puntos
+        ddif = (ch["dif_temp"] - ca["dif_temp"]) if (ch["dif_temp"] is not None and ca["dif_temp"] is not None) else 0.0; capa2 = "dif_puntos"
+        shift = 1.021 * dl5 + B_DIF * ddif
     import math as _m
     p0 = min(max(p_home, 1e-4), 1 - 1e-4)
     p1 = 1.0 / (1.0 + _m.exp(-(_m.log(p0 / (1 - p0)) + shift)))
-    return p1, {"aplicado": True, "home": ch, "away": ca, "dif_l5": round(dl5, 2), "dif_diferencial": round(ddif, 2),
+    return p1, {"aplicado": True, "home": ch, "away": ca, "dif_l5": round(dl5, 2), "dif_diferencial": round(ddif, 2), "capa2": capa2,
                 "ajuste_logit": round(shift, 4), "ajuste_pp": round(100 * (p1 - p0), 1), "p_sin_ajuste": round(p0, 4),
-                "pesos": {"l5": B_L5, "dif_temp": B_DIF},
-                "fuente": "pesos_capas_v2 (as-of, n=808, sobre ELO K=20): l5 +7.5, diferencial +4.0 milesimas; tecnicos y descanso ~0"}
+                "pesos": {"l5": B_L5, "epa_neto_x10": B_EPA, "dif_temp": B_DIF},
+                "fuente": "pesos_capas_v2 (as-of, n=808, sobre ELO K=20): l5 +7.5, EPA neto temporada +4.3 (juntos +9.8); yardas/jugada, turnovers, CPOE, sacks, tecnicos y descanso ~0"}
+
+
+# ------------------------------------------------------------------ capas medidas de NBA (utilidades/pesos_capas_v2.py)
+_CAPAS_NBA = None
+
+
+def _capas_nba(team, fecha):
+    """datos/nba.csv (NBA): descanso (dias desde el ultimo juego, tope 3), back-to-back y net rating de los ultimos 10
+    (puntos por 100 posesiones a favor menos en contra; posesiones = FGA + 0.44 FTA - ORB + TOV). Medido as-of sobre
+    3,511 juegos por encima de ELO + diferencial: b2b +2.7, descanso +2.4, net rating L10 +1.4 milesimas de log-loss;
+    cuatro factores por separado, L5, L10, racha y tecnicos ~0 (ya van dentro del net rating y del diferencial)."""
+    global _CAPAS_NBA
+    if _CAPAS_NBA is None:
+        _CAPAS_NBA = {}
+        ruta = os.path.join(BASE, "datos", "nba.csv")
+        if os.path.exists(ruta):
+            with _io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+                for r in csv.DictReader(f):
+                    if (r.get("league") or "").upper() != "NBA":
+                        continue
+                    def fl(k):
+                        try: return float(r.get(k))
+                        except (TypeError, ValueError): return None
+                    st = {k: fl("nba_" + k) for k in ("fga", "fta", "oreb", "dreb", "tov")}
+                    sto = {k: fl("nba_" + k + "_opp") for k in ("fga", "fta", "oreb", "dreb", "tov")}
+                    pf, pa = fl("points"), fl("points_opp")
+                    _CAPAS_NBA.setdefault(r.get("team"), []).append(((r.get("game_date") or "")[:10], pf, pa, st, sto))
+            for t in _CAPAS_NBA:
+                _CAPAS_NBA[t].sort(key=lambda x: x[0])
+    rows = _CAPAS_NBA.get(team)
+    if not rows:
+        return None
+    prev = [x for x in rows if x[0] < (fecha or "9999")]
+    if not prev:
+        return None
+    try:
+        desc = (dt.date.fromisoformat(fecha) - dt.date.fromisoformat(prev[-1][0])).days
+    except Exception:
+        desc = 3
+    u = [x for x in prev[-10:] if x[1] is not None and all(v is not None for v in x[3].values()) and all(v is not None for v in x[4].values())]
+    net = None
+    if len(u) >= 5:
+        pos_p = sum(x[3]["fga"] + 0.44 * x[3]["fta"] - x[3]["oreb"] + x[3]["tov"] for x in u)
+        pos_r = sum(x[4]["fga"] + 0.44 * x[4]["fta"] - x[4]["oreb"] + x[4]["tov"] for x in u)
+        if pos_p > 0 and pos_r > 0:
+            net = round(100.0 * sum(x[1] for x in u) / pos_p - 100.0 * sum(x[2] for x in u) / pos_r, 2)
+    return {"ultimo": prev[-1][0], "descanso_dias": min(desc, 3), "b2b": desc == 1, "net_rating_L10": net, "n_L10": len(u)}
+
+
+def _ajuste_capas_nba(p_home, h, a, fecha):
+    ch, ca = _capas_nba(h, fecha), _capas_nba(a, fecha)
+    if not ch or not ca:
+        return p_home, {"aplicado": False, "motivo": "sin historial de NBA de ambos equipos", "home": ch, "away": ca}
+    B_DESC, B_B2B, B_NET = 0.0664, -0.2336, 0.1664            # pesos_capas_v2.json (ajuste conjunto ELO+dif+descanso+b2b+net10)
+    ddesc = ch["descanso_dias"] - ca["descanso_dias"]
+    db2b = (1.0 if ch["b2b"] else 0.0) - (1.0 if ca["b2b"] else 0.0)
+    dnet = ((ch["net_rating_L10"] - ca["net_rating_L10"]) / 10.0) if (ch["net_rating_L10"] is not None and ca["net_rating_L10"] is not None) else 0.0
+    shift = B_DESC * ddesc + B_B2B * db2b + B_NET * dnet
+    import math as _m
+    p0 = min(max(p_home, 1e-4), 1 - 1e-4)
+    p1 = 1.0 / (1.0 + _m.exp(-(_m.log(p0 / (1 - p0)) + shift)))
+    return p1, {"aplicado": True, "home": ch, "away": ca, "dif_descanso": ddesc, "dif_b2b": db2b, "dif_net10": round(dnet * 10.0, 2),
+                "ajuste_logit": round(shift, 4), "ajuste_pp": round(100 * (p1 - p0), 1), "p_sin_ajuste": round(p0, 4),
+                "pesos": {"descanso_dia": B_DESC, "b2b": B_B2B, "net10_x10": B_NET},
+                "fuente": "pesos_capas_v2 (as-of, n=3511): b2b +2.7, descanso +2.4, net rating L10 +1.4 milesimas; cuatro factores, L5/L10, racha, tecnicos ~0"}
 
 
 def _sv_portero(team, nombre_equipo, fecha):
@@ -471,14 +561,19 @@ def _pred(g, c, fecha):
         p_h = r["p_home"]; capas = None
         if g.get("liga") == "nfl":
             p_h, capas = _ajuste_capas_nfl(r["p_home"], h, a)
+        elif g.get("liga") == "nba":
+            p_h, capas = _ajuste_capas_nba(r["p_home"], h, a, fecha)
         m = {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "puntos",
              "x_home": r["pts_home"], "x_away": r["pts_away"], "total": r["total_esperado"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
              "confianza": _conf(max(p_h, 1 - p_h)) if capas and capas.get("aplicado") else r["confianza"], "margen": r["margen_esperado"], "extra": []}
         if capas:
             m["capas_medidas"] = capas
-            if capas.get("aplicado"):
-                m["nota"] = "Capas medidas (L5 %+.2f, diferencial %+.1f): %+.1f pp al local." % (capas["dif_l5"], capas["dif_diferencial"], capas["ajuste_pp"])
+            if capas.get("aplicado") and g.get("liga") == "nfl":
+                m["nota"] = "Capas medidas (L5 %+.2f, %s %+.2f): %+.1f pp al local." % (capas["dif_l5"], "EPA neto x10" if capas.get("capa2") == "epa_neto" else "dif. puntos", capas["dif_diferencial"], capas["ajuste_pp"])
+            elif capas.get("aplicado") and g.get("liga") == "nba":
+                m["nota"] = "Capas medidas (descanso %+d dias, b2b %+d, net rating L10 %+.1f): %+.1f pp al local." % (capas["dif_descanso"], int(capas["dif_b2b"]), capas["dif_net10"], capas["ajuste_pp"])
+                m["descanso"] = {"home_b2b": capas["home"]["b2b"], "away_b2b": capas["away"]["b2b"]}
         if r.get("p_cubre_home") is not None:
             m["spread"] = {"linea_home": sp, "p_home": r["p_cubre_home"], "p_away": 1 - r["p_cubre_home"]}
         return m, None

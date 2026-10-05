@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-04 18:07",
+ "generado": "2026-10-04 19:01",
  "nota": "aporte en milesimas de log-loss walk-forward sobre ELO+diferencial; coef = coeficiente logit de la capa en el ajuste completo",
  "hockey": {
   "juegos": 4227,
@@ -264,6 +264,72 @@
      "d_brier_milesimas": -0.19,
      "coef": 0.1767,
      "n": 808
+    },
+    "epa_net10": {
+     "d_logloss_milesimas": -1.77,
+     "d_brier_milesimas": -0.8,
+     "coef": 0.0523,
+     "n": 808
+    },
+    "epa_net5": {
+     "d_logloss_milesimas": 0.98,
+     "d_brier_milesimas": 0.47,
+     "coef": 0.1339,
+     "n": 808
+    },
+    "epa_temp": {
+     "d_logloss_milesimas": -0.24,
+     "d_brier_milesimas": -0.0,
+     "coef": 0.145,
+     "n": 808
+    },
+    "epa_of10": {
+     "d_logloss_milesimas": -2.95,
+     "d_brier_milesimas": -1.4,
+     "coef": 0.1948,
+     "n": 808
+    },
+    "epa_df10": {
+     "d_logloss_milesimas": -3.49,
+     "d_brier_milesimas": -1.87,
+     "coef": -0.1672,
+     "n": 808
+    },
+    "ypj_net10": {
+     "d_logloss_milesimas": -2.21,
+     "d_brier_milesimas": -1.1,
+     "coef": 0.1388,
+     "n": 808
+    },
+    "to10": {
+     "d_logloss_milesimas": -0.88,
+     "d_brier_milesimas": -0.56,
+     "coef": -0.1393,
+     "n": 808
+    },
+    "cpoe10": {
+     "d_logloss_milesimas": -2.71,
+     "d_brier_milesimas": -1.31,
+     "coef": 0.0313,
+     "n": 808
+    },
+    "sack10": {
+     "d_logloss_milesimas": -1.06,
+     "d_brier_milesimas": -0.44,
+     "coef": 0.236,
+     "n": 808
+    },
+    "pass_epa10": {
+     "d_logloss_milesimas": -4.76,
+     "d_brier_milesimas": -2.15,
+     "coef": 0.1177,
+     "n": 808
+    },
+    "rush_epa10": {
+     "d_logloss_milesimas": -0.61,
+     "d_brier_milesimas": -0.3,
+     "coef": 0.0718,
+     "n": 808
     }
    },
    "final": {
@@ -273,19 +339,21 @@
      "pct",
      "l10",
      "l5",
-     "racha"
+     "racha",
+     "epa_net5"
     ],
     "beta": [
-     0.1017,
-     0.60822,
-     0.03787,
-     -0.24363,
-     0.00151,
-     1.1282,
-     0.04154
+     0.10118,
+     0.60804,
+     0.03604,
+     -0.21169,
+     -0.00098,
+     1.09444,
+     0.04179,
+     0.01062
     ],
-    "logloss": 0.6188,
-    "brier": 0.2148,
+    "logloss": 0.6209,
+    "brier": 0.2159,
     "n": 808
    }
   },
@@ -303,6 +371,166 @@
    }
   }
  },
+ "nba": {
+  "juegos": 4910,
+  "ganador": {
+   "nucleo": {
+    "n": 3511,
+    "logloss": 0.6054,
+    "brier": 0.209,
+    "brier_base": 0.2481
+   },
+   "capas": {
+    "pct": {
+     "d_logloss_milesimas": -0.19,
+     "d_brier_milesimas": -0.02,
+     "coef": -0.4001,
+     "n": 3511
+    },
+    "l10": {
+     "d_logloss_milesimas": -0.34,
+     "d_brier_milesimas": -0.08,
+     "coef": 0.1233,
+     "n": 3511
+    },
+    "l5": {
+     "d_logloss_milesimas": -0.25,
+     "d_brier_milesimas": -0.07,
+     "coef": 0.0823,
+     "n": 3511
+    },
+    "split": {
+     "d_logloss_milesimas": -0.16,
+     "d_brier_milesimas": -0.12,
+     "coef": 0.2298,
+     "n": 3511
+    },
+    "descanso": {
+     "d_logloss_milesimas": 2.44,
+     "d_brier_milesimas": 1.07,
+     "coef": 0.1851,
+     "n": 3511
+    },
+    "b2b": {
+     "d_logloss_milesimas": 2.67,
+     "d_brier_milesimas": 1.31,
+     "coef": -0.3196,
+     "n": 3511
+    },
+    "racha": {
+     "d_logloss_milesimas": -0.17,
+     "d_brier_milesimas": -0.05,
+     "coef": -0.0179,
+     "n": 3511
+    },
+    "pit_res": {
+     "d_logloss_milesimas": -0.05,
+     "d_brier_milesimas": 0.03,
+     "coef": -0.5056,
+     "n": 3511
+    },
+    "rsi10": {
+     "d_logloss_milesimas": -0.08,
+     "d_brier_milesimas": -0.04,
+     "coef": 0.1734,
+     "n": 3511
+    },
+    "macd": {
+     "d_logloss_milesimas": -0.27,
+     "d_brier_milesimas": -0.1,
+     "coef": 0.0065,
+     "n": 3511
+    },
+    "roc_elo": {
+     "d_logloss_milesimas": 0.25,
+     "d_brier_milesimas": 0.13,
+     "coef": 0.2658,
+     "n": 3511
+    },
+    "vol10": {
+     "d_logloss_milesimas": 0.12,
+     "d_brier_milesimas": 0.08,
+     "coef": 0.0093,
+     "n": 3511
+    },
+    "net10": {
+     "d_logloss_milesimas": 1.4,
+     "d_brier_milesimas": 0.59,
+     "coef": 0.1707,
+     "n": 3511
+    },
+    "net_temp": {
+     "d_logloss_milesimas": -0.42,
+     "d_brier_milesimas": -0.17,
+     "coef": 0.0816,
+     "n": 3511
+    },
+    "efg10": {
+     "d_logloss_milesimas": 0.21,
+     "d_brier_milesimas": 0.08,
+     "coef": 0.1182,
+     "n": 3511
+    },
+    "tov10": {
+     "d_logloss_milesimas": -0.11,
+     "d_brier_milesimas": -0.04,
+     "coef": 0.019,
+     "n": 3511
+    },
+    "orb10": {
+     "d_logloss_milesimas": 0.19,
+     "d_brier_milesimas": 0.09,
+     "coef": 0.0915,
+     "n": 3511
+    },
+    "ftr10": {
+     "d_logloss_milesimas": 0.29,
+     "d_brier_milesimas": 0.1,
+     "coef": 0.1104,
+     "n": 3511
+    }
+   },
+   "final": {
+    "vars": [
+     "elo",
+     "dif",
+     "descanso",
+     "b2b",
+     "net10"
+    ],
+    "beta": [
+     0.02658,
+     0.66007,
+     0.04548,
+     0.06643,
+     -0.23358,
+     0.16641
+    ],
+    "logloss": 0.6015,
+    "brier": 0.2072,
+    "n": 3511
+   }
+  },
+  "total": {
+   "ritmo": {
+    "n": 3511,
+    "mae": 15.028,
+    "mae_base": 16.026
+   },
+   "pace_suma": {
+    "mae": 14.968,
+    "d_mae": 0.059,
+    "coef": 1.1132,
+    "n": 3511
+   },
+   "b2b_suma": {
+    "mae": 15.033,
+    "d_mae": -0.005,
+    "coef": 0.2295,
+    "n": 3511
+   }
+  }
+ },
  "beisbol": {
   "juegos": 9841,
   "ganador": {
@@ -317,6 +545,18 @@
      "d_logloss_milesimas": 2.35,
      "d_brier_milesimas": 1.34,
      "coef": 0.2873,
+     "n": 336
+    },
+    "fip_bp": {
+     "d_logloss_milesimas": -11.71,
+     "d_brier_milesimas": -5.65,
+     "coef": -0.0746,
+     "n": 336
+    },
+    "carga_bp": {
+     "d_logloss_milesimas": -1.65,
+     "d_brier_milesimas": -0.78,
+     "coef": 0.0042,
      "n": 336
     },
     "pct": {
@@ -374,7 +614,9 @@
    "mae_base": 3.484,
    "mae_ritmo": 3.525,
    "mae_ritmo_fip": 3.527,
-   "coef_fip_suma": 0.2104
+   "mae_ritmo_fip_bullpen": 3.534,
+   "coef_fip_suma": 0.2139,
+   "coef_fip_bp_suma": 0.1676
   }
  }
 }

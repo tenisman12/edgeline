@@ -31,10 +31,10 @@ from collections import defaultdict
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
-K_ELO = {"beisbol": 6.0, "hockey": 8.0, "americano": 8.0}
-HFA = {"beisbol": 24.0, "hockey": 30.0, "americano": 55.0}
+K_ELO = {"beisbol": 6.0, "hockey": 8.0, "americano": 8.0, "nba": 5.0}
+HFA = {"beisbol": 24.0, "hockey": 30.0, "americano": 55.0, "nba": 70.0}
 REGRESION = 0.70
-PIT = {"hockey": 1.93, "americano": 2.37}
+PIT = {"hockey": 1.93, "americano": 2.37, "nba": 14.0}
 SALIDA = os.path.join(REPO, "modelos", "pesos_capas_v2.json")
 IP_PRIOR, FIP_C = 30.0, 3.10
 
@@ -95,23 +95,54 @@ def juegos_hockey():
 
 
 def juegos_nfl():
-    return _pares(os.path.join(BASE, "datos", "americano.csv"), "league", {"NFL"}, ("points", "points_opp"))
+    js = _pares(os.path.join(BASE, "datos", "americano.csv"), "league", {"NFL"}, ("points", "points_opp"))
+    st = {}
+    ruta = os.path.join(BASE, "datos", "equipos", "nfl_equipos.csv")
+    if os.path.exists(ruta):
+        with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+            for r in csv.DictReader(f):
+                jug = (_f(r.get("attempts"), 0) + _f(r.get("carries"), 0) + _f(r.get("sacks_suffered"), 0)) or None
+                st[(str(r.get("game_id")), r.get("team"))] = {
+                    "jugadas": jug,
+                    "epa": (_f(r.get("passing_epa"), 0) + _f(r.get("rushing_epa"), 0)),
+                    "yardas": _f(r.get("passing_yards"), 0) + _f(r.get("rushing_yards"), 0),
+                    "pierde": _f(r.get("passing_interceptions"), 0) + _f(r.get("fumbles_lost_total"), 0),
+                    "cpoe": _f(r.get("passing_cpoe")), "att": _f(r.get("attempts"), 0),
+                    "sacks_suf": _f(r.get("sacks_suffered"), 0), "pass_epa": _f(r.get("passing_epa"), 0), "rush_epa": _f(r.get("rushing_epa"), 0),
+                    "carries": _f(r.get("carries"), 0)}
+    for j in js:
+        j["st_h"] = st.get((j["gp"], j["home"])); j["st_a"] = st.get((j["gp"], j["away"]))
+    return js
+
+
+def juegos_nba():
+    """datos/nba.csv (liga NBA): puntos y box score por equipo (nba_fga, fta, oreb, dreb, tov, fgm, fg3m) -> cuatro factores as-of."""
+    campos = ("nba_fga", "nba_fta", "nba_oreb", "nba_dreb", "nba_tov", "nba_fgm", "nba_fg3m", "nba_ftm")
+    js = _pares(os.path.join(BASE, "datos", "nba.csv"), "league", {"NBA"}, ("points", "points_opp"), extra=campos)
+    for j in js:
+        for lado in ("h", "a"):
+            st = {c[4:]: _f(j.get(c + "_" + lado)) for c in campos}
+            j["st_" + lado] = st if all(v is not None for v in st.values()) else None
+    return js
 
 
 def juegos_mlb():
     js = _pares(os.path.join(BASE, "datos", "beisbol.csv"), "league", {"MLB"}, ("runs", "runs_opp"))
     # abridores por (game_id, team) con su linea
-    ab = {}
+    ab = {}; rel = {}
     ruta = os.path.join(BASE, "datos", "jugadores_recientes", "mlb_lanzadores.csv")
     if os.path.exists(ruta):
         with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
             for r in csv.DictReader(f):
-                if str(r.get("abridor")) not in ("1", "1.0", "True"):
-                    continue
-                ab[(str(r.get("game_id")).replace(".0", ""), r.get("team"))] = r
+                k = (str(r.get("game_id")).replace(".0", ""), r.get("team"))
+                if str(r.get("abridor")) in ("1", "1.0", "True"):
+                    ab[k] = r
+                else:
+                    rel.setdefault(k, []).append(r)
     for j in js:
         for lado, t in (("h", j["home"]), ("a", j["away"])):
             j["abridor_" + lado] = ab.get((j["gp"], t))
+            j["relevo_" + lado] = rel.get((j["gp"], t)) or []
     return js
 
 
@@ -172,6 +203,9 @@ def capas(js, deporte):
     porteros = defaultdict(list)               # portero -> [sv de cada apertura]
     usos = defaultdict(lambda: defaultdict(int))   # equipo -> portero -> aperturas (quien es el titular)
     abridores = defaultdict(list)              # lanzador -> [(ip, hr, bb, hbp, k)]
+    bullpen = defaultdict(list)                # equipo -> [(fecha, ip, hr, bb, hbp, k)] por juego (relevistas)
+    nfl_st = defaultdict(list)                 # equipo -> [(season, propio, rival)] stats por juego (NFL)
+    nba_st = defaultdict(list)                 # equipo -> [(season, propio, rival, pts propios, pts rival)] (NBA)
     base = defaultdict(lambda: [0, 0, 0.0])    # liga -> [local gana, n, total acumulado]
     lig_sv = [0.0, 0]                           # sv% medio de liga as-of
     filas = []
@@ -294,6 +328,77 @@ def capas(js, deporte):
             f["tiros"] = ((tf_h - ta_h) if tf_h is not None else 0.0) - ((tf_a - ta_a) if tf_a is not None else 0.0)
             f["pdo"] = (pdo(h) - pdo(a)) * 10.0
             f["tiros_suma"] = (((tf_h + ta_h) if tf_h is not None else 60.0) + ((tf_a + ta_a) if tf_a is not None else 60.0)) / 2.0 - 60.0
+        if deporte == "americano":
+            def agg(t, n=None, se_only=False):
+                u = nfl_st.get(t) or []
+                if se_only:
+                    u = [x for x in u if x[0] == se]
+                if n:
+                    u = u[-n:]
+                if len(u) < 3:
+                    return None
+                jp = sum(x[1]["jugadas"] or 0 for x in u); jr = sum(x[2]["jugadas"] or 0 for x in u)
+                if not jp or not jr:
+                    return None
+                return {"epa_of": sum(x[1]["epa"] for x in u) / jp, "epa_df": sum(x[2]["epa"] for x in u) / jr,
+                        "ypj_of": sum(x[1]["yardas"] for x in u) / jp, "ypj_df": sum(x[2]["yardas"] for x in u) / jr,
+                        "to": (sum(x[2]["pierde"] for x in u) - sum(x[1]["pierde"] for x in u)) / len(u),
+                        "cpoe": sum((x[1]["cpoe"] or 0) for x in u) / len(u),
+                        "sack_of": sum(x[1]["sacks_suf"] for x in u) / max(1, sum(x[1]["att"] + x[1]["sacks_suf"] for x in u)),
+                        "sack_df": sum(x[2]["sacks_suf"] for x in u) / max(1, sum(x[2]["att"] + x[2]["sacks_suf"] for x in u)),
+                        "pass_epa": sum(x[1]["pass_epa"] for x in u) / max(1, sum(x[1]["att"] + x[1]["sacks_suf"] for x in u)),
+                        "rush_epa": sum(x[1]["rush_epa"] for x in u) / max(1, sum(x[1]["carries"] for x in u))}
+            def d(k, ah, aa, esc=1.0):
+                if not ah or not aa:
+                    return 0.0
+                return (ah[k] - aa[k]) * esc
+            a10h, a10a = agg(h, 10), agg(a, 10)
+            a5h, a5a = agg(h, 5), agg(a, 5)
+            ash, asa = agg(h, se_only=True), agg(a, se_only=True)
+            f["epa_net10"] = d("epa_of", a10h, a10a, 10) - d("epa_df", a10h, a10a, 10)      # EPA/jugada neto L10, x10
+            f["epa_net5"] = d("epa_of", a5h, a5a, 10) - d("epa_df", a5h, a5a, 10)
+            f["epa_temp"] = (d("epa_of", ash, asa, 10) - d("epa_df", ash, asa, 10)) if (ash and asa and th["n"] >= 4 and ta["n"] >= 4) else 0.0
+            f["epa_of10"] = d("epa_of", a10h, a10a, 10)
+            f["epa_df10"] = -d("epa_df", a10h, a10a, 10)
+            f["ypj_net10"] = d("ypj_of", a10h, a10a) - d("ypj_df", a10h, a10a)
+            f["to10"] = d("to", a10h, a10a)
+            f["cpoe10"] = d("cpoe", a10h, a10a)
+            f["sack10"] = -d("sack_of", a10h, a10a, 10) + d("sack_df", a10h, a10a, 10)
+            f["pass_epa10"] = d("pass_epa", a10h, a10a, 10)
+            f["rush_epa10"] = d("rush_epa", a10h, a10a, 10)
+            f["nfl_ok"] = 1 if (a10h and a10a) else 0
+        if deporte == "nba":
+            def agg_nba(t, n=None, se_only=False):
+                u = nba_st.get(t) or []
+                if se_only:
+                    u = [x for x in u if x[0] == se]
+                if n:
+                    u = u[-n:]
+                if len(u) < 3:
+                    return None
+                S = lambda k, i: sum(x[i][k] for x in u)
+                pos_p = S("fga", 1) + 0.44 * S("fta", 1) - S("oreb", 1) + S("tov", 1)
+                pos_r = S("fga", 2) + 0.44 * S("fta", 2) - S("oreb", 2) + S("tov", 2)
+                if pos_p <= 0 or pos_r <= 0 or S("fga", 1) <= 0 or S("fga", 2) <= 0:
+                    return None
+                return {"ort": 100.0 * sum(x[3] for x in u) / pos_p, "drt": 100.0 * sum(x[4] for x in u) / pos_r,
+                        "efg": (S("fgm", 1) + 0.5 * S("fg3m", 1)) / S("fga", 1), "efg_d": (S("fgm", 2) + 0.5 * S("fg3m", 2)) / S("fga", 2),
+                        "tov": S("tov", 1) / pos_p, "tov_d": S("tov", 2) / pos_r,
+                        "orb": S("oreb", 1) / (S("oreb", 1) + S("dreb", 2)), "orb_d": S("oreb", 2) / (S("oreb", 2) + S("dreb", 1)),
+                        "ftr": S("ftm", 1) / S("fga", 1), "ftr_d": S("ftm", 2) / S("fga", 2),
+                        "pace": (pos_p + pos_r) / (2.0 * len(u))}
+            def dn(k, ah, aa, esc=1.0):
+                return ((ah[k] - aa[k]) * esc) if (ah and aa) else 0.0
+            n10h, n10a = agg_nba(h, 10), agg_nba(a, 10)
+            nsh, nsa = agg_nba(h, se_only=True), agg_nba(a, se_only=True)
+            f["net10"] = (dn("ort", n10h, n10a) - dn("drt", n10h, n10a)) / 10.0        # net rating L10 diff, por 10 pts/100 pos
+            f["net_temp"] = ((dn("ort", nsh, nsa) - dn("drt", nsh, nsa)) / 10.0) if (nsh and nsa and th["n"] >= 5 and ta["n"] >= 5) else 0.0
+            f["efg10"] = (dn("efg", n10h, n10a) - dn("efg_d", n10h, n10a)) * 10.0
+            f["tov10"] = -(dn("tov", n10h, n10a) - dn("tov_d", n10h, n10a)) * 10.0
+            f["orb10"] = (dn("orb", n10h, n10a) - dn("orb_d", n10h, n10a)) * 10.0
+            f["ftr10"] = (dn("ftr", n10h, n10a) - dn("ftr_d", n10h, n10a)) * 10.0
+            f["pace_suma"] = (((n10h["pace"] if n10h else 100.0) + (n10a["pace"] if n10a else 100.0)) / 2.0) - 100.0
+            f["nba_ok"] = 1 if (n10h and n10a) else 0
         if deporte == "beisbol":
             def fip_asof(r):
                 if not r:
@@ -305,6 +410,19 @@ def capas(js, deporte):
                 fipv = _fip(ip, sum(x[1] for x in u), sum(x[2] for x in u), sum(x[3] for x in u), sum(x[4] for x in u))
                 # mezcla con prior de liga (4.20) segun innings
                 return (ip * fipv + IP_PRIOR * 4.20) / (ip + IP_PRIOR), len(u)
+            def bp_asof(t):
+                u = [x for x in bullpen.get(t) or [] if x[0] >= (dt.date.fromisoformat(j["fecha"]) - dt.timedelta(days=30)).isoformat()]
+                ip = sum(x[1] for x in u)
+                if ip < 20:
+                    return None, 0.0
+                fipb = _fip(ip, sum(x[2] for x in u), sum(x[3] for x in u), sum(x[4] for x in u), sum(x[5] for x in u))
+                carga = sum(x[1] for x in bullpen.get(t) or [] if x[0] >= (dt.date.fromisoformat(j["fecha"]) - dt.timedelta(days=3)).isoformat())
+                return (ip * fipb + IP_PRIOR * 4.20) / (ip + IP_PRIOR), carga
+            bh, ch_ = bp_asof(h); ba, ca_ = bp_asof(a)
+            f["bullpen_ok"] = 1 if (bh is not None and ba is not None) else 0
+            f["fip_bp"] = ((ba if ba is not None else 4.20) - (bh if bh is not None else 4.20))
+            f["carga_bp"] = (ca_ - ch_)                       # + = bullpen local mas cansado (IP ultimos 3 dias)
+            f["fip_bp_suma"] = (((bh if bh is not None else 4.20) + (ba if ba is not None else 4.20)) / 2.0) - 4.20
             fh, nh = fip_asof(j.get("abridor_h")); fa, na = fip_asof(j.get("abridor_a"))
             f["abridor_ok"] = 1 if (nh >= 3 and na >= 3) else 0
             f["fip"] = ((fa if fa is not None else 4.20) - (fh if fh is not None else 4.20))      # + = abridor local mejor
@@ -329,11 +447,20 @@ def capas(js, deporte):
                     if j.get("portero_" + lado):
                         porteros[j["portero_" + lado]].append(sv)
                         usos[j["home"] if lado == "h" else j["away"]][j["portero_" + lado]] += 1
+        if deporte == "americano" and j.get("st_h") and j.get("st_a"):
+            nfl_st[h].append((se, j["st_h"], j["st_a"])); nfl_st[a].append((se, j["st_a"], j["st_h"]))
+        if deporte == "nba" and j.get("st_h") and j.get("st_a"):
+            nba_st[h].append((se, j["st_h"], j["st_a"], j["rh"], j["ra"])); nba_st[a].append((se, j["st_a"], j["st_h"], j["ra"], j["rh"]))
         if deporte == "beisbol":
             for lado in ("h", "a"):
                 r = j.get("abridor_" + lado)
                 if r:
                     abridores[r.get("jugador")].append((_ip(r.get("ip")), _f(r.get("hr"), 0), _f(r.get("bb"), 0), _f(r.get("hbp"), 0), _f(r.get("k"), 0)))
+                rl = j.get("relevo_" + lado) or []
+                if rl:
+                    t = j["home"] if lado == "h" else j["away"]
+                    bullpen[t].append((j["fecha"], sum(_ip(x.get("ip")) for x in rl), sum(_f(x.get("hr"), 0) for x in rl), sum(_f(x.get("bb"), 0) for x in rl),
+                                       sum(_f(x.get("hbp"), 0) for x in rl), sum(_f(x.get("k"), 0) for x in rl)))
     return filas
 
 
@@ -437,7 +564,7 @@ def medir(deporte, js):
     print("\n==== %s: %d juegos, %d con capas (>=5 juegos de temporada)" % (deporte.upper(), len(js), sum(1 for f in filas if f["n_temp"] >= 5)))
     nucleo = ["elo", "dif"]
     comunes = ["pct", "l10", "l5", "split", "descanso", "b2b", "racha", "pit_res", "rsi10", "macd", "roc_elo", "vol10"]
-    propias = {"hockey": ["portero", "portero60", "titular", "sv_eq", "tiros", "pdo"], "beisbol": ["fip"], "americano": ["bye"]}[deporte]
+    propias = {"hockey": ["portero", "portero60", "titular", "sv_eq", "tiros", "pdo"], "beisbol": ["fip"], "nba": ["net10", "net_temp", "efg10", "tov10", "orb10", "ftr10"], "americano": ["bye", "epa_net10", "epa_net5", "epa_temp", "epa_of10", "epa_df10", "ypj_net10", "to10", "cpoe10", "sack10", "pass_epa10", "rush_epa10"]}[deporte]
     out = {"juegos": len(js), "ganador": {}, "total": {}}
     filtro = None
     if deporte == "beisbol":
@@ -464,7 +591,7 @@ def medir(deporte, js):
     out["ganador"]["final"] = {"vars": nucleo + utiles, "beta": [round(b, 5) for b in beta_u], "logloss": round(llu, 4), "brier": round(bru, 4), "n": nu}
     # ---- total
     vt = ["ritmo"]
-    cand_t = {"hockey": ["portero_suma", "tiros_suma", "b2b_suma", "pdo_suma"], "beisbol": ["fip_suma"], "americano": ["vol_suma"]}[deporte]
+    cand_t = {"hockey": ["portero_suma", "tiros_suma", "b2b_suma", "pdo_suma"], "beisbol": ["fip_suma"], "americano": ["vol_suma"], "nba": ["pace_suma", "b2b_suma"]}[deporte]
     for f in filas:
         f["b2b_suma"] = abs(f["b2b"]) if f["b2b"] else 0.0
         f["pdo_suma"] = 0.0
@@ -513,7 +640,7 @@ def medir_beisbol(filas, out):
     print("GANADOR cv-4 bloques (nucleo): n=%d logloss %.4f Brier %.4f base %.4f" % (n, ll0, br0, bb))
     out["ganador"]["nucleo"] = {"n": n, "logloss": round(ll0, 4), "brier": round(br0, 4), "brier_base": round(bb, 4)}
     aportes = {}
-    for extra in ("fip", "pct", "l10", "l5", "racha", "pit_res", "rsi10", "macd", "roc_elo"):
+    for extra in ("fip", "fip_bp", "carga_bp", "pct", "l10", "l5", "racha", "pit_res", "rsi10", "macd", "roc_elo"):
         ll, br, _ = cv(["lp0", extra])
         beta = logistica(ok, ["lp0", extra], l2=1e-2)
         aportes[extra] = {"d_logloss_milesimas": round(1000 * (ll0 - ll), 2), "d_brier_milesimas": round(1000 * (br0 - br), 2), "coef": round(beta[-1], 4), "n": n}
@@ -531,21 +658,21 @@ def medir_beisbol(filas, out):
                 ea += abs(beta[0] + sum(b * f[v] for b, v in zip(beta[1:], vars_)) - f["total"]); n += 1
         return ea / n, n
     e_base = sum(abs(f["base_total"] - f["total"]) for f in okt) / len(okt)
-    e0, n = cvt(["ritmo"]); e1, _ = cvt(["ritmo", "fip_suma"])
-    bt = lineal(okt, ["ritmo", "fip_suma"], "total")
-    print("TOTAL cv-4: n=%d  MAE media liga %.3f | ritmo %.3f | ritmo + FIP abridores %.3f (coef FIP %+.3f carreras por punto de FIP medio)" % (n, e_base, e0, e1, bt[-1]))
-    out["total"] = {"n": n, "mae_base": round(e_base, 3), "mae_ritmo": round(e0, 3), "mae_ritmo_fip": round(e1, 3), "coef_fip_suma": round(bt[-1], 4)}
+    e0, n = cvt(["ritmo"]); e1, _ = cvt(["ritmo", "fip_suma"]); e2, _ = cvt(["ritmo", "fip_suma", "fip_bp_suma"])
+    bt = lineal(okt, ["ritmo", "fip_suma", "fip_bp_suma"], "total")
+    print("TOTAL cv-4: n=%d  MAE media liga %.3f | ritmo %.3f | + FIP abridores %.3f | + FIP bullpen %.3f (coef abridores %+.3f, bullpen %+.3f)" % (n, e_base, e0, e1, e2, bt[-2], bt[-1]))
+    out["total"] = {"n": n, "mae_base": round(e_base, 3), "mae_ritmo": round(e0, 3), "mae_ritmo_fip": round(e1, 3), "mae_ritmo_fip_bullpen": round(e2, 3), "coef_fip_suma": round(bt[-2], 4), "coef_fip_bp_suma": round(bt[-1], 4)}
     return out
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--deporte", default="hockey,americano,beisbol")
+    ap.add_argument("--deporte", default="hockey,americano,nba,beisbol")
     a = ap.parse_args()
     res = {"generado": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "nota": "aporte en milesimas de log-loss walk-forward sobre ELO+diferencial; coef = coeficiente logit de la capa en el ajuste completo"}
     for d in a.deporte.split(","):
         d = d.strip()
-        js = {"hockey": juegos_hockey, "americano": juegos_nfl, "beisbol": juegos_mlb}[d]()
+        js = {"hockey": juegos_hockey, "americano": juegos_nfl, "beisbol": juegos_mlb, "nba": juegos_nba}[d]()
         res[d] = medir(d, js)
     os.makedirs(os.path.dirname(SALIDA), exist_ok=True)
     with io.open(SALIDA, "w", encoding="utf-8") as f:
