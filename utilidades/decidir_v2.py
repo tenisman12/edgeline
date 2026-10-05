@@ -4,7 +4,7 @@ utilidades/decidir_v2.py - DECISION POR CAPAS para todos los deportes menos beis
 
 Razona como lo hacemos a mano, con pesos medidos y todo guardado:
   1. Mercado: probabilidad sharp (Pinnacle; si no hay, consenso de casas) por lado, con la mejor cuota.
-  2. Modelo: siempre vota. Mezcla en logit: p_final = inv(logit(p_sharp) + w*(logit(p_modelo) - logit(p_sharp))),
+  2. Modelo: vota SOLO si ese mercado esta validado en esa liga (salida/validacion_mercados.json). Mezcla en logit: p_final = inv(logit(p_sharp) + w*(logit(p_modelo) - logit(p_sharp))),
      con w por liga (NHL 0.5, NFL 0.5 con -3.4 pp al over, NBA/NCAAF/tenis/futbol 0.35). Si el modelo esta
      "sin_validar" en ese mercado, pesa la mitad.
   3. EV = p_final * cuota - 1; confianza alta >= 8%, media 4-8%, baja 1-4%, minima < 1%; unidades 3/2/1/0.
@@ -28,16 +28,23 @@ try:
     from nucleo import sharp as _sharp
 except Exception:
     _sharp = None
+try:
+    from modelos import beisbol as _bb          # binomial negativa con la dispersion medida por liga
+except Exception:
+    _bb = None
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PESO_MODELO = {"nhl": 0.5, "nfl": 0.5, "ncaafb": 0.35, "nba": 0.35, "ncaamb": 0.35, "atp": 0.35, "wta": 0.35}
 PESO_DEFAULT = 0.25                     # futbol y lo demas
-PESO_FIJO = {"nhl", "nfl"}              # acuerdo 4-oct: el modelo vota con 0.5 aunque la validacion diga sin_validar (muestra corta)
+# REGLA 4-oct (tarde): solo se apuesta lo VALIDADO. Si utilidades/validar_mercados.py no certifico ese mercado en esa
+# liga (walk-forward, n>=300, z>=2, mejora en las dos mitades, calibrado), no hay pick: ni con peso reducido ni con
+# nota al pie. El modelo se sigue mostrando como lectura, con 0 unidades.
+SOLO_VALIDADO = True
 AJUSTE_OVER = {"nfl": -0.034}           # el modelo de NFL sobreestima el over 3.4 pp (medido)
 CUOTA_MIN = 1.70
 CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel (sin tope de cuota: sigue siendo pick)
-UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0}
+UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0, "sin_cuota": 0, "no_validado": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 TZ = -6
 # total: desviacion del total real alrededor del esperado del modelo, por deporte (de los MAE medidos: sd ~ 1.25*MAE)
@@ -59,6 +66,9 @@ def confianza(ev):
     if ev is None:
         return "sin_cuota"
     return "alta" if ev >= 0.08 else "media" if ev >= 0.04 else "baja" if ev >= 0.01 else "minima"
+
+
+UNIDADES_CERO = ("minima", "sin_cuota", "no_validado")
 
 
 def _lados(rec, tipo):
@@ -122,7 +132,7 @@ def _dudas(rec, tipo, lado_k, p_sharp, fuente):
     m = rec.get("modelo") or {}
     val = (rec.get("validacion") or {}).get(tipo)
     if val and val != "publicable":
-        d.append({"duda": "modelo %s en %s para esta liga" % (val, tipo), "efecto": "el modelo pesa la mitad en la mezcla"})
+        d.append({"duda": "mercado %s sin validar en esta liga" % tipo, "efecto": "el modelo no vota: p_final = mercado; no se apuesta"})
     if p_sharp is None:
         d.append({"duda": "sin cuota de mercado", "efecto": "p_final = modelo; el pick vale solo si pagan la cuota minima"})
     elif fuente == "una_casa":
@@ -182,6 +192,14 @@ def p_over_modelo(rec, linea):
         return None
     dep = rec.get("deporte"); tipo = rec.get("tipo")
     entera = abs(linea - round(linea)) < 1e-9
+    if dep == "beisbol" and _bb is not None:
+        rd = _bb.disp_total(rec.get("liga"))
+        piso = int(math.floor(linea))
+        pu = sum(_bb._nb_pmf(k, mu, rd) for k in range(0, piso + 1))
+        if entera:
+            push = _bb._nb_pmf(int(linea), mu, rd)
+            return 1 - pu, max(0.0, pu - push), push
+        return 1 - pu, pu, 0.0
     if dep in ("hockey", "futbol"):
         if entera:
             po = 1 - _pois_cdf(linea, mu); pu = _pois_cdf(linea - 1, mu)
@@ -257,7 +275,8 @@ def decidir_mercado(rec, tipo, movs=None):
     liga = rec["liga"]
     w0 = PESO_MODELO.get(liga, PESO_DEFAULT)
     val = (rec.get("validacion") or {}).get(tipo)
-    w = w0 if (val == "publicable" or liga in PESO_FIJO) else w0 / 2.0
+    validado = (val == "publicable")
+    w = w0 if validado else 0.0        # sin validacion el modelo no vota: la probabilidad es la del mercado
     lados = _lados(rec, tipo)
     if not lados:
         if tipo == "Ganador" and m.get("p_home") is not None:
@@ -312,6 +331,9 @@ def decidir_mercado(rec, tipo, movs=None):
                      "linea_referencia": {"mercado": ref["mercado"], "lado": ref["lado"], "ev": ref["ev"], "decimal": ref["decimal"]}}
     conf = confianza(mejor["ev"])
     razones_no = []
+    if SOLO_VALIDADO and not validado:
+        razones_no.append("mercado %s de %s sin validar (walk-forward: el modelo no le gana a la base): lectura, no pick" % (tipo, liga.upper()))
+        conf = "no_validado"
     if mejor["decimal"] is not None and mejor["decimal"] < CUOTA_MIN:
         razones_no.append("cuota %.2f menor a %.2f" % (mejor["decimal"], CUOTA_MIN)); conf = "minima" if conf != "sin_cuota" else conf
     br = mejor["brecha_modelo_mercado"]
