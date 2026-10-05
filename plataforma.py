@@ -477,8 +477,9 @@ def _spread_mercado(q, p_home, xh, xa, pmf):
     return {"linea_home": float(sp), "p_home": round(pc, 4), "p_away": round(1 - pc, 4), "linea_es_mercado": q.get("spread_home") is not None}
 
 
-def _pred(g, c, fecha):
-    """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes."""
+def _pred(g, c, fecha, eventos=None):
+    """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes. eventos = cuotas de todas las casas
+    (se usa en tenis para tomar la linea de games del mercado)."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}
     if g["tipo"] != "tenis" and any("/" in (g[l]["nombre"] or "") for l in ("home", "away")):
         return None, "rival por definir (TBD)"            # ganador de una serie aun sin resolver, p. ej. "Phillies/Braves"
@@ -488,13 +489,25 @@ def _pred(g, c, fecha):
         j1, s1 = c["emp"].buscar(g["home"]["nombre"]); j2, s2 = c["emp"].buscar(g["away"]["nombre"])
         if not j1 or not j2:
             return None, "jugador sin historial en tus datos: %s" % (g["home"]["nombre"] if not j1 else g["away"]["nombre"])
-        bo = g.get("best_of", 3); linea = 22.5 if bo == 3 else 38.5
+        bo = g.get("best_of", 3)
+        # linea de games: la del mercado si alguna casa la publica (varia por partido: 18.5, 20.5, 22.5...); si no,
+        # la de referencia por formato. Antes siempre era 22.5, que no es linea de mercado y hacia que la prediccion
+        # de total no se pudiera comparar con el cierre (quedaba "no comparable" en totales_vs_linea.py).
+        linea_mkt = None
+        if eventos:
+            try:
+                _ev = sharp._ev_de_partido(eventos, g["liga"], g.get("fecha_utc") or g.get("fecha"), g["home"]["nombre"], g["away"]["nombre"])
+                if _ev:
+                    linea_mkt = sharp.linea_comun(_ev, "totals")
+            except Exception:
+                linea_mkt = None
+        linea = float(linea_mkt) if linea_mkt not in (None, "no") else (22.5 if bo == 3 else 38.5)
         r = estado.tenis_predecir(c["st"], j1, j2, g.get("superficie", "Hard"), bo, linea, tour=g["liga"],
                                   ajuste_games=AJUSTE_GAMES.get((g["liga"], bo), 0.0))
         if not r:
             return None, "muestra insuficiente de saque/resto"
         return {"p_home": r["p1"], "p_away": r["p2"], "unidad": "games",
-                "total": r["games_esperados"], "linea_total": linea, "linea_es_mercado": False,
+                "total": r["games_esperados"], "linea_total": linea, "linea_es_mercado": linea_mkt not in (None, "no"),
                 "p_over": r["p_over_games"], "confianza": _conf(max(r["p1"], r["p2"])),
                 "extra": [("Breaks esperados", r["breaks_esperados"]),
                           ("Prob. de al menos un break", r["p_al_menos_un_break"]),
@@ -854,7 +867,7 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
             if not c:
                 rec["motivo"] = "modelo no disponible (faltan datos historicos)"
             else:
-                m, motivo = _pred(g, c, rec["fecha"])
+                m, motivo = _pred(g, c, rec["fecha"], eventos)
                 if not m:
                     rec["motivo"] = motivo
                 else:

@@ -10,7 +10,10 @@ mercado Total, lado, p_modelo, valor_modelo = total esperado, linea usada, real)
 Reporta por liga:
   - n, MAE de la linea de cierre vs total real (el rival a vencer) y MAE del total esperado del modelo (si se registro).
   - Acierto del lado del modelo contra la linea de cierre (over si total esperado > cierre), con el umbral 52.4% que
-    paga a -110, por tamano de brecha (|modelo - cierre| en unidades de la liga).
+    paga a -110, por tamano de brecha (|modelo - cierre| en unidades de la liga). SOLO se comparan los casos validos:
+    con total esperado registrado, o cuando la linea del modelo es la misma del cierre. Si el modelo uso otra linea
+    (en tenis la de referencia es 22.5 fija, no la del mercado), el caso se marca "no comparable" y no entra: decir
+    "under 22.5" cuando el mercado cerro en 20 no es la misma apuesta.
   - Calibracion de Pinnacle: p_sharp del over vs frecuencia real de over.
 Se acumula solo: entre mas dias de fotos, mas n. Hoy (4-oct) las fotos empiezan el 1-oct: la muestra es chica y
 el reporte es orientativo hasta tener ~300 partidos por liga.
@@ -102,16 +105,26 @@ def main():
             p_mod = float(r["p_modelo"])
         except (TypeError, ValueError):
             pass
-        # lado del modelo contra el CIERRE: por total esperado si existe; si no, por el lado registrado (vs su linea)
+        # Comparacion valida solo de dos formas, nunca mezcladas:
+        #  (a) con el TOTAL ESPERADO del modelo (valor_modelo): lado = over si el esperado supera el cierre.
+        #  (b) sin total esperado, solo si la linea que uso el modelo ES la de cierre (si no, "under 22.5" contra un
+        #      cierre de 20 es otra apuesta y compararlos da un numero sin sentido).
+        try:
+            Lr = float(r["linea"])
+        except (TypeError, ValueError):
+            Lr = None
+        misma = Lr is not None and abs(Lr - c["linea"]) < 1e-6
         if vm is not None:
-            lado = "over" if vm > c["linea"] else ("under" if vm < c["linea"] else None); brecha = abs(vm - c["linea"])
+            lado = "over" if vm > c["linea"] else ("under" if vm < c["linea"] else None); brecha = abs(vm - c["linea"]); modo = "total_modelo"
+        elif misma:
+            lado = r["lado"]; brecha = None; modo = "misma_linea"
         else:
-            lado = r["lado"]; brecha = None
+            lado = None; brecha = None; modo = "no_comparable"
         acierto = None
         if lado and real != c["linea"]:
             acierto = 1 if ((real > c["linea"]) == (lado == "over")) else 0
-        por_liga[lg].append({"fecha": f, "home": r["home"], "away": r["away"], "cierre": c["linea"], "p_over_cierre": c["p_over"], "real": real,
-                             "modelo_total": vm, "lado_modelo": lado, "brecha": brecha, "acierto": acierto, "push": real == c["linea"]})
+        por_liga[lg].append({"fecha": f, "home": r["home"], "away": r["away"], "cierre": c["linea"], "linea_modelo": Lr, "p_over_cierre": c["p_over"], "real": real,
+                             "modelo_total": vm, "lado_modelo": lado, "brecha": brecha, "acierto": acierto, "push": real == c["linea"], "modo": modo})
     res = {"generado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "predicciones_total": len(pred), "sin_cierre": sin, "ligas": {}}
     print("TOTALES vs LINEA DE CIERRE (Pinnacle): %d predicciones de total calificadas, %d sin foto de cierre" % (len(pred), sin))
     for lg, xs in sorted(por_liga.items()):
@@ -121,6 +134,12 @@ def main():
         mae_m = (sum(abs(x["modelo_total"] - x["real"]) for x in con_vm) / len(con_vm)) if con_vm else None
         ac = [x for x in xs if x["acierto"] is not None]
         pct = (100.0 * sum(x["acierto"] for x in ac) / len(ac)) if ac else None
+        no_comp = sum(1 for x in xs if x["modo"] == "no_comparable")
+        por_modo = {}
+        for modo in ("total_modelo", "misma_linea"):
+            b = [x for x in ac if x["modo"] == modo]
+            if b:
+                por_modo[modo] = {"n": len(b), "acierto_pct": round(100.0 * sum(x["acierto"] for x in b) / len(b), 1)}
         # por brecha
         u = UNIDAD.get(lg, 1.0); bandas = {}
         for lo, hi, nom in ((0, u, "<%g" % u), (u, 2 * u, "%g-%g" % (u, 2 * u)), (2 * u, 99, ">=%g" % (2 * u))):
@@ -133,14 +152,19 @@ def main():
         p_med = (100.0 * sum(x["p_over_cierre"] for x in ov) / len(ov)) if ov else None
         res["ligas"][lg] = {"n": n, "mae_cierre": round(mae_c, 3), "mae_modelo": None if mae_m is None else round(mae_m, 3), "n_modelo_total": len(con_vm),
                             "acierto_lado_modelo_pct": None if pct is None else round(pct, 1), "n_acierto": len(ac), "por_brecha": bandas,
+                            "no_comparables": no_comp, "por_modo": por_modo,
                             "pinnacle_p_over_media_pct": None if p_med is None else round(p_med, 1), "over_real_pct": None if real_over is None else round(real_over, 1)}
-        print("  %-7s n=%3d | MAE cierre %.3f | MAE modelo %s (n=%d) | lado del modelo vs cierre %s%% (n=%d; paga desde 52.4%%) | bandas %s | Pinnacle p_over %s%% vs over real %s%%" % (
-            lg, n, mae_c, ("%.3f" % mae_m) if mae_m is not None else "-", len(con_vm), ("%.1f" % pct) if pct is not None else "-", len(ac),
+        print("  %-7s n=%3d | MAE cierre %.3f | MAE modelo %s (n=%d) | lado del modelo vs cierre %s%% (n=%d comparables, %d no comparables; paga desde 52.4%%) | %s | bandas %s | Pinnacle p_over %s%% vs over real %s%%" % (
+            lg, n, mae_c, ("%.3f" % mae_m) if mae_m is not None else "-", len(con_vm), ("%.1f" % pct) if pct is not None else "-", len(ac), no_comp,
+            ", ".join("%s %d/%s%%" % (k, v["n"], v["acierto_pct"]) for k, v in por_modo.items()) or "sin comparables",
             ", ".join("%s: %d/%s%%" % (k, v["n"], v["acierto_pct"]) for k, v in bandas.items()) or "-",
             ("%.1f" % p_med) if p_med is not None else "-", ("%.1f" % real_over) if real_over is not None else "-"))
     with io.open(os.path.join(SAL, "totales_vs_linea.json"), "w", encoding="utf-8") as f:
         json.dump(res, f, ensure_ascii=False, indent=1)
-    print("Escrito salida/totales_vs_linea.json. Nota: valor_modelo (total esperado) se registra desde el 4-oct; antes solo hay lado.")
+    print("Escrito salida/totales_vs_linea.json.")
+    print("Nota: 'no comparables' = el modelo uso una linea distinta a la de cierre y no hay total esperado registrado;")
+    print("      comparar 'under 22.5' contra un cierre de 20 no mide nada. El total esperado (valor_modelo) se registra")
+    print("      desde el 4-oct-2026, asi que la medicion limpia empieza a acumular con los partidos de hoy.")
     return 0
 
 
