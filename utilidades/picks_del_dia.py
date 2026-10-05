@@ -19,6 +19,8 @@ Uso (en C:\\Edgeline_repo, con $env:EDGELINE_BASE = "C:\\Edgeline_repo"):
 Solo stdlib.
 """
 import argparse, csv, datetime as dt, io, json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import decidir_v2 as V2
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))
@@ -45,7 +47,7 @@ def _mismo(a, b):
     return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
 CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdo 4-oct)
-STAKE = {"alta": 0.03, "media": 0.02, "premium": 0.02, "pick": 0.01}
+STAKE = {"alta": 0.03, "media": 0.02, "baja": 0.01, "premium": 0.02, "pick": 0.01}   # unidades 3/2/1 (acuerdo 4-oct)
 TZ = -6
 
 
@@ -58,10 +60,29 @@ def _hoy():
     return (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=TZ)).date()
 
 
-def decision(rec, dec_bb=None):
-    """Decision de ganador y de total del partido con la mejor probabilidad disponible."""
+def decision(rec, dec_bb=None, v2=None):
+    """Decision de ganador y de total del partido con la mejor probabilidad disponible.
+    Fuera de beisbol manda decidir_v2 (mezcla por capas con pesos medidos); beisbol sigue con decidir.py."""
     m = rec.get("modelo") or {}
     picks = rec.get("picks") or []
+    if v2 and rec.get("deporte") != "beisbol":
+        g = t = None
+        dg, dtot = v2.get("ganador"), v2.get("total")
+        if dg:
+            # "ganador" = el lado con p_final >= 50% (quien gana); el valor puede estar en el otro lado (va en valor/)
+            fav = max(dg.get("lados") or [], key=lambda e: e["p_final"]) if dg.get("lados") else None
+            if fav and fav["lado"] != dg["lado"]:
+                g = {"lado": fav["lado"], "nombre": rec[fav["lado"]]["nombre"], "p": fav["p_final"], "cuota": fav.get("cuota"), "fuente": "decidir_v2 (%s, peso modelo %.2f)" % (fav.get("fuente"), dg["peso_modelo"]),
+                     "cuota_min": None, "ev": fav.get("ev"), "confianza": None, "unidades": 0, "conteo": None,
+                     "valor": {"lado": dg["lado"], "nombre": dg["pick"], "p": dg["p_final"], "cuota": dg["cuota"], "ev": dg["ev"], "confianza": dg["confianza"], "unidades": dg["unidades"], "conteo": dg["conteo"]}}
+            else:
+                g = {"lado": dg["lado"], "nombre": dg["pick"], "p": dg["p_final"], "cuota": dg["cuota"], "fuente": "decidir_v2 (%s, peso modelo %.2f)" % (dg["fuente"], dg["peso_modelo"]),
+                     "cuota_min": dg["cuota_min"], "ev": dg["ev"], "confianza": dg["confianza"], "unidades": dg["unidades"], "conteo": dg["conteo"]}
+        if dtot:
+            t = {"lado": dtot["lado"], "linea": dtot["mercado"].split()[1] if " " in dtot["mercado"] else m.get("linea_total"), "p": dtot["p_final"], "cuota": dtot["cuota"],
+                 "fuente": "decidir_v2 (%s, peso modelo %.2f)" % (dtot["fuente"], dtot["peso_modelo"]), "ev": dtot["ev"], "confianza": dtot["confianza"], "unidades": dtot["unidades"], "conteo": dtot["conteo"]}
+        if g or t:
+            return g, t
     # En beisbol manda el sistema estimado: la decision del partido y el pick tienen que salir de la MISMA mezcla,
     # si no el reporte dice que gana un equipo y apuesta al otro.
     g = None
@@ -96,10 +117,24 @@ def decision(rec, dec_bb=None):
     return g, t
 
 
-def candidatos(rec, dec_bb):
-    """picks apostables del partido segun su sistema: beisbol -> decidir; resto -> Pick Premium."""
+def candidatos(rec, dec_bb, v2=None):
+    """picks apostables del partido segun su sistema: beisbol -> decidir; resto -> decidir_v2 (capas medidas)."""
     out = []
     if rec.get("pretemporada"):
+        return out
+    if v2 and rec.get("deporte") != "beisbol":
+        for d in (v2.get("ganador"), v2.get("total")):
+            if not d or d["confianza"] not in ("alta", "media", "baja") or d.get("decimal") is None or d["fuente"] == "sin_cuota":
+                continue
+            if d["decimal"] < CUOTA_MIN or d["decimal"] > CUOTA_MAX or d.get("ev") is None or d["ev"] < 0.01:
+                continue
+            out.append({"origen": "decidir_v2", "mercado": d["mercado"], "lado": d["lado"], "pick": d["pick"], "cuota": d["cuota"], "decimal": round(d["decimal"], 3),
+                        "casa": d.get("casa"), "p": d["p_final"], "ev": d["ev"], "confianza": d["confianza"], "stake": STAKE[d["confianza"]], "unidades": d["unidades"],
+                        "senales": "%d a favor / %d en contra" % (d["conteo"]["a_favor"], d["conteo"]["en_contra"]),
+                        "razon": ("p final %.1f%% (mercado %s, modelo %s, peso %.2f) contra %.2f | si: %s | no: %s | dudas: %s" % (
+                            100 * d["p_final"], ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "-",
+                            ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", d["peso_modelo"], d["decimal"],
+                            "; ".join(d["por_que_si"][1:]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))[:900]})
         return out
     if rec.get("deporte") == "beisbol":
         d = dec_bb.get((rec["liga"], str(rec["id"]), rec["fecha"]))
@@ -209,16 +244,30 @@ def main():
         return t, m
     partidos, cand = [], []
     for p in sel:
-        g, t = decision(p, dec_bb)
+        v2 = None
+        if p.get("deporte") != "beisbol" and p.get("modelo"):
+            movs = {}
+            for tipo, lados in (("Ganador", ("home", "away")), ("Total", ("over", "under"))):
+                for ld in lados:
+                    nombre = p[ld]["nombre"] if ld in ("home", "away") else None
+                    mv_, _ = movimiento(p, tipo, ld, nombre)
+                    if mv_ is not None:
+                        movs[(tipo, ld)] = mv_
+            try:
+                v2 = V2.decidir_partido(p, movs)
+            except Exception as e:
+                v2 = None; print("  decidir_v2 fallo en %s %s: %s" % (p["liga"], p["id"], e))
+        g, t = decision(p, dec_bb, v2)
         q = publico.get((p["liga"], str(p["id"])))
         mv_g = movimiento(p, "Ganador", "home", g["nombre"])[0] if g else None
         mv_t, sen_mov = movimiento(p, "Total", (t or {}).get("lado") or "over")
         fila = {"liga": p["liga"], "id": str(p["id"]), "fecha": p["fecha"], "hora": p.get("hora"), "home": p["home"]["nombre"], "away": p["away"]["nombre"],
                 "pretemporada": bool(p.get("pretemporada")), "ganador": g, "total": t, "sin_modelo": not p.get("modelo"),
                 "mov_ganador": mv_g, "mov_total": mv_t, "senales_mercado": sen_mov,
-                "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None}
+                "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None,
+                "decision_v2": v2}
         partidos.append(fila)
-        for c in candidatos(p, dec_bb):
+        for c in candidatos(p, dec_bb, v2):
             tk, mn = lado_publico(q, c["mercado"], c["lado"])
             at = (q or {}).get("atencion") or {}
             mv, sen = movimiento(p, c["mercado"], c["lado"], c.get("pick"))
@@ -258,7 +307,7 @@ def main():
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
-            "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado"]
+            "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
