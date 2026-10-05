@@ -384,6 +384,9 @@ def decidir_partido(rec, movs=None):
     t = decidir_mercado(rec, "Total", movs)
     m = rec.get("modelo") or {}
     partes = []
+    if rec.get("torneo"):
+        partes.append("%s%s%s." % (rec["torneo"], (", " + rec["ronda"]) if rec.get("ronda") else "",
+                                   (", " + str(rec.get("cancha") or rec.get("superficie") or "")) if (rec.get("cancha") or rec.get("superficie")) else ""))
     if m.get("x_home") is not None:
         partes.append("Modelo: %s %.1f - %s %.1f (total %.1f%s); gana %s %.0f%%." % (
             rec["home"]["nombre"], m["x_home"], rec["away"]["nombre"], m["x_away"], m.get("total") or 0,

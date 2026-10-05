@@ -272,6 +272,7 @@ def main():
             at = (q or {}).get("atencion") or {}
             mv, sen = movimiento(p, c["mercado"], c["lado"], c.get("pick"))
             cand.append(dict(c, liga=p["liga"], id=str(p["id"]), fecha=p["fecha"], hora=p.get("hora"), home=p["home"]["nombre"], away=p["away"]["nombre"],
+                             torneo=p.get("torneo") or p.get("liga_nombre"), ronda=p.get("ronda") or p.get("nota"), cancha=p.get("cancha") or p.get("superficie") or p.get("superficie_estimada"),
                              publico_boletos=tk, publico_dinero=mn, notas_home=at.get("home"), notas_away=at.get("away"),
                              mov_linea=mv, senales_mercado=sen))
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
@@ -289,8 +290,9 @@ def main():
         pub = ("" if c.get("publico_boletos") is None else " | publico %s%% boletos / %s%% dinero" % (c["publico_boletos"], c["publico_dinero"] if c.get("publico_dinero") is not None else "-"))
         if c.get("mov_linea") is not None:
             pub += " | linea %+.1f pp %s" % (c["mov_linea"], "a favor" if c["mov_linea"] > 0 else "en contra")
-        print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s%s" % (
-            i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub))
+        sede = ("  [%s%s]" % (c.get("torneo") or "", (" - " + c["ronda"]) if c.get("ronda") else "")) if c.get("torneo") else ""
+        print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s%s%s" % (
+            i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub, sede))
     if descartados:
         print("  candidatos fuera del tope: " + "; ".join("%s %s EV %+.1f%%" % (c["liga"], c["pick"], 100 * c["ev"]) for c in descartados[:6]))
     print("\nDECISION POR PARTIDO (ganador y total):")
@@ -307,7 +309,8 @@ def main():
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
-            "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon"]
+            "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon",
+            "torneo", "ronda", "cancha"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
