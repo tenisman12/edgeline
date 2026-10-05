@@ -31,6 +31,7 @@ PESO_DEFAULT = 0.25                     # futbol y lo demas
 PESO_FIJO = {"nhl", "nfl"}              # acuerdo 4-oct: el modelo vota con 0.5 aunque la validacion diga sin_validar (muestra corta)
 AJUSTE_OVER = {"nfl": -0.034}           # el modelo de NFL sobreestima el over 3.4 pp (medido)
 CUOTA_MIN = 1.70
+CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel (sin tope de cuota: sigue siendo pick)
 UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 TZ = -6
@@ -197,6 +198,9 @@ def decidir_mercado(rec, tipo, movs=None):
         else:
             razones_no.append("modelo %.0f pp arriba del mercado en el total: baja un nivel" % (100 * br))
             conf = {"alta": "media", "media": "baja", "baja": "minima"}.get(conf, conf)
+    if mejor["decimal"] is not None and mejor["decimal"] > CUOTA_LONGSHOT and conf in ("alta", "media", "baja"):
+        razones_no.append("cuota %.2f: el EV de un longshot depende de 1-2 pp de probabilidad que el modelo no afina; baja un nivel" % mejor["decimal"])
+        conf = {"alta": "media", "media": "baja", "baja": "minima"}[conf]
     if rec.get("pretemporada"):
         razones_no.append("pretemporada"); conf = "minima"
     favor = [s for s in mejor["senales"] if s["dir"] > 0]; contra = [s for s in mejor["senales"] if s["dir"] < 0]
