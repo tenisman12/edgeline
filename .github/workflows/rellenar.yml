@@ -1,0 +1,79 @@
+name: rellenar historial (ESPN, una vez)
+
+# Se corre A MANO (Actions -> "rellenar historial" -> Run workflow). Baja de ESPN las estadisticas de equipo que
+# faltan en el historial, llena datos/<deporte>.csv con utilidades/completar_datos.py y publica la rama datos.
+# Lo que ya esta guardado no se vuelve a pedir (fusion por game_id). Se puede correr varias veces sin duplicar.
+#   ncaafb      temporada 2022 (ago-2022 a ene-2023): yardas, downs, posesion
+#   nfl         2021 a hoy: 3a y 4a oportunidad, zona roja, tiempo de posesion
+#   ligamx/mls  2021 a jul-2023: tiros, corners, faltas, tarjetas, posesion, pases
+#   europa      ago-2021 a jul-2023 (5 ligas): posesion, pases, centros, atajadas, tacleadas...
+
+on:
+  workflow_dispatch:
+    inputs:
+      que:
+        description: "que rellenar (separado por coma): ncaafb,nfl,ligamx,mls,europa"
+        default: "ncaafb,nfl,ligamx,mls,europa"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rellenar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      QUE: ${{ github.event.inputs.que }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+          python utilidades/jugadores_recientes.py sembrar
+
+      - name: Bajar de ESPN lo que falta
+        continue-on-error: true
+        timeout-minutes: 300
+        run: |
+          espn () { echo "::group::$1 $2 -> $3"; python colectores/recolectar_jugadores.py espn --liga "$1" --desde "$2" --hasta "$3" --sin-raw || echo "::warning::$1 termino con error"; echo "::endgroup::"; }
+          case ",$QUE," in *,ncaafb,*) espn ncaafb 20220801 20230131 ;; esac
+          case ",$QUE," in *,nfl,*)    espn nfl 20210901 $(date -u +%Y%m%d) ;; esac
+          case ",$QUE," in *,ligamx,*) espn ligamx 20210101 20230810 ;; esac
+          case ",$QUE," in *,mls,*)    espn mls 20210401 20230819 ;; esac
+          case ",$QUE," in *,europa,*)
+            for l in premier laliga seriea bundesliga ligue1; do espn $l 20210801 20230810; done ;;
+          esac
+
+      - name: Completar archivos base y cobertura
+        run: |
+          python utilidades/completar_datos.py --aplicar
+          python utilidades/jugadores_recientes.py recortar
+
+      - name: Guardar cobertura en main
+        continue-on-error: true
+        run: bash utilidades/subir_a_main.sh "cobertura de datos" salida/cobertura_datos.json
+
+      - name: Publicar datos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (relleno) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos

@@ -247,6 +247,12 @@ def main():
         t0 = time.time()
         r = subprocess.run([PY, os.path.join(COL, "historial_ncaa.py")], env=env)
         resumen.append(("ncaa", ("ok" if r.returncode == 0 else "CON AVISOS (error %d)" % r.returncode) + "  [%ds]" % (time.time() - t0)))
+    if not a.solo_jugadores:
+        # llena huecos de datos\<deporte>.csv con datos\equipos\ (solo celdas vacias; nunca pisa) y escribe la cobertura
+        print("\n=== COMPLETAR DATOS (equipos -> archivos base) ===")
+        t0 = time.time()
+        r = subprocess.run([PY, os.path.join(BASE, "utilidades", "completar_datos.py"), "--aplicar"], env=env)
+        resumen.append(("completar", ("ok" if r.returncode == 0 else "CON AVISOS (error %d)" % r.returncode) + "  [%ds]" % (time.time() - t0)))
     if a.proximos:
         print("\n=== PROXIMOS (ESPN) ===")
         subprocess.run([PY, os.path.join(COL, "recolectar_proximos.py"), "--dias", "3"], env=env)

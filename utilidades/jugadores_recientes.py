@@ -46,7 +46,7 @@ CORE = {
                                         "tiros", "bloqueos", "shifts", "giveaways", "takeaways", "faceoff_pct"],
     "nfl_jugadores.csv": NFL_FIJAS + NFL_STATS,
 }
-ESPN_LIGAS = ["nba", "ncaamb", "ncaafb", "premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls",
+ESPN_LIGAS = ["nfl", "nba", "ncaamb", "ncaafb", "premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls",
               "champions"]
 
 

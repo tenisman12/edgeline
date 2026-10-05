@@ -91,6 +91,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   se movió 5.5 → 6.0 en cinco partidos, o sea hacia el over. El dato se usa y se mide; `TOTAL_PUBLICO_VETADO` quedó vacío.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.
 
+## Completar datos (utilidades/completar_datos.py)
+Corre al final de `actualizar_todo.py` (cada hora en Actions). Llena las celdas vacias de `datos/<deporte>.csv` con
+`datos/equipos/` y nunca pisa un dato existente: NHL (tiros, hits, bloqueos, PP, portero abridor), NFL/NCAAF (yardas, downs,
+perdidas, castigos, EPA en NFL, posesion), NCAAMB (box completo), NBA (play-in y playoffs desde ESPN, columna `tipo`),
+futbol (tiros/corners/tarjetas de Liga MX y MLS; posesion, pases y demas en las 7 ligas desde ago-2023), beisbol NPB/KBO
+(espejo bateo = pitcheo del rival, comprobado 100 % en MLB; tasas acumuladas como MLB). Escribe `salida/cobertura_datos.json`
+(por archivo, liga y columna: % con dato y fechas). Relleno historico por ESPN: workflow manual `rellenar.yml`.
+
 ## Datos históricos (rama "datos")
 Al inicio de cada sesión, antes de analizar, traer la rama de datos:
 git fetch origin datos:refs/remotes/origin/datos && git worktree add trabajo/datos origin/datos
