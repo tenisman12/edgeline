@@ -23,6 +23,11 @@ total (igual, siempre con lado), dudas y un texto de razonamiento. picks_del_dia
 Solo stdlib.
 """
 import argparse, datetime as dt, io, json, math, os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from nucleo import sharp as _sharp
+except Exception:
+    _sharp = None
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +40,10 @@ CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un ni
 UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 TZ = -6
+# total: desviacion del total real alrededor del esperado del modelo, por deporte (de los MAE medidos: sd ~ 1.25*MAE)
+SD_TOTAL = {"americano": 13.0, "nba": 19.0, "beisbol": 4.3, "tenis": 4.5}
+EV_MAX_LINEA = 0.12          # una linea con mas de 12% de EV contra el modelo mezclado suele ser vieja o de otro mercado: se ignora
+_EVENTOS = None
 
 
 def _lg(p):
@@ -141,6 +150,107 @@ def _dudas(rec, tipo, lado_k, p_sharp, fuente):
     return d
 
 
+def _eventos():
+    """salida/cuotas_casas.json (todas las casas, todas las lineas) cargado una vez."""
+    global _EVENTOS
+    if _EVENTOS is None:
+        _EVENTOS = []
+        if _sharp is not None:
+            for base in (os.path.join(REPO, "salida"), os.path.join(BASE, "salida")):
+                ruta = os.path.join(base, "cuotas_casas.json")
+                if os.path.exists(ruta):
+                    _EVENTOS = _sharp.cargar(ruta)[0] or []
+                    break
+    return _EVENTOS
+
+
+def _pois_cdf(k, mu):
+    """P(X <= k) Poisson."""
+    if k < 0:
+        return 0.0
+    t = math.exp(-mu); acc = t
+    for i in range(1, int(k) + 1):
+        t *= mu / i; acc += t
+    return min(1.0, acc)
+
+
+def p_over_modelo(rec, linea):
+    """Probabilidad del modelo de que el total pase la linea: (p_over, p_under, p_push) desde el total esperado."""
+    m = rec.get("modelo") or {}
+    mu = m.get("total")
+    if mu is None:
+        return None
+    dep = rec.get("deporte"); tipo = rec.get("tipo")
+    entera = abs(linea - round(linea)) < 1e-9
+    if dep in ("hockey", "futbol"):
+        if entera:
+            po = 1 - _pois_cdf(linea, mu); pu = _pois_cdf(linea - 1, mu)
+        else:
+            po = 1 - _pois_cdf(math.floor(linea), mu); pu = 1 - po
+        return po, pu, max(0.0, 1 - po - pu)
+    sd = SD_TOTAL.get("tenis" if tipo == "tenis" else dep, 10.0)
+    def phi(z): return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+    if entera:
+        po = 1 - phi((linea + 0.5 - mu) / sd); pu = phi((linea - 0.5 - mu) / sd)
+    else:
+        po = 1 - phi((linea - mu) / sd); pu = 1 - po
+    return po, pu, max(0.0, 1 - po - pu)
+
+
+def _dec_am(x):
+    x = float(x)
+    return 1 + x / 100.0 if x > 0 else 1 + 100.0 / abs(x)
+
+
+def comprar_linea(rec, w, excluir_casas=None):
+    """Recorre TODAS las lineas de total de todas las casas y devuelve el (lado, linea, casa) con mejor EV, mezclando el
+    modelo (p a esa linea) con el mercado de esa casa sin vig con el peso w. El margen en totales suele estar en la
+    linea (6.0 vs 6.5), no en la cuota. Devuelve None si no hay evento o no hay lineas con los dos lados."""
+    ev = None
+    if _sharp is not None and _eventos():
+        try:
+            ev = _sharp._ev_de_partido(_eventos(), rec["liga"], rec.get("fecha_utc") or rec.get("fecha"), rec["home"]["nombre"], rec["away"]["nombre"])
+        except Exception:
+            ev = None
+    if not ev:
+        return None
+    excl = set(excluir_casas or (getattr(_sharp, "EXCLUIR", set()) if _sharp else set()))
+    lados = _sharp._lados(ev, "totals")
+    opciones = []
+    for casa, d in lados.items():
+        if casa in excl or "over" not in d or "under" not in d:
+            continue
+        (co, pto), (cu, ptu) = d["over"], d["under"]
+        if pto is None or ptu is None or abs(float(pto) - float(ptu)) > 1e-6:
+            continue
+        L = float(pto); do, du = _dec_am(co), _dec_am(cu)
+        po_m, pu_m = 1.0 / do, 1.0 / du; s_ = po_m + pu_m
+        po_mkt, pu_mkt = po_m / s_, pu_m / s_
+        pm = p_over_modelo(rec, L)
+        if pm is None:
+            continue
+        po_mod, pu_mod, push = pm
+        # mezcla sobre probabilidad condicional a no-push
+        def mix(p_mkt, p_mod):
+            return _inv(_lg(p_mkt) + w * (_lg(p_mod) - _lg(p_mkt)))
+        po_f = mix(po_mkt, po_mod / max(1e-6, 1 - push)) * (1 - push)
+        pu_f = mix(pu_mkt, pu_mod / max(1e-6, 1 - push)) * (1 - push)
+        for lado, dec, pf, pmk, pmo in (("over", do, po_f, po_mkt, po_mod), ("under", du, pu_f, pu_mkt, pu_mod)):
+            evv = pf * dec - 1 + push * 1.0 * 0  # push devuelve la apuesta: EV = pf*dec + push*1 - 1
+            evv = pf * dec + push - 1
+            if evv > EV_MAX_LINEA:
+                continue
+            opciones.append({"casa": casa, "linea": L, "lado": lado, "decimal": round(dec, 3), "cuota_am": co if lado == "over" else cu,
+                             "p_mercado": round(pmk, 4), "p_modelo": round(pmo, 4), "p_final": round(pf, 4), "p_push": round(push, 4), "ev": round(evv, 4)})
+    if not opciones:
+        return None
+    opciones.sort(key=lambda o: -o["ev"])
+    mejor = opciones[0]
+    lineas = sorted({o["linea"] for o in opciones})
+    return {"mejor": mejor, "n_casas": len({o["casa"] for o in opciones}), "lineas_disponibles": lineas,
+            "top": opciones[:5]}
+
+
 def decidir_mercado(rec, tipo, movs=None):
     """Decision de un mercado (Ganador o Total): evalua los dos lados y se queda con el de mejor EV (o mayor p sin cuota)."""
     m = rec.get("modelo") or {}
@@ -185,6 +295,21 @@ def decidir_mercado(rec, tipo, movs=None):
         return None
     con_ev = [e for e in evals if e["ev"] is not None]
     mejor = max(con_ev, key=lambda e: e["ev"]) if con_ev else max(evals, key=lambda e: e["p_final"])
+    compra = None
+    if tipo == "Total":
+        try:
+            compra = comprar_linea(rec, w)
+        except Exception:
+            compra = None
+        if compra and (mejor["ev"] is None or compra["mejor"]["ev"] > (mejor["ev"] or -1) + 0.005):
+            b = compra["mejor"]
+            # la linea alternativa sustituye a la de referencia: misma estructura, con casa y linea propias
+            ref = dict(mejor)
+            mejor = {"lado": b["lado"], "mercado": "Total %g" % b["linea"], "p_modelo": b["p_modelo"], "p_sharp": b["p_mercado"], "p_final": b["p_final"],
+                     "peso_modelo": w, "cuota": b["cuota_am"], "decimal": b["decimal"], "casa": b["casa"], "fuente": "linea_comprada",
+                     "ev": b["ev"], "brecha_modelo_mercado": round(b["p_modelo"] - b["p_mercado"], 4), "mov_linea": ref.get("mov_linea"),
+                     "senales": _senales(rec, tipo, b["lado"], b["p_modelo"], b["p_mercado"], ref.get("mov_linea")),
+                     "linea_referencia": {"mercado": ref["mercado"], "lado": ref["lado"], "ev": ref["ev"], "decimal": ref["decimal"]}}
     conf = confianza(mejor["ev"])
     razones_no = []
     if mejor["decimal"] is not None and mejor["decimal"] < CUOTA_MIN:
@@ -212,16 +337,23 @@ def decidir_mercado(rec, tipo, movs=None):
     razones_si = ["%s a favor (%s; %s)" % (s["capa"], s["valor"], s["peso"]) for s in favor]
     if mejor["ev"] is not None:
         razones_si.insert(0, "p final %.1f%% contra cuota %.2f: EV %+.1f%%" % (100 * mejor["p_final"], mejor["decimal"], 100 * mejor["ev"]))
+    if mejor.get("linea_referencia"):
+        lr = mejor["linea_referencia"]
+        razones_si.append("linea comprada en %s (%s): mejor que la de referencia %s %s (EV %s)" % (
+            mejor["casa"], mejor["mercado"], lr["lado"], lr["mercado"], ("%+.1f%%" % (100 * lr["ev"])) if lr["ev"] is not None else "-"))
     cuota_min = round(max(CUOTA_MIN, 1.0 / mejor["p_final"]), 2)
     texto = {"home": rec["home"]["nombre"], "away": rec["away"]["nombre"], "over": "Over", "under": "Under"}[mejor["lado"]]
     if tipo == "Total" and " " in mejor["mercado"]:
         texto = "%s %s" % (texto, mejor["mercado"].split(" ", 1)[1])
+        if mejor.get("fuente") == "linea_comprada":
+            texto += " (%s)" % mejor["casa"]
     return {"mercado": mejor["mercado"], "lado": mejor["lado"], "pick": texto, "p_final": mejor["p_final"], "p_modelo": mejor["p_modelo"],
             "p_sharp": mejor["p_sharp"], "peso_modelo": w, "cuota": mejor["cuota"], "decimal": mejor["decimal"], "casa": mejor["casa"], "fuente": mejor["fuente"],
             "ev": mejor["ev"], "cuota_min": cuota_min, "confianza": conf, "unidades": UNIDADES.get(conf, 0),
             "brecha_modelo_mercado": mejor["brecha_modelo_mercado"], "mov_linea": mejor["mov_linea"],
             "conteo": {"a_favor": len(favor), "en_contra": len(contra)}, "por_que_si": razones_si, "por_que_no": razones_no,
-            "senales": mejor["senales"], "dudas": _dudas(rec, tipo, mejor, mejor["p_sharp"], mejor["fuente"]), "lados": evals}
+            "senales": mejor["senales"], "dudas": _dudas(rec, tipo, mejor, mejor["p_sharp"], mejor["fuente"]), "lados": evals,
+            "compra_linea": compra, "linea_referencia": mejor.get("linea_referencia")}
 
 
 def decidir_partido(rec, movs=None):

@@ -1524,7 +1524,7 @@ def registrar_predicciones(partidos, ruta):
             nom = "Games" if p["tipo"] == "tenis" else "Total"
             if (p["liga"], p["id"], nom) not in existentes:
                 fila("%s %s" % (nom, m["linea_total"]), "over" if m["p_over"] >= 0.5 else "under",
-                     m["p_over"] if m["p_over"] >= 0.5 else 1 - m["p_over"], linea=m["linea_total"])
+                     m["p_over"] if m["p_over"] >= 0.5 else 1 - m["p_over"], vm=m.get("total"), linea=m["linea_total"])   # vm = total esperado del modelo
         sp = m.get("spread")
         if sp and sp.get("linea_home") is not None and (p["liga"], p["id"], "Spread") not in existentes:
             fila("Spread %+g" % sp["linea_home"], "home" if sp["p_home"] >= 0.5 else "away",
