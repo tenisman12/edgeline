@@ -617,7 +617,8 @@ def _pred(g, c, fecha, eventos=None):
         if g["liga"] in AB.RUTAS and AB.aplica(g["liga"]):
             # capa de abridores (nucleo/abridores.py): KBO medida (ganador z 3.57, total MAE z 5.4); LMP solo si su medicion paso
             K_AB, ESC_AB = AB.coeficientes(g["liga"])
-            vh = AB.actual(BASE, g["home"].get("probable"), fecha, g["liga"]); va = AB.actual(BASE, g["away"].get("probable"), fecha, g["liga"])
+            vh = AB.actual(BASE, g["home"].get("probable"), fecha, g["liga"], g["home"].get("nombre"))
+            va = AB.actual(BASE, g["away"].get("probable"), fecha, g["liga"], g["away"].get("nombre"))
             if vh and va:
                 sh, sa = AB.carreras_salvadas(fila.get("df_home"), vh), AB.carreras_salvadas(fila.get("df_away"), va)
                 import math as _m

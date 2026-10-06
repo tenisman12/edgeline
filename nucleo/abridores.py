@@ -20,7 +20,22 @@ IP_PRIOR = 30.0
 
 # liga -> archivo de lanzadores por juego (una fila por lanzador; columna abridor = 1 para el abridor)
 RUTAS = {"kbo": ("datos", "jugadores", "kbo_lanzadores.csv"),
-         "lmp": ("datos", "abridores", "lmp_lanzadores.csv")}
+         "lmp": ("datos", "abridores", "lmp_lanzadores.csv"),
+         "npb": ("datos", "abridores", "npb_lanzadores.csv")}
+
+
+def _clave(r):
+    """nombre del lanzador: en NPB el japones (la fuente mezcla romaji y kanji entre temporadas; el probable viene en kanji)."""
+    if (r.get("liga") or "").upper() == "NPB" and r.get("jugador_jp"):
+        return r["jugador_jp"].strip()
+    return (r.get("jugador") or "").strip()
+
+
+def _es_abridor(r):
+    return str(r.get("abridor")).replace(".0", "") == "1" or str(r.get("orden_salida")).replace(".0", "") == "1"
+
+
+_EQUIPO = {}
 
 _CACHE = {}
 
@@ -86,16 +101,17 @@ def _recorrer(rows, hasta=None):
     for fch in sorted(por_fecha):
         dia = por_fecha[fch]
         for r in dia:
-            if str(r.get("abridor")) == "1":
-                out[(r["game_id"], r["team"])] = _valor(hist, liga, (r.get("jugador") or "").strip(), int(fch[:4]))
+            if _es_abridor(r):
+                out[(r["game_id"], r["team"])] = _valor(hist, liga, _clave(r), int(fch[:4]))
         for r in dia:
-            nom = (r.get("jugador") or "").strip()
+            nom = _clave(r)
+            _EQUIPO[nom] = r.get("team") or ""
             o, k, hr, er = (_f(r.get(c)) or 0.0 for c in ("outs", "k", "hr", "er"))
             bb = _f(r.get("bb_hbp"))
             if bb is None:                                   # esquema MLB Stats API: bb y hbp por separado
                 bb = (_f(r.get("bb")) or 0.0) + (_f(r.get("hbp")) or 0.0)
             liga["outs"] += o; liga["k"] += k; liga["bb"] += bb; liga["hr"] += hr; liga["er"] += er
-            if str(r.get("abridor")) == "1":
+            if _es_abridor(r):
                 hist.setdefault(nom, []).append((int(fch[:4]), o, k, bb, hr))
     return out, hist, liga
 
@@ -120,7 +136,7 @@ def historicos(base, liga="kbo"):
     return _CACHE[k]
 
 
-def actual(base, nombre, fecha, liga_="kbo"):
+def actual(base, nombre, fecha, liga_="kbo", equipo=None):
     """(fip_encogido, ip_esperadas, aperturas, fip_liga) del abridor anunciado, con todo lo anterior a 'fecha'."""
     k = ("act", base, fecha, liga_)
     if k not in _CACHE:
@@ -128,9 +144,22 @@ def actual(base, nombre, fecha, liga_="kbo"):
         _CACHE[k] = (hist, liga)
     hist, liga = _CACHE[k]
     nom = (nombre or "").strip()
+    if nom and nom not in hist and liga_ == "npb":
+        nom = _buscar_npb(hist, nom, equipo)
     if not nom or nom not in hist:
         return None
     return _valor(hist, liga, nom, int(fecha[:4]))
+
+
+def _buscar_npb(hist, corto, equipo):
+    """El probable de NPB llega abreviado en kanji ('西勇' = 西 勇輝). Busca nombres que empiezan asi; si hay varios, se queda
+    con el del equipo (el box dice 'Giants', el calendario 'Yomiuri Giants'). Sin un unico candidato devuelve None."""
+    c = corto.replace(" ", "").replace("\u3000", "")
+    cand = [n for n in hist if n.replace(" ", "").replace("\u3000", "").startswith(c)]
+    if len(cand) > 1 and equipo:
+        eq = (equipo or "").lower()
+        cand = [n for n in cand if (_EQUIPO.get(n) or "").lower() and (_EQUIPO[n].lower() in eq or eq in _EQUIPO[n].lower())]
+    return cand[0] if len(cand) == 1 else None
 
 
 def carreras_salvadas(ra_equipo, v):

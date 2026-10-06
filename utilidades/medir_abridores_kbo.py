@@ -17,6 +17,7 @@ Escribe modelos/abridores_<liga>.json (--liga kbo por defecto; --liga lmp para L
 import csv, json, math, os, sys, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from nucleo import io, features as F
+from nucleo import abridores as _AB
 from modelos import beisbol as B
 
 IP_PRIOR = 30.0
@@ -60,9 +61,9 @@ def valores_abridor(rows):
         cf = (9 * liga["er"] / ip_l - (13 * liga["hr"] + 3 * liga["bb"] - 2 * liga["k"]) / ip_l) if ip_l > 300 else 3.2
         lg_fip = (13 * liga["hr"] + 3 * liga["bb"] - 2 * liga["k"]) / ip_l + cf if ip_l > 300 else 4.6
         for r in dia:
-            if str(r.get("abridor")) != "1":
+            if not _AB._es_abridor(r):
                 continue
-            nom = (r.get("jugador") or "").strip()
+            nom = _AB._clave(r)
             temp = int(fch[:4])
             h = [x for x in hist.get(nom, []) if x[0] >= temp - 1]
             outs = sum(x[1] for x in h); ip = outs / 3.0
@@ -71,13 +72,13 @@ def valores_abridor(rows):
             ip_esp = ((ip / len(h)) * len(h) + 5.0 * 5) / (len(h) + 5) if h else 5.0
             out[(r["game_id"], r["team"])] = (fip_s, ip_esp, len(h), lg_fip)
         for r in dia:                                 # despues de usar el dia, se suma
-            nom = (r.get("jugador") or "").strip()
+            nom = _AB._clave(r)
             o, k, hr, er = (_f(r.get(c)) or 0.0 for c in ("outs", "k", "hr", "er"))
             bb = _f(r.get("bb_hbp"))
             if bb is None:
                 bb = (_f(r.get("bb")) or 0.0) + (_f(r.get("hbp")) or 0.0)
             liga["outs"] += o; liga["k"] += k; liga["bb"] += bb; liga["hr"] += hr; liga["er"] += er
-            if str(r.get("abridor")) == "1":
+            if _AB._es_abridor(r):
                 hist.setdefault(nom, []).append((int(fch[:4]), o, k, bb, hr))
     return out
 

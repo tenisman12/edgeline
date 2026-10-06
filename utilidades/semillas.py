@@ -29,6 +29,8 @@ DESTINOS = {
     # LMP (workflow "lmp"): temporadas rellenadas desde la MLB Stats API y lanzadores por juego para la capa de abridores
     "lmp_historial.csv": (os.path.join("datos", "beisbol.csv"), lambda r: (str(r.get("gamePk")).replace(".0", ""), str(r.get("is_home")).replace(".0", ""))),
     "lmp_lanzadores.csv": (os.path.join("datos", "abridores", "lmp_lanzadores.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("jugador"))),
+    # NPB: lanzadores por juego 2022-2026 del Nippon Baseball Data Repository (capa de abridores medida el 6-oct)
+    "npb_lanzadores.csv": (os.path.join("datos", "abridores", "npb_lanzadores.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("player_id"))),
 }
 
 

@@ -365,7 +365,7 @@ def cmd_npb_repo(a):
                 if r.get("pitching_IP") not in (None, "", "NA"):
                     x = dict(base)
                     orden = r.get("pitcher_order_number") or ""
-                    x["abridor"] = 1 if str(orden) == "1" or str(r.get("pitching_GS")) in ("1", "1.0") else 0
+                    x["abridor"] = 1 if str(orden).replace(".0", "") == "1" or str(r.get("pitching_GS")) in ("1", "1.0") else 0
                     x["orden_salida"] = orden
                     x["ip"] = r.get("pitching_IP"); x["outs"] = ip_a_outs(r.get("pitching_IP_str") or r.get("pitching_IP"))
                     for k_out, k_in in (("h", "pitching_H"), ("r", "pitching_R"), ("er", "pitching_ER"), ("bb", "pitching_BB"),
