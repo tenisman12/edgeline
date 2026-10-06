@@ -8,6 +8,7 @@ Actions, en cada actualizacion, "mezcla" semillas/ con datos/: solo AGREGA filas
     cd C:\\Edgeline_repo
     $env:EDGELINE_BASE = "C:\\Edgeline_repo"
     python utilidades\\semillas.py exportar kbo      (data_maestra\\baseball_boxscores.csv y datos\\beisbol.csv -> semillas\\kbo_historial.csv)
+    python utilidades\\semillas.py exportar kbo_box  (data_maestra\\kbo_box.csv y kbo_lanzadores -> semillas\\)
     python utilidades\\semillas.py exportar xg       (datos\\equipos\\nhl_xg_partidos.csv -> semillas\\nhl_xg_partidos.csv)
     python utilidades\\semillas.py mezclar           (semillas\\ -> datos\\ ; lo corre actualizar_todo.py solo)
     python utilidades\\semillas.py estado
@@ -18,9 +19,12 @@ BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.pat
 SEM = os.path.join(BASE, "semillas")
 csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
 
-# semilla -> (destino en datos, llave)
+# semilla -> (destino en datos, llave). LLENAR: semillas que no agregan filas sino que llenan celdas vacias de filas existentes
+LLENAR = {"kbo_box.csv"}
 DESTINOS = {
     "kbo_historial.csv": (os.path.join("datos", "beisbol.csv"), lambda r: (str(r.get("gamePk")).replace(".0", ""), str(r.get("is_home")).replace(".0", ""))),
+    "kbo_box.csv": (os.path.join("datos", "beisbol.csv"), lambda r: (str(r.get("gamePk")).replace(".0", ""), str(r.get("is_home")).replace(".0", ""))),
+    "kbo_lanzadores.csv": (os.path.join("datos", "jugadores", "kbo_lanzadores.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("jugador"))),
     "nhl_xg_partidos.csv": (os.path.join("datos", "equipos", "nhl_xg_partidos.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("situation"))),
 }
 
@@ -57,6 +61,14 @@ def exportar(que):
         ruta = os.path.join(SEM, "kbo_historial.csv"); escribir(ruta, cols, filas)
         temps = sorted({(r.get("game_date") or "")[:4] for r in filas})
         print("KBO: %d filas (%d juegos), temporadas %s -> %s" % (len(filas), len(filas) // 2, ", ".join(temps), ruta))
+    elif que == "kbo_box":
+        for nombre, origen in (("kbo_box.csv", os.path.join(BASE, "data_maestra", "kbo_box.csv")),
+                               ("kbo_lanzadores.csv", os.path.join(BASE, "datos", "jugadores", "kbo_lanzadores.csv"))):
+            c, rs = leer(origen)
+            if not rs:
+                print("No existe %s: corre antes colectores\\recolectar_kbo_box.py" % origen); return 1
+            escribir(os.path.join(SEM, nombre), c, rs)
+            print("%s: %d filas" % (nombre, len(rs)))
     elif que == "xg":
         c, rs = leer(os.path.join(BASE, "datos", "equipos", "nhl_xg_partidos.csv"))
         if not rs:
@@ -64,7 +76,7 @@ def exportar(que):
         ruta = os.path.join(SEM, "nhl_xg_partidos.csv"); escribir(ruta, c, rs)
         print("xG NHL: %d filas, %s -> %s, en %s" % (len(rs), min(r["game_date"] for r in rs), max(r["game_date"] for r in rs), ruta))
     else:
-        print("exportar kbo | exportar xg"); return 1
+        print("exportar kbo | exportar kbo_box | exportar xg"); return 1
     print("Sube con: git add semillas && git commit -m \"semillas %s\" && git push origin main" % que)
     return 0
 
@@ -78,6 +90,20 @@ def mezclar():
             continue
         ruta = os.path.join(BASE, dest)
         cd, dat = leer(ruta)
+        if nombre in LLENAR:
+            idx = {llave(r): r for r in dat}
+            celdas = 0
+            for r in sem:
+                d = idx.get(llave(r))
+                if not d:
+                    continue
+                for c, v in r.items():
+                    if (c.startswith("bat_") or c.startswith("pit_")) and v not in (None, "") and (d.get(c) in (None, "")):
+                        d[c] = v; celdas += 1
+            if celdas:
+                cols = cd + [c for c in cs if (c.startswith("bat_") or c.startswith("pit_")) and c not in cd]
+                escribir(ruta, cols, dat)
+            print("  %-22s %d celdas llenadas -> %s" % (nombre, celdas, dest)); continue
         ya = {llave(r) for r in dat}
         nuevas = [r for r in sem if llave(r) not in ya]
         if not nuevas:
