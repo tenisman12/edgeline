@@ -555,7 +555,10 @@ def _pred(g, c, fecha, eventos=None):
             nota += " Back-to-back: %s (ofensiva x%.2f, defensa x%.2f, estimado de los datos)." % (
                 " y ".join(n for n, k in ((g["home"]["nombre"], "home_b2b"), (g["away"]["nombre"], "away_b2b")) if d.get(k)),
                 d.get("factor_of", 1.0), d.get("factor_df", 1.0))
-        p_h, capas = _ajuste_capas_nhl(r["p_home"], h, a)
+        if getattr(hockey, "XG_W", 0) > 0:      # el modelo ya usa xG: la capa de tiros/PDO (medida sobre goles reales) contaria doble
+            p_h, capas = r["p_home"], {"aplicado": False, "motivo": "el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales"}
+        else:
+            p_h, capas = _ajuste_capas_nhl(r["p_home"], h, a)
         if capas.get("aplicado"):
             nota += " Capas medidas (tiros L10 %+.1f, PDO %+.3f): %+.1f pp al local." % (capas["dif_tiros"], capas["dif_pdo"], capas["ajuste_pp"])
         return {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "goles", "capas_medidas": capas,

@@ -19,9 +19,10 @@ import argparse, csv, io, os, sys, time, urllib.request
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SALIDA = os.path.join(BASE, "datos", "equipos", "nhl_xg_partidos.csv")
 URL = "https://moneypuck.com/moneypuck/playerData/careers/gameByGame/%s/teams/%s.csv"
-EQUIPOS_MP = ["ANA", "ARI", "BOS", "BUF", "CAR", "CBJ", "CGY", "CHI", "COL", "DAL", "DET", "EDM", "FLA", "L.A", "MIN",
-              "MTL", "N.J", "NSH", "NYI", "NYR", "OTT", "PHI", "PIT", "S.J", "SEA", "STL", "T.B", "TOR", "UTA", "VAN",
+EQUIPOS_MP = ["ANA", "ARI", "BOS", "BUF", "CAR", "CBJ", "CGY", "CHI", "COL", "DAL", "DET", "EDM", "FLA", "LAK", "MIN",
+              "MTL", "NJD", "NSH", "NYI", "NYR", "OTT", "PHI", "PIT", "SJS", "SEA", "STL", "TBL", "TOR", "UTA", "VAN",
               "VGK", "WPG", "WSH"]
+ALTERNOS = {"LAK": "L.A", "NJD": "N.J", "SJS": "S.J", "TBL": "T.B"}     # MoneyPuck ha usado los dos nombres de archivo
 A_NUESTRO = {"L.A": "LAK", "N.J": "NJD", "S.J": "SJS", "T.B": "TBL"}
 CAMPOS = [("xGoalsFor", "xgf"), ("xGoalsAgainst", "xga"), ("xGoalsPercentage", "xg_pct"),
           ("corsiPercentage", "corsi_pct"), ("fenwickPercentage", "fenwick_pct"),
@@ -63,10 +64,16 @@ def main():
     nuevas, fallos = [], []
     for tipo, carpeta in (("REG", "regular"), ("POST", "playoffs")):
         for t in EQUIPOS_MP:
-            try:
-                rows = bajar(URL % (carpeta, t))
-            except Exception as e:
-                fallos.append("%s %s: %s" % (carpeta, t, str(e)[:60])); continue
+            rows = None
+            for nombre in (t, ALTERNOS.get(t)):
+                if not nombre:
+                    continue
+                try:
+                    rows = bajar(URL % (carpeta, nombre)); break
+                except Exception as e:
+                    err = str(e)[:60]
+            if rows is None:
+                fallos.append("%s %s: %s" % (carpeta, t, err)); continue
             n = 0
             for r in rows:
                 try:
@@ -100,6 +107,8 @@ def main():
     with open(SALIDA, "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(filas)
     print("Listo: %d filas (%d nuevas) en %s" % (len(filas), len(filas) - antes, SALIDA))
+    eqs = sorted({r["team"] for r in filas})
+    print("Equipos (%d): %s" % (len(eqs), " ".join(eqs)))
     if fallos:
         print("Fallaron %d descargas (equipos que no existen en esa carpeta es normal, p.ej. ARI/UTA):" % len(fallos))
         for x in fallos[:10]:

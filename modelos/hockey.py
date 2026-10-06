@@ -13,6 +13,10 @@ stats de portero). Todo as-of. Predice:
 
 Metodo: ELO por goles + tasas ofensiva/defensiva as-of -> goles esperados (Log5) ->
 dos Poisson -> todos los mercados. Calibracion Platt sobre las predicciones as-of.
+Desde el 5-oct-2026 las tasas mezclan goles reales (25 %) con xG de MoneyPuck por partido (75 %,
+datos/equipos/nhl_xg_partidos.csv) y olvidan 3 % por juego. Walk-forward 24 meses: ganador +1.4 % -> +2.3 %
+(publicable, z ~4); mejora en ventanas de 12, 18, 24 y 30 meses. Totales: el total se encoge a la mitad hacia
+el promedio de la liga (MAE 1.867 -> 1.862); sigue sin superar al promedio con datos de equipo.
 
 Solo stdlib.
 """
@@ -26,6 +30,10 @@ except ImportError:
 
 BASE_ELO = 1500.0; K = 6.0; HFA = 35.0; REGR = 0.75; ESCALA = 400.0
 VENT_LOCAL = 0.04; SHRINK = 12; OT_LOCAL = 0.55   # ventaja local en OT
+XG_W = float(os.environ.get("EDGELINE_NHL_XG_W", "0.75"))     # peso del xG (MoneyPuck) frente a goles reales (validado 5-oct-2026)
+DECAY = float(os.environ.get("EDGELINE_NHL_DECAY", "0.97"))  # olvido por juego de cada equipo (1.0 = sin olvido; validado 5-oct-2026)
+LG_DECAY = float(os.environ.get("EDGELINE_NHL_LG_DECAY", "1.0"))  # olvido por juego del promedio de goles de la liga
+TOT_K = float(os.environ.get("EDGELINE_NHL_TOT_K", "0.5"))     # cuanto del desvio del total esperado contra la liga se conserva
 B2B_MIN = 100                                      # juegos back-to-back minimos antes de usar el factor estimado
 
 
@@ -69,10 +77,39 @@ def _juegos(liga=None):
     return juegos
 
 class Eq:
-    __slots__=("elo","gf","ga","n","sv","s0","ult","fecha_ult")
-    def __init__(s): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None; s.fecha_ult=None
-    def of(s,lg): return (s.gf+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
-    def df(s,lg): return (s.ga+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
+    __slots__=("elo","gf","ga","n","sv","s0","ult","fecha_ult","xf","xa","nx")
+    def __init__(s): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None; s.fecha_ult=None; s.xf=0.0; s.xa=0.0; s.nx=0.0
+    def _mezcla(s, g, x, lg):
+        rg=(g+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
+        if XG_W<=0 or s.nx<=0: return rg
+        rx=(x+SHRINK*lg)/(s.nx+SHRINK)
+        return (1-XG_W)*rg+XG_W*rx
+    def of(s,lg): return s._mezcla(s.gf, s.xf, lg)
+    def df(s,lg): return s._mezcla(s.ga, s.xa, lg)
+    def sumar(s, gf, ga, xgf=None, xga=None):
+        if DECAY<1.0:
+            s.gf*=DECAY; s.ga*=DECAY; s.n*=DECAY; s.xf*=DECAY; s.xa*=DECAY; s.nx*=DECAY
+        s.gf+=gf; s.ga+=ga; s.n+=1
+        if xgf is not None and xga is not None:
+            s.xf+=xgf; s.xa+=xga; s.nx+=1
+
+
+_XG = None
+def _xg_partidos():
+    """{(gamePk, team): (xGF, xGA)} de datos/equipos/nhl_xg_partidos.csv (situacion 'all'). Vacio si no existe."""
+    global _XG
+    if _XG is None:
+        _XG = {}
+        ruta = os.path.join(io.BASE, "datos", "equipos", "nhl_xg_partidos.csv")
+        if os.path.exists(ruta):
+            import csv
+            with open(ruta, encoding="utf-8-sig", newline="") as fh:
+                for r in csv.DictReader(fh):
+                    if r.get("situation") == "all":
+                        a, b = _f(r.get("xgf")), _f(r.get("xga"))
+                        if a is not None and b is not None:
+                            _XG[(str(r.get("game_id")), r.get("team"))] = (a, b)
+    return _XG
 
 class _B2B:
     """Acumula goles reales y esperados de los equipos en back-to-back para estimar el factor as-of."""
@@ -111,7 +148,7 @@ def entrenar(liga=None, min_j=8):
             t.ult=season(f)
         bh, ba = _es_b2b(th.fecha_ult, f), _es_b2b(ta.fecha_ult, f)
         # prediccion as-of (con el factor de descanso estimado hasta ayer)
-        if th.n>=min_j and ta.n>=min_j:
+        if th.n>=min_j*(1 if DECAY>=1 else 0.5) and ta.n>=min_j*(1 if DECAY>=1 else 0.5):
             xh0, xa0 = _xg_base(th, ta, lg)
             xh1, xa1 = _aplicar_b2b(xh0, xa0, bh, ba, b2b.factores())
             cal.append((_prob_home(xh1, xa1), 1 if gh>ga_ else 0))
@@ -122,9 +159,10 @@ def entrenar(liga=None, min_j=8):
         res=1.0 if gh>ga_ else 0.0
         mov=math.log(abs(gh-ga_)+1)
         d=K*mov*(res-esp); th.elo+=d; ta.elo-=d
-        th.gf+=gh; th.ga+=ga_; th.n+=1; ta.gf+=ga_; ta.ga+=gh; ta.n+=1
+        X=_xg_partidos(); xh_=X.get((str(gp), h.get("team"))); xa_=X.get((str(gp), a.get("team")))
+        th.sumar(gh, ga_, *(xh_ or (None, None))); ta.sumar(ga_, gh, *(xa_ or (None, None)))
         th.fecha_ult=f; ta.fecha_ult=f
-        tot+=gh+ga_; ng+=2; lg=tot/ng
+        tot=tot*LG_DECAY+gh+ga_; ng=ng*LG_DECAY+2; lg=tot/ng
     a,b=_platt(cal)
     f_of, f_df = b2b.factores()
     return {"eq":eq,"lg":lg,"platt":(a,b),"cal":cal,
@@ -177,7 +215,9 @@ def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fe
     a,b=estado["platt"]
     lo=lambda p:math.log(min(max(p,1e-6),1-1e-6)/(1-min(max(p,1e-6),1-1e-6)))
     p=_sig(a*lo(_prob_home(xh,xa))+b)
-    mu=xh+xa; piso=int(math.floor(linea_total))
+    mu=xh+xa
+    lg2=2*estado["lg"]; mu=lg2+TOT_K*(mu-lg2)
+    piso=int(math.floor(linea_total))
     p_over=1-sum(_pois(mu,k) for k in range(piso+1))
     # puck line -1.5: P(home - away >= 2) en regulacion (aprox)
     kmax=12; ph=[_pois(xh,k) for k in range(kmax)]; pa=[_pois(xa,k) for k in range(kmax)]
