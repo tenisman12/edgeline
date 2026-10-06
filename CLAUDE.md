@@ -61,7 +61,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   y conteo de señales de la lectura a favor / en contra. Coeficientes en `modelos/decidir_beisbol.json` (`utilidades/pesos_capas.py`).
 - `salida/picks_del_dia.json` y `salida/historial_picks_dia.csv`: LA LISTA OFICIAL (`utilidades/picks_del_dia.py`): decisión de ganador y total
   para todos los partidos, y los mejores picks del día (beisbol: sistema estimado con confianza alta/media; demás deportes: Pick Premium
-  premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 3 al día y 10% del bank). Solo ganador y totales.
+  premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 4 al día y 10% del bank). Solo ganador y totales. Cada pick lleva
+  confianza, `por_que_si` y `por_que_no` (en picks_del_dia.json y en historial_picks_dia.csv).
   Se excluye (liga, mercado) cuando el historial en vivo promete ≥10 pp más de lo que acierta (n≥30, z≥2): `picks_del_dia.descalibrados()`.
   Al 6-oct-2026: totales de NCAAF (60% vs 39%, n 57) y games de WTA (58% vs 44%, n 57). Leans, mínima, revisar y lecturas
   sin precio se miden pero no son picks. Es lo único que se recomienda y lo que mide el track record público.

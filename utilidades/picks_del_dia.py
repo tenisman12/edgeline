@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import decidir_v2 as V2
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "3"))   # maximo 3 al dia (Alejandro, 6-oct-2026)
+MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))   # maximo 4 al dia, cada uno con confianza y por que si / por que no (Alejandro, 6-oct-2026)
 TOPE_BANK = 0.10                      # suma de stakes del dia
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
 # Ligas donde el reparto del TOTAL no se usa por sesgo de fuente. Vacio: NHL salio del veto porque la linea
@@ -120,6 +120,22 @@ def decision(rec, dec_bb=None, v2=None):
 _DESCAL = None
 
 
+SENAL_TXT = {"forma": "forma reciente", "h2h": "historial directo", "osciladores": "osciladores", "bullpen": "bullpen",
+             "racha": "racha", "consenso": "modelo y mercado del mismo lado", "fuerza": "fuerza (ELO)", "movimiento": "movimiento de linea",
+             "abridor": "abridor", "contexto": "contexto"}
+
+
+def _abridor_txt(d, lado, a_favor):
+    det = d.get("detalle_modelo") or {}
+    ca = det.get("carreras_abridor")
+    if ca in (None, 0, 0.0):
+        return []
+    mio = ca if lado == "home" else -ca
+    if (mio > 0) != a_favor:
+        return []
+    return ["abridor %s %.2f carreras" % ("a favor" if mio > 0 else "en contra", abs(mio))]
+
+
 def descalibrados():
     """(liga, 'Ganador'|'Total') donde el historial en vivo promete mucho mas de lo que acierta: n >= 30,
     p media - acierto >= 10 pp y z >= 2 (binomial). Ahi el modelo no se apuesta hasta que se corrija.
@@ -179,7 +195,8 @@ def _candidatos(rec, dec_bb, v2=None):
                         "razon": ("p final %.1f%% (mercado %s, modelo %s, peso %.2f) contra %.2f | si: %s | no: %s | dudas: %s" % (
                             100 * d["p_final"], ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "-",
                             ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", d["peso_modelo"], d["decimal"],
-                            "; ".join(d["por_que_si"][1:]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))[:900]})
+                            "; ".join(d["por_que_si"][1:]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))[:900],
+                        "_si": list(d["por_que_si"][1:]), "_no": list(d["por_que_no"]) + [x["duda"] for x in d["dudas"]]})
         return out
     if rec.get("deporte") == "beisbol":
         d = dec_bb.get((rec["liga"], str(rec["id"]), rec["fecha"]))
@@ -189,7 +206,10 @@ def _candidatos(rec, dec_bb, v2=None):
             out.append({"origen": "sistema estimado", "mercado": mercado, "lado": k["lado"], "pick": k["texto"], "cuota": k["cuota"], "decimal": k["decimal"],
                         "casa": k.get("casa"), "p": k["p"], "ev": k["ev"], "confianza": d["confianza"], "stake": STAKE[d["confianza"]],
                         "senales": "%d a favor / %d en contra" % (k.get("senales_favor", 0), k.get("senales_contra", 0)),
-                        "razon": "p final %.1f%% (Pinnacle %.1f%%, modelo %.1f%%) contra %s" % (100 * d["p_final"], 100 * (d["p_sharp"] or 0), 100 * (d["p_modelo"] or 0), k["cuota"])})
+                        "razon": "p final %.1f%% (Pinnacle %.1f%%, modelo %.1f%%) contra %s" % (100 * d["p_final"], 100 * (d["p_sharp"] or 0), 100 * (d["p_modelo"] or 0), k["cuota"]),
+                        "_si": ["modelo %.1f%% contra Pinnacle %.1f%%" % (100 * (d["p_modelo"] or 0), 100 * (d["p_sharp"] or 0))] + _abridor_txt(d, k["lado"], True)
+                               + [SENAL_TXT.get(x, x) for x in ((k.get("senales") or {}).get("a_favor") or [])],
+                        "_no": _abridor_txt(d, k["lado"], False) + [SENAL_TXT.get(x, x) for x in ((k.get("senales") or {}).get("en_contra") or [])]})
         return out
     for k in rec.get("picks") or []:
         if k.get("nivel") not in ("premium", "pick") or k.get("ev") is None or k.get("cuota") is None:
@@ -201,7 +221,9 @@ def _candidatos(rec, dec_bb, v2=None):
             continue
         out.append({"origen": "pick premium", "mercado": k["mercado"], "lado": k["lado"], "pick": k["texto"], "cuota": k["cuota"], "decimal": round(dec, 3),
                     "casa": k.get("casa"), "p": k.get("p_final"), "ev": k["ev"], "confianza": k["nivel"], "stake": STAKE[k["nivel"]],
-                    "senales": "%.0f pts" % (k.get("puntaje") or 0), "razon": (k.get("razonamiento") or "")[:220]})
+                    "senales": "%.0f pts" % (k.get("puntaje") or 0), "razon": (k.get("razonamiento") or "")[:220],
+                    "_si": [x.strip() for x in (k.get("razonamiento") or "").split(". ") if x.strip() and "Decision" not in x][:5],
+                    "_no": list(k.get("razones") or [])})
     return out
 
 
@@ -320,6 +342,18 @@ def main():
                              torneo=p.get("torneo") or p.get("liga_nombre"), ronda=p.get("ronda") or p.get("nota"), cancha=p.get("cancha") or p.get("superficie") or p.get("superficie_estimada"),
                              publico_boletos=tk, publico_dinero=mn, notas_home=at.get("home"), notas_away=at.get("away"),
                              mov_linea=mv, senales_mercado=sen))
+            cc = cand[-1]
+            si, no = list(cc.pop("_si", None) or []), list(cc.pop("_no", None) or [])
+            if mv is not None and abs(mv) >= 1.0:
+                (si if mv > 0 else no).append("linea sharp %s %+.1f pp desde la apertura" % ("a favor" if mv > 0 else "en contra", mv))
+            if sen and "SOLO PUBLICO" in sen:
+                no.append("movimiento hecho por el publico (%s)" % sen[:80])
+            if tk is not None:
+                if tk >= 70: no.append("publico cargado en este lado (%s%% de boletos)" % tk)
+                elif tk <= 35: si.append("publico del otro lado (%s%% de boletos aqui)" % tk)
+            ruido = ("capas medidas no aplicadas",)
+            si = [x for x in si if not x.startswith(ruido)]; no = [x for x in no if not x.startswith(ruido)]
+            cc["por_que_si"] = si[:6]; cc["por_que_no"] = no[:6]
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
@@ -338,6 +372,8 @@ def main():
         sede = ("  [%s%s]" % (c.get("torneo") or "", (" - " + c["ronda"]) if c.get("ronda") else "")) if c.get("torneo") else ""
         print("  %d. %-5s %s %s | %-22s %-28s cuota %7s EV %+5.1f%% %-7s stake %.0f%% | %s%s%s" % (
             i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub, sede))
+        print("       por que si: %s" % ("; ".join(c.get("por_que_si") or []) or "-"))
+        print("       por que no: %s" % ("; ".join(c.get("por_que_no") or []) or "-"))
     if descartados:
         print("  candidatos fuera del tope: " + "; ".join("%s %s EV %+.1f%%" % (c["liga"], c["pick"], 100 * c["ev"]) for c in descartados[:6]))
     print("\nDECISION POR PARTIDO (ganador y total):")
@@ -355,7 +391,7 @@ def main():
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
             "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon",
-            "torneo", "ronda", "cancha"]
+            "torneo", "ronda", "cancha", "por_que_si", "por_que_no"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
@@ -381,7 +417,8 @@ def main():
         for c in picks:
             if (c["liga"], c["id"], c["fecha"]) in vistos:
                 continue
-            w.writerow(dict(c, registrado=ahora)); nuevos += 1
+            w.writerow(dict(c, registrado=ahora, por_que_si=" | ".join(c.get("por_que_si") or []),
+                            por_que_no=" | ".join(c.get("por_que_no") or []))); nuevos += 1
     print("\nEscrito: salida/picks_del_dia.json | historial_picks_dia.csv: %d picks nuevos" % nuevos)
 
 
