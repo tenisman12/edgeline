@@ -1,0 +1,79 @@
+name: historial largo (una vez)
+
+# Se corre A MANO (Actions -> "historial largo (una vez)" -> Run workflow), de preferencia de noche.
+# Amplia la historia de datos/<deporte>.csv para que la validacion y las mediciones tengan mas partidos:
+#   nhl  temporadas 2018-19 a 2022-23 (hoy empieza en 2023-24)
+#   mlb  2018 a 2021 (hoy empieza en 2022)
+#   nfl  2015 a 2020 (hoy empieza en 2021)
+#   nba  2018-19 a 2021-22 (stats.nba.com; puede bloquear a GitHub, se intenta)
+# Fusion por llave (no duplica ni pisa lo que ya hay). Comparte grupo con las corridas horarias: no se pisan.
+
+on:
+  workflow_dispatch:
+    inputs:
+      que:
+        description: "que ampliar (coma): nhl,mlb,nfl,nba"
+        default: "nhl,mlb,nfl,nba"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  historial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      QUE: ${{ github.event.inputs.que }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+          python actualizar_todo.py --estado
+
+      - name: Bajar historia
+        continue-on-error: true
+        timeout-minutes: 300
+        run: |
+          paso () { echo "::group::$*"; python "$@" || echo "::warning::$1 termino con error"; echo "::endgroup::"; }
+          case ",$QUE," in *,nhl,*) paso colectores/recolectar_hockey.py --desde 20182019 --hasta 20222023 ;; esac
+          case ",$QUE," in *,nfl,*) paso colectores/recolectar_americano.py --desde 2015 ;; esac
+          case ",$QUE," in *,nba,*) paso colectores/recolectar_nba.py --desde 2018 --hasta 2021 ;; esac
+          case ",$QUE," in *,mlb,*)
+            for y in 2018 2019 2020 2021; do paso colectores/recolectar_boxscores.py --liga mlb --desde "$y-03-15" --hasta "$y-11-10"; done ;;
+          esac
+
+      - name: Fusionar en datos/ y completar
+        run: |
+          python actualizar_todo.py --solo hockey,americano,nba,beisbol --solo-publicar
+          python utilidades/completar_datos.py --aplicar || true
+          python actualizar_todo.py --estado
+
+      - name: Guardar cobertura en main
+        continue-on-error: true
+        run: bash utilidades/subir_a_main.sh "historial largo - cobertura" salida/cobertura_datos.json
+
+      - name: Publicar datos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (historial largo) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
