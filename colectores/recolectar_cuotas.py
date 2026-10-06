@@ -177,7 +177,9 @@ def guardar_compacto(eventos, ahora):
                         hp = [d["home"][1] for d in cot.values() if "home" in d and d["home"][1] is not None]
                         pt = max(set(hp), key=hp.count) if hp else pt
                         cot = sharp._lados(ev, mk, pt)
-                tres = any("draw" in d for d in cot.values())
+                # 3 vias solo en futbol. En NHL/MLB algunas casas europeas cotizan el tiempo regular con empate: esas se
+                # descartan en _precio y queda el 2 vias (con Pinnacle), que es el mercado que se apuesta y el que mide el CLV.
+                tres = mk == "h2h" and str(ev.get("sport") or "").startswith("soccer") and any("draw" in d for d in cot.values())
                 lados_mk = {"h2h": ["home", "away"] + (["draw"] if tres else []), "totals": ["over", "under"], "spreads": ["home", "away"]}[mk]
                 pr = sharp._precio(cot, lados_mk)
                 for lado, x in pr.items():

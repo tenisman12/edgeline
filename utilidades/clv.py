@@ -59,11 +59,25 @@ def _ts(s):
 
 
 def cargar_fotos():
-    """(liga, home, away, mercado, lado, linea) -> lista ordenada de fotos (ts, p_sharp, ref_cuota, fuente, inicio)."""
+    """(liga, home, away, mercado, lado, linea) -> lista ordenada de fotos (ts, p_sharp, ref_cuota, fuente, inicio).
+    Fotos viejas de NHL/MLB guardadas a 3 vias (tiempo regular con empate, casas europeas): se pasan a 2 vias
+    repartiendo el empate en proporcion (p / (1 - p_empate)) y sin cuota de referencia."""
     out = {}
+    filas = []
     for ruta in sorted(glob.glob(io.ruta("salida", "cuotas_sharp_*.csv"))):
         with open(ruta, encoding="utf-8-sig", newline="") as f:
-            for r in csv.DictReader(f):
+            filas += list(csv.DictReader(f))
+    empate = {(r.get("event_id"), r.get("ts_utc")): _f(r.get("p_sharp")) for r in filas
+              if r.get("mercado") == "h2h" and r.get("lado") == "draw" and not str(r.get("sport") or "").startswith("soccer")}
+    if True:
+        if True:
+            for r in filas:
+                if r.get("mercado") == "h2h" and not str(r.get("sport") or "").startswith("soccer"):
+                    if r.get("lado") == "draw":
+                        continue
+                    pe = empate.get((r.get("event_id"), r.get("ts_utc")))
+                    if pe and pe < 0.6:
+                        r = dict(r, p_sharp=str(_f(r.get("p_sharp")) / (1 - pe)), ref_cuota="")
                 lg = sharp.liga_de(r.get("sport") or "")
                 ts, ini = _ts(r.get("ts_utc")), _ts(r.get("commence_time"))
                 p = _f(r.get("p_sharp"))
@@ -97,6 +111,8 @@ def medir(fotos, liga, home, away, mercado, lado, registrado, cuota=None, linea=
         return None
     reg = _ts(registrado)
     cierre = serie[-1]
+    if cierre[4] > dt.datetime.now(dt.timezone.utc).replace(tzinfo=None):
+        return None                                  # el partido no ha empezado: todavia no hay cierre
     antes = [x for x in serie if reg and x[0] <= reg]
     al_reg = antes[-1] if antes else serie[0]
     if reg and reg > cierre[4]:

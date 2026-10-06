@@ -61,7 +61,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   y conteo de señales de la lectura a favor / en contra. Coeficientes en `modelos/decidir_beisbol.json` (`utilidades/pesos_capas.py`).
 - `salida/picks_del_dia.json` y `salida/historial_picks_dia.csv`: LA LISTA OFICIAL (`utilidades/picks_del_dia.py`): decisión de ganador y total
   para todos los partidos, y los mejores picks del día (beisbol: sistema estimado con confianza alta/media; demás deportes: Pick Premium
-  premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 4 al día y 10% del bank). Leans, mínima, revisar y lecturas
+  premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 3 al día y 10% del bank). Solo ganador y totales.
+  Se excluye (liga, mercado) cuando el historial en vivo promete ≥10 pp más de lo que acierta (n≥30, z≥2): `picks_del_dia.descalibrados()`.
+  Al 6-oct-2026: totales de NCAAF (60% vs 39%, n 57) y games de WTA (58% vs 44%, n 57). Leans, mínima, revisar y lecturas
   sin precio se miden pero no son picks. Es lo único que se recomienda y lo que mide el track record público.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
@@ -109,6 +111,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   (z 5.2), WTA bo3 4.1% -> 4.6% (z 8.4). Aplicado en plataforma y en la validacion. Torneo rapido -> menos breaks.
   El torneo de ESPN se casa con el de TML por el ultimo partido de los dos jugadores (o alias).
 - CLV (`utilidades/clv.py`, salida/clv.json): picks contra el cierre de Pinnacle y si el cierre se mueve hacia el modelo.
+  NHL/MLB: las fotos h2h a 3 vias (casas europeas, tiempo regular) se pasan a 2 vias; desde el 6-oct el colector guarda
+  2 vias fuera del futbol. El CLV solo se calcula cuando el partido ya empezo.
 
 ## Completar datos (utilidades/completar_datos.py)
 Corre al final de `actualizar_todo.py` (cada hora en Actions). Llena las celdas vacias de `datos/<deporte>.csv` con

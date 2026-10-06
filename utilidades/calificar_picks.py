@@ -209,7 +209,14 @@ def _cierres():
     for ruta in sorted(glob.glob(io.ruta("salida", "cuotas_sharp_*.csv"))):
         try:
             with open(ruta, encoding="utf-8-sig", newline="") as f:
-                for r in csv.DictReader(f):
+                filas = list(csv.DictReader(f))
+            # fotos de NHL/MLB guardadas a 3 vias (tiempo regular con empate): no son el mercado que se apuesta
+            tres = {(r.get("event_id"), r.get("ts_utc")) for r in filas if r.get("mercado") == "h2h" and r.get("lado") == "draw"
+                    and not str(r.get("sport") or "").startswith("soccer")}
+            if True:
+                for r in filas:
+                    if r.get("mercado") == "h2h" and (r.get("event_id"), r.get("ts_utc")) in tres:
+                        continue
                     lg = sharp.liga_de(r.get("sport") or "")
                     if not lg or (r.get("ts_utc") or "") > (r.get("commence_time") or ""):
                         continue

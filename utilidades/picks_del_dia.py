@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import decidir_v2 as V2
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))
+MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "3"))   # maximo 3 al dia (Alejandro, 6-oct-2026)
 TOPE_BANK = 0.10                      # suma de stakes del dia
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
 # Ligas donde el reparto del TOTAL no se usa por sesgo de fuente. Vacio: NHL salio del veto porque la linea
@@ -117,11 +117,56 @@ def decision(rec, dec_bb=None, v2=None):
     return g, t
 
 
+_DESCAL = None
+
+
+def descalibrados():
+    """(liga, 'Ganador'|'Total') donde el historial en vivo promete mucho mas de lo que acierta: n >= 30,
+    p media - acierto >= 10 pp y z >= 2 (binomial). Ahi el modelo no se apuesta hasta que se corrija.
+    Ejemplo (6-oct-2026): totales de NCAAF prometieron 60% y acertaron 39% (57 casos) contra la linea de la casa."""
+    global _DESCAL
+    if _DESCAL is not None:
+        return _DESCAL
+    import csv, math
+    _DESCAL = {}
+    ruta = os.path.join(BASE, "salida", "historial_predicciones_calificado.csv")
+    if not os.path.exists(ruta):
+        return _DESCAL
+    acc = {}
+    with io.open(ruta, encoding="utf-8-sig", newline="") as f:
+        for r in csv.DictReader(f):
+            if r.get("estado") != "calificado" or r.get("acierto") in ("", None):
+                continue
+            tipo = (r.get("mercado") or "").split()[0]
+            tipo = {"Games": "Total"}.get(tipo, tipo)
+            if tipo not in ("Ganador", "Total"):
+                continue
+            try:
+                p, y = float(r["p_modelo"]), int(float(r["acierto"]))
+            except (TypeError, ValueError):
+                continue
+            a = acc.setdefault((r.get("liga"), tipo), [0, 0.0, 0.0, 0.0])
+            a[0] += 1; a[1] += p; a[2] += y; a[3] += p * (1 - p)
+    for k, (n, sp, sy, var) in acc.items():
+        if n >= 30 and var > 0:
+            gap = (sp - sy) / n; z = (sp - sy) / math.sqrt(var)
+            if gap >= 0.10 and z >= 2.0:
+                _DESCAL[k] = {"n": n, "p_media": round(sp / n, 3), "acierto": round(sy / n, 3), "z": round(z, 2)}
+    return _DESCAL
+
+
 def candidatos(rec, dec_bb, v2=None):
     """picks apostables del partido segun su sistema: beisbol -> decidir; resto -> decidir_v2 (capas medidas)."""
     out = []
     if rec.get("pretemporada"):
         return out
+    out_ = _candidatos(rec, dec_bb, v2)
+    malos = descalibrados()
+    return [k for k in out_ if (rec.get("liga"), "Total" if str(k.get("mercado", "")).startswith(("Total", "Games")) else "Ganador") not in malos]
+
+
+def _candidatos(rec, dec_bb, v2=None):
+    out = []
     if v2 and rec.get("deporte") != "beisbol":
         for d in (v2.get("ganador"), v2.get("total")):
             if not d or d["confianza"] not in ("alta", "media", "baja") or d.get("decimal") is None or d["fuente"] == "sin_cuota":
