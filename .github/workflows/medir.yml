@@ -1,0 +1,85 @@
+name: medir capas (porteros, viajes, clima, arbitros, CLV)
+
+# Mide, fuera de muestra y con el protocolo de validacion (n >= 300, z >= 2, las dos mitades), las capas nuevas:
+#   porteros NHL (GSAx)    utilidades/medir_porteros_nhl.py   -> modelos/porteros_nhl.json
+#   viajes NHL/NBA         utilidades/medir_viajes.py         -> modelos/viajes.json
+#   clima MLB y umpire     utilidades/medir_clima_mlb.py      -> modelos/clima_mlb.json   (lo usa colectores/clima.py)
+#   clima NFL (Open-Meteo) utilidades/medir_clima_nfl.py      -> modelos/clima_nfl.json  + datos/equipos/nfl_clima.csv
+#   arbitros NHL           colectores/recolectar_arbitros_nhl.py -> modelos/arbitros_nhl.json + datos/equipos/nhl_arbitros.csv
+#   CLV                    utilidades/clv.py                  -> salida/clv.json
+# Corre a mano (Actions -> "medir capas" -> Run workflow) y solo cada lunes. Los .json van a main; los .csv nuevos a la rama datos.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "11 9 * * 1"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Traer datos (rama datos) y semillas
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+          python utilidades/semillas.py mezclar || true
+
+      - name: Porteros NHL (GSAx)
+        continue-on-error: true
+        run: python utilidades/medir_porteros_nhl.py
+
+      - name: Viajes NHL y NBA
+        continue-on-error: true
+        run: python utilidades/medir_viajes.py
+
+      - name: Clima y umpire MLB
+        continue-on-error: true
+        run: python utilidades/medir_clima_mlb.py
+
+      - name: Clima NFL (baja Open-Meteo archive y mide)
+        continue-on-error: true
+        timeout-minutes: 20
+        run: python utilidades/medir_clima_nfl.py
+
+      - name: Arbitros NHL (baja lo que falta y mide)
+        continue-on-error: true
+        timeout-minutes: 60
+        run: python colectores/recolectar_arbitros_nhl.py
+
+      - name: CLV
+        continue-on-error: true
+        run: python utilidades/clv.py
+
+      - name: Guardar mediciones en main
+        continue-on-error: true
+        run: bash utilidades/subir_a_main.sh "mediciones de capas" modelos/porteros_nhl.json modelos/viajes.json modelos/clima_mlb.json modelos/clima_nfl.json modelos/arbitros_nhl.json salida/clv.json salida/clv_detalle.csv
+
+      - name: Publicar datos nuevos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (mediciones) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos

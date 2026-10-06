@@ -34,6 +34,8 @@ XG_W = float(os.environ.get("EDGELINE_NHL_XG_W", "0.75"))     # peso del xG (Mon
 DECAY = float(os.environ.get("EDGELINE_NHL_DECAY", "0.97"))  # olvido por juego de cada equipo (1.0 = sin olvido; validado 5-oct-2026)
 LG_DECAY = float(os.environ.get("EDGELINE_NHL_LG_DECAY", "1.0"))  # olvido por juego del promedio de goles de la liga
 TOT_K = float(os.environ.get("EDGELINE_NHL_TOT_K", "0.5"))     # cuanto del desvio del total esperado contra la liga se conserva
+GSAX_BETA = float(os.environ.get("EDGELINE_NHL_GSAX_BETA", "0.25"))  # goles del rival por gol salvado sobre lo esperado (medido 5-oct-2026)
+GSAX_K, GSAX_N = 40, 40                            # encogimiento (aperturas) y ultimas N aperturas del portero
 B2B_MIN = 100                                      # juegos back-to-back minimos antes de usar el factor estimado
 
 
@@ -111,6 +113,45 @@ def _xg_partidos():
                             _XG[(str(r.get("game_id")), r.get("team"))] = (a, b)
     return _XG
 
+_GSAX = None
+def _gsax_hist():
+    """{(inicial, apellido): [(fecha, gsax)]} del abridor de cada partido: xG en contra del equipo (MoneyPuck 'all')
+    menos goles recibidos (sin el gol de shootout). Medido en utilidades/medir_porteros_nhl.py."""
+    global _GSAX
+    if _GSAX is None:
+        _GSAX = {}
+        X = _xg_partidos()
+        ruta = os.path.join(io.BASE, "datos", "hockey.csv")
+        if X and os.path.exists(ruta):
+            import csv
+            with open(ruta, encoding="utf-8-sig", newline="") as fh:
+                for r in csv.DictReader(fh):
+                    g = (r.get("starter_goalie") or "").strip(); x = X.get((str(r.get("gamePk") or "").split(".")[0], r.get("team")))
+                    ga = _f(r.get("goals_opp"))
+                    if not g or not x or ga is None:
+                        continue
+                    if (r.get("ended_in") or "") == "SO" and ga > (_f(r.get("goals")) or 0):
+                        ga -= 1
+                    _GSAX.setdefault(_llave_portero(g), []).append(((r.get("game_date") or "")[:10], x[1] - ga))
+            for v in _GSAX.values():
+                v.sort()
+    return _GSAX
+
+
+def _llave_portero(nombre):
+    import unicodedata
+    n = unicodedata.normalize("NFKD", nombre or "").encode("ascii", "ignore").decode().lower().replace(".", " ").split()
+    return (n[0][:1], n[-1]) if n else ("", "")
+
+
+def rating_portero(nombre, fecha=None):
+    """GSAx por juego del portero, as-of (aperturas antes de 'fecha'), encogido hacia 0. (rating, aperturas) o (None, 0)."""
+    v = [g for f, g in (_gsax_hist().get(_llave_portero(nombre)) or []) if not fecha or f < str(fecha)[:10]][-GSAX_N:]
+    if not v:
+        return None, 0
+    return sum(v) / (len(v) + GSAX_K), len(v)
+
+
 class _B2B:
     """Acumula goles reales y esperados de los equipos en back-to-back para estimar el factor as-of."""
     __slots__=("gf","xgf","ga","xga","n")
@@ -168,7 +209,7 @@ def entrenar(liga=None, min_j=8):
     return {"eq":eq,"lg":lg,"platt":(a,b),"cal":cal,
             "b2b":{"n":b2b.n,"factor_of":round(f_of,4),"factor_df":round(f_df,4)}}
 
-def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False)):
+def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False), gsax_home=None, gsax_away=None):
     eq,lg=estado["eq"],estado["lg"]
     th,ta=eq.get(home),eq.get(away)
     if not th or not ta: return None,None
@@ -183,6 +224,9 @@ def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(F
     # ajuste por portero: save% del titular vs liga (~.905). Mejor portero -> menos goles en contra.
     if sv_away is not None: xh *= (1-(sv_away-0.905))/(1)   # portero visitante frena al local
     if sv_home is not None: xa *= (1-(sv_home-0.905))/(1)
+    # calidad del portero titular (GSAx as-of): mejora el total esperado (z 3.0, las dos mitades) sin empeorar el ganador
+    if gsax_away is not None: xh -= GSAX_BETA*gsax_away
+    if gsax_home is not None: xa -= GSAX_BETA*gsax_home
     return max(xh,0.3),max(xa,0.3)
 
 def _pred_p(th,ta,lg):
@@ -207,9 +251,9 @@ def _platt(cal, iters=600, lr=0.05):
     return a,b
 
 # ---------------- firma comun ----------------
-def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False)):
+def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False), gsax_home=None, gsax_away=None):
     """jugo_ayer: (local, visita) segun el calendario de ESPN; marca back-to-back aunque el juego de ayer aun no este en el historial."""
-    xh,xa=_xg(estado,home,away,sv_home,sv_away,fecha,jugo_ayer)
+    xh,xa=_xg(estado,home,away,sv_home,sv_away,fecha,jugo_ayer,gsax_home,gsax_away)
     if xh is None: return None
     th,ta=estado["eq"].get(home),estado["eq"].get(away)
     b2b_h=(_es_b2b(getattr(th,"fecha_ult",None), fecha) or bool(jugo_ayer[0])) if fecha else False

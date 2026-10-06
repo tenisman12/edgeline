@@ -204,6 +204,85 @@ def agregar(juegos, deporte_de=None, verbose=True):
     return juegos
 
 
+# ------------------------------------------------------------------ MLB: clima oficial del juego (viento relativo al campo)
+MLB_SCHED = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=%s&hydrate=weather"
+
+
+def _coef_mlb():
+    ruta = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "modelos", "clima_mlb.json")
+    try:
+        with open(ruta, encoding="utf-8") as f:
+            return (json.load(f) or {}).get("coef_vigentes") or {}
+    except Exception:
+        return {}
+
+
+def ajuste_mlb(temp_f, viento_txt, condicion=""):
+    """carreras de mas (o de menos) al total por clima, con los coeficientes medidos (utilidades/medir_clima_mlb.py)."""
+    c = _coef_mlb()
+    if not c:
+        return None
+    techo = any(k in (condicion or "") for k in ("Roof Closed", "Dome"))
+    m = re.search(r"(\d+)\s*mph", viento_txt or ""); mph = float(m.group(1)) if m else 0.0
+    d = (viento_txt or "").split(", ", 1)[1] if ", " in (viento_txt or "") else ""
+    x = {"temp_F_menos_72": 0.0 if (techo or temp_f is None) else temp_f - 72.0,
+         "mph_hacia_afuera": 0.0 if techo else (mph if d.startswith("Out") else 0.0),
+         "mph_hacia_adentro": 0.0 if techo else (mph if d.startswith("In") else 0.0),
+         "mph_cruzado": 0.0 if techo else (mph if d in ("L To R", "R To L") else 0.0),
+         "lluvia": 1.0 if any(k in (condicion or "") for k in ("Rain", "Drizzle")) else 0.0, "techado": 1.0 if techo else 0.0}
+    return round(sum(c.get(k, 0.0) * v for k, v in x.items()), 2)
+
+
+def agregar_mlb(juegos, verbose=True):
+    """Clima oficial de MLB (MLB Stats API, aparece unas horas antes): temperatura, condicion y viento 'Out To CF'.
+    Lo agrega en g['clima']['mlb'] con el ajuste medido al total. Sin respuesta: no hace nada."""
+    fechas = sorted({(g.get("fecha_utc") or "")[:10] for g in juegos if g.get("liga") == "mlb"})
+    extra = set()
+    for f in fechas:                      # juegos de noche en EE.UU. caen al dia siguiente en UTC
+        try:
+            extra.add((dt.date.fromisoformat(f) - dt.timedelta(days=1)).isoformat())
+        except ValueError:
+            pass
+    idx = {}
+    for f in sorted(set(fechas) | extra):
+        try:
+            d = _get(MLB_SCHED % f)
+        except Exception as e:
+            if verbose: print("  clima MLB %s: sin respuesta (%s)" % (f, str(e)[:60]))
+            continue
+        for dd in d.get("dates") or []:
+            for gm in dd.get("games") or []:
+                w = gm.get("weather") or {}
+                if not w:
+                    continue
+                h = ((gm.get("teams") or {}).get("home") or {}).get("team", {}).get("name")
+                a = ((gm.get("teams") or {}).get("away") or {}).get("team", {}).get("name")
+                idx[(h, a, (gm.get("gameDate") or "")[:13])] = w
+                idx.setdefault((h, a, None), w)
+    n = 0
+    for g in juegos:
+        if g.get("liga") != "mlb":
+            continue
+        k = (g["home"].get("nombre"), g["away"].get("nombre"))
+        w = idx.get(k + ((g.get("fecha_utc") or "")[:13],)) or idx.get(k + (None,))
+        if not w:
+            continue
+        try:
+            tf = float(w.get("temp")) if w.get("temp") not in (None, "") else None
+        except ValueError:
+            tf = None
+        aj = ajuste_mlb(tf, w.get("wind"), w.get("condition"))
+        c = g.get("clima") or {}
+        c["mlb"] = {"condicion": w.get("condition"), "temp_f": tf, "viento": w.get("wind"), "ajuste_total_carreras": aj,
+                    "fuente": "MLB Stats API"}
+        if aj is not None and abs(aj) >= 0.5:
+            c.setdefault("alertas", []).append("clima suma %+.1f carreras al total (viento %s, %s F)" % (aj, w.get("wind"), w.get("temp")))
+        g["clima"] = c; n += 1
+    if verbose and fechas:
+        print("  clima MLB oficial: %d juegos" % n)
+    return juegos
+
+
 def texto(c):
     """una linea en espanol para el razonamiento."""
     if not c:
@@ -215,6 +294,10 @@ def texto(c):
     if c.get("prob_lluvia") is not None: partes.append("lluvia %d%%" % c["prob_lluvia"])
     if c.get("viento_kmh") is not None: partes.append("viento %.0f km/h" % c["viento_kmh"])
     s = "Clima a la hora del juego: %s." % ", ".join(partes)
+    if c.get("mlb"):
+        m = c["mlb"]
+        s += " MLB: %s, %s F, viento %s%s." % (m.get("condicion"), m.get("temp_f"), m.get("viento"),
+              (", ajuste medido al total %+.2f carreras" % m["ajuste_total_carreras"]) if m.get("ajuste_total_carreras") is not None else "")
     if c.get("alertas"):
         s += " Ojo: %s." % "; ".join(c["alertas"])
     return s

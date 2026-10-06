@@ -91,6 +91,16 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   se movió 5.5 → 6.0 en cinco partidos, o sea hacia el over. El dato se usa y se mide; `TOTAL_PUBLICO_VETADO` quedó vacío.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.
 
+## Capas medidas el 5-oct-2026 (manual: Actions -> "medir capas"; los .json quedan en modelos/)
+- Porteros NHL (GSAx as-of, `utilidades/medir_porteros_nhl.py`): total esperado mejora z 3.0 en las dos mitades; ganador y
+  O/U sin cambio. Aplicado en `modelos/hockey.py` (GSAX_BETA 0.25, K 40, ultimas 40 aperturas). El ajuste viejo por save%
+  de ventana queda solo como dato. O/U de NHL sigue sin validar (p media 0.431 vs real 0.415: el modelo carga el over).
+- Viajes NHL/NBA (km y husos, `utilidades/medir_viajes.py`): sin efecto medible. Contexto.
+- Clima MLB (`utilidades/medir_clima_mlb.py`, MLB Stats API trae viento relativo al campo): MSE z 3.5, MAE z 0.9.
+  +0.035 carreras por grado F, +0.033 por mph hacia afuera. Se muestra "Total con clima" junto al total del modelo.
+- Umpire MLB: sin efecto (z negativo). Contexto. Arbitros NHL y clima NFL: se miden en "medir capas".
+- CLV (`utilidades/clv.py`, salida/clv.json): picks contra el cierre de Pinnacle y si el cierre se mueve hacia el modelo.
+
 ## Completar datos (utilidades/completar_datos.py)
 Corre al final de `actualizar_todo.py` (cada hora en Actions). Llena las celdas vacias de `datos/<deporte>.csv` con
 `datos/equipos/` y nunca pisa un dato existente: NHL (tiros, hits, bloqueos, PP, portero abridor), NFL/NCAAF (yardas, downs,

@@ -607,6 +607,11 @@ def _pred(g, c, fecha, eventos=None):
              "confianza": _conf(max(p, 1 - p)), "extra": []}
         if r.get("p_rl_home") is not None:
             m["extra"] += [("Run line local -1.5", r["p_rl_home"]), ("Run line visita +1.5", r["p_rl_away"])]
+        cm = (g.get("clima") or {}).get("mlb") or {}
+        if cm.get("ajuste_total_carreras") is not None:
+            # clima medido (utilidades/medir_clima_mlb.py: MSE z 3.5). El total del modelo queda igual; se muestra al lado.
+            m["extra"] += [("Ajuste clima (carreras)", cm["ajuste_total_carreras"]),
+                           ("Total con clima", round((r["total"] or 0) + cm["ajuste_total_carreras"], 2))]
         m["spread"] = _spread_mercado(q, p, r["esperado_home"], r["esperado_away"], beisbol._nb_pmf)
         return m, None
 
@@ -614,13 +619,20 @@ def _pred(g, c, fecha, eventos=None):
         sv_h, por_h = _sv_portero(h, g["home"]["nombre"], fecha, g["home"].get("probable"))
         sv_a, por_a = _sv_portero(a, g["away"]["nombre"], fecha, g["away"].get("probable"))
         ja = (_jugo_ayer(g["liga"], g["home"]["nombre"], fecha), _jugo_ayer(g["liga"], g["away"]["nombre"], fecha))
-        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, sv_home=sv_h, sv_away=sv_a, fecha=fecha, jugo_ayer=ja)
+        # calidad del titular: GSAx as-of (medido); el ajuste viejo por save% de ventana (sin medir) queda solo como dato
+        gx_h, n_h = hockey.rating_portero(por_h["portero"], fecha) if por_h else (None, 0)
+        gx_a, n_a = hockey.rating_portero(por_a["portero"], fecha) if por_a else (None, 0)
+        for p_, gx, nn in ((por_h, gx_h, n_h), (por_a, gx_a, n_a)):
+            if p_ is not None:
+                p_["gsax_por_juego"] = None if gx is None else round(gx, 3); p_["aperturas_gsax"] = nn
+        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, fecha=fecha, jugo_ayer=ja, gsax_home=gx_h, gsax_away=gx_a)
         if not r:
             return None, "equipo sin historial"
         d = r.get("descanso") or {}
         if sv_h is not None or sv_a is not None:
-            nota = "Ajuste por portero titular (Daily Faceoff / ESPN): %s." % "; ".join(
-                "%s %s (%s, sv %.3f en 10 juegos)" % (n, p["portero"], p.get("estado"), p["sv_ventana"])
+            nota = "Portero titular (Daily Faceoff / ESPN): %s." % "; ".join(
+                "%s %s (%s, sv %.3f en 10 juegos%s)" % (n, p["portero"], p.get("estado"), p["sv_ventana"],
+                    (", GSAx %+.2f por juego en %d aperturas" % (p["gsax_por_juego"], p["aperturas_gsax"])) if p.get("gsax_por_juego") is not None else "")
                 for n, p, sv in ((g["home"]["nombre"], por_h, sv_h), (g["away"]["nombre"], por_a, sv_a)) if sv is not None and p)
         elif por_h or por_a:
             nota = "Porteros anunciados sin ventana suficiente para ajustar: %s." % "; ".join(
@@ -1665,6 +1677,7 @@ def main():
         print("     calendario (ayer en adelante, para descanso): %d partidos" % len(RP.CALENDARIO))
         try:
             CLIMA.agregar(juegos, DEPORTE)
+            CLIMA.agregar_mlb(juegos)
         except Exception as e:
             print("     clima: omitido (%s)" % str(e)[:80])
         RP.guardar(juegos)

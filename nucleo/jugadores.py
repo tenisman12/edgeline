@@ -141,6 +141,13 @@ def beisbol(liga, team, probable=None):
     etiqueta = liga.upper()
     lan = [r for r in lan if (r.get("liga") or "").upper() == etiqueta]
     bat = [r for r in bat if (r.get("liga") or "").upper() == etiqueta]
+    if etiqueta == "KBO":
+        # box score oficial de koreabaseball.com (colectores/recolectar_kbo_box.py): IP, H, ER, K, HR por lanzador
+        kl, pk = _filas("kbo_lanzadores.csv")
+        if kl:
+            lan = [dict(r, jugador=(r.get("jugador") or "").strip(), bb=r.get("bb_hbp"), hbp=0,
+                        season=(r.get("game_date") or "")[:4], liga="KBO") for r in kl]
+            pl = pk
     if not lan and not bat:
         return _no_disp("sin datos de jugadores de %s en tus archivos" % etiqueta, pl or pb)
     tl = [r for r in lan if r.get("team") == team]
