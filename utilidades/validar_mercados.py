@@ -262,7 +262,8 @@ def validar_beisbol(liga, meses, bloque):
         print("\nBEISBOL %s: muestra insuficiente (%d juegos)." % (liga, len(G))); return
     ultimo = dt.date.fromisoformat(G[-1]["game_date"][:10]); ini = ultimo - dt.timedelta(days=int(meses * 30.4))
     from nucleo import abridores as AB
-    VAB = AB.historicos(io.BASE) if lg == "kbo" else {}
+    VAB = AB.historicos(io.BASE, lg) if AB.aplica(lg) else {}
+    K_AB, ESC_AB = AB.coeficientes(lg)
     rep = Rep(); d0 = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
@@ -288,8 +289,8 @@ def validar_beisbol(liga, meses, bloque):
                         vh, va = VAB.get((r["gamePk"], r["home"])), VAB.get((r["gamePk"], r["away"]))
                         if vh and va:
                             sh, sa = AB.carreras_salvadas(r.get("df_home"), vh), AB.carreras_salvadas(r.get("df_away"), va)
-                            p = 1 / (1 + math.exp(-(math.log(p / (1 - p)) + AB.K_GANADOR * (sh - sa))))
-                            xh, xa = max(xh - AB.ESCALA_TOTAL * sa, 0.5), max(xa - AB.ESCALA_TOTAL * sh, 0.5)
+                            p = 1 / (1 + math.exp(-(math.log(p / (1 - p)) + K_AB * (sh - sa))))
+                            xh, xa = max(xh - ESC_AB * sa, 0.5), max(xa - ESC_AB * sh, 0.5)
                     tot, mar = r["total"], r["marg_home"]
                     rep.add_prob("Ganador", p, r["y_home"], hw)
                     rep.add_val("Total esperado", xh + xa, tot, base_tot)
@@ -465,7 +466,7 @@ def main():
             for lg in [x.strip() for x in a.ligas.split(",") if x.strip()]:
                 validar_equipos(d, a.meses, a.bloque, lg)
         elif d == "beisbol":
-            for lg in ("MLB", "NPB", "KBO"):
+            for lg in ("MLB", "NPB", "KBO", "LMP"):
                 validar_beisbol(lg, a.meses, a.bloque)
         elif d == "ncaa":
             for x in ("ncaafb", "ncaamb"): validar_equipos(x, a.meses, a.bloque)

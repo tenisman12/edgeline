@@ -1,0 +1,127 @@
+name: lmp (preparar temporada)
+
+# Se corre A MANO (Actions -> "lmp (preparar temporada)" -> Run workflow) antes del arranque de la LMP.
+# 1) sonda: que temporadas tiene la MLB Stats API, calendario de arranque con abridores, beisbol en The Odds API.
+# 2) rellena en datos/beisbol.csv las temporadas que faltan (box de equipo por juego).
+# 3) baja los lanzadores por juego de la LMP (abridores) a datos/abridores/lmp_lanzadores.csv.
+# 4) mide la capa de abridores (modelos/abridores_lmp.json) y valida LMP walk-forward (salida/validacion_mercados.json).
+# Lo ya guardado no se vuelve a pedir. Se puede correr varias veces.
+
+on:
+  workflow_dispatch:
+    inputs:
+      desde:
+        description: "primera temporada a revisar (anio de octubre)"
+        default: "2014"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  lmp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      DESDE: ${{ github.event.inputs.desde }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+
+      - name: Sonda LMP
+        env:
+          EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
+        run: python colectores/sonda_lmp.py
+
+      - name: Rellenar temporadas que faltan (box de equipo)
+        continue-on-error: true
+        timeout-minutes: 150
+        run: |
+          python - <<'EOF' > /tmp/faltan.txt
+          import json, os
+          d = json.load(open("salida/sonda_lmp.json", encoding="utf-8"))
+          desde = int(os.environ.get("DESDE") or 2014)
+          for y, v in sorted(d["fuente"].items()):
+              y = int(y)
+              if y < desde or not isinstance(v, dict) or not v.get("final"):
+                  continue
+              tiene = d["repo"].get(str(y), 0)
+              if tiene < 0.9 * v["final"]:
+                  print(y)
+          EOF
+          echo "Temporadas a rellenar: $(tr '\n' ' ' < /tmp/faltan.txt)"
+          for y in $(cat /tmp/faltan.txt); do
+            echo "::group::LMP $y-$((y+1))"
+            python colectores/recolectar_boxscores.py --liga lmp --desde "$y-10-01" --hasta "$((y+1))-02-20" || echo "::warning::LMP $y con error"
+            echo "::endgroup::"
+          done
+          python actualizar_todo.py --solo beisbol --solo-publicar
+
+      - name: Lanzadores por juego (abridores)
+        continue-on-error: true
+        timeout-minutes: 150
+        run: |
+          python colectores/recolectar_jugadores.py lmp --desde "${DESDE:-2014}-10-01" --hasta "$(date -u +%Y-%m-%d)" --sin-raw
+          python - <<'EOF'
+          import csv, os
+          src = os.path.join("datos", "jugadores", "mlb_lanzadores.csv")
+          dst = os.path.join("datos", "abridores", "lmp_lanzadores.csv")
+          os.makedirs(os.path.dirname(dst), exist_ok=True)
+          viejas, cols = {}, []
+          if os.path.exists(dst):
+              with open(dst, encoding="utf-8-sig", newline="") as f:
+                  rd = csv.DictReader(f); cols = list(rd.fieldnames or [])
+                  for r in rd: viejas[(r["game_id"], r["player_id"])] = r
+          n0 = len(viejas)
+          if os.path.exists(src):
+              with open(src, encoding="utf-8-sig", newline="") as f:
+                  rd = csv.DictReader(f)
+                  cols = cols or list(rd.fieldnames or [])
+                  for r in rd:
+                      if r.get("liga") == "LMP":
+                          viejas[(r["game_id"], r["player_id"])] = r
+          filas = sorted(viejas.values(), key=lambda r: (r.get("game_date") or "", r.get("game_id") or ""))
+          with open(dst, "w", encoding="utf-8-sig", newline="") as f:
+              w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(filas)
+          ab = sum(1 for r in filas if str(r.get("abridor")) == "1")
+          print("lmp_lanzadores.csv: %d filas (antes %d), %d aperturas, %s -> %s" % (
+              len(filas), n0, ab, filas[0]["game_date"] if filas else "?", filas[-1]["game_date"] if filas else "?"))
+          EOF
+
+      - name: Medir capa de abridores LMP
+        continue-on-error: true
+        run: python utilidades/medir_abridores_kbo.py --liga lmp
+
+      - name: Validar LMP (walk-forward)
+        continue-on-error: true
+        run: python utilidades/validar_mercados.py --deporte beisbol | tail -40
+
+      - name: Guardar resultados en main
+        continue-on-error: true
+        run: bash utilidades/subir_a_main.sh "lmp: sonda, abridores y validacion" salida/sonda_lmp.json modelos/abridores_lmp.json salida/validacion_mercados.json
+
+      - name: Publicar datos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (lmp) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos

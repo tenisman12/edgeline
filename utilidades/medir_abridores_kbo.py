@@ -8,7 +8,7 @@ Valor del abridor = (carreras permitidas por juego del equipo, as-of) - (FIP del
   hacia la liga con IP_PRIOR innings. IP esperadas: su promedio por apertura, encogido hacia 5.
 Ganador: logit(p) + K x (valor_local - valor_visita). Total: cada abridor quita su valor a las carreras del rival.
 K se elige en una mitad y se evalua en la otra (y al reves). Protocolo: z >= 2 y mejora en las dos mitades.
-Escribe modelos/abridores_kbo.json.
+Escribe modelos/abridores_<liga>.json (--liga kbo por defecto; --liga lmp para LMP).
 
     cd C:\\Edgeline_repo
     $env:EDGELINE_BASE = "C:\\Edgeline_repo"
@@ -31,8 +31,15 @@ def _f(x):
         return None
 
 
+LIGA = "kbo"
+for _i, _a in enumerate(sys.argv):
+    if _a == "--liga" and _i + 1 < len(sys.argv):
+        LIGA = sys.argv[_i + 1].lower()
+
+
 def lanzadores():
-    ruta = os.path.join(io.BASE, "datos", "jugadores", "kbo_lanzadores.csv")
+    from nucleo import abridores as _AB
+    ruta = _AB._ruta(io.BASE, LIGA)
     with open(ruta, encoding="utf-8-sig", newline="") as f:
         rows = list(csv.DictReader(f))
     rows.sort(key=lambda r: (r.get("game_date") or "", r.get("game_id") or ""))
@@ -65,7 +72,10 @@ def valores_abridor(rows):
             out[(r["game_id"], r["team"])] = (fip_s, ip_esp, len(h), lg_fip)
         for r in dia:                                 # despues de usar el dia, se suma
             nom = (r.get("jugador") or "").strip()
-            o, k, bb, hr, er = (_f(r.get(c)) or 0.0 for c in ("outs", "k", "bb_hbp", "hr", "er"))
+            o, k, hr, er = (_f(r.get(c)) or 0.0 for c in ("outs", "k", "hr", "er"))
+            bb = _f(r.get("bb_hbp"))
+            if bb is None:
+                bb = (_f(r.get("bb")) or 0.0) + (_f(r.get("hbp")) or 0.0)
             liga["outs"] += o; liga["k"] += k; liga["bb"] += bb; liga["hr"] += hr; liga["er"] += er
             if str(r.get("abridor")) == "1":
                 hist.setdefault(nom, []).append((int(fch[:4]), o, k, bb, hr))
@@ -86,8 +96,8 @@ def _p_over(mu, L):
 
 def main():
     V = valores_abridor(lanzadores())
-    feats, _ = F.construir("beisbol", "KBO", 5)
-    G = [r for r in feats if r["league"] == "kbo" and r.get("y_home") is not None and r.get("total") is not None]
+    feats, _ = F.construir("beisbol", LIGA.upper(), 5)
+    G = [r for r in feats if r["league"] == LIGA and r.get("y_home") is not None and r.get("total") is not None]
     G.sort(key=lambda r: r["game_date"])
     ultimo = dt.date.fromisoformat(G[-1]["game_date"][:10]); d0 = ultimo - dt.timedelta(days=int(24 * 30.4))
     filas = []
@@ -117,7 +127,9 @@ def main():
                                   "base_tot": base_tot, "L": L, "fr": fr, "hw": hw})
         d0 = d1
     n = len(filas); h = n // 2
-    print("KBO: %d partidos en la ventana con abridor de ambos lados" % n)
+    print("%s: %d partidos en la ventana con abridor de ambos lados" % (LIGA.upper(), n))
+    if n < 50:
+        print("Muestra insuficiente para medir."); return 1
     A, Bm = filas[:h], filas[h:]
 
     def ll_gan(F_, k):
@@ -133,7 +145,7 @@ def main():
         return {"mejora_milesimas": round(1000 * mu, 3), "z": round(z, 2), "mitades": [round(1000 * mA, 3), round(1000 * mB, 3)],
                 "veredicto": "APLICAR" if (len(d) >= 300 and z >= 2.0 and mA > 0 and mB > 0) else "sin mejora demostrada"}
     gB, gA = ll_gan(Bm, kA), ll_gan(A, kB)
-    res = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "n": n,
+    res = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "liga": LIGA, "n": n,
            "ganador": dict(resumen(gB + gA, sum(gA) / len(gA), sum(gB) / len(gB)), k_mitad1=kA, k_mitad2=kB, k_todo=mejor_k(filas))}
     # ganador contra la tasa base (para ver si cruza z 2 de la validacion)
     def skill(F_, k):
@@ -170,7 +182,7 @@ def main():
         print("Totales %s: MAE %+.4f carreras (z %.2f) %s | O/U %+.3f milesimas (z %.2f) %s" % (
             e, o["total_mae"]["mejora"], o["total_mae"]["z"], o["total_mae"]["veredicto"],
             o["over_under"]["mejora"], o["over_under"]["z"], o["over_under"]["veredicto"]))
-    with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "modelos", "abridores_kbo.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "modelos", "abridores_%s.json" % LIGA), "w", encoding="utf-8") as f:
         json.dump(res, f, ensure_ascii=False, indent=1)
     return 0
 
