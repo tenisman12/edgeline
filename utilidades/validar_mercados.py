@@ -345,6 +345,8 @@ def validar_tenis(meses, min_j=10):
     J = {}
     def g(n): return J.setdefault(n, {"sp": 0., "spw": 0., "rp": 0., "rpw": 0., "elo": {}})
     tsp = {}                      # circuito -> [puntos al saque, ganados]
+    from nucleo import velocidad_tenis as VT
+    SV = VT.Senales()             # velocidad del torneo y saque por superficie (capa de breaks, medida 6-oct-2026)
     HH = {}   # lineas base (solo pasado) POR CIRCUITO: ATP y WTA tienen niveles de breaks muy distintos
     for r in rows:
         w, l = r.get("winner_name"), r.get("loser_name")
@@ -405,7 +407,8 @@ def validar_tenis(meses, min_j=10):
                 RB = RESB.setdefault((tour, bo), [])
                 ajb = (sum(RB[-400:]) / len(RB[-400:])) if len(RB) >= 150 else 0.0     # sesgo de breaks, solo con el pasado
                 AJUSTES_BR.setdefault(tour, {})[str(bo)] = round(ajb, 2)
-                mu_b = max(0.1, pr["breaks_esperados"] + ajb)
+                aj_v = VT.ajuste(SV, tour, bo, r.get("tourney_name") or "", p1n, p2n, sup)[0]
+                mu_b = max(0.1, pr["breaks_esperados"] + ajb + aj_v)
                 rp_.add_val("Breaks totales [%s]" % tag, mu_b, brk, sum(B) / len(B))
                 for L in (medio(sum(B) / len(B)) - 1, medio(sum(B) / len(B)), medio(sum(B) / len(B)) + 1):
                     po = 1 - sum(math.exp(-mu_b) * mu_b ** k / math.factorial(k) for k in range(int(L) + 1))
@@ -416,6 +419,7 @@ def validar_tenis(meses, min_j=10):
         if brk is not None:
             hist["br%d" % bo].append(brk)
             if pr: RESB.setdefault((tour, bo), []).append(brk - pr["breaks_esperados"])
+        SV.actualizar(tour, r.get("tourney_name") or "", sup, r.get("tourney_date", ""), w, l, wsv, wsw, lsv, lsw, tour_spw)
         jw["sp"] += wsv; jw["spw"] += wsw; jw["rp"] += lsv; jw["rpw"] += (lsv - lsw)
         jl["sp"] += lsv; jl["spw"] += lsw; jl["rp"] += wsv; jl["rpw"] += (wsv - wsw)
         exp = 1 / (1 + 10 ** (-(ew - el) / 400)); jw["elo"][sup] = ew + 24 * (1 - exp); jl["elo"][sup] = el - 24 * (1 - exp)

@@ -580,11 +580,22 @@ def _pred(g, c, fecha, eventos=None):
                                   ajuste_games=AJUSTE_GAMES.get((g["liga"], bo), 0.0))
         if not r:
             return None, "muestra insuficiente de saque/resto"
+        # velocidad del torneo y saque por superficie (nucleo/velocidad_tenis.py): medido, O/U de breaks z 5-7
+        from nucleo import velocidad_tenis as VT
+        try:
+            _S = VT.produccion(BASE)
+            _tor = VT.torneo_tml(_S, g.get("torneo") or "", g["liga"], j1, j2)
+            aj_v, v1_, v2_ = VT.ajuste(_S, g["liga"], bo, _tor, j1, j2, g.get("superficie", "Hard"))
+        except Exception:
+            aj_v, v1_, v2_, _tor = 0.0, 0.0, 0.0, ""
+        aj_b = AJUSTE_BREAKS.get((g["liga"], bo), 0.0)
         return {"p_home": r["p1"], "p_away": r["p2"], "unidad": "games",
                 "total": r["games_esperados"], "linea_total": linea, "linea_es_mercado": linea_mkt not in (None, "no"),
                 "p_over": r["p_over_games"], "confianza": _conf(max(r["p1"], r["p2"])),
-                "extra": [("Breaks esperados", round(max(0.1, r["breaks_esperados"] + AJUSTE_BREAKS.get((g["liga"], bo), 0.0)), 1)),
-                          ("Ajuste breaks", AJUSTE_BREAKS.get((g["liga"], bo), 0.0)),
+                "extra": [("Breaks esperados", round(max(0.1, r["breaks_esperados"] + aj_b + aj_v), 1)),
+                          ("Ajuste breaks", round(aj_b + aj_v, 2)),
+                          ("Velocidad del torneo (breaks)", round(aj_v, 2)),
+                          ("Torneo (historial)", _tor),
                           ("Prob. de al menos un break", r["p_al_menos_un_break"]),
                           ("Hold saque local / visita", "%s / %s" % (r["hold_j1"], r["hold_j2"]))],
                 "nota": "Superficie estimada: %s. Best of %d." % (g.get("superficie"), bo)}, None

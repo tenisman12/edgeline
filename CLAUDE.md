@@ -104,6 +104,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Abridores KBO (`nucleo/abridores.py`, box oficial 2021-2026, `utilidades/medir_abridores_kbo.py`): ganador pasa de z 1.67
   (sin_validar) a z 3.42 (publicable, Brier +3.1%). K 0.45 por carrera salvada; total esperado -0.25 x valor del abridor
   rival (MAE z 5.4); O/U sin mejora. Aplicado en plataforma (KBO) y en la validacion.
+- Velocidad del torneo y saque por superficie en BREAKS de tenis (`nucleo/velocidad_tenis.py`, minado el 6-oct-2026,
+  `trabajo/minar/2026-10-06_velocidad_tenis.md`): O/U de breaks ATP bo3 skill 11.2% -> 12.6% (z 17.3), ATP bo5 5.3% -> 8.1%
+  (z 5.2), WTA bo3 4.1% -> 4.6% (z 8.4). Aplicado en plataforma y en la validacion. Torneo rapido -> menos breaks.
+  El torneo de ESPN se casa con el de TML por el ultimo partido de los dos jugadores (o alias).
 - CLV (`utilidades/clv.py`, salida/clv.json): picks contra el cierre de Pinnacle y si el cierre se mueve hacia el modelo.
 
 ## Completar datos (utilidades/completar_datos.py)
