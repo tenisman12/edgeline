@@ -249,6 +249,8 @@ def main():
         resumen.append(("ncaa", ("ok" if r.returncode == 0 else "CON AVISOS (error %d)" % r.returncode) + "  [%ds]" % (time.time() - t0)))
     if not a.solo_jugadores:
         # llena huecos de datos\<deporte>.csv con datos\equipos\ (solo celdas vacias; nunca pisa) y escribe la cobertura
+        print("\n=== SEMILLAS (historia bajada en la PC -> datos) ===")
+        subprocess.run([PY, os.path.join(BASE, "utilidades", "semillas.py"), "mezclar"], env=env)
         print("\n=== COMPLETAR DATOS (equipos -> archivos base) ===")
         t0 = time.time()
         r = subprocess.run([PY, os.path.join(BASE, "utilidades", "completar_datos.py"), "--aplicar"], env=env)
