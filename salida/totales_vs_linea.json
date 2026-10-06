@@ -1,43 +1,69 @@
 {
- "generado": "2026-10-06T12:28:52Z",
- "predicciones_total": 176,
- "sin_cierre": 8,
+ "generado": "2026-10-06T19:23:00Z",
+ "predicciones_total": 189,
+ "sin_cierre": 13,
  "ligas": {
   "atp": {
-   "n": 22,
-   "mae_cierre": 5.591,
-   "mae_modelo": null,
-   "n_modelo_total": 0,
-   "acierto_lado_modelo_pct": 33.3,
-   "n_acierto": 12,
-   "por_brecha": {},
+   "n": 23,
+   "mae_cierre": 5.413,
+   "mae_modelo": 0.5,
+   "n_modelo_total": 1,
+   "acierto_lado_modelo_pct": 38.5,
+   "n_acierto": 13,
+   "por_brecha": {
+    "1-2": {
+     "n": 1,
+     "acierto_pct": 100.0
+    }
+   },
    "no_comparables": 10,
    "por_modo": {
+    "total_modelo": {
+     "n": 1,
+     "acierto_pct": 100.0
+    },
     "misma_linea": {
      "n": 12,
      "acierto_pct": 33.3
     }
    },
-   "pinnacle_p_over_media_pct": 50.1,
-   "over_real_pct": 45.5
+   "pinnacle_p_over_media_pct": 50.2,
+   "over_real_pct": 47.8
   },
   "kbo": {
-   "n": 15,
-   "mae_cierre": 2.4,
-   "mae_modelo": null,
-   "n_modelo_total": 0,
-   "acierto_lado_modelo_pct": 100.0,
-   "n_acierto": 7,
-   "por_brecha": {},
+   "n": 20,
+   "mae_cierre": 2.5,
+   "mae_modelo": 2.268,
+   "n_modelo_total": 5,
+   "acierto_lado_modelo_pct": 91.7,
+   "n_acierto": 12,
+   "por_brecha": {
+    "<0.5": {
+     "n": 2,
+     "acierto_pct": 50.0
+    },
+    "0.5-1": {
+     "n": 1,
+     "acierto_pct": 100.0
+    },
+    ">=1": {
+     "n": 2,
+     "acierto_pct": 100.0
+    }
+   },
    "no_comparables": 8,
    "por_modo": {
+    "total_modelo": {
+     "n": 5,
+     "acierto_pct": 80.0
+    },
     "misma_linea": {
      "n": 7,
      "acierto_pct": 100.0
     }
    },
-   "pinnacle_p_over_media_pct": 50.1,
-   "over_real_pct": 46.7
+   "pinnacle_p_over_media_pct": 49.8,
+   "over_real_pct": 45.0
   },
   "mlb": {
    "n": 8,
@@ -130,22 +156,22 @@
    "over_real_pct": 30.0
   },
   "wta": {
-   "n": 45,
-   "mae_cierre": 4.944,
+   "n": 47,
+   "mae_cierre": 5.053,
    "mae_modelo": null,
    "n_modelo_total": 0,
-   "acierto_lado_modelo_pct": 0.0,
-   "n_acierto": 2,
+   "acierto_lado_modelo_pct": 33.3,
+   "n_acierto": 3,
    "por_brecha": {},
-   "no_comparables": 43,
+   "no_comparables": 44,
    "por_modo": {
     "misma_linea": {
-     "n": 2,
-     "acierto_pct": 0.0
+     "n": 3,
+     "acierto_pct": 33.3
     }
    },
    "pinnacle_p_over_media_pct": 49.9,
-   "over_real_pct": 55.6
+   "over_real_pct": 57.4
   }
  }
 }
