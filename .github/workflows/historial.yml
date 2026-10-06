@@ -5,7 +5,8 @@ name: historial largo (una vez)
 #   nhl  temporadas 2018-19 a 2022-23 (hoy empieza en 2023-24)
 #   mlb  2018 a 2021 (hoy empieza en 2022)
 #   nfl  2015 a 2020 (hoy empieza en 2021)
-#   nba  2018-19 a 2021-22 (stats.nba.com; puede bloquear a GitHub, se intenta)
+#   nba  2018-19 a 2021-22 (stats.nba.com; puede bloquear a GitHub, se intenta) y box por jugador de ESPN 2022-2026
+#        para utilidades/nba_ausencias.py (datos/equipos/nba_ausencias.csv: ausencias de jugadores de 20+ min)
 # Fusion por llave (no duplica ni pisa lo que ya hay). Comparte grupo con las corridas horarias: no se pisan.
 
 on:
@@ -52,6 +53,12 @@ jobs:
           case ",$QUE," in *,nhl,*) paso colectores/recolectar_hockey.py --desde 20182019 --hasta 20222023 ;; esac
           case ",$QUE," in *,nfl,*) paso colectores/recolectar_americano.py --desde 2015 ;; esac
           case ",$QUE," in *,nba,*) paso colectores/recolectar_nba.py --desde 2018 --hasta 2021 ;; esac
+          case ",$QUE," in *,nba,*)
+            echo "::group::NBA box por jugador (ESPN) para ausencias"
+            python colectores/recolectar_jugadores.py espn --liga nba --desde 20221018 --hasta 20260630 --sin-raw || echo "::warning::espn nba con error"
+            python utilidades/nba_ausencias.py || true
+            echo "::endgroup::" ;;
+          esac
           case ",$QUE," in *,mlb,*)
             for y in 2018 2019 2020 2021; do paso colectores/recolectar_boxscores.py --liga mlb --desde "$y-03-15" --hasta "$y-11-10"; done ;;
           esac
