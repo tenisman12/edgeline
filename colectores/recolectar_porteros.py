@@ -31,6 +31,10 @@ EQUIPOS = ["Anaheim Ducks", "Boston Bruins", "Buffalo Sabres", "Calgary Flames",
            "New York Rangers", "Ottawa Senators", "Philadelphia Flyers", "Pittsburgh Penguins", "San Jose Sharks", "Seattle Kraken",
            "St. Louis Blues", "Tampa Bay Lightning", "Toronto Maple Leafs", "Utah Mammoth", "Vancouver Canucks", "Vegas Golden Knights",
            "Washington Capitals", "Winnipeg Jets"]
+# como los escribe Daily Faceoff cuando no coincide con nuestro nombre (sin esto se perdia todo el partido STL-CHI)
+ALIAS = {"St Louis Blues": "St. Louis Blues", "St.Louis Blues": "St. Louis Blues", "Montréal Canadiens": "Montreal Canadiens",
+         "Utah Hockey Club": "Utah Mammoth", "Utah HC": "Utah Mammoth", "LA Kings": "Los Angeles Kings",
+         "NY Rangers": "New York Rangers", "NY Islanders": "New York Islanders", "Tampa Bay Lightning ": "Tampa Bay Lightning"}
 ESTADOS = ("Confirmed", "Likely", "Expected", "Probable", "Unconfirmed", "Projected")
 
 
@@ -55,7 +59,7 @@ def _texto(h):
     h = re.sub(r"<style.*?</style>", " ", h, flags=re.S | re.I)
     t = re.sub(r"<[^>]+>", "\n", h)
     t = html.unescape(t)
-    return [l.strip() for l in t.splitlines() if l.strip()]
+    return [ALIAS.get(l.strip(), l.strip()) for l in t.splitlines() if l.strip()]
 
 
 def _buscar_json(h):

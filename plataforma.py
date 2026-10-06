@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.join(AQUI, "colectores"))
 from nucleo import io, mercado, calibrar, equipos, estado, forma, linea, jugadores, sharp
 from modelos import beisbol, hockey, americano, nba, futbol
 import recolectar_proximos as RP
+import clima as CLIMA
 import proximos_beisbol as PB
 import pagina_plataforma as PAG
 
@@ -197,6 +198,26 @@ def _p_cubre(xh, xa, linea_home, pmf, kmax=20):
 # ------------------------------------------------------------------ porteros titulares (colectores/recolectar_porteros.py) y xG (recolectar_xg_nhl.py)
 _PORTEROS_DIA = {}
 _XG_NHL = None
+
+
+_CAL = set()      # (liga, nombre de equipo, fecha CDMX) de TODOS los partidos de ayer en adelante (ESPN, cualquier estado)
+
+
+def cargar_calendario(filas):
+    _CAL.clear()
+    for r in filas or []:
+        for k in ("home", "away"):
+            if r.get(k):
+                _CAL.add((r.get("liga"), r[k], r.get("fecha")))
+
+
+def _jugo_ayer(liga, nombre, fecha):
+    """True si el equipo tiene partido el dia anterior en el calendario de ESPN (aunque no este en el historial)."""
+    try:
+        ayer = (dt.date.fromisoformat(fecha) - dt.timedelta(days=1)).isoformat()
+    except Exception:
+        return False
+    return (liga, nombre, ayer) in _CAL
 
 
 def _porteros_dia(fecha):
@@ -409,8 +430,13 @@ def _capas_nba(team, fecha):
     return {"ultimo": prev[-1][0], "descanso_dias": min(desc, 3), "b2b": desc == 1, "net_rating_L10": net, "n_L10": len(u)}
 
 
-def _ajuste_capas_nba(p_home, h, a, fecha):
+def _ajuste_capas_nba(p_home, h, a, fecha, nom_h=None, nom_a=None):
     ch, ca = _capas_nba(h, fecha), _capas_nba(a, fecha)
+    # el juego de ayer puede no estar aun en datos/nba.csv: el calendario de ESPN lo detecta
+    if ch and not ch["b2b"] and _jugo_ayer("nba", nom_h, fecha):
+        ch = dict(ch, b2b=True, descanso_dias=1, b2b_fuente="calendario ESPN")
+    if ca and not ca["b2b"] and _jugo_ayer("nba", nom_a, fecha):
+        ca = dict(ca, b2b=True, descanso_dias=1, b2b_fuente="calendario ESPN")
     if not ch or not ca:
         return p_home, {"aplicado": False, "motivo": "sin historial de NBA de ambos equipos", "home": ch, "away": ca}
     B_DESC, B_B2B, B_NET = 0.0664, -0.2336, 0.1664            # pesos_capas_v2.json (ajuste conjunto ELO+dif+descanso+b2b+net10)
@@ -427,9 +453,12 @@ def _ajuste_capas_nba(p_home, h, a, fecha):
                 "fuente": "pesos_capas_v2 (as-of, n=3511): b2b +2.7, descanso +2.4, net rating L10 +1.4 milesimas; cuatro factores, L5/L10, racha, tecnicos ~0"}
 
 
-def _sv_portero(team, nombre_equipo, fecha):
-    """save% en la ventana de 10 juegos del portero anunciado para ese equipo (de nhl_porteros.csv); None sin dato."""
+def _sv_portero(team, nombre_equipo, fecha, probable_espn=None):
+    """save% en la ventana de 10 juegos del portero anunciado para ese equipo (de nhl_porteros.csv); None sin dato.
+    Anuncio: Daily Faceoff; si no trae a ese equipo, el probable de ESPN."""
     anuncio = _porteros_dia(fecha).get(nombre_equipo)
+    if (not anuncio or not anuncio.get("portero")) and probable_espn:
+        anuncio = {"portero": probable_espn, "estado": "probable ESPN"}
     if not anuncio or not anuncio.get("portero"):
         return None, None
     apellido = anuncio["portero"].split()[-1].lower()
@@ -444,7 +473,48 @@ def _sv_portero(team, nombre_equipo, fecha):
                 break
     except Exception:
         pass
+    # el portero no aparece en la ventana de su equipo (cambio de equipo, p.ej. Bobrovsky a TOR): sus ultimas 10 aperturas
+    # en cualquier equipo, de datos/jugadores_recientes/nhl_porteros.csv
+    sv, n, gc = _sv_por_jugador(anuncio["portero"], fecha)
+    if sv is not None:
+        info.update({"sv_ventana": sv, "apariciones": n, "gc_por_juego": gc, "ventana": "por jugador (todas sus aperturas)"})
+        if n >= 3:
+            return sv, info
     return None, info
+
+
+_NHL_PORT = None
+
+
+def _sv_por_jugador(nombre, fecha, n=10):
+    global _NHL_PORT
+    if _NHL_PORT is None:
+        _NHL_PORT = []
+        ruta = os.path.join(BASE, "datos", "jugadores_recientes", "nhl_porteros.csv")
+        try:
+            with _io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+                for r in csv.DictReader(f):
+                    if str(r.get("abridor")) in ("1", "1.0", "True"):
+                        _NHL_PORT.append(r)
+        except Exception:
+            pass
+    partes = (nombre or "").split()
+    if not partes:
+        return None, 0, None
+    ape, ini = partes[-1].lower(), partes[0][:1].lower()
+    filas = [r for r in _NHL_PORT if (r.get("game_date") or "") < (fecha or "9999")
+             and (r.get("jugador") or "").split()[-1].lower() == ape and (r.get("jugador") or "")[:1].lower() == ini]
+    filas.sort(key=lambda r: r.get("game_date") or "")
+    filas = filas[-n:]
+    tiros = paradas = gc = 0.0
+    for r in filas:
+        try:
+            tiros += float(r.get("tiros_contra") or 0); paradas += float(r.get("paradas") or 0); gc += float(r.get("goles_contra") or 0)
+        except ValueError:
+            pass
+    if not filas or tiros <= 0:
+        return None, 0, None
+    return round(paradas / tiros, 3), len(filas), round(gc / len(filas), 2)
 
 
 def _xg_nhl(abrev):
@@ -541,14 +611,15 @@ def _pred(g, c, fecha, eventos=None):
         return m, None
 
     if dep == "hockey":
-        sv_h, por_h = _sv_portero(h, g["home"]["nombre"], fecha)
-        sv_a, por_a = _sv_portero(a, g["away"]["nombre"], fecha)
-        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, sv_home=sv_h, sv_away=sv_a, fecha=fecha)
+        sv_h, por_h = _sv_portero(h, g["home"]["nombre"], fecha, g["home"].get("probable"))
+        sv_a, por_a = _sv_portero(a, g["away"]["nombre"], fecha, g["away"].get("probable"))
+        ja = (_jugo_ayer(g["liga"], g["home"]["nombre"], fecha), _jugo_ayer(g["liga"], g["away"]["nombre"], fecha))
+        r = hockey.predecir(c["st"], h, a, linea_total=tot_m or 6.5, sv_home=sv_h, sv_away=sv_a, fecha=fecha, jugo_ayer=ja)
         if not r:
             return None, "equipo sin historial"
         d = r.get("descanso") or {}
         if sv_h is not None or sv_a is not None:
-            nota = "Ajuste por portero titular (Daily Faceoff): %s." % "; ".join(
+            nota = "Ajuste por portero titular (Daily Faceoff / ESPN): %s." % "; ".join(
                 "%s %s (%s, sv %.3f en 10 juegos)" % (n, p["portero"], p.get("estado"), p["sv_ventana"])
                 for n, p, sv in ((g["home"]["nombre"], por_h, sv_h), (g["away"]["nombre"], por_a, sv_a)) if sv is not None and p)
         elif por_h or por_a:
@@ -583,7 +654,7 @@ def _pred(g, c, fecha, eventos=None):
         if g.get("liga") == "nfl":
             p_h, capas = _ajuste_capas_nfl(r["p_home"], h, a)
         elif g.get("liga") == "nba":
-            p_h, capas = _ajuste_capas_nba(r["p_home"], h, a, fecha)
+            p_h, capas = _ajuste_capas_nba(r["p_home"], h, a, fecha, g["home"]["nombre"], g["away"]["nombre"])
         m = {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "puntos",
              "x_home": r["pts_home"], "x_away": r["pts_away"], "total": r["total_esperado"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
@@ -858,7 +929,7 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
         rec = {"id": g["id"], "liga": g["liga"], "liga_nombre": NOMBRE.get(g["liga"], g["liga"]),
                "deporte": DEPORTE.get(g["liga"]), "tipo": g["tipo"], "fecha": loc.strftime("%Y-%m-%d"),
                "hora": loc.strftime("%H:%M"), "estado": g.get("estado"), "nota": g.get("nota"),
-               "serie": g.get("serie"), "estadio": g.get("estadio"),
+               "serie": g.get("serie"), "estadio": g.get("estadio"), "clima": g.get("clima"),
                "home": {k: g["home"].get(k) for k in ("nombre", "abrev", "logo", "record", "probable", "probable_rol", "ranking")},
                "away": {k: g["away"].get(k) for k in ("nombre", "abrev", "logo", "record", "probable", "probable_rol", "ranking")},
                "cuotas": g.get("cuotas") or {}, "contexto": g.get("contexto") or {},
@@ -1244,6 +1315,8 @@ def _razonar(rec, k):
             fr.append("Forma: %s (%s) contra %s (%s)." % (rec["home" if lado == "home" else "away"]["nombre"], a or "sin senal",
                                                         rec["away" if lado == "home" else "home"]["nombre"], b or "sin senal"))
     s_ = k["senales"]
+    if rec.get("clima") and not rec["clima"].get("techado"):
+        fr.append(CLIMA.texto(rec["clima"]))
     if temporada_corta(rec):
         fr.append("Temporada recien iniciada: la forma reciente seria de la temporada pasada y no puntua; cuenta el precio, el modelo, el ELO y el contexto.")
     if s_.get("forma") is not None:
@@ -1578,6 +1651,7 @@ def main():
         with _io.open(a.entrada, encoding="utf-8") as f:
             crudo = json.load(f)
         juegos = crudo["partidos"]
+        cargar_calendario(crudo.get("calendario"))
         print("Usando %d partidos de %s (generado %s)" % (len(juegos), a.entrada, crudo.get("generado")))
     else:
         ligas = [x.strip() for x in a.ligas.split(",")] if a.ligas else RP.DEFAULT + PB.DEFAULT
@@ -1587,6 +1661,12 @@ def main():
         if extra:
             print("     NPB, KBO y ligas de invierno (MLB Stats API / koreabaseball.com, sin cuotas):")
             juegos += PB.recolectar(extra, a.dias)
+        cargar_calendario(RP.CALENDARIO)
+        print("     calendario (ayer en adelante, para descanso): %d partidos" % len(RP.CALENDARIO))
+        try:
+            CLIMA.agregar(juegos, DEPORTE)
+        except Exception as e:
+            print("     clima: omitido (%s)" % str(e)[:80])
         RP.guardar(juegos)
     if not juegos:
         print("::warning::No hay partidos por jugar en ese rango (o ESPN no respondio). Se conserva el proximos.json anterior.")

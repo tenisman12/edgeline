@@ -132,7 +132,38 @@ def _evento(ev, liga):
             "home": _equipo(home), "away": _equipo(away), "cuotas": _cuotas(comp),
             "nota": nota, "serie": (comp.get("series") or {}).get("summary") or None,
             "pretemporada": ((ev.get("season") or {}).get("type") == 1),
-            "neutral": bool(comp.get("neutralSite")), "estadio": (comp.get("venue") or {}).get("fullName")}
+            "neutral": bool(comp.get("neutralSite")), "estadio": (comp.get("venue") or {}).get("fullName"),
+            "sede": _sede(comp.get("venue"))}
+
+
+def _sede(v):
+    """ciudad, estado, pais y si es techado (ESPN venue.address / venue.indoor), para el clima."""
+    v = v or {}
+    ad = v.get("address") or {}
+    out = {"ciudad": ad.get("city"), "estado": ad.get("state"), "pais": ad.get("country"), "techado": v.get("indoor")}
+    return out if any(x is not None for x in out.values()) else None
+
+
+CALENDARIO = []      # todos los partidos (cualquier estado) de ayer a +dias: para detectar back-to-back aunque el
+                     # juego de ayer todavia no este en el historial (p.ej. OTT jugo el 5-oct y el 6-oct otra vez)
+
+
+def _al_calendario(ev, lg):
+    comp = (ev.get("competitions") or [{}])[0]
+    cps = comp.get("competitors") or []
+    h = next((c for c in cps if c.get("homeAway") == "home"), None)
+    a = next((c for c in cps if c.get("homeAway") == "away"), None)
+    if not h or not a or not (h.get("team") and a.get("team")):
+        return
+    try:
+        utc = dt.datetime.fromisoformat((ev.get("date") or comp.get("date") or "").replace("Z", "+00:00")).replace(tzinfo=None)
+        fecha = (utc + dt.timedelta(hours=TZ_MX)).strftime("%Y-%m-%d")
+    except ValueError:
+        return
+    est = ((comp.get("status") or {}).get("type") or {}).get("state")
+    CALENDARIO.append({"liga": lg, "fecha": fecha, "fecha_utc": ev.get("date"), "estado": est,
+                       "home": h["team"].get("displayName"), "away": a["team"].get("displayName"),
+                       "home_abrev": h["team"].get("abbreviation"), "away_abrev": a["team"].get("abbreviation")})
 
 
 def _superficie(torneo, fecha):
@@ -246,8 +277,11 @@ def contexto(sport, league, gid, home_ab, away_ab):
 
 # ------------------------------------------------------------------ recoleccion
 def recolectar(ligas, dias, con_contexto=True, hoy=None, verbose=True):
-    hoy = hoy or dt.date.today()
-    fechas = [(hoy + dt.timedelta(days=i)).strftime("%Y%m%d") for i in range(dias)]
+    # "hoy" en hora de CDMX (Actions corre en UTC: a las 19:30 CDMX ya es manana en UTC y se perdian los juegos de hoy)
+    hoy = hoy or (dt.datetime.utcnow() + dt.timedelta(hours=TZ_MX)).date()
+    fechas = [(hoy + dt.timedelta(days=i)).strftime("%Y%m%d") for i in range(-1, dias)]   # -1: ayer, solo calendario
+    ayer = fechas[0]
+    del CALENDARIO[:]
     juegos, vistos = [], set()
     for lg in ligas:
         if lg not in E.LIGAS:
@@ -262,6 +296,13 @@ def recolectar(ligas, dias, con_contexto=True, hoy=None, verbose=True):
                 if verbose: print("  %s %s: %s" % (lg, fecha, str(e)[:60]))
                 continue
             for ev in d.get("events", []):
+                if not ev.get("groupings"):
+                    try:
+                        _al_calendario(ev, lg)
+                    except Exception:
+                        pass
+                if fecha == ayer:
+                    continue                     # ayer solo alimenta el calendario (descanso / back-to-back)
                 try:
                     filas = _tenis_pre(ev, lg) if ev.get("groupings") else [x for x in [_evento(ev, lg)] if x]
                 except Exception as e:           # un evento raro de ESPN no debe tumbar toda la corrida
@@ -290,7 +331,7 @@ def guardar(juegos, ruta=None):
     ruta = ruta or os.path.join(BASE, "contexto", "proximos_espn.json")
     os.makedirs(os.path.dirname(ruta), exist_ok=True)
     with io.open(ruta, "w", encoding="utf-8") as f:
-        json.dump({"generado": dt.datetime.now().isoformat(timespec="seconds"), "partidos": juegos},
+        json.dump({"generado": dt.datetime.now().isoformat(timespec="seconds"), "partidos": juegos, "calendario": CALENDARIO},
                   f, ensure_ascii=False)
     return ruta
 

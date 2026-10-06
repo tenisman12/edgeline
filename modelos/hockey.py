@@ -168,7 +168,7 @@ def entrenar(liga=None, min_j=8):
     return {"eq":eq,"lg":lg,"platt":(a,b),"cal":cal,
             "b2b":{"n":b2b.n,"factor_of":round(f_of,4),"factor_df":round(f_df,4)}}
 
-def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None):
+def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False)):
     eq,lg=estado["eq"],estado["lg"]
     th,ta=eq.get(home),eq.get(away)
     if not th or not ta: return None,None
@@ -178,7 +178,8 @@ def _xg(estado, home, away, sv_home=None, sv_away=None, fecha=None):
     if fecha:
         b=estado.get("b2b") or {}
         fac=(b.get("factor_of",1.0), b.get("factor_df",1.0))
-        xh,xa=_aplicar_b2b(xh, xa, _es_b2b(getattr(th,"fecha_ult",None), fecha), _es_b2b(getattr(ta,"fecha_ult",None), fecha), fac)
+        xh,xa=_aplicar_b2b(xh, xa, _es_b2b(getattr(th,"fecha_ult",None), fecha) or bool(jugo_ayer[0]),
+                          _es_b2b(getattr(ta,"fecha_ult",None), fecha) or bool(jugo_ayer[1]), fac)
     # ajuste por portero: save% del titular vs liga (~.905). Mejor portero -> menos goles en contra.
     if sv_away is not None: xh *= (1-(sv_away-0.905))/(1)   # portero visitante frena al local
     if sv_home is not None: xa *= (1-(sv_home-0.905))/(1)
@@ -206,12 +207,13 @@ def _platt(cal, iters=600, lr=0.05):
     return a,b
 
 # ---------------- firma comun ----------------
-def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fecha=None):
-    xh,xa=_xg(estado,home,away,sv_home,sv_away,fecha)
+def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fecha=None, jugo_ayer=(False, False)):
+    """jugo_ayer: (local, visita) segun el calendario de ESPN; marca back-to-back aunque el juego de ayer aun no este en el historial."""
+    xh,xa=_xg(estado,home,away,sv_home,sv_away,fecha,jugo_ayer)
     if xh is None: return None
     th,ta=estado["eq"].get(home),estado["eq"].get(away)
-    b2b_h=_es_b2b(getattr(th,"fecha_ult",None), fecha) if fecha else False
-    b2b_a=_es_b2b(getattr(ta,"fecha_ult",None), fecha) if fecha else False
+    b2b_h=(_es_b2b(getattr(th,"fecha_ult",None), fecha) or bool(jugo_ayer[0])) if fecha else False
+    b2b_a=(_es_b2b(getattr(ta,"fecha_ult",None), fecha) or bool(jugo_ayer[1])) if fecha else False
     a,b=estado["platt"]
     lo=lambda p:math.log(min(max(p,1e-6),1-1e-6)/(1-min(max(p,1e-6),1-1e-6)))
     p=_sig(a*lo(_prob_home(xh,xa))+b)
