@@ -13,6 +13,7 @@ for f in "$@"; do
 done
 if [ -z "$lista" ]; then echo "Nada que subir."; exit 0; fi
 git add -f $lista
+git add -u -- salida 2>/dev/null || true      # tambien borrados/cambios de archivos ya versionados en salida/ (resumen de dias pasados)
 if git diff --cached --quiet; then echo "Sin cambios."; exit 0; fi
 git commit -q -m "$msg $(date -u +'%Y-%m-%d %H:%M')Z"
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then

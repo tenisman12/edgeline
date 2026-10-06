@@ -125,6 +125,15 @@ def construir(dias=2):
                     json.dump(r2, f, ensure_ascii=False, separators=(",", ":"))
                 ent["por_dia"][fch] = {"archivo": os.path.basename(ruta2), "partidos": len(sub), "kb": round(os.path.getsize(ruta2) / 1024)}
         indice["ligas"][liga] = ent
+    # toda liga del registro tiene su archivo aunque hoy no juegue (asi el enlace raw nunca da 404)
+    for liga in sorted(set(io.LIGAS) - set(por_liga)):
+        rec = {"liga": liga, "generado": gen, "fechas": sorted(fechas), "partidos": 0, "con_modelo": 0,
+               "validacion_modelo": (val or {}).get(liga) if isinstance(val, dict) else None,
+               "track_record_picks": (track.get("por_liga") or {}).get(liga), "partidos_lista": [],
+               "nota": "sin partidos en las fechas del resumen"}
+        with open(os.path.join(DESTINO, "%s.json" % liga), "w", encoding="utf-8") as f:
+            json.dump(rec, f, ensure_ascii=False, separators=(",", ":"))
+        indice["ligas"][liga] = {"partidos": 0, "con_modelo": 0, "archivo": "%s.json" % liga}
     with open(os.path.join(DESTINO, "indice.json"), "w", encoding="utf-8") as f:
         json.dump(indice, f, ensure_ascii=False, indent=1)
     with open(os.path.join(DESTINO, "LEEME.md"), "w", encoding="utf-8") as f:
