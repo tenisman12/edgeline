@@ -112,7 +112,7 @@ jobs:
 
       - name: Guardar resultados en main
         continue-on-error: true
-        run: bash utilidades/subir_a_main.sh "lmp: sonda, abridores y validacion" salida/sonda_lmp.json modelos/abridores_lmp.json salida/validacion_mercados.json
+        run: bash utilidades/subir_a_main.sh "lmp - sonda, abridores y validacion" salida/sonda_lmp.json modelos/abridores_lmp.json salida/validacion_mercados.json
 
       - name: Publicar datos en la rama datos
         run: |
