@@ -27,7 +27,7 @@ git clone --depth 1 https://github.com/tenisman12/edgeline.git && cd edgeline
 python utilidades/volcar_partidos.py --ligas nhl,mlb        # ficha completa por liga en trabajo/volcado/
 python utilidades/picks_del_dia.py                          # lista del sistema con razones a favor y en contra
 ```
-Solo con navegador: `proximos.json` pesa ~11 MB, conviene leerlo por partes o empezar por los archivos chicos.
+Solo con navegador: `proximos.json` pesa ~11 MB. Para eso existe `salida/resumen/`: un archivo por liga (70–150 KB; tenis también por día) con todo lo que se usa para decidir, más `indice.json` y `LEEME.md` con la explicación de cada campo. Conviene empezar por `salida/resumen/indice.json`.
 
 Archivos:
 - `proximos.json`: ficha por partido (`partidos[]`): `liga`, `fecha`, `hora` (CDMX), `home`/`away` (con `probable` = abridor o portero probable), `modelo`, `mercados`, `valor`, `cuotas`, `movimiento` (con `serie`), `consenso`, `alerta`, `clima`, `forma` (por equipo: `racha`, `ventanas` temp/local/visita/L10/L5/L3, `elo`, `osciladores`, `osciladores_detalle`, `osciladores_tecnicos`), `h2h_datos`, `estadisticas_equipo`, `jugadores_clave` (abridor con FIP, K%, BB%, últimas 5 salidas; rotación; uso del bullpen en 3 días; bateadores recientes), `contexto` (lesiones, serie, últimos 5 de ESPN, estimación de ESPN), `picks`, `pick_top`, `validacion`, `bloques`.
