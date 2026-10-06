@@ -21,3 +21,8 @@ Métrica: log-loss; error pareado contra el modelo. Criterio de la casa: n ≥ 3
 - KBO (1,086): ~0. NO PASA.
 Pendiente antes de aplicar en NBA: la base de esta prueba es el modelo sin las capas de producción (descanso, b2b, net rating L10).
 Hay que repetir la prueba encima de esas capas para no contar dos veces la misma información.
+
+## Repetición en NBA encima de las capas de producción (descanso, back-to-back, net rating L10)
+- básicos +1.86 milésimas (z 1.03, mitades +3.77/−0.06); técnicos +1.60 (z 1.22); todos +2.24 (z 1.14).
+Veredicto final: NO PASA en ninguna liga. La señal de NBA ya la capturaba el net rating L10 de producción.
+Los osciladores quedan como contexto: se muestran siempre en el análisis, sin peso en la probabilidad.

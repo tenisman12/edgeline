@@ -18,6 +18,7 @@ from nucleo import io, features as F, abridores as AB
 from modelos import hockey, nba, beisbol as B
 
 BASE_N = 40
+CAPAS_NBA = None      # funcion (p, local, visita, fecha) -> (p, info); si se da, la base de NBA incluye las capas de produccion
 PIT_EXP = {"nhl": 2.0, "mlb": 1.83, "kbo": 1.83, "nba": 14.0}
 BASICOS = ["forma", "ataque", "defensa", "dif5"]
 TECNICOS = ["rsi10", "macd_hist", "estoc", "elo_mom10", "res_pit"]
@@ -120,7 +121,10 @@ def filas_equipos(liga):
                 else:
                     r = nba.predecir(est, h["team"], a["team"], linea_total=None, linea_spread=0.0)
                 if r:
-                    out.append({"f": f, "p": r["p_home"], "y": 1 if _f(h[cg]) > _f(h[cgo]) else 0, **o})
+                    p_ = r["p_home"]
+                    if liga == "nba" and CAPAS_NBA:
+                        p_, _c = CAPAS_NBA(p_, h["team"], a["team"], f)
+                    out.append({"f": f, "p": p_, "y": 1 if _f(h[cg]) > _f(h[cgo]) else 0, **o})
         d0 = d1
     return out
 
