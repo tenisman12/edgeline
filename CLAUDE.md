@@ -98,7 +98,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Viajes NHL/NBA (km y husos, `utilidades/medir_viajes.py`): sin efecto medible. Contexto.
 - Clima MLB (`utilidades/medir_clima_mlb.py`, MLB Stats API trae viento relativo al campo): MSE z 3.5, MAE z 0.9.
   +0.035 carreras por grado F, +0.033 por mph hacia afuera. Se muestra "Total con clima" junto al total del modelo.
-- Umpire MLB: sin efecto (z negativo). Contexto. Arbitros NHL y clima NFL: se miden en "medir capas".
+- Umpire MLB: sin efecto (z negativo). Arbitros NHL (4,231 partidos): goles totales sin efecto (MSE z -2.5); minutos de
+  castigo si (MAE z 13.7), sin uso en mercados de goles. Clima NFL (1,163 partidos): MAE z 2.3 pero falla una mitad: contexto
+  (viento -0.50 puntos por mph arriba de 10).
 - Abridores KBO (`nucleo/abridores.py`, box oficial 2021-2026, `utilidades/medir_abridores_kbo.py`): ganador pasa de z 1.67
   (sin_validar) a z 3.42 (publicable, Brier +3.1%). K 0.45 por carrera salvada; total esperado -0.25 x valor del abridor
   rival (MAE z 5.4); O/U sin mejora. Aplicado en plataforma (KBO) y en la validacion.
