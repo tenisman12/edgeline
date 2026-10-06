@@ -208,6 +208,13 @@ def p_over_modelo(rec, linea):
         return po, pu, max(0.0, 1 - po - pu)
     sd = SD_TOTAL.get("tenis" if tipo == "tenis" else dep, 10.0)
     def phi(z): return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+    if tipo == "tenis" and m.get("p_over") is not None and m.get("linea_total") is not None:
+        # Tenis: el total de games es bimodal (2 o 3 sets) y el modelo calcula p_over en su linea con su propia distribucion.
+        # La normal se centra para reproducir ESA probabilidad en esa linea (antes se centraba en el total esperado y
+        # podia dar el lado contrario: 6-oct, Kovacevic-Berrettini, modelo 47.9% al over de 23.5 y la normal 64%).
+        from statistics import NormalDist
+        po0 = min(max(float(m["p_over"]), 0.01), 0.99)
+        mu = float(m["linea_total"]) - sd * NormalDist().inv_cdf(1 - po0)
     if entera:
         po = 1 - phi((linea + 0.5 - mu) / sd); pu = phi((linea - 0.5 - mu) / sd)
     else:
