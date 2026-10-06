@@ -136,6 +136,34 @@ def _abridor_txt(d, lado, a_favor):
     return ["abridor %s %.2f carreras" % ("a favor" if mio > 0 else "en contra", abs(mio))]
 
 
+def _osc(p, lado):
+    o = (((p.get("forma") or {}).get(lado) or {}).get("osciladores")) or {}
+    return o if any(o.get(k) not in (None, 0, 0.0) for k in ("forma", "ataque", "defensa", "dif5")) else None
+
+
+def osciladores_txt(p, mercado, lado):
+    """Osciladores de los dos equipos, SIEMPRE en por que si / por que no. Contexto sin peso: medidos el 6-oct-2026
+    (trabajo/minar/2026-10-06_osciladores.md) no suman sobre las capas de produccion. Defensa: negativo = permite menos.
+    Devuelve (texto, a_favor)."""
+    h, a = _osc(p, "home"), _osc(p, "away")
+    nh, na = p["home"].get("abrev") or p["home"]["nombre"], p["away"].get("abrev") or p["away"]["nombre"]
+    if not h and not a:
+        return "osciladores: sin senal (menos de 5 juegos en la temporada)", False
+    def t(n, o):
+        if not o:
+            return "%s sin senal" % n
+        return "%s forma %+.2f, ataque %+.2f, defensa %+.2f, dif5 %+.2f, %s" % (
+            n, o.get("forma") or 0, o.get("ataque") or 0, o.get("defensa") or 0, o.get("dif5") or 0, (o.get("tendencia") or "-").lower())
+    txt = "osciladores (contexto, sin peso): " + t(nh, h) + " | " + t(na, a)
+    if str(mercado).startswith(("Total", "Games")):
+        sube = sum(((o or {}).get("ataque") or 0) + ((o or {}).get("defensa") or 0) for o in (h, a))
+        return txt, (sube > 0) == (str(lado).lower() == "over")
+    me, op = (h, a) if lado == "home" else (a, h) if lado == "away" else (None, None)
+    if me is None and op is None:
+        return txt, True
+    return txt, ((me or {}).get("forma") or 0) >= ((op or {}).get("forma") or 0)
+
+
 def descalibrados():
     """(liga, 'Ganador'|'Total') donde el historial en vivo promete mucho mas de lo que acierta: n >= 30,
     p media - acierto >= 10 pp y z >= 2 (binomial). Ahi el modelo no se apuesta hasta que se corrija.
@@ -353,7 +381,11 @@ def main():
                 elif tk <= 35: si.append("publico del otro lado (%s%% de boletos aqui)" % tk)
             ruido = ("capas medidas no aplicadas",)
             si = [x for x in si if not x.startswith(ruido)]; no = [x for x in no if not x.startswith(ruido)]
-            cc["por_que_si"] = si[:6]; cc["por_que_no"] = no[:6]
+            si, no = si[:6], no[:6]
+            os_txt, os_favor = osciladores_txt(p, c["mercado"], c["lado"])
+            if os_txt:
+                (si if os_favor else no).append(os_txt)
+            cc["por_que_si"] = si; cc["por_que_no"] = no
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):

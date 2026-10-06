@@ -87,6 +87,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.
 - Con menos de 5 juegos en la temporada los osciladores salen en 0: "sin señal".
+- Osciladores: SIEMPRE se muestran en cada análisis y en por_que_si / por_que_no (`picks_del_dia.osciladores_txt`), sin peso en p.
+  Minado 6-oct-2026: NBA z 3.2 sobre el modelo base, z 1.1 sobre las capas de producción (no pasa); NHL, MLB, KBO cero.
 - Pick Premium con temporada recién iniciada (`plataforma.temporada_corta`: menos de 5 juegos en la temporada actual, NFL/NCAAFB menos de 3,
   o último juego hace más de 60 días): forma, osciladores y racha no puntúan, fuerza usa solo el ELO, nunca premium; la razón lo dice.
 - NHL: ganador `sin_validar`; no usar el total del modelo como argumento.
