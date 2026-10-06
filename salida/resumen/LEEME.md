@@ -11,6 +11,8 @@ Lo genera el bot tres veces al dia. Enlaces (texto plano, se abren sin cuenta):
 
 ## Campos de cada partido (partidos_lista)
 - liga, fecha, hora (CDMX), estado, estadio, torneo/ronda/superficie (tenis), serie y nota (playoffs).
+- clima (al aire libre, Open-Meteo a la hora del juego): temp_c, humedad, prob_lluvia, lluvia_mm, viento_kmh,
+  rafagas_kmh, dir_viento y alertas (lluvia probable, viento fuerte, frio, calor); bajo techo: techado = true.
 - home / away: nombre, abreviatura, record, abridor probable (probable) o ranking (tenis).
 - modelo: p_home / p_away (probabilidad de ganar), x_home / x_away (marcador esperado por equipo), total esperado,
   linea_total y p_over, spread calculado, confianza. Hockey: porteros (titular y sv%), descanso (back-to-back),
