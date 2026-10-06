@@ -105,7 +105,7 @@ def _aplicar_validacion():
 
 # ---- capas de decision de pick (ver decidir_picks). Backtest: futbol 20,633 partidos con Pinnacle 2018-2026 y NFL 2,220.
 EV_PICK, EV_FUERTE = 0.02, 0.04   # ventaja minima contra la MEJOR cuota: pick / fuerte
-CUOTA_MAX = 3.00                  # arriba de 3.00 los longshots pierden (-4% a -9% de ROI en el backtest)
+CUOTA_MAX = 99.0                  # sin tope (acuerdo 6-oct). El backtest viejo dio -4% a -9% de ROI arriba de 3.00: se mide en vivo por rango de cuota
 PESO_SHARP = 0.85                 # mezcla: 85% probabilidad sharp (Pinnacle/consenso) + 15% modelo (mas peso al modelo = menos ROI)
 EXTRA_SESGO = 0.02                # NFL/NCAAFB: local y over estan sobreapostados (-5% / -6%): piden 2 pts mas de EV
 EDGE_REVISAR = 0.10               # edge del modelo arriba de esto = informacion que el modelo no ve: "revisar", no pick
@@ -1425,7 +1425,7 @@ def puntuar_premium(rec, tipo, lado, ev_sharp, fuente, p_mod, p_sharp, validado)
 
 def decidir_picks(rec, g, eventos):
     """PICK PREMIUM por mercado y lado: puntaje 0-100 que junta precio (sharp vs mejor cuota), modelo, forma/osciladores,
-    movimiento de linea, consenso, H2H y contexto. Vetos duros: pretemporada, empate, cuota fuera de 1.70-3.00,
+    movimiento de linea, consenso, H2H y contexto. Vetos duros: pretemporada, empate, cuota menor a 1.70,
     modelo >15 pts arriba del mercado (revisar), linea movida >=2 pts en contra. Sin cuota (NPB, KBO, tenis) se
     puntua sin la senal de precio y se entrega la CUOTA MINIMA para que el pick valga."""
     m = rec.get("modelo") or {}
@@ -1470,7 +1470,7 @@ def decidir_picks(rec, g, eventos):
         if lado == "draw":
             nivel = "pasar"; razones.append("empate: -9% ROI en el backtest")
         if dec is not None and (dec < CUOTA_MIN or dec > CUOTA_MAX):
-            if nivel != "pasar": razones.append("cuota %.2f fuera de %.2f-%.2f" % (dec, CUOTA_MIN, CUOTA_MAX))
+            if nivel != "pasar": razones.append("cuota %.2f menor a %.2f" % (dec, CUOTA_MIN))
             nivel = "pasar"
         if liga in _LIGAS_SESGO and nivel in ("pick", "premium") and ((tipo in ("Ganador", "Spread") and lado == "home") or (tipo == "Total" and lado == "over")):
             if puntaje < CORTE[nivel] + 5:

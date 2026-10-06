@@ -31,7 +31,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 4. **Validación única y estricta** (walk-forward as-of contra línea base): n>=300, mejora a la base, z>=2.0
    (fútbol 1.64), mejora en ambas mitades, calibrado |p media - tasa real|<=0.04 (conteos: sesgo<=0.10 desv.).
    "Publicable" = supera la tasa histórica, NO a las casas. No hay edge demostrado contra el cierre (CLV pendiente).
-5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota >= 1.70 (-143) y <= 3.00 (+200). Stake plano 1 u.
+5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota >= 1.70 (-143), sin tope (acuerdo 6-oct). Stake plano 1 u.
+   Todos los picks del modelo se guardan y se califican; el resultado se mide también por rango de cuota.
    Sin cuota no hay pick. Criterio completo en `ia/instrucciones_picks.md`.
 6. **Pretemporada y juegos "If Necessary"** fuera de VALOR y track record.
 7. **Llaves** solo en variables de entorno / secretos (`EDGELINE_ODDS_KEY`, `ANTHROPIC_API_KEY`). Nunca en código ni chat.
@@ -57,11 +58,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `salida/validacion_mercados.json`, `salida/validacion_futbol.json`: estado y métricas de cada mercado.
 - `salida/track_record.json`, `salida/historial_calificado.csv`, `salida/historial_predicciones_calificado.csv`.
 - `salida/decidir.json` y `salida/historial_decidir.csv`: sistema estimado de béisbol (`utilidades/decidir.py`): p_modelo (ELO + diferencial + abridor),
-  p_final (Pinnacle 75% + modelo 25% en logit), pick de mayor EV (ML o run line, cuota 1.70–3.00), confianza alta/media/baja/mínima (stake 3/2/1/0%)
+  p_final (Pinnacle 75% + modelo 25% en logit), pick de mayor EV (ML, cuota desde 1.70), confianza alta/media/baja/mínima (stake 3/2/1/0%)
   y conteo de señales de la lectura a favor / en contra. Coeficientes en `modelos/decidir_beisbol.json` (`utilidades/pesos_capas.py`).
 - `salida/picks_del_dia.json` y `salida/historial_picks_dia.csv`: LA LISTA OFICIAL (`utilidades/picks_del_dia.py`): decisión de ganador y total
   para todos los partidos, y los mejores picks del día (beisbol: sistema estimado con confianza alta/media; demás deportes: Pick Premium
-  premium/pick con EV ≥ 2%; cuota 1.70–3.00; un pick por partido; máximo 4 al día y 10% del bank). Solo ganador y totales. Cada pick lleva
+  premium/pick con EV ≥ 2%; cuota desde 1.70 sin tope; un pick por partido; máximo 4 al día y 10% del bank). Solo ganador y totales. Cada pick lleva
   confianza, `por_que_si` y `por_que_no` (en picks_del_dia.json y en historial_picks_dia.csv).
   Se excluye (liga, mercado) cuando el historial en vivo promete ≥10 pp más de lo que acierta (n≥30, z≥2): `picks_del_dia.descalibrados()`.
   Al 6-oct-2026: totales de NCAAF (60% vs 39%, n 57) y games de WTA (58% vs 44%, n 57). Leans, mínima, revisar y lecturas
@@ -91,7 +92,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   Minado 6-oct-2026: NBA z 3.2 sobre el modelo base, z 1.1 sobre las capas de producción (no pasa); NHL, MLB, KBO cero.
 - Pick Premium con temporada recién iniciada (`plataforma.temporada_corta`: menos de 5 juegos en la temporada actual, NFL/NCAAFB menos de 3,
   o último juego hace más de 60 días): forma, osciladores y racha no puntúan, fuerza usa solo el ELO, nunca premium; la razón lo dice.
-- NHL: ganador `sin_validar`; no usar el total del modelo como argumento.
+- NHL: ganador `publicable` desde oct-2026 (z 4.5, n 2,818) pero sin ventaja contra el cierre todavia (CLV z 0.2); no usar el total del modelo como argumento.
 - El público de NHL carga el over en toda la liga (mediana 92% de boletos). No es error de lectura: la línea de totales
   se movió 5.5 → 6.0 en cinco partidos, o sea hacia el over. El dato se usa y se mide; `TOTAL_PUBLICO_VETADO` quedó vacío.
 - Tenis: TML fecha con el inicio del torneo; la llave no lleva fecha.

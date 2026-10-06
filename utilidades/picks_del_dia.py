@@ -7,7 +7,7 @@ con su probabilidad final (precio sharp movido por el modelo cuando hay cuota; m
 Despues elige los picks apostables con una sola regla de entrada:
   - beisbol (MLB, NPB, KBO): sistema estimado (salida/decidir.json) con confianza alta o media (EV >= 4% contra Pinnacle);
   - demas deportes: Pick Premium con nivel premium o pick, EV >= EV_MIN contra la mejor cuota;
-  - cuota 1.70-3.00, sin pretemporada, un pick por partido, ordenados por EV, maximo MAX_PICKS al dia y tope de bank.
+  - cuota desde 1.70 (sin tope), sin pretemporada, un pick por partido, ordenados por EV, maximo MAX_PICKS al dia y tope de bank.
 Todo lo demas (leans, minima, revisar, lecturas sin precio) se sigue midiendo en sus historiales, pero NO es pick.
 
 Salida: salida/picks_del_dia.json (decisiones + picks) y salida/historial_picks_dia.csv (los picks oficiales, para calificarlos).
@@ -46,7 +46,7 @@ def _mismo(a, b):
     A, B = _clave(a), _clave(b)
     return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
-CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdo 4-oct)
+CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdos 4-oct y 6-oct)
 STAKE = {"alta": 0.03, "media": 0.02, "baja": 0.01, "premium": 0.02, "pick": 0.01}   # unidades 3/2/1 (acuerdo 4-oct)
 TZ = -6
 

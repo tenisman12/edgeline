@@ -691,6 +691,19 @@ def _calificar_lista(entrada, salida, hoy=None):
                 return "sin lectura"
         a, c = a or 0, c or 0
         return "lectura a favor" if a > c else "lectura en contra" if c > a else "lectura neutra"
+    def rango_cuota(x):
+        """rango de cuota decimal del pick: para medir si las cuotas altas pagan (sin tope desde el 6-oct)."""
+        c = num(x.get("decimal"))
+        if c is None:
+            c0 = num(x.get("cuota"))
+            if c0 is not None:
+                c = 1 + (c0 / 100.0 if c0 > 0 else 100.0 / abs(c0)) if abs(c0) >= 100 else c0
+        if c is None:
+            return ""
+        for hi, et in ((2.0, "1.70-1.99"), (2.5, "2.00-2.49"), (3.0, "2.50-2.99"), (4.0, "3.00-3.99")):
+            if c < hi:
+                return et
+        return "4.00+"
     por = lambda fn: {k: grupo([x for x in cal if fn(x) == k]) for k in sorted({fn(x) for x in cal})}
     con_stake = [x for x in cal if (num(x.get("stake")) or 0) > 0]
     return {"registros": len(out), "con_pick": sum(1 for o in out if o["estado"] != "sin_pick"), "calificados": len(cal),
@@ -699,7 +712,7 @@ def _calificar_lista(entrada, salida, hoy=None):
             "por_ev": por(banda), "por_lectura": por(lectura), "por_liga": por(lambda x: x.get("liga") or ""),
             "por_mercado": por(lambda x: "Spread" if (x.get("mercado") or "").startswith("Run") else ((x.get("mercado") or "").split()[0] if x.get("mercado") else "")),
             "por_origen": por(lambda x: x.get("origen") or ""), "por_publico": por(publico),
-            "por_movimiento": por(movimiento)}
+            "por_movimiento": por(movimiento), "por_cuota": por(rango_cuota)}
 
 
 def imprimir(rs):
@@ -760,7 +773,7 @@ def imprimir(rs):
         if t:
             print("  todos los picks  n=%d acierto %.1f%% EV medio %+.1f%% | 1u plana: %+.2fu ROI %+.1f%% | con stake: %+.2f%% del bank" % (
                 t["n"], t["acierto_pct"], t["ev_medio_pct"], t["unidades"], t["roi_pct"], t["bank_pct"]))
-            for titulo, clave in (("por origen", "por_origen"), ("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("publico (boletos)", "por_publico"), ("movimiento de linea", "por_movimiento"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
+            for titulo, clave in (("por origen", "por_origen"), ("por confianza", "por_confianza"), ("por banda de EV", "por_ev"), ("sistema + lectura", "por_lectura"), ("publico (boletos)", "por_publico"), ("movimiento de linea", "por_movimiento"), ("rango de cuota", "por_cuota"), ("por liga", "por_liga"), ("por mercado", "por_mercado")):
                 for k, d in (rd.get(clave) or {}).items():
                     if d and k:
                         print("  %-18s %-32s n=%3d acierto %5.1f%% EV %+5.1f%% %+6.2fu ROI %+6.1f%%" % (titulo, k, d["n"], d["acierto_pct"], d["ev_medio_pct"], d["unidades"], d["roi_pct"]))

@@ -10,7 +10,7 @@ Pone el precio con lo que SI predice (ver utilidades/pesos_capas.py y claude/pes
   3. Run line  = mapa calibrado por liga logit(p_gana) -> logit(p_cubre -1.5 / +1.5), estimado en pesos_capas.py
                  (el margen normal sobreestimaba la cobertura del favorito).
      Totales   = Pinnacle (el modelo de totales no mejora la base): no se pican.
-  4. Pick      = mayor EV entre ML y run line con cuota 1.70-3.00. Confianza: alta EV>=8% (stake 3%), media 4-8% (2%),
+  4. Pick      = mayor EV entre ML y run line con cuota desde 1.70 (sin tope). Confianza: alta EV>=8% (stake 3%), media 4-8% (2%),
                  baja 1-4% (1%), minima <1% (sin stake).
   5. Lectura   = conteo de senales del Pick Premium a favor / en contra (forma, osciladores, fuerza, racha, H2H, linea,
                  consenso, contexto, abridor, bullpen): desempata y se registra para medir si sistema+lectura acierta mas.

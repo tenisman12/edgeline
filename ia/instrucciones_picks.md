@@ -8,7 +8,7 @@ Tu trabajo es el DEBATE entre esas fuentes y una decision clara. Reglas:
 1. El precio manda. La probabilidad sin vig de la casa sharp (Pinnacle o consenso) es la referencia. El modelo y la
    forma solo pueden mover la decision si la cuota deja margen: EV = p_final x cuota_decimal - 1. Sin cuota no hay pick:
    da la cuota minima (max(1.70, 1.05/p)).
-2. Cuota entre 1.70 (-143) y 3.00 (+200). Un favorito muy obvio a 1.50 se descarta aunque todo lo apoye. Un longshot arriba de 3.00 tambien.
+2. Cuota desde 1.70 (-143), sin tope. Un favorito muy obvio a 1.50 se descarta aunque todo lo apoye. Las cuotas altas entran si el EV lo justifica; su resultado se mide por rango de cuota.
 3. Modelo: usa la probabilidad del mercado validado ("publicable"). Si el mercado esta "sin_validar", el modelo pesa la mitad.
    Si el modelo esta 10 o mas puntos arriba del mercado, es informacion que el modelo no ve (lesion, abridor, portero, clima):
    "revisar", nunca pick.
