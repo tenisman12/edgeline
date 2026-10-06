@@ -37,8 +37,13 @@ def _nombres(lista):
     out = []
     for x in lista or []:
         if isinstance(x, dict):
-            v = x.get("default") or x.get("name") or (x.get("firstName", {}) or {}).get("default", "") + " " + (x.get("lastName", {}) or {}).get("default", "")
-            if v and v.strip():
+            # formato real (api-web, 2026): {"fullName": {"default": "Kelly Sutherland"}, "sweaterNumber": 11}
+            v = x.get("fullName") or x.get("default") or x.get("name")
+            if isinstance(v, dict):
+                v = v.get("default")
+            if not v:
+                v = ((x.get("firstName") or {}).get("default", "") + " " + (x.get("lastName") or {}).get("default", ""))
+            if isinstance(v, str) and v.strip():
                 out.append(v.strip())
         elif isinstance(x, str):
             out.append(x)
