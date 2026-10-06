@@ -103,18 +103,28 @@ def indice(res):
     return ind
 
 def emparejar(ind, liga, fecha, home, away):
-    """Busca el partido en el indice {(liga, fecha): [(clave_home, clave_away, valor)]} tolerando nombres
-    distintos entre fuentes (Action Network escribe 'Montreal Canadiens', ESPN escribe otra cosa).
-    Primero intenta la coincidencia exacta de conjuntos; si falla, pide 50% de palabras en comun en los dos lados."""
+    """Busca el partido en el indice {(liga, fecha): [(clave_home, clave_away, valor)]} tolerando:
+    nombres distintos entre fuentes (exacto o 50% de palabras en comun en los dos lados), fecha +-1 dia
+    (tenis y horarios nocturnos cambian de dia entre UTC y CDMX) y local/visita invertidos (tenis no tiene
+    local; Action Network y ESPN ordenan distinto). Si viene invertido, el ganador se voltea."""
     ch, ca = clave(home), clave(away)
-    for a, b, v in ind.get((liga, fecha), ()):
-        if a == ch and b == ca:
-            return v
     def parecido(A, B):
-        return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
-    for a, b, v in ind.get((liga, fecha), ()):
-        if parecido(a, ch) and parecido(b, ca):
-            return v
+        return bool(A and B) and (A == B or len(A & B) / float(min(len(A), len(B))) >= 0.5)
+    try:
+        f0 = dt.date.fromisoformat(str(fecha)[:10])
+        fechas = [f0.isoformat(), (f0 - dt.timedelta(days=1)).isoformat(), (f0 + dt.timedelta(days=1)).isoformat()]
+    except ValueError:
+        fechas = [fecha]
+    for exacto in (True, False):
+        for f in fechas:
+            for a, b, v in ind.get((liga, f), ()):
+                if (a == ch and b == ca) if exacto else (parecido(a, ch) and parecido(b, ca)):
+                    return v
+                if (a == ca and b == ch) if exacto else (parecido(a, ca) and parecido(b, ch)):
+                    w = dict(v)
+                    if w.get("gan") in ("home", "away"):
+                        w["gan"] = "away" if w["gan"] == "home" else "home"
+                    return w
     return None
 
 
@@ -234,7 +244,8 @@ def main():
     print("   emparejados con resultado: %d -> con total y linea %d (de esos, %d con el over al %.0f%%+), con cuotas de ML %d (de esos, %d con el favorito al %.0f%%+)" % (
         emparejados, con_total, dispara1, a.over, con_ml, dispara2, a.fav))
     if sin_emparejar:
-        print("   %d partidos ya jugados NO emparejaron con el historial (nombres distintos entre fuentes): revisar" % sin_emparejar)
+        print("   %d partidos ya jugados sin resultado en el historial: el modelo no los predijo (qualys de tenis, "
+              "pretemporada) o su resultado aun no llega (tenis tarda dias)" % sin_emparejar)
     reporte("R1  UNDER con el over al %.0f%% o mas de los boletos" % a.over, r1,
             "precio asumido -110; punto de equilibrio 52.4%")
     reporte("R2  DOG con el favorito al %.0f%% o mas de los boletos" % a.fav, r2,

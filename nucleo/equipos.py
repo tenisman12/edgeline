@@ -62,6 +62,39 @@ ALIAS_ABREV = {
 }
 
 
+# nombre completo (normalizado) -> abreviatura de tus datos (NFL/NHL/NBA se guardan con 2-3 letras).
+# Sin esta tabla solo empataban las abreviaturas que son prefijo del nombre (WAS = Washington), y
+# "New York Giants" -> NYG, "Buffalo Bills" -> BUF, etc. quedaban sin resultado (pendientes para siempre).
+NOMBRE_ABREV = {
+    "arizona cardinals": "ARI", "atlanta falcons": "ATL", "baltimore ravens": "BAL", "buffalo bills": "BUF",
+    "carolina panthers": "CAR", "chicago bears": "CHI", "cincinnati bengals": "CIN", "cleveland browns": "CLE",
+    "dallas cowboys": "DAL", "denver broncos": "DEN", "detroit lions": "DET", "green bay packers": "GB",
+    "houston texans": "HOU", "indianapolis colts": "IND", "jacksonville jaguars": "JAX", "kansas city chiefs": "KC",
+    "los angeles rams": "LA", "los angeles chargers": "LAC", "las vegas raiders": "LV", "miami dolphins": "MIA",
+    "minnesota vikings": "MIN", "new england patriots": "NE", "new orleans saints": "NO", "new york giants": "NYG",
+    "new york jets": "NYJ", "philadelphia eagles": "PHI", "pittsburgh steelers": "PIT", "seattle seahawks": "SEA",
+    "san francisco 49ers": "SF", "tampa bay buccaneers": "TB", "tennessee titans": "TEN", "washington commanders": "WAS",
+    # NHL (api-web.nhle.com, datos/hockey.csv)
+    "anaheim ducks": "ANA", "boston bruins": "BOS", "buffalo sabres": "BUF", "calgary flames": "CGY",
+    "carolina hurricanes": "CAR", "chicago blackhawks": "CHI", "colorado avalanche": "COL", "columbus blue jackets": "CBJ",
+    "dallas stars": "DAL", "detroit red wings": "DET", "edmonton oilers": "EDM", "florida panthers": "FLA",
+    "los angeles kings": "LAK", "minnesota wild": "MIN", "montreal canadiens": "MTL", "nashville predators": "NSH",
+    "new jersey devils": "NJD", "new york islanders": "NYI", "new york rangers": "NYR", "ottawa senators": "OTT",
+    "philadelphia flyers": "PHI", "pittsburgh penguins": "PIT", "san jose sharks": "SJS", "seattle kraken": "SEA",
+    "st louis blues": "STL", "tampa bay lightning": "TBL", "toronto maple leafs": "TOR", "utah mammoth": "UTA",
+    "utah hockey club": "UTA", "vancouver canucks": "VAN", "vegas golden knights": "VGK", "washington capitals": "WSH",
+    "winnipeg jets": "WPG",
+    # NBA (datos/nba.csv)
+    "atlanta hawks": "ATL", "brooklyn nets": "BKN", "boston celtics": "BOS", "charlotte hornets": "CHA",
+    "chicago bulls": "CHI", "cleveland cavaliers": "CLE", "dallas mavericks": "DAL", "denver nuggets": "DEN",
+    "detroit pistons": "DET", "golden state warriors": "GSW", "houston rockets": "HOU", "indiana pacers": "IND",
+    "la clippers": "LAC", "los angeles clippers": "LAC", "los angeles lakers": "LAL", "memphis grizzlies": "MEM",
+    "miami heat": "MIA", "milwaukee bucks": "MIL", "minnesota timberwolves": "MIN", "new orleans pelicans": "NOP",
+    "new york knicks": "NYK", "oklahoma city thunder": "OKC", "orlando magic": "ORL", "philadelphia 76ers": "PHI",
+    "phoenix suns": "PHX", "portland trail blazers": "POR", "sacramento kings": "SAC", "san antonio spurs": "SAS",
+    "toronto raptors": "TOR", "utah jazz": "UTA", "washington wizards": "WAS",
+}
+
 def _tokens(s):
     return [t for t in s.split() if t not in _STOP and not t.isdigit()]
 
@@ -101,6 +134,10 @@ class Emparejador:
             for c in self.claves:
                 if c.upper() in cand:
                     return c, 0.97
+        for v in variantes:
+            ab = NOMBRE_ABREV.get(_norm(v))
+            if ab and ab in self.claves:
+                return ab, 0.97
         mejor, sm = None, 0.0
         for v in variantes:
             nb = _norm(v)
