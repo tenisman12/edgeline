@@ -121,9 +121,11 @@ class Tenis:
         self.filas = [r for r in io._leer_csv(io.DATOS("tenis.csv"))]
         nombres = {r.get("winner_name") for r in self.filas} | {r.get("loser_name") for r in self.filas}
         self.emp = equipos.EmparejadorJugadores(sorted(n for n in nombres if n))
+        # indice por nombre NORMALIZADO: TML y ESPN escriben distinto ("Alex de Minaur" / "Alex De Minaur"); con nombre exacto
+        # el partido no se encontraba y quedaba pendiente
         self.idx = {}
         for r in self.filas:
-            self.idx.setdefault((r.get("winner_name"), r.get("loser_name")), []).append(r)
+            self.idx.setdefault((equipos._norm(r.get("winner_name")), equipos._norm(r.get("loser_name"))), []).append(r)
 
     def resultado(self, liga, fecha, home, away):
         self._cargar()
@@ -132,7 +134,7 @@ class Tenis:
         if not j1 or not j2: return None, "jugador sin empate en tus datos"
         f0 = dia(fecha); mejor = None
         for w, l in ((j1, j2), (j2, j1)):
-            for r in self.idx.get((w, l), []):
+            for r in self.idx.get((equipos._norm(w), equipos._norm(l)), []):
                 if (r.get("tour") or "").lower() not in ("", liga):
                     continue
                 td = str(r.get("tourney_date") or "")
