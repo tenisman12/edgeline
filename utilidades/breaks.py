@@ -102,14 +102,16 @@ def partidos(dias=2):
     for p in d.get("partidos", []):
         if p.get("tipo") != "tenis" or not p.get("modelo") or p.get("fecha") not in fechas:
             continue
-        b = None
+        b = None; ajustado = False
         for nom, v in p["modelo"].get("extra") or []:
             if nom == "Breaks esperados" and isinstance(v, (int, float)):
                 b = float(v)
+            if nom == "Ajuste breaks":
+                ajustado = True             # la plataforma ya corrigio el sesgo (validacion por circuito y formato)
         if b is None:
             continue
         out.append({"liga": p["liga"], "id": str(p["id"]), "fecha": p["fecha"], "hora": p.get("hora", ""), "torneo": p.get("torneo", ""),
-                    "home": p["home"]["nombre"], "away": p["away"]["nombre"], "breaks": b,
+                    "home": p["home"]["nombre"], "away": p["away"]["nombre"], "breaks": b, "ajustado": ajustado,
                     "games": p["modelo"].get("total"), "nota": p["modelo"].get("nota", "")})
     return sorted(out, key=lambda x: (x["fecha"], x["hora"]))
 
@@ -123,6 +125,8 @@ def buscar(ps, clave):
 
 
 def decidir(p, linea, c_over, c_under, sesgo, sd):
+    if p.get("ajustado"):
+        sesgo = 0.0                         # no se corrige dos veces
     aj = p["breaks"] + sesgo
     po, pu, _ = probabilidades(aj, linea, sd)
     ev_o, ev_u = po * c_over - 1, pu * c_under - 1
@@ -172,7 +176,7 @@ def main():
         print("%-5s %-7s %-6s %-30s %-30s %6s %6s  %s" % ("liga", "id", "hora", "jugador 1", "jugador 2", "model", "ajust", "torneo"))
         for p in ps:
             print("%-5s %-7s %-6s %-30s %-30s %6.1f %6.1f  %s" % (p["liga"], p["id"], p["hora"], p["home"][:30], p["away"][:30],
-                                                                 p["breaks"], p["breaks"] + sesgo, p["torneo"]))
+                                                                 p["breaks"], p["breaks"] + (0.0 if p.get("ajustado") else sesgo), p["torneo"]))
         print("\nLinea justa ~ 'ajust'. Pick solo si la casa esta a >= %.1f break de distancia y cuota >= %.2f." % (UMBRAL, CUOTA_MIN))
         print("Cargar linea: python utilidades\\breaks.py linea <apellido|id> <linea> <cuota over> <cuota under>")
         return

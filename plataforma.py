@@ -51,6 +51,7 @@ for _l in ("ligamx", "mls", "seriea", "atp", "wta"):
 
 
 AJUSTE_GAMES = {}  # (liga, best_of) -> sesgo de games a corregir (lo calcula validar_mercados.py)
+AJUSTE_BREAKS = {} # (liga, best_of) -> sesgo de breaks a corregir (real - modelo, validar_mercados.py)
 BREAKS_OK = {}     # (liga, best_of) -> los mercados de breaks (totales y over/under) superan la validacion estricta
 
 
@@ -74,6 +75,9 @@ def _aplicar_validacion():
     for tour, d in (vm.get("ajustes_tenis") or {}).items():
         for bo, v in d.items():
             AJUSTE_GAMES[(tour.lower(), int(bo))] = float(v)
+    for tour, d in (vm.get("ajustes_tenis_breaks") or {}).items():
+        for bo, v in d.items():
+            AJUSTE_BREAKS[(tour.lower(), int(bo))] = float(v)
     dep = vm.get("deportes", {})
     for liga, clave in (("nhl", "hockey"), ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb"),
                         ("mlb", "beisbol_mlb"), ("npb", "beisbol_npb"), ("kbo", "beisbol_kbo")):
@@ -509,7 +513,8 @@ def _pred(g, c, fecha, eventos=None):
         return {"p_home": r["p1"], "p_away": r["p2"], "unidad": "games",
                 "total": r["games_esperados"], "linea_total": linea, "linea_es_mercado": linea_mkt not in (None, "no"),
                 "p_over": r["p_over_games"], "confianza": _conf(max(r["p1"], r["p2"])),
-                "extra": [("Breaks esperados", r["breaks_esperados"]),
+                "extra": [("Breaks esperados", round(max(0.1, r["breaks_esperados"] + AJUSTE_BREAKS.get((g["liga"], bo), 0.0)), 1)),
+                          ("Ajuste breaks", AJUSTE_BREAKS.get((g["liga"], bo), 0.0)),
                           ("Prob. de al menos un break", r["p_al_menos_un_break"]),
                           ("Hold saque local / visita", "%s / %s" % (r["hold_j1"], r["hold_j2"]))],
                 "nota": "Superficie estimada: %s. Best of %d." % (g.get("superficie"), bo)}, None

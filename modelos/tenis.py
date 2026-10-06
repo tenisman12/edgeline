@@ -137,12 +137,44 @@ def pset_desde_partido(p_match_obj, best_of=3):
         else: hi = mid
     return (lo + hi) / 2
 
+GPS_MODO = os.environ.get("EDGELINE_TENIS_GPS", "markov")    # 'markov' (exacto desde holds) o 'lineal' (formula anterior)
+
+
+def games_por_set(h1, h2):
+    """Games esperados en un set con saque alternado: J1 retiene con h1, J2 con h2; 7-5 y tiebreak a 6-6
+    (cuenta como 13 games). Promedio de que saque primero J1 o J2."""
+    def una(primero_j1):
+        prob = {(0, 0): 1.0}; esp = 0.0
+        for g in range(13):
+            nuevo = {}
+            for (a, b), pr in prob.items():
+                saca_j1 = (g % 2 == 0) == primero_j1
+                pj1 = h1 if saca_j1 else 1 - h2
+                for (da, db), pp in (((1, 0), pj1), ((0, 1), 1 - pj1)):
+                    na, nb = a + da, b + db
+                    fin = (na == 6 and nb <= 4) or (nb == 6 and na <= 4) or (na == 7 and nb == 5) or (nb == 7 and na == 5)
+                    if fin:
+                        esp += pr * pp * (na + nb)
+                    elif na == 6 and nb == 6:
+                        esp += pr * pp * 13
+                    else:
+                        nuevo[(na, nb)] = nuevo.get((na, nb), 0.0) + pr * pp
+            prob = nuevo
+            if not prob:
+                break
+        return esp
+    return 0.5 * (una(True) + una(False))
+
+
 def games_esperados(h1, h2, best_of=3, pset=None):
     """Games totales esperados = games por set * sets esperados. Si se da pset (coherente con la
     probabilidad de ganar el partido) se usa; si no, se calcula desde los holds."""
-    pg1 = (h1 + (1 - h2)) / 2
-    dom = abs(pg1 - .5)
-    gps = 9.6 - 6 * dom          # mas parejo -> mas games por set
+    if GPS_MODO == "markov":
+        gps = games_por_set(h1, h2)
+    else:
+        pg1 = (h1 + (1 - h2)) / 2
+        dom = abs(pg1 - .5)
+        gps = 9.6 - 6 * dom          # mas parejo -> mas games por set
     if pset is None:
         pset = p_set(h1, h2, h1, 1 - h2)
     return gps * sets_esperados(pset, best_of)
@@ -178,13 +210,46 @@ def predecir(j1, j2, superficie="Hard", best_of=3, tour_spw=0.635, linea_games=2
         "hold_j1": round(h1, 3), "hold_j2": round(h2, 3),
         "p_set_j1": round(pset_c, 3),
         "games_esperados": round(gtot, 1), "games_sin_ajuste": round(gtot_modelo, 1),
-        "p_over_games": round(_p_over_games(gtot, linea_games, SD_GAMES[best_of]), 3),
+        "p_over_games": round(_p_over_mezcla(h1, h2, pset_c, best_of, linea_games, ajuste_games) if GPS_MODO == "markov"
+                              else _p_over_games(gtot, linea_games, SD_GAMES[best_of]), 3),
         "linea_games": linea_games,
         "breaks_esperados": round(breaks_esp, 1),
         "p_al_menos_un_break": round(min(max(p_break, 0), 1), 3),
         "p_2_0" if best_of == 3 else "p_barrida": round(p_j1_gana_corrido(pset_c, best_of), 3),
         "p_sets_corridos": round(p_sets_corridos(pset_c, best_of), 3),
+        "_h": (h1, h2, pset_c, best_of, ajuste_games),
     }
+
+
+def p_over_linea(pr, linea):
+    """P(over) del total de games a cualquier linea, con la misma formula que usa predecir()."""
+    h1, h2, pset, bo, aj = pr["_h"]
+    if GPS_MODO == "markov":
+        return _p_over_mezcla(h1, h2, pset, bo, linea, aj)
+    return _p_over_games(pr["games_esperados"], linea, SD_GAMES[bo])
+
+SD_SET = float(os.environ.get("EDGELINE_TENIS_SD_SET", "1.8"))   # desviacion de games por set
+
+
+def _p_over_mezcla(h1, h2, pset, best_of, linea, ajuste=0.0):
+    """P(over) del total de games como mezcla por numero de sets: el total de un bo3 es bimodal
+    (2 sets ~20 games, 3 sets ~30), una sola normal lo aplasta. Cada escenario: normal(n*gps, sqrt(n)*SD_SET)."""
+    gps = games_por_set(h1, h2)
+    n_min = 3 if best_of == 5 else 2
+    if best_of == 5:
+        ps = {3: _mezcla(lambda q: q**3 + (1 - q)**3, pset), 4: _mezcla(lambda q: 3 * q**3 * (1 - q) + 3 * (1 - q)**3 * q, pset)}
+        ps[5] = max(0.0, 1 - ps[3] - ps[4])
+    else:
+        ps = {2: _mezcla(lambda q: q**2 + (1 - q)**2, pset)}
+        ps[3] = max(0.0, 1 - ps[2])
+    from math import erf, sqrt
+    tot = 0.0
+    for n, pn in ps.items():
+        mu = n * gps + ajuste * (n / (n_min + 0.5))
+        sd = sqrt(n) * SD_SET
+        tot += pn * (1 - 0.5 * (1 + erf((linea - mu) / (sd * sqrt(2)))))
+    return tot
+
 
 def _p_over_games(mu, linea, sd=3.2):
     """Aprox normal para el total de games."""

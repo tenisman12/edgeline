@@ -6,7 +6,7 @@ Igual que beisbol/americano: el ganador combina la vista ELO y la vista de anota
 reciente; validar() compara y halla el mejor peso EN TU DATA. Mercados: ganador,
 spread, total. Solo stdlib.
 """
-import math, sys, os
+import os, math, sys
 
 try:
     from nucleo import io
@@ -63,6 +63,9 @@ def _platt(pairs, iters=600, lr=0.05):
         a-=lr*ga/n; b-=lr*gb/n
     return a,b
 
+VENT_TOT = int(os.environ.get("EDGELINE_NBA_VENT_TOT", "500"))   # juegos recientes para el sesgo del total
+
+
 def entrenar(liga=None, min_j=5, w=W_ENS):
     js=_juegos(liga); eq={}; tot=0.0; ng=0; lg=113.0; cal=[]; rm=[]; rt=[]
     for f,gp,h,a in js:
@@ -86,7 +89,7 @@ def entrenar(liga=None, min_j=5, w=W_ENS):
     def _ms(v,sd0):
         if len(v)<150: return 0.0, sd0
         m=sum(v)/len(v); return m, math.sqrt(sum((x-m)**2 for x in v)/(len(v)-1))
-    sesgo_m,sd_m=_ms(rm,SD_MARGEN); sesgo_t,sd_t=_ms(rt,SD_TOT)
+    sesgo_m,sd_m=_ms(rm,SD_MARGEN); sesgo_t,sd_t=_ms(rt[-VENT_TOT:],SD_TOT)   # sesgo del total: solo lo reciente (la anotacion sube cada temporada)
     return {"eq":eq,"lg":lg,"platt":platt,"cal":cal,"w":w,
             "sesgo_m":sesgo_m,"sd_m":sd_m,"sesgo_t":sesgo_t,"sd_t":sd_t}
 

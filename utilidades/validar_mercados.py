@@ -44,6 +44,8 @@ def _f(x):
 
 RESULT = {}
 AJUSTES = {}      # circuito -> {formato: sesgo de games vigente al final de la validacion}
+AJUSTES_BR = {}   # circuito -> {formato: sesgo de breaks vigente al final de la validacion}
+RESB = {}         # (circuito, formato) -> residuos de breaks (real - modelo), en orden
 Z_MIN = 2.0; CAL_MAX = 0.04
 
 
@@ -357,6 +359,7 @@ def validar_tenis(meses, min_j=10):
         if None not in (bpw, bpl, _f(r.get("w_bpSaved")), _f(r.get("l_bpSaved"))):
             brk = (bpw - _f(r["w_bpSaved"])) + (bpl - _f(r["l_bpSaved"]))
         en_ventana = r.get("tourney_date", "") >= corte
+        pr = None
         if en_ventana and jw["sp"] >= min_j * 50 and jl["sp"] >= min_j * 50:
             p1n, p2n = (w, l) if w < l else (l, w)
             j1, j2 = g(p1n), g(p2n)
@@ -380,7 +383,7 @@ def validar_tenis(meses, min_j=10):
                     rp_.add_val("Total games [%s]" % tag, pr["games_esperados"], games, mu0)
                     for L in lineas:
                         fb = sum(1 for x in H if x > L) / len(H)
-                        rp_.add_prob("Over/Under games [%s]" % tag, T._p_over_games(pr["games_esperados"], L, T.SD_GAMES[bo]),
+                        rp_.add_prob("Over/Under games [%s]" % tag, (T.p_over_linea(pr, L) if hasattr(T, "p_over_linea") else T._p_over_games(pr["games_esperados"], L, T.SD_GAMES[bo])),
                                      1 if games > L else 0, fb)
                     S = hist["ss%d" % bo]
                     if len(S) > 200:
@@ -390,15 +393,20 @@ def validar_tenis(meses, min_j=10):
                                      1 if nsets == n_need else 0, sum(S) / len(S))
             if brk is not None and len(hist["br%d" % bo]) > 200:
                 B = hist["br%d" % bo]
-                rp_.add_val("Breaks totales [%s]" % tag, pr["breaks_esperados"], brk, sum(B) / len(B))
-                mu_b = pr["breaks_esperados"]
+                RB = RESB.setdefault((tour, bo), [])
+                ajb = (sum(RB[-400:]) / len(RB[-400:])) if len(RB) >= 150 else 0.0     # sesgo de breaks, solo con el pasado
+                AJUSTES_BR.setdefault(tour, {})[str(bo)] = round(ajb, 2)
+                mu_b = max(0.1, pr["breaks_esperados"] + ajb)
+                rp_.add_val("Breaks totales [%s]" % tag, mu_b, brk, sum(B) / len(B))
                 for L in (medio(sum(B) / len(B)) - 1, medio(sum(B) / len(B)), medio(sum(B) / len(B)) + 1):
                     po = 1 - sum(math.exp(-mu_b) * mu_b ** k / math.factorial(k) for k in range(int(L) + 1))
                     rp_.add_prob("Breaks over/under [%s]" % tag, po, 1 if brk > L else 0,
                                  sum(1 for x in B if x > L) / len(B))
         # historia para lineas base (siempre despues de predecir)
         if ok and games: hist["g%d" % bo].append(games); hist["ss%d" % bo].append(1 if nsets == (2 if bo == 3 else 3) else 0)
-        if brk is not None: hist["br%d" % bo].append(brk)
+        if brk is not None:
+            hist["br%d" % bo].append(brk)
+            if pr: RESB.setdefault((tour, bo), []).append(brk - pr["breaks_esperados"])
         jw["sp"] += wsv; jw["spw"] += wsw; jw["rp"] += lsv; jw["rpw"] += (lsv - lsw)
         jl["sp"] += lsv; jl["spw"] += lsw; jl["rp"] += wsv; jl["rpw"] += (wsv - wsw)
         exp = 1 / (1 + 10 ** (-(ew - el) / 400)); jw["elo"][sup] = ew + 24 * (1 - exp); jl["elo"][sup] = el - 24 * (1 - exp)
@@ -419,6 +427,7 @@ def guardar():
     except Exception:
         pass
     if AJUSTES: d["ajustes_tenis"] = AJUSTES
+    if AJUSTES_BR: d["ajustes_tenis_breaks"] = AJUSTES_BR
     d["generado"] = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
     d["criterio"] = "n>=300, mejora a la base, z>=%.1f, mejora en las dos mitades, calibrado (prob |p media - tasa|<=%.2f) o sesgo<=0.10 desv. (conteos)" % (Z_MIN, CAL_MAX)
     d.setdefault("deportes", {}).update({k: v for k, v in RESULT.items() if not k.startswith("futbol_")})
