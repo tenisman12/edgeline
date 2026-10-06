@@ -1,959 +1,8 @@
 {
- "generado": "2026-10-06T12:26:43",
+ "generado": "2026-10-06T15:24:13",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
-  {
-   "liga": "npb",
-   "id": "npb-20261006-ロッテ-西武",
-   "fecha": "2026-10-06",
-   "hora": "03:00",
-   "home": "Marines",
-   "away": "Lions",
-   "p_modelo": 0.465,
-   "p_sharp": 0.0337,
-   "p_final": 0.0723,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -6.29,
-   "linea_home": "+2.5",
-   "p_runline_home": 0.1898,
-   "detalle_modelo": {
-    "elo_h": 1458.2,
-    "elo_a": 1525.2,
-    "dif_h": -0.629,
-    "dif_a": 0.254,
-    "p_base": 0.465,
-    "abridor_h": null,
-    "abridor_a": null,
-    "carreras_abridor": 0.0
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Marines",
-     "p": 0.0723,
-     "cuota": 3000.0,
-     "decimal": 31.0,
-     "casa": "unibet_se",
-     "ev": 1.241,
-     "cuota_min": 13.83,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "consenso",
-       "h2h",
-       "fuerza",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 59.8,
-     "nota_lectura": "modelo 43 pp arriba del mercado en el lado del pick: revisar, no pick"
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "Lions",
-     "p": 0.9277,
-     "cuota": -10000.0,
-     "decimal": 1.01,
-     "casa": "unibet_se",
-     "ev": -0.063,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 5,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "consenso",
-       "h2h",
-       "fuerza",
-       "racha"
-      ],
-      "en_contra": [
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 45.0
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Marines +2.5",
-     "p": 0.1898,
-     "cuota": 600.0,
-     "decimal": 7.0,
-     "casa": "williamhill_us",
-     "ev": 0.3285,
-     "cuota_min": 5.27,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "fuerza",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 54.8
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "Lions -2.5",
-     "p": 0.8102,
-     "cuota": -800.0,
-     "decimal": 1.125,
-     "casa": "betmgm",
-     "ev": -0.0885,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 3,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "fuerza",
-       "racha"
-      ],
-      "en_contra": [
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 34.9
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Marines",
-    "p": 0.0723,
-    "cuota": 3000.0,
-    "decimal": 31.0,
-    "casa": "unibet_se",
-    "ev": 1.241,
-    "cuota_min": 13.83,
-    "en_rango": true,
-    "senales_favor": 1,
-    "senales_contra": 5,
-    "senales": {
-     "a_favor": [
-      "bullpen"
-     ],
-     "en_contra": [
-      "forma",
-      "consenso",
-      "h2h",
-      "fuerza",
-      "racha"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 59.8,
-    "nota_lectura": "modelo 43 pp arriba del mercado en el lado del pick: revisar, no pick"
-   },
-   "confianza": "minima",
-   "stake": 0.0,
-   "pretemporada": false
-  },
-  {
-   "liga": "kbo",
-   "id": "kbo-20261006NCLG0",
-   "fecha": "2026-10-06",
-   "hora": "03:30",
-   "home": "LG Twins",
-   "away": "NC Dinos",
-   "p_modelo": 0.6052,
-   "p_sharp": 0.9411,
-   "p_final": 0.8989,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 5.49,
-   "linea_home": "-5.5",
-   "p_runline_home": 0.4995,
-   "detalle_modelo": {
-    "elo_h": 1507.5,
-    "elo_a": 1462.6,
-    "dif_h": -0.007,
-    "dif_a": -0.293,
-    "p_base": 0.5812,
-    "abridor_h": {
-     "nombre": "박시원",
-     "fip_ventana": 3.87,
-     "fip_ultimas5": 3.38,
-     "k_pct": 0.188,
-     "bb_pct": 0.11,
-     "ip_ventana": "54.0",
-     "bullpen_game": true,
-     "innings": 3.0,
-     "era_ajustada": 4.14,
-     "ga_equipo": 5.065
-    },
-    "abridor_a": {
-     "nombre": "최성영",
-     "fip_ventana": 5.65,
-     "fip_ultimas5": 4.37,
-     "k_pct": 0.145,
-     "bb_pct": 0.136,
-     "ip_ventana": "47.2",
-     "bullpen_game": true,
-     "innings": 3.0,
-     "era_ajustada": 5.13,
-     "ga_equipo": 5.321
-    },
-    "carreras_abridor": 0.25
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "LG Twins",
-     "p": 0.8989,
-     "cuota": -10000.0,
-     "decimal": 1.01,
-     "casa": "betmgm",
-     "ev": -0.0921,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 5,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "consenso",
-       "h2h",
-       "fuerza",
-       "abridor",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "osciladores",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 33.9
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "NC Dinos",
-     "p": 0.1011,
-     "cuota": 1500.0,
-     "decimal": 16.0,
-     "casa": "nordicbet",
-     "ev": 0.6175,
-     "cuota_min": 9.89,
-     "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "osciladores",
-       "racha"
-      ],
-      "en_contra": [
-       "consenso",
-       "h2h",
-       "fuerza",
-       "abridor",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 43.1,
-     "nota_lectura": "modelo 34 pp arriba del mercado en el lado del pick: revisar, no pick"
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "LG Twins -5.5",
-     "p": 0.4995,
-     "cuota": 260.0,
-     "decimal": 3.6,
-     "casa": "williamhill_us",
-     "ev": 0.7982,
-     "cuota_min": 2.0,
-     "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "fuerza",
-       "abridor",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "osciladores",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 38.6
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "NC Dinos +5.5",
-     "p": 0.5005,
-     "cuota": -250.0,
-     "decimal": 1.4,
-     "casa": "draftkings",
-     "ev": -0.2993,
-     "cuota_min": 2.0,
-     "en_rango": false,
-     "senales_favor": 3,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "osciladores",
-       "racha"
-      ],
-      "en_contra": [
-       "fuerza",
-       "abridor",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 64.5
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "away",
-    "texto": "NC Dinos",
-    "p": 0.1011,
-    "cuota": 1500.0,
-    "decimal": 16.0,
-    "casa": "nordicbet",
-    "ev": 0.6175,
-    "cuota_min": 9.89,
-    "en_rango": true,
-    "senales_favor": 3,
-    "senales_contra": 5,
-    "senales": {
-     "a_favor": [
-      "forma",
-      "osciladores",
-      "racha"
-     ],
-     "en_contra": [
-      "consenso",
-      "h2h",
-      "fuerza",
-      "abridor",
-      "bullpen"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 43.1,
-    "nota_lectura": "modelo 34 pp arriba del mercado en el lado del pick: revisar, no pick"
-   },
-   "confianza": "minima",
-   "stake": 0.0,
-   "pretemporada": false
-  },
-  {
-   "liga": "kbo",
-   "id": "kbo-20261006SSHT0",
-   "fecha": "2026-10-06",
-   "hora": "03:30",
-   "home": "Kia Tigers",
-   "away": "Samsung Lions",
-   "p_modelo": 0.4981,
-   "p_sharp": 0.2554,
-   "p_final": 0.3091,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -2.15,
-   "linea_home": "+1.5",
-   "p_runline_home": 0.3533,
-   "detalle_modelo": {
-    "elo_h": 1542.2,
-    "elo_a": 1565.9,
-    "dif_h": 0.659,
-    "dif_a": 1.115,
-    "p_base": 0.5102,
-    "abridor_h": {
-     "nombre": "김태형",
-     "fip_ventana": 5.7,
-     "fip_ultimas5": 5.43,
-     "k_pct": 0.14,
-     "bb_pct": 0.108,
-     "ip_ventana": "75.0",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 5.3,
-     "ga_equipo": 4.652
-    },
-    "abridor_a": {
-     "nombre": "장찬희",
-     "fip_ventana": 5.46,
-     "fip_ultimas5": 6.08,
-     "k_pct": 0.171,
-     "bb_pct": 0.103,
-     "ip_ventana": "71.0",
-     "bullpen_game": true,
-     "innings": 3.0,
-     "era_ajustada": 5.42,
-     "ga_equipo": 4.583
-    },
-    "carreras_abridor": -0.12
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Kia Tigers",
-     "p": 0.3091,
-     "cuota": 267.0,
-     "decimal": 3.67,
-     "casa": "pinnacle",
-     "ev": 0.1343,
-     "cuota_min": 3.24,
-     "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "h2h",
-       "osciladores",
-       "racha"
-      ],
-      "en_contra": [
-       "consenso",
-       "abridor",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 42.9,
-     "nota_lectura": "modelo 24 pp arriba del mercado en el lado del pick: revisar, no pick"
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "Samsung Lions",
-     "p": 0.6909,
-     "cuota": -222.0,
-     "decimal": 1.45,
-     "casa": "mybookieag",
-     "ev": 0.0022,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 3,
-     "senales_contra": 3,
-     "senales": {
-      "a_favor": [
-       "consenso",
-       "abridor",
-       "bullpen"
-      ],
-      "en_contra": [
-       "h2h",
-       "osciladores",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 57.1
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Kia Tigers +1.5",
-     "p": 0.3533,
-     "cuota": -245.0,
-     "decimal": 1.408,
-     "casa": "unibet_se",
-     "ev": -0.5026,
-     "cuota_min": 2.83,
-     "en_rango": false,
-     "senales_favor": 2,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "osciladores",
-       "racha"
-      ],
-      "en_contra": [
-       "abridor",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 53.3
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "Samsung Lions -1.5",
-     "p": 0.6467,
-     "cuota": 300.0,
-     "decimal": 4.0,
-     "casa": "betmgm",
-     "ev": 1.587,
-     "cuota_min": 1.7,
-     "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "abridor",
-       "bullpen"
-      ],
-      "en_contra": [
-       "osciladores",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 67.8
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Kia Tigers",
-    "p": 0.3091,
-    "cuota": 267.0,
-    "decimal": 3.67,
-    "casa": "pinnacle",
-    "ev": 0.1343,
-    "cuota_min": 3.24,
-    "en_rango": true,
-    "senales_favor": 3,
-    "senales_contra": 3,
-    "senales": {
-     "a_favor": [
-      "h2h",
-      "osciladores",
-      "racha"
-     ],
-     "en_contra": [
-      "consenso",
-      "abridor",
-      "bullpen"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 42.9,
-    "nota_lectura": "modelo 24 pp arriba del mercado en el lado del pick: revisar, no pick"
-   },
-   "confianza": "minima",
-   "stake": 0.0,
-   "pretemporada": false
-  },
-  {
-   "liga": "kbo",
-   "id": "kbo-20261006SKHH0",
-   "fecha": "2026-10-06",
-   "hora": "03:30",
-   "home": "Hanwha Eagles",
-   "away": "SSG Landers",
-   "p_modelo": 0.5694,
-   "p_sharp": 0.9411,
-   "p_final": 0.8955,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 5.41,
-   "linea_home": "-6.5",
-   "p_runline_home": 0.4004,
-   "detalle_modelo": {
-    "elo_h": 1443.6,
-    "elo_a": 1495.7,
-    "dif_h": -0.128,
-    "dif_a": -0.614,
-    "p_base": 0.4799,
-    "abridor_h": {
-     "nombre": "화이트",
-     "fip_ventana": 3.94,
-     "fip_ultimas5": 4.84,
-     "k_pct": 0.175,
-     "bb_pct": 0.076,
-     "ip_ventana": "163.0",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 4.61,
-     "ga_equipo": 5.809
-    },
-    "abridor_a": {
-     "nombre": "김건우",
-     "fip_ventana": 5.8,
-     "fip_ultimas5": 5.92,
-     "k_pct": 0.192,
-     "bb_pct": 0.134,
-     "ip_ventana": "128.1",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 5.8,
-     "ga_equipo": 5.543
-    },
-    "carreras_abridor": 0.89
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Hanwha Eagles",
-     "p": 0.8955,
-     "cuota": -10000.0,
-     "decimal": 1.01,
-     "casa": "betmgm",
-     "ev": -0.0955,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 1,
-     "senales_contra": 6,
-     "senales": {
-      "a_favor": [
-       "consenso"
-      ],
-      "en_contra": [
-       "forma",
-       "h2h",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 22.3
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "SSG Landers",
-     "p": 0.1045,
-     "cuota": 1500.0,
-     "decimal": 16.0,
-     "casa": "nordicbet",
-     "ev": 0.6719,
-     "cuota_min": 9.57,
-     "en_rango": true,
-     "senales_favor": 6,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "h2h",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ],
-      "en_contra": [
-       "consenso"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 54.8,
-     "nota_lectura": "modelo 37 pp arriba del mercado en el lado del pick: revisar, no pick"
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Hanwha Eagles -6.5",
-     "p": 0.4004,
-     "cuota": -222.0,
-     "decimal": 1.45,
-     "casa": "mybookieag",
-     "ev": -0.4192,
-     "cuota_min": 2.5,
-     "en_rango": false,
-     "senales_favor": 0,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [],
-      "en_contra": [
-       "forma",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 35.2
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "SSG Landers +6.5",
-     "p": 0.5996,
-     "cuota": 250.0,
-     "decimal": 3.5,
-     "casa": "nordicbet",
-     "ev": 1.0986,
-     "cuota_min": 1.7,
-     "en_rango": true,
-     "senales_favor": 5,
-     "senales_contra": 0,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ],
-      "en_contra": []
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 77.7
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "away",
-    "texto": "SSG Landers",
-    "p": 0.1045,
-    "cuota": 1500.0,
-    "decimal": 16.0,
-    "casa": "nordicbet",
-    "ev": 0.6719,
-    "cuota_min": 9.57,
-    "en_rango": true,
-    "senales_favor": 6,
-    "senales_contra": 1,
-    "senales": {
-     "a_favor": [
-      "forma",
-      "h2h",
-      "osciladores",
-      "fuerza",
-      "bullpen",
-      "racha"
-     ],
-     "en_contra": [
-      "consenso"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 54.8,
-    "nota_lectura": "modelo 37 pp arriba del mercado en el lado del pick: revisar, no pick"
-   },
-   "confianza": "minima",
-   "stake": 0.0,
-   "pretemporada": false
-  },
-  {
-   "liga": "kbo",
-   "id": "kbo-20261006KTWO0",
-   "fecha": "2026-10-06",
-   "hora": "03:30",
-   "home": "Kiwoom Heroes",
-   "away": "KT Wiz",
-   "p_modelo": 0.2786,
-   "p_sharp": 0.1082,
-   "p_final": 0.1395,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -4.67,
-   "linea_home": "+9.5",
-   "p_runline_home": 0.8691,
-   "detalle_modelo": {
-    "elo_h": 1388.4,
-    "elo_a": 1586.3,
-    "dif_h": -1.725,
-    "dif_a": 1.071,
-    "p_base": 0.3349,
-    "abridor_h": {
-     "nombre": "박준현",
-     "fip_ventana": 4.99,
-     "fip_ultimas5": 5.8,
-     "k_pct": 0.218,
-     "bb_pct": 0.179,
-     "ip_ventana": "84.1",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 5.47,
-     "ga_equipo": 5.662
-    },
-    "abridor_a": {
-     "nombre": "대니엘",
-     "fip_ventana": 2.81,
-     "fip_ultimas5": 2.27,
-     "k_pct": 0.293,
-     "bb_pct": 0.091,
-     "ip_ventana": "50.0",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 3.3,
-     "ga_equipo": 4.571
-    },
-    "carreras_abridor": -0.66
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Kiwoom Heroes",
-     "p": 0.1395,
-     "cuota": 725.0,
-     "decimal": 8.25,
-     "casa": "betclic_fr",
-     "ev": 0.1505,
-     "cuota_min": 7.17,
-     "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 6,
-     "senales": {
-      "a_favor": [
-       "osciladores",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "consenso",
-       "h2h",
-       "fuerza",
-       "abridor",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 33.7,
-     "nota_lectura": "modelo 17 pp arriba del mercado en el lado del pick: revisar, no pick"
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "KT Wiz",
-     "p": 0.8605,
-     "cuota": -100000.0,
-     "decimal": 1.001,
-     "casa": "nordicbet",
-     "ev": -0.1386,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 6,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "consenso",
-       "h2h",
-       "fuerza",
-       "abridor",
-       "racha"
-      ],
-      "en_contra": [
-       "osciladores",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 43.2
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Kiwoom Heroes +9.5",
-     "p": 0.8691,
-     "cuota": -250.0,
-     "decimal": 1.4,
-     "casa": "fanatics",
-     "ev": 0.2168,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 2,
-     "senales_contra": 4,
-     "senales": {
-      "a_favor": [
-       "osciladores",
-       "bullpen"
-      ],
-      "en_contra": [
-       "forma",
-       "fuerza",
-       "abridor",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 41.7
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "KT Wiz -9.5",
-     "p": 0.1309,
-     "cuota": 220.0,
-     "decimal": 3.2,
-     "casa": "unibet_se",
-     "ev": -0.5812,
-     "cuota_min": 7.64,
-     "en_rango": true,
-     "senales_favor": 4,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "fuerza",
-       "abridor",
-       "racha"
-      ],
-      "en_contra": [
-       "osciladores",
-       "bullpen"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 44.7
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Kiwoom Heroes",
-    "p": 0.1395,
-    "cuota": 725.0,
-    "decimal": 8.25,
-    "casa": "betclic_fr",
-    "ev": 0.1505,
-    "cuota_min": 7.17,
-    "en_rango": true,
-    "senales_favor": 2,
-    "senales_contra": 6,
-    "senales": {
-     "a_favor": [
-      "osciladores",
-      "bullpen"
-     ],
-     "en_contra": [
-      "forma",
-      "consenso",
-      "h2h",
-      "fuerza",
-      "abridor",
-      "racha"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 33.7,
-    "nota_lectura": "modelo 17 pp arriba del mercado en el lado del pick: revisar, no pick"
-   },
-   "confianza": "minima",
-   "stake": 0.0,
-   "pretemporada": false
-  },
   {
    "liga": "mlb",
    "id": "401908015",
@@ -962,12 +11,12 @@
    "home": "Atlanta Braves",
    "away": "Los Angeles Dodgers",
    "p_modelo": 0.5418,
-   "p_sharp": 0.4906,
-   "p_final": 0.5034,
+   "p_sharp": 0.5047,
+   "p_final": 0.514,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.04,
+   "margen_esperado": 0.15,
    "linea_home": "+1.5",
-   "p_runline_home": 0.617,
+   "p_runline_home": 0.6267,
    "detalle_modelo": {
     "elo_h": 1541.5,
     "elo_a": 1587.8,
@@ -1005,69 +54,69 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Atlanta Braves",
-     "p": 0.5034,
-     "cuota": 100.0,
-     "decimal": 2.0,
-     "casa": "pinnacle",
-     "ev": 0.0068,
-     "cuota_min": 1.99,
+     "p": 0.514,
+     "cuota": -104.0,
+     "decimal": 1.962,
+     "casa": "onexbet",
+     "ev": 0.0082,
+     "cuota_min": 1.95,
      "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 6,
+     "senales_favor": 2,
+     "senales_contra": 5,
      "senales": {
       "a_favor": [
+       "consenso",
        "h2h"
       ],
       "en_contra": [
        "forma",
        "movimiento",
-       "consenso",
        "osciladores",
        "fuerza",
        "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 34.7
+     "premium_pts": 37.7
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Los Angeles Dodgers",
-     "p": 0.4966,
-     "cuota": -108.0,
-     "decimal": 1.926,
-     "casa": "fanduel",
-     "ev": -0.0436,
-     "cuota_min": 2.01,
+     "p": 0.486,
+     "cuota": -102.0,
+     "decimal": 1.98,
+     "casa": "pinnacle",
+     "ev": -0.0375,
+     "cuota_min": 2.06,
      "en_rango": true,
-     "senales_favor": 6,
-     "senales_contra": 1,
+     "senales_favor": 5,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "forma",
        "movimiento",
-       "consenso",
        "osciladores",
        "fuerza",
        "bullpen"
       ],
       "en_contra": [
+       "consenso",
        "h2h"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 53.9
+     "premium_pts": 52.7
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Atlanta Braves +1.5",
-     "p": 0.617,
-     "cuota": -187.0,
-     "decimal": 1.535,
-     "casa": "pinnacle",
-     "ev": -0.0531,
+     "p": 0.6267,
+     "cuota": -180.0,
+     "decimal": 1.556,
+     "casa": "onexbet",
+     "ev": -0.0252,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 0,
@@ -1082,18 +131,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 35.4
+     "premium_pts": 42.5
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Los Angeles Dodgers -1.5",
-     "p": 0.383,
+     "p": 0.3733,
      "cuota": 175.0,
      "decimal": 2.75,
-     "casa": "williamhill",
-     "ev": 0.0534,
-     "cuota_min": 2.61,
+     "casa": "lowvig",
+     "ev": 0.0266,
+     "cuota_min": 2.68,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 0,
@@ -1106,38 +155,38 @@
       ],
       "en_contra": []
      },
-     "premium_nivel": "lean",
-     "premium_pts": 50.2
+     "premium_nivel": "pasar",
+     "premium_pts": 43.5
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Atlanta Braves",
-    "p": 0.5034,
-    "cuota": 100.0,
-    "decimal": 2.0,
-    "casa": "pinnacle",
-    "ev": 0.0068,
-    "cuota_min": 1.99,
+    "p": 0.514,
+    "cuota": -104.0,
+    "decimal": 1.962,
+    "casa": "onexbet",
+    "ev": 0.0082,
+    "cuota_min": 1.95,
     "en_rango": true,
-    "senales_favor": 1,
-    "senales_contra": 6,
+    "senales_favor": 2,
+    "senales_contra": 5,
     "senales": {
      "a_favor": [
+      "consenso",
       "h2h"
      ],
      "en_contra": [
       "forma",
       "movimiento",
-      "consenso",
       "osciladores",
       "fuerza",
       "bullpen"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 34.7
+    "premium_pts": 37.7
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -1151,12 +200,12 @@
    "home": "San Diego Padres",
    "away": "Milwaukee Brewers",
    "p_modelo": 0.552,
-   "p_sharp": 0.5463,
-   "p_final": 0.5477,
+   "p_sharp": 0.5523,
+   "p_final": 0.5522,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.52,
+   "margen_esperado": 0.57,
    "linea_home": "-1.5",
-   "p_runline_home": 0.3689,
+   "p_runline_home": 0.373,
    "detalle_modelo": {
     "elo_h": 1566.7,
     "elo_a": 1614.1,
@@ -1194,12 +243,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "San Diego Padres",
-     "p": 0.5477,
-     "cuota": -126.0,
-     "decimal": 1.794,
-     "casa": "pinnacle",
-     "ev": -0.0176,
-     "cuota_min": 1.83,
+     "p": 0.5522,
+     "cuota": -128.0,
+     "decimal": 1.781,
+     "casa": "onexbet",
+     "ev": -0.0163,
+     "cuota_min": 1.81,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 4,
@@ -1218,18 +267,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 36.8
+     "premium_pts": 37.9
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Milwaukee Brewers",
-     "p": 0.4523,
+     "p": 0.4478,
      "cuota": 123.0,
      "decimal": 2.23,
      "casa": "everygame",
-     "ev": 0.0086,
-     "cuota_min": 2.21,
+     "ev": -0.0015,
+     "cuota_min": 2.23,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 4,
@@ -1247,19 +296,19 @@
        "abridor"
       ]
      },
-     "premium_nivel": "pasar",
-     "premium_pts": 60.4
+     "premium_nivel": "lean",
+     "premium_pts": 57.8
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "San Diego Padres -1.5",
-     "p": 0.3689,
-     "cuota": 172.0,
-     "decimal": 2.72,
-     "casa": "pinnacle",
-     "ev": 0.0033,
-     "cuota_min": 2.71,
+     "p": 0.373,
+     "cuota": 166.0,
+     "decimal": 2.66,
+     "casa": "lowvig",
+     "ev": -0.0078,
+     "cuota_min": 2.68,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 4,
@@ -1281,11 +330,11 @@
      "mercado": "Run line",
      "lado": "away",
      "texto": "Milwaukee Brewers +1.5",
-     "p": 0.6311,
-     "cuota": -188.0,
-     "decimal": 1.532,
+     "p": 0.627,
+     "cuota": -175.0,
+     "decimal": 1.571,
      "casa": "williamhill",
-     "ev": -0.0332,
+     "ev": -0.0147,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 4,
@@ -1302,19 +351,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 53.4
+     "premium_pts": 56.6
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "away",
     "texto": "Milwaukee Brewers",
-    "p": 0.4523,
+    "p": 0.4478,
     "cuota": 123.0,
     "decimal": 2.23,
     "casa": "everygame",
-    "ev": 0.0086,
-    "cuota_min": 2.21,
+    "ev": -0.0015,
+    "cuota_min": 2.23,
     "en_rango": true,
     "senales_favor": 4,
     "senales_contra": 4,
@@ -1332,11 +381,1132 @@
       "abridor"
      ]
     },
-    "premium_nivel": "pasar",
-    "premium_pts": 60.4
+    "premium_nivel": "lean",
+    "premium_pts": 57.8
    },
    "confianza": "minima",
    "stake": 0.0,
+   "pretemporada": false
+  },
+  {
+   "liga": "npb",
+   "id": "npb-20261007-阪神-広島",
+   "fecha": "2026-10-07",
+   "hora": "03:00",
+   "home": "Tigers",
+   "away": "Carp",
+   "p_modelo": 0.6251,
+   "p_sharp": 0.5903,
+   "p_final": 0.5991,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": 1.08,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.3965,
+   "detalle_modelo": {
+    "elo_h": 1538.4,
+    "elo_a": 1449.4,
+    "dif_h": 0.579,
+    "dif_a": -0.617,
+    "p_base": 0.6251,
+    "abridor_h": null,
+    "abridor_a": null,
+    "carreras_abridor": 0.0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Tigers",
+     "p": 0.5991,
+     "cuota": -154.0,
+     "decimal": 1.649,
+     "casa": "onexbet",
+     "ev": -0.0119,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 2,
+     "senales_contra": 6,
+     "senales": {
+      "a_favor": [
+       "consenso",
+       "fuerza"
+      ],
+      "en_contra": [
+       "forma",
+       "h2h",
+       "contexto",
+       "osciladores",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 40.0
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Carp",
+     "p": 0.4009,
+     "cuota": 140.0,
+     "decimal": 2.4,
+     "casa": "betonlineag",
+     "ev": -0.0378,
+     "cuota_min": 2.49,
+     "en_rango": true,
+     "senales_favor": 5,
+     "senales_contra": 3,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "h2h",
+       "osciladores",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": [
+       "consenso",
+       "contexto",
+       "fuerza"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 43.3
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Tigers -1.5",
+     "p": 0.3965,
+     "cuota": 163.0,
+     "decimal": 2.63,
+     "casa": "onexbet",
+     "ev": 0.0429,
+     "cuota_min": 2.52,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "fuerza"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 47.2
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Carp +1.5",
+     "p": 0.6035,
+     "cuota": -180.0,
+     "decimal": 1.556,
+     "casa": "pinnacle",
+     "ev": -0.0613,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 4,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": [
+       "fuerza"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 39.2
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "away",
+    "texto": "Carp",
+    "p": 0.4009,
+    "cuota": 140.0,
+    "decimal": 2.4,
+    "casa": "betonlineag",
+    "ev": -0.0378,
+    "cuota_min": 2.49,
+    "en_rango": true,
+    "senales_favor": 5,
+    "senales_contra": 3,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "h2h",
+      "osciladores",
+      "bullpen",
+      "racha"
+     ],
+     "en_contra": [
+      "consenso",
+      "contexto",
+      "fuerza"
+     ]
+    },
+    "premium_nivel": "pasar",
+    "premium_pts": 43.3
+   },
+   "confianza": "minima",
+   "stake": 0.0,
+   "pretemporada": false
+  },
+  {
+   "liga": "kbo",
+   "id": "kbo-20261007OBLG0",
+   "fecha": "2026-10-07",
+   "hora": "03:30",
+   "home": "LG Twins",
+   "away": "Doosan Bears",
+   "p_modelo": 0.5052,
+   "p_sharp": 0.5564,
+   "p_final": 0.5437,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": 0.47,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.3778,
+   "detalle_modelo": {
+    "elo_h": 1511.9,
+    "elo_a": 1538.3,
+    "dif_h": 0.029,
+    "dif_a": 0.444,
+    "p_base": 0.5074,
+    "abridor_h": {
+     "nombre": "임찬규",
+     "fip_ventana": 4.28,
+     "fip_ultimas5": 4.49,
+     "k_pct": 0.139,
+     "bb_pct": 0.071,
+     "ip_ventana": "161.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.49,
+     "ga_equipo": 5.036
+    },
+    "abridor_a": {
+     "nombre": "최민석",
+     "fip_ventana": 3.75,
+     "fip_ultimas5": 3.51,
+     "k_pct": 0.204,
+     "bb_pct": 0.099,
+     "ip_ventana": "141.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.75,
+     "ga_equipo": 4.338
+    },
+    "carreras_abridor": -0.02
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "LG Twins",
+     "p": 0.5437,
+     "cuota": -135.0,
+     "decimal": 1.741,
+     "casa": "betonlineag",
+     "ev": -0.0536,
+     "cuota_min": 1.84,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "consenso",
+       "h2h"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 27.0
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Doosan Bears",
+     "p": 0.4563,
+     "cuota": 122.0,
+     "decimal": 2.22,
+     "casa": "onexbet",
+     "ev": 0.0131,
+     "cuota_min": 2.19,
+     "en_rango": true,
+     "senales_favor": 4,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "consenso",
+       "h2h"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 58.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "LG Twins -1.5",
+     "p": 0.3778,
+     "cuota": 147.0,
+     "decimal": 2.47,
+     "casa": "onexbet",
+     "ev": -0.0667,
+     "cuota_min": 2.65,
+     "en_rango": true,
+     "senales_favor": 0,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 17.3
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Doosan Bears +1.5",
+     "p": 0.6222,
+     "cuota": -164.0,
+     "decimal": 1.61,
+     "casa": "onexbet",
+     "ev": 0.0015,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 4,
+     "senales_contra": 0,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": []
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 65.2
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "away",
+    "texto": "Doosan Bears",
+    "p": 0.4563,
+    "cuota": 122.0,
+    "decimal": 2.22,
+    "casa": "onexbet",
+    "ev": 0.0131,
+    "cuota_min": 2.19,
+    "en_rango": true,
+    "senales_favor": 4,
+    "senales_contra": 2,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "osciladores",
+      "abridor",
+      "racha"
+     ],
+     "en_contra": [
+      "consenso",
+      "h2h"
+     ]
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 58.6
+   },
+   "confianza": "baja",
+   "stake": 0.01,
+   "pretemporada": false
+  },
+  {
+   "liga": "kbo",
+   "id": "kbo-20261007HTLT0",
+   "fecha": "2026-10-07",
+   "hora": "03:30",
+   "home": "Lotte Giants",
+   "away": "Kia Tigers",
+   "p_modelo": 0.4512,
+   "p_sharp": 0.3874,
+   "p_final": 0.4031,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": -1.06,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.4665,
+   "detalle_modelo": {
+    "elo_h": 1469.4,
+    "elo_a": 1540.1,
+    "dif_h": -0.489,
+    "dif_a": 0.647,
+    "p_base": 0.4613,
+    "abridor_h": {
+     "nombre": "김태균",
+     "fip_ventana": 3.84,
+     "fip_ultimas5": 7.09,
+     "k_pct": 0.16,
+     "bb_pct": 0.12,
+     "ip_ventana": "4.0",
+     "bullpen_game": true,
+     "innings": 3.0,
+     "era_ajustada": 5.21,
+     "ga_equipo": 5.18
+    },
+    "abridor_a": {
+     "nombre": "양현종",
+     "fip_ventana": 5.23,
+     "fip_ultimas5": 3.71,
+     "k_pct": 0.154,
+     "bb_pct": 0.115,
+     "ip_ventana": "114.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.51,
+     "ga_equipo": 4.655
+    },
+    "carreras_abridor": -0.1
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Lotte Giants",
+     "p": 0.4031,
+     "cuota": 152.0,
+     "decimal": 2.52,
+     "casa": "onexbet",
+     "ev": 0.0158,
+     "cuota_min": 2.48,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 6,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 41.3
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Kia Tigers",
+     "p": 0.5969,
+     "cuota": -160.0,
+     "decimal": 1.625,
+     "casa": "betonlineag",
+     "ev": -0.03,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 6,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 51.8
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Lotte Giants +1.5",
+     "p": 0.4665,
+     "cuota": 104.0,
+     "decimal": 2.04,
+     "casa": "onexbet",
+     "ev": -0.0484,
+     "cuota_min": 2.14,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 40.4
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Kia Tigers -1.5",
+     "p": 0.5335,
+     "cuota": -110.0,
+     "decimal": 1.909,
+     "casa": "fanduel",
+     "ev": 0.0186,
+     "cuota_min": 1.87,
+     "en_rango": true,
+     "senales_favor": 4,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 51.6
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "Lotte Giants",
+    "p": 0.4031,
+    "cuota": 152.0,
+    "decimal": 2.52,
+    "casa": "onexbet",
+    "ev": 0.0158,
+    "cuota_min": 2.48,
+    "en_rango": true,
+    "senales_favor": 1,
+    "senales_contra": 6,
+    "senales": {
+     "a_favor": [
+      "bullpen"
+     ],
+     "en_contra": [
+      "consenso",
+      "h2h",
+      "osciladores",
+      "fuerza",
+      "abridor",
+      "racha"
+     ]
+    },
+    "premium_nivel": "pasar",
+    "premium_pts": 41.3
+   },
+   "confianza": "baja",
+   "stake": 0.01,
+   "pretemporada": false
+  },
+  {
+   "liga": "kbo",
+   "id": "kbo-20261007NCSK0",
+   "fecha": "2026-10-07",
+   "hora": "03:30",
+   "home": "SSG Landers",
+   "away": "NC Dinos",
+   "p_modelo": 0.6283,
+   "p_sharp": 0.544,
+   "p_final": 0.5655,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": 0.71,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.4043,
+   "detalle_modelo": {
+    "elo_h": 1489.0,
+    "elo_a": 1458.2,
+    "dif_h": -0.66,
+    "dif_a": -0.326,
+    "p_base": 0.5671,
+    "abridor_h": {
+     "nombre": "김민준",
+     "fip_ventana": 4.64,
+     "fip_ultimas5": 4.69,
+     "k_pct": 0.192,
+     "bb_pct": 0.113,
+     "ip_ventana": "84.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.9,
+     "ga_equipo": 5.567
+    },
+    "abridor_a": {
+     "nombre": "송명기",
+     "fip_ventana": 6.59,
+     "fip_ultimas5": 6.53,
+     "k_pct": 0.194,
+     "bb_pct": 0.112,
+     "ip_ventana": "36.0",
+     "bullpen_game": true,
+     "innings": 3.0,
+     "era_ajustada": 6.0,
+     "ga_equipo": 5.326
+    },
+    "carreras_abridor": 0.63
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "SSG Landers",
+     "p": 0.5655,
+     "cuota": -125.0,
+     "decimal": 1.8,
+     "casa": "fanatics",
+     "ev": 0.0179,
+     "cuota_min": 1.77,
+     "en_rango": true,
+     "senales_favor": 6,
+     "senales_contra": 0,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "consenso",
+       "h2h",
+       "abridor",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": []
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 63.5,
+     "nota_lectura": "lectura unanime a favor: sube un escalon"
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "NC Dinos",
+     "p": 0.4345,
+     "cuota": 115.0,
+     "decimal": 2.15,
+     "casa": "draftkings",
+     "ev": -0.0659,
+     "cuota_min": 2.3,
+     "en_rango": true,
+     "senales_favor": 0,
+     "senales_contra": 6,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "consenso",
+       "h2h",
+       "abridor",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 23.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "SSG Landers -1.5",
+     "p": 0.4043,
+     "cuota": 165.0,
+     "decimal": 2.65,
+     "casa": "betonlineag",
+     "ev": 0.0713,
+     "cuota_min": 2.47,
+     "en_rango": true,
+     "senales_favor": 4,
+     "senales_contra": 0,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "abridor",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": []
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 61.5
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "NC Dinos +1.5",
+     "p": 0.5957,
+     "cuota": -169.0,
+     "decimal": 1.592,
+     "casa": "onexbet",
+     "ev": -0.0518,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 0,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "abridor",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 29.1
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "SSG Landers",
+    "p": 0.5655,
+    "cuota": -125.0,
+    "decimal": 1.8,
+    "casa": "fanatics",
+    "ev": 0.0179,
+    "cuota_min": 1.77,
+    "en_rango": true,
+    "senales_favor": 6,
+    "senales_contra": 0,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "consenso",
+      "h2h",
+      "abridor",
+      "bullpen",
+      "racha"
+     ],
+     "en_contra": []
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 63.5,
+    "nota_lectura": "lectura unanime a favor: sube un escalon"
+   },
+   "confianza": "media",
+   "stake": 0.02,
+   "pretemporada": false
+  },
+  {
+   "liga": "kbo",
+   "id": "kbo-20261007SSKT0",
+   "fecha": "2026-10-07",
+   "hora": "03:30",
+   "home": "KT Wiz",
+   "away": "Samsung Lions",
+   "p_modelo": 0.5436,
+   "p_sharp": 0.5,
+   "p_final": 0.5109,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": 0.12,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.59,
+   "detalle_modelo": {
+    "elo_h": 1590.1,
+    "elo_a": 1568.0,
+    "dif_h": 1.128,
+    "dif_a": 1.114,
+    "p_base": 0.5579,
+    "abridor_h": {
+     "nombre": "소형준",
+     "fip_ventana": 3.64,
+     "fip_ultimas5": 4.06,
+     "k_pct": 0.185,
+     "bb_pct": 0.05,
+     "ip_ventana": "120.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.99,
+     "ga_equipo": 4.546
+    },
+    "abridor_a": {
+     "nombre": "원태인",
+     "fip_ventana": 3.38,
+     "fip_ultimas5": 3.86,
+     "k_pct": 0.186,
+     "bb_pct": 0.065,
+     "ip_ventana": "140.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.79,
+     "ga_equipo": 4.579
+    },
+    "carreras_abridor": -0.14
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "KT Wiz",
+     "p": 0.5109,
+     "cuota": -104.0,
+     "decimal": 1.962,
+     "casa": "onexbet",
+     "ev": 0.0022,
+     "cuota_min": 1.96,
+     "en_rango": true,
+     "senales_favor": 5,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "h2h",
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 58.1
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Samsung Lions",
+     "p": 0.4891,
+     "cuota": -106.0,
+     "decimal": 1.943,
+     "casa": "onexbet",
+     "ev": -0.0495,
+     "cuota_min": 2.04,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 5,
+     "senales": {
+      "a_favor": [
+       "h2h",
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 27.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "KT Wiz +1.5",
+     "p": 0.59,
+     "cuota": -153.0,
+     "decimal": 1.654,
+     "casa": "onexbet",
+     "ev": -0.0244,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 5,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 67.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Samsung Lions -1.5",
+     "p": 0.41,
+     "cuota": 147.0,
+     "decimal": 2.47,
+     "casa": "coolbet",
+     "ev": 0.0127,
+     "cuota_min": 2.44,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 5,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 24.8
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "KT Wiz",
+    "p": 0.5109,
+    "cuota": -104.0,
+    "decimal": 1.962,
+    "casa": "onexbet",
+    "ev": 0.0022,
+    "cuota_min": 1.96,
+    "en_rango": true,
+    "senales_favor": 5,
+    "senales_contra": 2,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "osciladores",
+      "fuerza",
+      "abridor",
+      "racha"
+     ],
+     "en_contra": [
+      "h2h",
+      "bullpen"
+     ]
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 58.1
+   },
+   "confianza": "minima",
+   "stake": 0.0,
+   "pretemporada": false
+  },
+  {
+   "liga": "kbo",
+   "id": "kbo-20261007HHWO0",
+   "fecha": "2026-10-07",
+   "hora": "03:30",
+   "home": "Kiwoom Heroes",
+   "away": "Hanwha Eagles",
+   "p_modelo": 0.4929,
+   "p_sharp": 0.4008,
+   "p_final": 0.4234,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": -0.83,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.4904,
+   "detalle_modelo": {
+    "elo_h": 1384.7,
+    "elo_a": 1450.4,
+    "dif_h": -1.776,
+    "dif_a": -0.077,
+    "p_base": 0.4669,
+    "abridor_h": {
+     "nombre": "김성진",
+     "fip_ventana": 4.19,
+     "fip_ultimas5": 3.34,
+     "k_pct": 0.151,
+     "bb_pct": 0.09,
+     "ip_ventana": "35.1",
+     "bullpen_game": true,
+     "innings": 3.0,
+     "era_ajustada": 4.65,
+     "ga_equipo": 5.692
+    },
+    "abridor_a": {
+     "nombre": "정우주",
+     "fip_ventana": 5.85,
+     "fip_ultimas5": 4.8,
+     "k_pct": 0.216,
+     "bb_pct": 0.189,
+     "ip_ventana": "42.0",
+     "bullpen_game": true,
+     "innings": 3.0,
+     "era_ajustada": 5.52,
+     "ga_equipo": 5.782
+    },
+    "carreras_abridor": 0.26
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Kiwoom Heroes",
+     "p": 0.4234,
+     "cuota": 140.0,
+     "decimal": 2.4,
+     "casa": "fanatics",
+     "ev": 0.0162,
+     "cuota_min": 2.36,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "h2h",
+       "bullpen"
+      ],
+      "en_contra": [
+       "consenso",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 35.6
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Hanwha Eagles",
+     "p": 0.5766,
+     "cuota": -155.0,
+     "decimal": 1.645,
+     "casa": "betonlineag",
+     "ev": -0.0514,
+     "cuota_min": 1.73,
+     "en_rango": false,
+     "senales_favor": 4,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "consenso",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "h2h",
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 48.8
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Kiwoom Heroes +1.5",
+     "p": 0.4904,
+     "cuota": -110.0,
+     "decimal": 1.909,
+     "casa": "onexbet",
+     "ev": -0.0638,
+     "cuota_min": 2.04,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 3,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 49.0
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Hanwha Eagles -1.5",
+     "p": 0.5096,
+     "cuota": 105.0,
+     "decimal": 2.05,
+     "casa": "betonlineag",
+     "ev": 0.0447,
+     "cuota_min": 1.96,
+     "en_rango": true,
+     "senales_favor": 3,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 40.1
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "Kiwoom Heroes",
+    "p": 0.4234,
+    "cuota": 140.0,
+    "decimal": 2.4,
+    "casa": "fanatics",
+    "ev": 0.0162,
+    "cuota_min": 2.36,
+    "en_rango": true,
+    "senales_favor": 2,
+    "senales_contra": 4,
+    "senales": {
+     "a_favor": [
+      "h2h",
+      "bullpen"
+     ],
+     "en_contra": [
+      "consenso",
+      "fuerza",
+      "abridor",
+      "racha"
+     ]
+    },
+    "premium_nivel": "pasar",
+    "premium_pts": 35.6
+   },
+   "confianza": "baja",
+   "stake": 0.01,
    "pretemporada": false
   },
   {
@@ -1347,12 +1517,12 @@
    "home": "Chicago White Sox",
    "away": "Cleveland Guardians",
    "p_modelo": 0.553,
-   "p_sharp": 0.5196,
-   "p_final": 0.528,
+   "p_sharp": 0.523,
+   "p_final": 0.5305,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.3,
-   "linea_home": "-1.5",
-   "p_runline_home": 0.3511,
+   "margen_esperado": 0.33,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.6417,
    "detalle_modelo": {
     "elo_h": 1528.4,
     "elo_a": 1510.8,
@@ -1368,12 +1538,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Chicago White Sox",
-     "p": 0.528,
-     "cuota": -114.0,
-     "decimal": 1.877,
-     "casa": "pinnacle",
-     "ev": -0.0089,
-     "cuota_min": 1.89,
+     "p": 0.5305,
+     "cuota": -115.0,
+     "decimal": 1.87,
+     "casa": "betonlineag",
+     "ev": -0.0082,
+     "cuota_min": 1.88,
      "en_rango": true,
      "senales_favor": 6,
      "senales_contra": 2,
@@ -1392,18 +1562,18 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 57.0
+     "premium_pts": 57.1
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Cleveland Guardians",
-     "p": 0.472,
-     "cuota": 110.0,
-     "decimal": 2.1,
-     "casa": "everygame",
-     "ev": -0.0087,
-     "cuota_min": 2.12,
+     "p": 0.4695,
+     "cuota": 109.0,
+     "decimal": 2.09,
+     "casa": "onexbet",
+     "ev": -0.0188,
+     "cuota_min": 2.13,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 6,
@@ -1421,25 +1591,24 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 33.9
+     "premium_pts": 31.6
     },
     {
      "mercado": "Run line",
      "lado": "home",
-     "texto": "Chicago White Sox -1.5",
-     "p": 0.3511,
-     "cuota": 183.0,
-     "decimal": 2.83,
-     "casa": "pinnacle",
-     "ev": -0.0065,
-     "cuota_min": 2.85,
-     "en_rango": true,
-     "senales_favor": 5,
+     "texto": "Chicago White Sox +1.5",
+     "p": 0.6417,
+     "cuota": -187.0,
+     "decimal": 1.535,
+     "casa": "onexbet",
+     "ev": -0.0151,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 4,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
-       "movimiento",
        "osciladores",
        "fuerza",
        "racha"
@@ -1448,66 +1617,66 @@
        "bullpen"
       ]
      },
-     "premium_nivel": "lean",
-     "premium_pts": 47.5
+     "premium_nivel": "pasar",
+     "premium_pts": 55.0
     },
     {
      "mercado": "Run line",
      "lado": "away",
-     "texto": "Cleveland Guardians +1.5",
-     "p": 0.6489,
-     "cuota": -200.0,
-     "decimal": 1.5,
-     "casa": "coolbet",
-     "ev": -0.0266,
-     "cuota_min": 1.7,
-     "en_rango": false,
+     "texto": "Cleveland Guardians -1.5",
+     "p": 0.3583,
+     "cuota": 180.0,
+     "decimal": 2.8,
+     "casa": "betmgm",
+     "ev": 0.0032,
+     "cuota_min": 2.79,
+     "en_rango": true,
      "senales_favor": 1,
-     "senales_contra": 5,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
        "bullpen"
       ],
       "en_contra": [
        "forma",
-       "movimiento",
        "osciladores",
        "fuerza",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 29.8
+     "premium_pts": 33.8
     }
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "away",
-    "texto": "Cleveland Guardians",
-    "p": 0.472,
-    "cuota": 110.0,
-    "decimal": 2.1,
-    "casa": "everygame",
-    "ev": -0.0087,
-    "cuota_min": 2.12,
+    "lado": "home",
+    "texto": "Chicago White Sox",
+    "p": 0.5305,
+    "cuota": -115.0,
+    "decimal": 1.87,
+    "casa": "betonlineag",
+    "ev": -0.0082,
+    "cuota_min": 1.88,
     "en_rango": true,
-    "senales_favor": 1,
-    "senales_contra": 6,
+    "senales_favor": 6,
+    "senales_contra": 2,
     "senales": {
      "a_favor": [
-      "bullpen"
-     ],
-     "en_contra": [
       "forma",
       "consenso",
       "h2h",
       "osciladores",
       "fuerza",
       "racha"
+     ],
+     "en_contra": [
+      "contexto",
+      "bullpen"
      ]
     },
-    "premium_nivel": "pasar",
-    "premium_pts": 33.9
+    "premium_nivel": "lean",
+    "premium_pts": 57.1
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -1565,10 +1734,10 @@
      "lado": "home",
      "texto": "New York Yankees",
      "p": 0.5857,
-     "cuota": -155.0,
-     "decimal": 1.645,
-     "casa": "lowvig",
-     "ev": -0.0365,
+     "cuota": -150.0,
+     "decimal": 1.667,
+     "casa": "onexbet",
+     "ev": -0.0239,
      "cuota_min": 1.71,
      "en_rango": false,
      "senales_favor": 5,
@@ -1586,7 +1755,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 47.3
+     "premium_pts": 50.0
     },
     {
      "mercado": "Ganador",
@@ -1623,7 +1792,7 @@
      "p": 0.4045,
      "cuota": 151.0,
      "decimal": 2.51,
-     "casa": "williamhill_us",
+     "casa": "mybookieag",
      "ev": 0.0153,
      "cuota_min": 2.47,
      "en_rango": true,
@@ -1645,10 +1814,10 @@
      "lado": "away",
      "texto": "Tampa Bay Rays +1.5",
      "p": 0.5955,
-     "cuota": -162.0,
-     "decimal": 1.617,
-     "casa": "williamhill",
-     "ev": -0.0369,
+     "cuota": -159.0,
+     "decimal": 1.629,
+     "casa": "onexbet",
+     "ev": -0.03,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
@@ -1662,7 +1831,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.6
+     "premium_pts": 41.3
     }
    ],
    "pick": {
