@@ -50,6 +50,10 @@ jobs:
         continue-on-error: true
         run: python utilidades/medir_viajes.py
 
+      - name: Abridores KBO
+        continue-on-error: true
+        run: python utilidades/medir_abridores_kbo.py
+
       - name: Clima y umpire MLB
         continue-on-error: true
         run: python utilidades/medir_clima_mlb.py
@@ -70,7 +74,7 @@ jobs:
 
       - name: Guardar mediciones en main
         continue-on-error: true
-        run: bash utilidades/subir_a_main.sh "mediciones de capas" modelos/porteros_nhl.json modelos/viajes.json modelos/clima_mlb.json modelos/clima_nfl.json modelos/arbitros_nhl.json salida/clv.json salida/clv_detalle.csv
+        run: bash utilidades/subir_a_main.sh "mediciones de capas" modelos/porteros_nhl.json modelos/viajes.json modelos/clima_mlb.json modelos/clima_nfl.json modelos/arbitros_nhl.json modelos/abridores_kbo.json salida/clv.json salida/clv_detalle.csv
 
       - name: Publicar datos nuevos en la rama datos
         run: |

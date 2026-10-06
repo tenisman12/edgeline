@@ -601,7 +601,27 @@ def _pred(g, c, fecha, eventos=None):
         r = beisbol.predecir(c["st"]["modelo"], fila, tot_m)
         pa_, pb_ = calibrar.cargar("beisbol", c["st"]["liga"])
         p = calibrar.aplicar(r["p_home"], pa_, pb_)
-        m = {"p_home": p, "p_away": 1 - p, "unidad": "carreras",
+        capa_ab = None
+        if g["liga"] == "kbo":
+            # capa de abridores (nucleo/abridores.py): medida, ganador z 3.57 contra la tasa base, total MAE z 5.4
+            from nucleo import abridores as AB
+            vh = AB.actual(BASE, g["home"].get("probable"), fecha); va = AB.actual(BASE, g["away"].get("probable"), fecha)
+            if vh and va:
+                sh, sa = AB.carreras_salvadas(fila.get("df_home"), vh), AB.carreras_salvadas(fila.get("df_away"), va)
+                import math as _m
+                p0 = min(max(p, 1e-4), 1 - 1e-4)
+                p = 1 / (1 + _m.exp(-(_m.log(p0 / (1 - p0)) + AB.K_GANADOR * (sh - sa))))
+                r["esperado_home"] = round(max(r["esperado_home"] - AB.ESCALA_TOTAL * sa, 0.5), 2)
+                r["esperado_away"] = round(max(r["esperado_away"] - AB.ESCALA_TOTAL * sh, 0.5), 2)
+                r["total"] = round(r["esperado_home"] + r["esperado_away"], 2)
+                capa_ab = {"aplicado": True, "local": {"abridor": g["home"].get("probable"), "fip": round(vh[0], 2), "ip": round(vh[1], 1),
+                                                         "aperturas": vh[2], "carreras_salvadas": round(sh, 2)},
+                           "visita": {"abridor": g["away"].get("probable"), "fip": round(va[0], 2), "ip": round(va[1], 1),
+                                      "aperturas": va[2], "carreras_salvadas": round(sa, 2)},
+                           "ajuste_pp": round(100 * (p - p0), 1)}
+            else:
+                capa_ab = {"aplicado": False, "motivo": "abridor anunciado sin aperturas en kbo_lanzadores.csv"}
+        m = {"p_home": p, "p_away": 1 - p, "unidad": "carreras", "capa_abridores": capa_ab,
              "x_home": r["esperado_home"], "x_away": r["esperado_away"], "total": r["total"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
              "confianza": _conf(max(p, 1 - p)), "extra": []}

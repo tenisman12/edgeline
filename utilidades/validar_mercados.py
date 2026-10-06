@@ -261,6 +261,8 @@ def validar_beisbol(liga, meses, bloque):
     if len(G) < 500:
         print("\nBEISBOL %s: muestra insuficiente (%d juegos)." % (liga, len(G))); return
     ultimo = dt.date.fromisoformat(G[-1]["game_date"][:10]); ini = ultimo - dt.timedelta(days=int(meses * 30.4))
+    from nucleo import abridores as AB
+    VAB = AB.historicos(io.BASE) if lg == "kbo" else {}
     rep = Rep(); d0 = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
@@ -281,6 +283,13 @@ def validar_beisbol(liga, meses, bloque):
                     if xh is None: continue
                     if B.COHERENTE:
                         xh, xa = B.ajustar_carreras(xh, xa, p)
+                    if VAB:
+                        # capa de abridores de KBO (nucleo/abridores.py, medida en utilidades/medir_abridores_kbo.py)
+                        vh, va = VAB.get((r["gamePk"], r["home"])), VAB.get((r["gamePk"], r["away"]))
+                        if vh and va:
+                            sh, sa = AB.carreras_salvadas(r.get("df_home"), vh), AB.carreras_salvadas(r.get("df_away"), va)
+                            p = 1 / (1 + math.exp(-(math.log(p / (1 - p)) + AB.K_GANADOR * (sh - sa))))
+                            xh, xa = max(xh - AB.ESCALA_TOTAL * sa, 0.5), max(xa - AB.ESCALA_TOTAL * sh, 0.5)
                     tot, mar = r["total"], r["marg_home"]
                     rep.add_prob("Ganador", p, r["y_home"], hw)
                     rep.add_val("Total esperado", xh + xa, tot, base_tot)
