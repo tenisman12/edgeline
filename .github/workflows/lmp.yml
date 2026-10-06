@@ -6,6 +6,8 @@ name: lmp (preparar temporada)
 # 3) baja los lanzadores por juego de la LMP (abridores) a datos/abridores/lmp_lanzadores.csv.
 # 4) mide la capa de abridores (modelos/abridores_lmp.json) y valida LMP walk-forward (salida/validacion_mercados.json).
 # Lo ya guardado no se vuelve a pedir. Se puede correr varias veces.
+# No toca la rama datos (no compite con las corridas horarias): deja semillas/lmp_historial.csv y semillas/lmp_lanzadores.csv
+# en main, y actualizar_todo.py (utilidades/semillas.py mezclar) las agrega a datos/ en la siguiente actualizacion.
 
 on:
   workflow_dispatch:
@@ -15,7 +17,7 @@ on:
         default: "2014"
 
 concurrency:
-  group: edgeline-main
+  group: edgeline-lmp
   cancel-in-progress: false
 
 permissions:
@@ -102,26 +104,33 @@ jobs:
               len(filas), n0, ab, filas[0]["game_date"] if filas else "?", filas[-1]["game_date"] if filas else "?"))
           EOF
 
+      - name: Semillas LMP (historial y lanzadores)
+        run: |
+          python - <<'EOF'
+          import csv, os
+          def copiar(src, dst, filtro):
+              if not os.path.exists(src):
+                  print("falta", src); return
+              with open(src, encoding="utf-8-sig", newline="") as f:
+                  rd = csv.DictReader(f); cols = list(rd.fieldnames or []); filas = [r for r in rd if filtro(r)]
+              os.makedirs(os.path.dirname(dst), exist_ok=True)
+              with open(dst, "w", encoding="utf-8-sig", newline="") as f:
+                  w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(filas)
+              print("%s: %d filas" % (dst, len(filas)))
+          copiar(os.path.join("datos", "beisbol.csv"), os.path.join("semillas", "lmp_historial.csv"), lambda r: r.get("league") == "LMP")
+          copiar(os.path.join("datos", "abridores", "lmp_lanzadores.csv"), os.path.join("semillas", "lmp_lanzadores.csv"), lambda r: True)
+          EOF
+
       - name: Medir capa de abridores LMP
         continue-on-error: true
         run: python utilidades/medir_abridores_kbo.py --liga lmp
 
-      - name: Validar LMP (walk-forward)
+      - name: Validar LMP (walk-forward, solo para el registro; la validacion oficial la corre actualizar)
         continue-on-error: true
-        run: python utilidades/validar_mercados.py --deporte beisbol | tail -40
+        run: |
+          python utilidades/validar_mercados.py --deporte beisbol | tail -60
+          git checkout -- salida || true
 
       - name: Guardar resultados en main
         continue-on-error: true
-        run: bash utilidades/subir_a_main.sh "lmp - sonda, abridores y validacion" salida/sonda_lmp.json modelos/abridores_lmp.json salida/validacion_mercados.json
-
-      - name: Publicar datos en la rama datos
-        run: |
-          rm -rf /tmp/pub && mkdir -p /tmp/pub
-          rsync -a --exclude jugadores --exclude _respaldo datos /tmp/pub/
-          cd /tmp/pub
-          git init -q -b datos
-          git config user.name "edgeline-bot"
-          git config user.email "edgeline-bot@users.noreply.github.com"
-          git add -A
-          git commit -qm "datos (lmp) $(date -u +'%Y-%m-%d %H:%M')Z"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
+        run: bash utilidades/subir_a_main.sh "lmp - sonda, semillas y abridores" salida/sonda_lmp.json modelos/abridores_lmp.json semillas/lmp_historial.csv semillas/lmp_lanzadores.csv
