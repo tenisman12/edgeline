@@ -31,10 +31,13 @@ from collections import defaultdict
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 csv.field_size_limit(min(2 ** 31 - 1, sys.maxsize))
-K_ELO = {"beisbol": 6.0, "hockey": 8.0, "americano": 8.0, "nba": 5.0}
-HFA = {"beisbol": 24.0, "hockey": 30.0, "americano": 55.0, "nba": 70.0}
+# NCAAMB (ajustado el 6-oct-2026 por rejilla sobre log-loss del nucleo ELO, 18,835 partidos): K=30, HFA=95.
+# Muy distintos de NBA (K=5, HFA=70) y por eso NO se copiaron: en NCAA los planteles rotan cada temporada, asi
+# que el ELO tiene que moverse mucho mas rapido, y el local gana 66.8% con +8.11 puntos de margen medio.
+K_ELO = {"beisbol": 6.0, "hockey": 8.0, "americano": 8.0, "nba": 5.0, "ncaamb": 30.0}
+HFA = {"beisbol": 24.0, "hockey": 30.0, "americano": 55.0, "nba": 70.0, "ncaamb": 95.0}
 REGRESION = 0.70
-PIT = {"hockey": 1.93, "americano": 2.37, "nba": 14.0}
+PIT = {"hockey": 1.93, "americano": 2.37, "nba": 14.0, "ncaamb": 8.5}   # NCAAMB ajustado sobre 1,141 equipos-temporada
 SALIDA = os.path.join(REPO, "modelos", "pesos_capas_v2.json")
 IP_PRIOR, FIP_C = 30.0, 3.10
 
@@ -115,15 +118,28 @@ def juegos_nfl():
     return js
 
 
-def juegos_nba():
-    """datos/nba.csv (liga NBA): puntos y box score por equipo (nba_fga, fta, oreb, dreb, tov, fgm, fg3m) -> cuatro factores as-of."""
-    campos = ("nba_fga", "nba_fta", "nba_oreb", "nba_dreb", "nba_tov", "nba_fgm", "nba_fg3m", "nba_ftm")
-    js = _pares(os.path.join(BASE, "datos", "nba.csv"), "league", {"NBA"}, ("points", "points_opp"), extra=campos)
+CAMPOS_BASKET = ("nba_fga", "nba_fta", "nba_oreb", "nba_dreb", "nba_tov", "nba_fgm", "nba_fg3m", "nba_ftm")
+
+
+def _juegos_basket(liga):
+    """datos/nba.csv: puntos y box score por equipo -> cuatro factores as-of. liga = 'NBA' o 'NCAAMB'.
+    NCAA basquet tiene el box completo en 37,636 de 37,670 filas, igual que NBA."""
+    js = _pares(os.path.join(BASE, "datos", "nba.csv"), "league", {liga}, ("points", "points_opp"), extra=CAMPOS_BASKET)
     for j in js:
         for lado in ("h", "a"):
-            st = {c[4:]: _f(j.get(c + "_" + lado)) for c in campos}
+            st = {c[4:]: _f(j.get(c + "_" + lado)) for c in CAMPOS_BASKET}
             j["st_" + lado] = st if all(v is not None for v in st.values()) else None
     return js
+
+
+def juegos_nba():
+    return _juegos_basket("NBA")
+
+
+def juegos_ncaamb():
+    """NCAA basquet: 18,835 partidos. Valido el 6-oct-2026 (ganador +14.8% de skill con z 20.3, total +5.1%,
+    over/under +6.4% con z 31.3) y sin ninguna capa medida, al contrario de NHL, NFL, NBA y MLB."""
+    return _juegos_basket("NCAAMB")
 
 
 def juegos_mlb():
@@ -367,7 +383,7 @@ def capas(js, deporte):
             f["pass_epa10"] = d("pass_epa", a10h, a10a, 10)
             f["rush_epa10"] = d("rush_epa", a10h, a10a, 10)
             f["nfl_ok"] = 1 if (a10h and a10a) else 0
-        if deporte == "nba":
+        if deporte in ("nba", "ncaamb"):
             def agg_nba(t, n=None, se_only=False):
                 u = nba_st.get(t) or []
                 if se_only:
@@ -449,7 +465,7 @@ def capas(js, deporte):
                         usos[j["home"] if lado == "h" else j["away"]][j["portero_" + lado]] += 1
         if deporte == "americano" and j.get("st_h") and j.get("st_a"):
             nfl_st[h].append((se, j["st_h"], j["st_a"])); nfl_st[a].append((se, j["st_a"], j["st_h"]))
-        if deporte == "nba" and j.get("st_h") and j.get("st_a"):
+        if deporte in ("nba", "ncaamb") and j.get("st_h") and j.get("st_a"):
             nba_st[h].append((se, j["st_h"], j["st_a"], j["rh"], j["ra"])); nba_st[a].append((se, j["st_a"], j["st_h"], j["ra"], j["rh"]))
         if deporte == "beisbol":
             for lado in ("h", "a"):
@@ -564,7 +580,8 @@ def medir(deporte, js):
     print("\n==== %s: %d juegos, %d con capas (>=5 juegos de temporada)" % (deporte.upper(), len(js), sum(1 for f in filas if f["n_temp"] >= 5)))
     nucleo = ["elo", "dif"]
     comunes = ["pct", "l10", "l5", "split", "descanso", "b2b", "racha", "pit_res", "rsi10", "macd", "roc_elo", "vol10"]
-    propias = {"hockey": ["portero", "portero60", "titular", "sv_eq", "tiros", "pdo"], "beisbol": ["fip"], "nba": ["net10", "net_temp", "efg10", "tov10", "orb10", "ftr10"], "americano": ["bye", "epa_net10", "epa_net5", "epa_temp", "epa_of10", "epa_df10", "ypj_net10", "to10", "cpoe10", "sack10", "pass_epa10", "rush_epa10"]}[deporte]
+    propias = {"hockey": ["portero", "portero60", "titular", "sv_eq", "tiros", "pdo"], "beisbol": ["fip"], "nba": ["net10", "net_temp", "efg10", "tov10", "orb10", "ftr10"],
+                "ncaamb": ["net10", "net_temp", "efg10", "tov10", "orb10", "ftr10"], "americano": ["bye", "epa_net10", "epa_net5", "epa_temp", "epa_of10", "epa_df10", "ypj_net10", "to10", "cpoe10", "sack10", "pass_epa10", "rush_epa10"]}[deporte]
     out = {"juegos": len(js), "ganador": {}, "total": {}}
     filtro = None
     if deporte == "beisbol":
@@ -591,7 +608,8 @@ def medir(deporte, js):
     out["ganador"]["final"] = {"vars": nucleo + utiles, "beta": [round(b, 5) for b in beta_u], "logloss": round(llu, 4), "brier": round(bru, 4), "n": nu}
     # ---- total
     vt = ["ritmo"]
-    cand_t = {"hockey": ["portero_suma", "tiros_suma", "b2b_suma", "pdo_suma"], "beisbol": ["fip_suma"], "americano": ["vol_suma"], "nba": ["pace_suma", "b2b_suma"]}[deporte]
+    cand_t = {"hockey": ["portero_suma", "tiros_suma", "b2b_suma", "pdo_suma"], "beisbol": ["fip_suma"], "americano": ["vol_suma"], "nba": ["pace_suma", "b2b_suma"],
+              "ncaamb": ["pace_suma", "b2b_suma"]}[deporte]
     for f in filas:
         f["b2b_suma"] = abs(f["b2b"]) if f["b2b"] else 0.0
         f["pdo_suma"] = 0.0
@@ -667,12 +685,13 @@ def medir_beisbol(filas, out):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--deporte", default="hockey,americano,nba,beisbol")
+    ap.add_argument("--deporte", default="hockey,americano,nba,ncaamb,beisbol")
     a = ap.parse_args()
     res = {"generado": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "nota": "aporte en milesimas de log-loss walk-forward sobre ELO+diferencial; coef = coeficiente logit de la capa en el ajuste completo"}
     for d in a.deporte.split(","):
         d = d.strip()
-        js = {"hockey": juegos_hockey, "americano": juegos_nfl, "beisbol": juegos_mlb, "nba": juegos_nba}[d]()
+        js = {"hockey": juegos_hockey, "americano": juegos_nfl, "beisbol": juegos_mlb,
+              "nba": juegos_nba, "ncaamb": juegos_ncaamb}[d]()
         res[d] = medir(d, js)
     os.makedirs(os.path.dirname(SALIDA), exist_ok=True)
     with io.open(SALIDA, "w", encoding="utf-8") as f:

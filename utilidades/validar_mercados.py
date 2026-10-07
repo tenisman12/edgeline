@@ -139,8 +139,12 @@ class Rep:
 # ------------------------------------------------------------------ deportes de equipos
 CFG = {
     "hockey":  {"mod": hockey,   "dep": "hockey",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "HOCKEY (NHL)"},
-    "nfl":     {"mod": americano, "dep": "americano", "ms": (("points", "points_opp"),), "total_step": 6.0, "spread": (-6.5, -2.5, 2.5, 6.5), "titulo": "NFL"},
-    "nba":     {"mod": nba,      "dep": "nba",       "ms": (("points", "points_opp"),), "total_step": 8.0, "spread": (-8.5, -4.5, 0.5, 4.5, 8.5), "titulo": "NBA"},
+    # OJO (6-oct-2026): nfl y nba NO tenian clave "liga", asi que _juegos(None) cargaba las DOS ligas del archivo
+    # juntas (NFL+NCAAF y NBA+NCAA basquet). Eso mezclaba el promedio de anotacion de la liga (NBA ~225 de total,
+    # NCAA ~147) e inflaba la linea base: el MAE base del total de "NBA" salia en 29.3 y de ahi el +50% de skill,
+    # que era un artefacto de la mezcla, no ventaja. Ahora cada una entrena con su liga.
+    "nfl":     {"mod": americano, "dep": "americano", "ms": (("points", "points_opp"),), "total_step": 6.0, "spread": (-6.5, -2.5, 2.5, 6.5), "titulo": "NFL", "liga": "NFL"},
+    "nba":     {"mod": nba,      "dep": "nba",       "ms": (("points", "points_opp"),), "total_step": 8.0, "spread": (-8.5, -4.5, 0.5, 4.5, 8.5), "titulo": "NBA", "liga": "NBA"},
     "ncaafb":  {"mod": americano, "dep": "americano", "ms": (("points", "points_opp"),), "total_step": 6.0, "spread": (-10.5, -6.5, -2.5, 2.5, 6.5, 10.5), "titulo": "NCAA FUTBOL AMERICANO", "liga": "NCAAFB"},
     "ncaamb":  {"mod": nba,      "dep": "nba",       "ms": (("points", "points_opp"),), "total_step": 8.0, "spread": (-8.5, -4.5, 0.5, 4.5, 8.5), "titulo": "NCAA BASQUET", "liga": "NCAAMB"},
     "futbol":  {"mod": futbol,   "dep": "futbol",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "FUTBOL (5 ligas)"},

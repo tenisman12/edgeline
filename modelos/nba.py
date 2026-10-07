@@ -16,6 +16,20 @@ except ImportError:
 
 BASE_ELO=1500.0; K=20.0; HFA=100.0; REGR=0.75; ESCALA=400.0
 ELO_POR_PUNTO=28.0; SD_MARGEN=11.5; SHRINK=8; HFA_PTS=2.7
+# Constantes de ELO POR LIGA. El mecanismo queda, VACIO, con el resultado de la medicion del 6-oct-2026:
+#   Ajustar K, HFA y REGR del nucleo de ELO aislado daba +13.37 milesimas de log-loss en NBA fuera de muestra
+#   (ajuste en el 70% antiguo, prueba una vez en el 30%: K=8, HFA=60, REGR=0.65, z 2.54, mitades +21.43/+5.33).
+#   Pero en el MODELO COMPLETO empeora: el validador oficial da +13.0% de skill en el ganador con las constantes
+#   de siempre y +11.7% con las ajustadas. La causa: el modelo es ELO al 80% + vista de anotacion al 20% y
+#   encima una calibracion de Platt, y esa Platt ya absorbia el error del HFA. Arreglar el HFA del ELO crudo no
+#   aporta cuando hay una capa que ya lo corregia, y mover la K desordena un ensamble afinado con K=20.
+#   Leccion: medir un componente aislado no sirve para decidir; hay que medir el modelo completo.
+ELO_LIGA = {}
+
+
+def _elo_params(liga):
+    """(K, HFA, REGR) de la liga; las de siempre si no tiene propias."""
+    return ELO_LIGA.get((liga or "").lower(), (K, HFA, REGR))
 SD_TOT=19.0   # respaldo si no hay muestra; entrenar() la aprende de los residuos
 W_ENS=0.8      # validar() con datos reales: mejor w=0.8 (NBA, 2026-09-29)
 
@@ -48,8 +62,8 @@ class Eq:
     def of(s,lg): return (s.pf+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
     def df(s,lg): return (s.pa+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
 
-def _vistas(th,ta,lg):
-    m_elo=(th.elo+HFA-ta.elo)/ELO_POR_PUNTO
+def _vistas(th,ta,lg,hfa=None):
+    m_elo=(th.elo+(HFA if hfa is None else hfa)-ta.elo)/ELO_POR_PUNTO
     m_sc=((th.of(lg)+ta.df(lg))-(ta.of(lg)+th.df(lg)))+HFA_PTS   # local anota of+df_rival-lg ; visita of+df_local-lg
     return m_elo, m_sc, _cdf(m_elo/SD_MARGEN), _cdf(m_sc/SD_MARGEN)
 
@@ -67,22 +81,23 @@ VENT_TOT = int(os.environ.get("EDGELINE_NBA_VENT_TOT", "500"))   # juegos recien
 
 
 def entrenar(liga=None, min_j=5, w=W_ENS):
+    k_, hfa_, regr_ = _elo_params(liga)
     js=_juegos(liga); eq={}; tot=0.0; ng=0; lg=113.0; cal=[]; rm=[]; rt=[]
     for f,gp,h,a in js:
         ph=_f(h.get("points")) or _f(h.get("runs")); pa_=_f(h.get("points_opp")) or _f(h.get("runs_opp"))
         if ph is None or pa_ is None: continue
         th=eq.setdefault(h.get("team"),Eq()); ta=eq.setdefault(a.get("team"),Eq())
         for t in (th,ta):
-            if t.ult and t.ult!=f[:4]: t.elo=BASE_ELO+(t.elo-BASE_ELO)*REGR
+            if t.ult and t.ult!=f[:4]: t.elo=BASE_ELO+(t.elo-BASE_ELO)*regr_
             t.ult=f[:4]
         if th.n>=min_j and ta.n>=min_j:
-            m_elo_,m_sc_,pe,psc=_vistas(th,ta,lg)
+            m_elo_,m_sc_,pe,psc=_vistas(th,ta,lg,hfa_)
             cal.append((pe,psc,1 if ph>pa_ else 0))
             rm.append((ph-pa_)-(w*m_elo_+(1-w)*m_sc_))
             rt.append((ph+pa_)-(th.of(lg)+ta.of(lg)+th.df(lg)+ta.df(lg))/2)
-        esp=_sig((th.elo+HFA-ta.elo)/(ESCALA/math.log(10)))
+        esp=_sig((th.elo+hfa_-ta.elo)/(ESCALA/math.log(10)))
         res=1.0 if ph>pa_ else 0.0
-        d=K*math.log(abs(ph-pa_)+1)*(res-esp); th.elo+=d; ta.elo-=d
+        d=k_*math.log(abs(ph-pa_)+1)*(res-esp); th.elo+=d; ta.elo-=d
         th.pf+=ph; th.pa+=pa_; th.n+=1; ta.pf+=pa_; ta.pa+=ph; ta.n+=1
         tot+=ph+pa_; ng+=2; lg=tot/ng
     platt=_platt([(w*pe+(1-w)*psc,y) for pe,psc,y in cal])
@@ -90,14 +105,14 @@ def entrenar(liga=None, min_j=5, w=W_ENS):
         if len(v)<150: return 0.0, sd0
         m=sum(v)/len(v); return m, math.sqrt(sum((x-m)**2 for x in v)/(len(v)-1))
     sesgo_m,sd_m=_ms(rm,SD_MARGEN); sesgo_t,sd_t=_ms(rt[-VENT_TOT:],SD_TOT)   # sesgo del total: solo lo reciente (la anotacion sube cada temporada)
-    return {"eq":eq,"lg":lg,"platt":platt,"cal":cal,"w":w,
+    return {"eq":eq,"lg":lg,"platt":platt,"cal":cal,"w":w,"hfa":hfa_,"k":k_,"regr":regr_,
             "sesgo_m":sesgo_m,"sd_m":sd_m,"sesgo_t":sesgo_t,"sd_t":sd_t}
 
 def predecir(estado, home, away, linea_total=None, linea_spread=None, w=None):
     eq,lg=estado["eq"],estado["lg"]; th,ta=eq.get(home),eq.get(away)
     if not th or not ta: return None
     w=estado.get("w",W_ENS) if w is None else w
-    m_elo,m_sc,pe,psc=_vistas(th,ta,lg)
+    m_elo,m_sc,pe,psc=_vistas(th,ta,lg,estado.get("hfa"))
     margen=w*m_elo+(1-w)*m_sc+estado.get("sesgo_m",0.0)      # corregido por el sesgo local aprendido
     total=(th.of(lg)+ta.of(lg)+th.df(lg)+ta.df(lg))/2+estado.get("sesgo_t",0.0)
     sd_m=estado.get("sd_m",SD_MARGEN); sd_t=estado.get("sd_t",SD_TOT)
