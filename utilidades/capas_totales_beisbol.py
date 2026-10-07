@@ -58,6 +58,7 @@ def juegos(liga_filtro=None):
                 continue
             vistos[k] = {"liga": lg, "pk": pk, "fecha": fecha, "total": total,
                          "estadio": (r.get("estadio") or "").strip(),
+                         "local": (r.get("team") if str(r.get("is_home")).lower() in ("true", "1") else r.get("opp")) or "",
                          "umpire": (r.get("umpire_home") or "").strip(),
                          "temp": _temp(r.get("clima")), "viento": _viento(r.get("viento"))}
     out = sorted(vistos.values(), key=lambda j: (j["liga"], j["fecha"], j["pk"]))
@@ -93,6 +94,7 @@ def capas_asof(js):
     """Para cada juego, las capas calculadas solo con los juegos anteriores. Devuelve (filas, base_liga)."""
     sum_tot, n_tot = 0.0, 0
     par = defaultdict(lambda: [0.0, 0])     # estadio -> [suma de totales, n]
+    loc = defaultdict(lambda: [0.0, 0])     # equipo local -> igual (es lo usable en produccion)
     ump = defaultdict(lambda: [0.0, 0])
     sum_t, n_t = 0.0, 0                     # temperatura media as-of
     filas = []
@@ -102,6 +104,8 @@ def capas_asof(js):
         if base is not None:
             s, n = par[j["estadio"]]
             f["parque"] = ((s / n) - base) * (n / (n + LASTRE_PARQUE)) if n else 0.0
+            s, n = loc[j["local"]]
+            f["parque_local"] = ((s / n) - base) * (n / (n + LASTRE_PARQUE)) if n else 0.0
             s, n = ump[j["umpire"]] if j["umpire"] else (0.0, 0)
             f["umpire"] = ((s / n) - base) * (n / (n + LASTRE_UMPIRE)) if n else 0.0
             tm = (sum_t / n_t) if n_t >= 200 else None
@@ -112,6 +116,8 @@ def capas_asof(js):
         sum_tot += j["total"]; n_tot += 1
         if j["estadio"]:
             par[j["estadio"]][0] += j["total"]; par[j["estadio"]][1] += 1
+        if j["local"]:
+            loc[j["local"]][0] += j["total"]; loc[j["local"]][1] += 1
         if j["umpire"]:
             ump[j["umpire"]][0] += j["total"]; ump[j["umpire"]][1] += 1
         if j["temp"] is not None:
@@ -184,12 +190,12 @@ def main():
         if len(filas) < MIN_JUEGOS:
             print("  %-5s n=%5d  muy poca muestra, se omite" % (lg, len(filas)))
             continue
-        hay = {c: sum(1 for f in filas if abs(f[c]) > 1e-9) for c in ("parque", "umpire", "temp", "viento")}
-        print("  == %s  n=%d juegos medibles  (con dato: parque %d, umpire %d, temp %d, viento %d)" % (
-            lg, len(filas), hay["parque"], hay["umpire"], hay["temp"], hay["viento"]))
+        hay = {c: sum(1 for f in filas if abs(f[c]) > 1e-9) for c in ("parque", "parque_local", "umpire", "temp", "viento")}
+        print("  == %s  n=%d juegos medibles  (con dato: parque %d, parque_local %d, umpire %d, temp %d, viento %d)" % (
+            lg, len(filas), hay["parque"], hay["parque_local"], hay["umpire"], hay["temp"], hay["viento"]))
         d = {"n": len(filas), "cobertura": hay, "capas": {}}
         # cada capa por separado
-        for c in ("parque", "umpire", "temp", "viento"):
+        for c in ("parque", "parque_local", "umpire", "temp", "viento"):
             if hay[c] < 300:
                 print("     %-8s sin dato suficiente" % c)
                 continue
@@ -201,7 +207,7 @@ def main():
             print("     %-8s coef %+8.4f  MAE %.4f -> %.4f  mejora %+6.1f milesimas  (n prueba %d)" % (c, coef[0], mae0, mae1, mej, cnt))
             d["capas"][c] = {"coef": round(coef[0], 5), "mae_base": round(mae0, 4), "mae_capa": round(mae1, 4), "mejora_milesimas": round(mej, 1), "n": cnt}
         # todas juntas, solo las que tienen dato
-        cols = [c for c in ("parque", "umpire", "temp", "viento") if hay[c] >= 300]
+        cols = [c for c in ("parque_local", "temp", "viento") if hay[c] >= 300]   # la combinacion usable en produccion
         if len(cols) > 1:
             m = medir(filas, cols)
             if m:

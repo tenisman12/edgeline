@@ -264,6 +264,8 @@ def validar_beisbol(liga, meses, bloque):
     from nucleo import abridores as AB
     VAB = AB.historicos(io.BASE, lg) if AB.aplica(lg) else {}
     K_AB, ESC_AB = AB.coeficientes(lg)
+    from nucleo import parques as PQ
+    VPQ = PQ.historicos(io.BASE, lg) if PQ.aplica(lg) else {}
     rep = Rep(); d0 = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
@@ -291,11 +293,17 @@ def validar_beisbol(liga, meses, bloque):
                             sh, sa = AB.carreras_salvadas(r.get("df_home"), vh), AB.carreras_salvadas(r.get("df_away"), va)
                             p = 1 / (1 + math.exp(-(math.log(p / (1 - p)) + K_AB * (sh - sa))))
                             xh, xa = max(xh - ESC_AB * sa, 0.5), max(xa - ESC_AB * sh, 0.5)
+                    if VPQ:
+                        # capa de parque y clima (nucleo/parques.py, medida en utilidades/capas_totales_beisbol.py):
+                        # el total del modelo no sabia donde se juega. Solo toca el total, no el ganador.
+                        v = VPQ.get((r["gamePk"], r["home"]))
+                        if v:
+                            xh, xa = PQ.ajustar(xh, xa, lg, v[0], v[1], v[2])
                     tot, mar = r["total"], r["marg_home"]
                     rep.add_prob("Ganador", p, r["y_home"], hw)
                     rep.add_val("Total esperado", xh + xa, tot, base_tot)
                     for L in lineas:
-                        po, _ = B.prob_over(r, L)
+                        po, _ = B.prob_over(r, L, xh, xa)
                         if po is not None and tot != L:
                             rep.add_prob("Over/Under (lineas ~promedio)", po, 1 if tot > L else 0, fr_over[L])
                     rlh, rla = B.prob_run_line(r, 1.5, xh=xh, xa=xa)

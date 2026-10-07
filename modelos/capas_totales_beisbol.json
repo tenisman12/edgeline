@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-07T02:30:42Z",
+ "generado": "2026-10-07T02:53:45Z",
  "metodo": "capas as-of (sin mirar el futuro) + minimos cuadrados con validacion cruzada en 4 bloques por tiempo",
  "lastre_parque": 60.0,
  "lastre_umpire": 40.0,
@@ -8,12 +8,20 @@
    "n": 4177,
    "cobertura": {
     "parque": 4177,
+    "parque_local": 4177,
     "umpire": 0,
     "temp": 0,
     "viento": 0
    },
    "capas": {
     "parque": {
+     "coef": 0.87325,
+     "mae_base": 3.8367,
+     "mae_capa": 3.8284,
+     "mejora_milesimas": 8.3,
+     "n": 4177
+    },
+    "parque_local": {
      "coef": 0.87325,
      "mae_base": 3.8367,
      "mae_capa": 3.8284,
@@ -26,6 +34,7 @@
    "n": 1550,
    "cobertura": {
     "parque": 1533,
+    "parque_local": 1546,
     "umpire": 1467,
     "temp": 1491,
     "viento": 481
@@ -36,6 +45,13 @@
      "mae_base": 3.686,
      "mae_capa": 3.6293,
      "mejora_milesimas": 56.7,
+     "n": 1550
+    },
+    "parque_local": {
+     "coef": 1.61628,
+     "mae_base": 3.686,
+     "mae_capa": 3.5904,
+     "mejora_milesimas": 95.6,
      "n": 1550
     },
     "umpire": {
@@ -62,20 +78,18 @@
    },
    "juntas": {
     "cols": [
-     "parque",
-     "umpire",
+     "parque_local",
      "temp",
      "viento"
     ],
     "coef": [
-     2.1033,
-     0.59227,
-     0.03976,
-     0.001
+     1.66468,
+     0.04093,
+     -0.0007
     ],
     "mae_base": 3.686,
-    "mae_capas": 3.6132,
-    "mejora_milesimas": 72.8,
+    "mae_capas": 3.5759,
+    "mejora_milesimas": 110.0,
     "n": 1550
    }
   },
@@ -83,6 +97,7 @@
    "n": 1107,
    "cobertura": {
     "parque": 1101,
+    "parque_local": 1106,
     "umpire": 1070,
     "temp": 1100,
     "viento": 485
@@ -93,6 +108,13 @@
      "mae_base": 3.9741,
      "mae_capa": 3.9778,
      "mejora_milesimas": -3.7,
+     "n": 1107
+    },
+    "parque_local": {
+     "coef": 0.69686,
+     "mae_base": 3.9741,
+     "mae_capa": 3.9751,
+     "mejora_milesimas": -0.9,
      "n": 1107
     },
     "umpire": {
@@ -119,20 +141,18 @@
    },
    "juntas": {
     "cols": [
-     "parque",
-     "umpire",
+     "parque_local",
      "temp",
      "viento"
     ],
     "coef": [
-     0.95825,
-     1.57551,
-     0.02888,
-     0.02223
+     0.69231,
+     0.02691,
+     0.0176
     ],
     "mae_base": 3.9741,
-    "mae_capas": 3.9865,
-    "mejora_milesimas": -12.3,
+    "mae_capas": 3.9834,
+    "mejora_milesimas": -9.3,
     "n": 1107
    }
   },
@@ -140,6 +160,7 @@
    "n": 9647,
    "cobertura": {
     "parque": 9633,
+    "parque_local": 9646,
     "umpire": 9615,
     "temp": 9645,
     "viento": 4987
@@ -150,6 +171,13 @@
      "mae_base": 3.5112,
      "mae_capa": 3.4853,
      "mejora_milesimas": 25.9,
+     "n": 9647
+    },
+    "parque_local": {
+     "coef": 1.07189,
+     "mae_base": 3.5112,
+     "mae_capa": 3.4843,
+     "mejora_milesimas": 26.9,
      "n": 9647
     },
     "umpire": {
@@ -176,20 +204,18 @@
    },
    "juntas": {
     "cols": [
-     "parque",
-     "umpire",
+     "parque_local",
      "temp",
      "viento"
     ],
     "coef": [
-     0.96902,
-     0.15013,
-     0.03335,
-     0.03393
+     0.9805,
+     0.03345,
+     0.03373
     ],
     "mae_base": 3.5112,
-    "mae_capas": 3.4784,
-    "mejora_milesimas": 32.8,
+    "mae_capas": 3.4776,
+    "mejora_milesimas": 33.6,
     "n": 9647
    }
   },
@@ -197,6 +223,7 @@
    "n": 4172,
    "cobertura": {
     "parque": 4139,
+    "parque_local": 4172,
     "umpire": 0,
     "temp": 0,
     "viento": 0
@@ -207,6 +234,13 @@
      "mae_base": 3.0465,
      "mae_capa": 3.0154,
      "mejora_milesimas": 31.0,
+     "n": 4172
+    },
+    "parque_local": {
+     "coef": 1.07318,
+     "mae_base": 3.0465,
+     "mae_capa": 3.0185,
+     "mejora_milesimas": 28.0,
      "n": 4172
     }
    }

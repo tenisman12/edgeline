@@ -609,7 +609,21 @@ def _pred(g, c, fecha, eventos=None):
         fila = estado.fila_proximo(c["st"], h, a, fecha)
         if not fila:
             return None, "muestra insuficiente esta temporada"
-        r = beisbol.predecir(c["st"]["modelo"], fila, tot_m)
+        # Capa de parque y clima para el TOTAL (nucleo/parques.py, medida en utilidades/capas_totales_beisbol.py):
+        # baja el MAE del total 26.9 milesimas de carrera en MLB, 28.0 en NPB, 8.3 en KBO y 95.6 en LMP, y sube el
+        # over/under de MLB de -0.67% de skill a +0.04% (deja de ser peor que la base). No toca el ganador.
+        dpq = 0.0
+        try:
+            from nucleo import parques as PQ
+            if PQ.aplica(g["liga"]):
+                cl = g.get("clima") or {}
+                fac, tmp, vto = PQ.actual(BASE, g["liga"], h, fecha,
+                                          temp=cl.get("temp_f") or cl.get("temperatura"),
+                                          viento=cl.get("viento_mph") or cl.get("viento"))
+                dpq = PQ.delta(g["liga"], fac, tmp, vto)
+        except Exception:
+            dpq = 0.0
+        r = beisbol.predecir(c["st"]["modelo"], fila, tot_m, delta_total=dpq)
         pa_, pb_ = calibrar.cargar("beisbol", c["st"]["liga"])
         p = calibrar.aplicar(r["p_home"], pa_, pb_)
         capa_ab = None

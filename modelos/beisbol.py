@@ -113,10 +113,13 @@ def _nb_pmf(k, mu, r=NB_DISP):
     lg = math.lgamma(k + r) - math.lgamma(r) - math.lgamma(k + 1)
     return math.exp(lg + r * math.log(p) + k * math.log(1 - p))
 
-def prob_over(r, linea):
+def prob_over(r, linea, xh=None, xa=None):
     """P(total de carreras > linea) con la suma de dos binomiales negativas
-    aproximada por una NB de media = xhome + xaway."""
-    xh, xa = carreras_esperadas(r)
+    aproximada por una NB de media = xhome + xaway.
+    xh/xa: carreras ya ajustadas por quien llama (capa de abridores, capa de parque). Si no se pasan, se
+    calculan aqui, que es el comportamiento de siempre."""
+    if xh is None or xa is None:
+        xh, xa = carreras_esperadas(r)
     if xh is None:
         return None, None
     mu = xh + xa
@@ -216,7 +219,10 @@ def prob(modelo, r, w=None):
     return w * pl + (1 - w) * pc
 
 # ------------------------------------------------------------------ firma comun
-def predecir(modelo, r, linea_total=None):
+def predecir(modelo, r, linea_total=None, delta_total=0.0):
+    """delta_total: carreras que una capa externa suma al total esperado (capa de parque y clima,
+    nucleo/parques.py). Se reparte entre local y visita en proporcion a lo que anotan y afecta el total,
+    el over/under y la run line; NO toca la probabilidad del ganador."""
     p = prob(modelo, r)
     xh, xa = carreras_esperadas(r)
     if xh is None:   # respaldo si faltan niveles
@@ -227,6 +233,11 @@ def predecir(modelo, r, linea_total=None):
     xh_crudo, xa_crudo = xh, xa
     if COHERENTE:
         xh, xa = ajustar_carreras(xh, xa, p)
+    if delta_total:
+        t0 = xh + xa
+        if t0 > 0:
+            xh = max(xh + delta_total * (xh / t0), 0.3)
+            xa = max(xa + delta_total * (xa / t0), 0.3)
     total = xh + xa
     margen = abs(p - 0.5)
     conf = "alta" if margen > 0.20 else ("media" if margen > 0.10 else "baja")
@@ -234,8 +245,10 @@ def predecir(modelo, r, linea_total=None):
            "esperado_home": round(xh, 2), "esperado_away": round(xa, 2),
            "esperado_home_crudo": round(xh_crudo, 2), "esperado_away_crudo": round(xa_crudo, 2),
            "total": round(total, 2), "edge": None, "confianza": conf}
+    if delta_total:
+        out["delta_total_parque"] = round(delta_total, 3)
     if linea_total is not None:
-        po, _ = prob_over(r, linea_total)
+        po, _ = prob_over(r, linea_total, xh, xa)
         out["p_over"] = round(po, 4) if po is not None else None
         out["linea_total"] = linea_total
     # run line -1.5 / +1.5
