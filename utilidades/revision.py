@@ -175,8 +175,14 @@ def revisar_datos():
     if not ERR:
         ok("datos", "%d ligas con conteo y frescura dentro de lo esperado" % len(actual))
     else:
-        print("         Para refrescar datos/ desde la rama: git fetch origin datos && "
-              "git archive FETCH_HEAD datos | tar -x && python utilidades/semillas.py mezclar")
+        print("         Para refrescar datos/ desde la rama 'datos':")
+        print("           Windows:  git fetch origin datos")
+        print("                     git archive --format=zip --output=\"$env:TEMP\\datos.zip\" FETCH_HEAD datos")
+        print("                     Expand-Archive -Path \"$env:TEMP\\datos.zip\" -DestinationPath . -Force")
+        print("                     python utilidades\\semillas.py mezclar")
+        print("           Linux:    git fetch origin datos && git archive FETCH_HEAD datos | tar -x && "
+              "python utilidades/semillas.py mezclar")
+        print("         (el tar.exe de Windows no lee bien la tuberia de git archive: usa el zip)")
     try:
         os.makedirs(os.path.dirname(INVENTARIO), exist_ok=True)
         with io.open(INVENTARIO, "w", encoding="utf-8") as f:
