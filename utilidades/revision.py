@@ -174,6 +174,9 @@ def revisar_datos():
                                 lg.upper(), u, dias, ATRASO[lg]))
     if not ERR:
         ok("datos", "%d ligas con conteo y frescura dentro de lo esperado" % len(actual))
+    else:
+        print("         Para refrescar datos/ desde la rama: git fetch origin datos && "
+              "git archive FETCH_HEAD datos | tar -x && python utilidades/semillas.py mezclar")
     try:
         os.makedirs(os.path.dirname(INVENTARIO), exist_ok=True)
         with io.open(INVENTARIO, "w", encoding="utf-8") as f:
@@ -227,8 +230,10 @@ def revisar_validacion():
         g = mk.get("Ganador") or {}
         n = g.get("n")
         if tot and n and n > tot:
-            err("validacion", "%s: el Ganador se midio con n=%d y la liga solo tiene %d juegos. "
-                              "Senal de que se estan mezclando dos ligas (falta la clave 'liga' en CFG)." % (dep, n, tot))
+            err("validacion", "%s: el Ganador se midio con n=%d y la liga solo tiene %d juegos. Dos causas posibles: "
+                              "(a) el validador esta mezclando dos ligas del mismo archivo porque le falta la clave "
+                              "'liga' en CFG, o (b) datos/ esta incompleto y la validacion es de otra corrida con mas "
+                              "datos. Revisa primero los errores del bloque 1." % (dep, n, tot))
         elif tot and n:
             ok("validacion", "%s: n=%d de %d juegos de la liga" % (dep, n, tot))
         rango = MAE_BASE.get(dep)
