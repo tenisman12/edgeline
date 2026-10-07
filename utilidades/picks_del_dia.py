@@ -500,7 +500,11 @@ def main():
                        "nivel_1_lectura": "'partidos': la prediccion de TODOS los partidos y mercados, con es_lectura=true. "
                                           "Se registra y se califica para acumular muestra. NO son picks. El campo 'apostable' "
                                           "de cada mercado dice si puede generar pick y, si no, por que.",
-                       "descalibrados": descalibrados()},
+                       # Las claves de descalibrados() son tuplas (liga, mercado) y json.dump no las acepta:
+                       # reventaba AQUI, despues de imprimir el reporte completo en consola, asi que la corrida
+                       # se veia bien y salida/picks_del_dia.json se quedaba con la version anterior.
+                       # El telefono lee ese JSON. Se serializan como "liga Mercado".
+                       "descalibrados": {("%s %s" % (lg or "?", mk)): v for (lg, mk), v in descalibrados().items()}},
                    "picks": picks, "candidatos_fuera": descartados,
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
