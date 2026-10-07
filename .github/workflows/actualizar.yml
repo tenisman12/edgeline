@@ -165,3 +165,6 @@ jobs:
           git add -A
           git commit -qm "datos $(date -u +'%Y-%m-%d %H:%M')Z"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
+
+      - name: Revision de integridad (va al final, con los datos ya publicados, para que la corrida se ponga en rojo sin bloquear la salida)
+        run: python utilidades/revision.py
