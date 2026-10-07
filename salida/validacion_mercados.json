@@ -680,9 +680,90 @@
     "dos_mitades": true,
     "estado": "sin_validar"
    }
+  },
+  "ncaamb": {
+   "Ganador": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1479,
+    "z": 20.29,
+    "p_media": 0.651,
+    "tasa_real": 0.663,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado": {
+    "tipo": "conteo",
+    "n": 12321,
+    "skill": 0.0508,
+    "z": 19.32,
+    "sesgo": -1.043,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (lineas ~promedio)": {
+    "tipo": "prob",
+    "n": 36963,
+    "skill": 0.0637,
+    "z": 31.31,
+    "p_media": 0.507,
+    "tasa_real": 0.514,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -8.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1066,
+    "z": 15.97,
+    "p_media": 0.837,
+    "tasa_real": 0.848,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -4.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1328,
+    "z": 23.08,
+    "p_media": 0.761,
+    "tasa_real": 0.76,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +0.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1447,
+    "z": 25.02,
+    "p_media": 0.644,
+    "tasa_real": 0.663,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +4.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1437,
+    "z": 27.15,
+    "p_media": 0.538,
+    "tasa_real": 0.548,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +8.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1432,
+    "z": 28.0,
+    "p_media": 0.43,
+    "tasa_real": 0.433,
+    "dos_mitades": true,
+    "estado": "publicable"
+   }
   }
  },
- "generado": "2026-10-05 20:21",
+ "generado": "2026-10-06 20:48",
  "criterio": "n>=300, mejora a la base, z>=2.0, mejora en las dos mitades, calibrado (prob |p media - tasa|<=0.04) o sesgo<=0.10 desv. (conteos)",
  "ajustes_tenis": {
   "WTA": {

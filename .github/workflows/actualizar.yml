@@ -82,7 +82,12 @@ jobs:
           EDGELINE_ODDS_PRESUPUESTO: "72"       # plan de pago (20,000/mes): 16 deportes por foto, us+eu
           EDGELINE_ODDS_REGIONES: us,eu
         continue-on-error: true
-        run: python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3   # no gasta si la foto tiene menos de 3 h
+        run: |
+          # Primero el calendario del dia: recolectar_cuotas lo usa para priorizar en que deportes gasta los
+          # creditos (contexto/proximos_espn.json). Sin el, la priorizacion se salta y los deportes del final de
+          # la lista (los torneos de tenis, que se descubren en caliente) se quedan sin cuota por presupuesto.
+          python colectores/recolectar_proximos.py --dias 3 --sin-contexto || true
+          python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3   # no gasta si la foto tiene menos de 3 h
 
       - name: Lectura sharp vs publico (casas sharp contra casas del publico)
         continue-on-error: true

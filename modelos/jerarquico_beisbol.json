@@ -1,0 +1,233 @@
+{
+ "generado": "2026-10-07T02:11:57Z",
+ "bloque_dias": 60,
+ "meses": 30.0,
+ "l2": {
+  "comun": 1.0,
+  "delta_liga": 20.0,
+  "equipo": 8.0
+ },
+ "variantes": {
+  "B": "coeficientes comunes + intercepto por liga",
+  "C": "B + desviacion por liga encogida",
+  "D": "C + efectos aleatorios de equipo"
+ },
+ "resultados": {
+  "B": {
+   "kbo": {
+    "n": 2066,
+    "vs_actual_milesimas": 0.45,
+    "z_vs_actual": 0.34,
+    "vs_base_milesimas": 7.65,
+    "z_vs_base": 2.69,
+    "mitades": [
+     0.51,
+     0.39
+    ],
+    "p_media": 0.503,
+    "tasa_real": 0.499,
+    "pasa": false
+   },
+   "mlb": {
+    "n": 7108,
+    "vs_actual_milesimas": 2.32,
+    "z_vs_actual": 3.38,
+    "vs_base_milesimas": 8.9,
+    "z_vs_base": 5.24,
+    "mitades": [
+     3.7,
+     0.95
+    ],
+    "p_media": 0.532,
+    "tasa_real": 0.531,
+    "pasa": true
+   },
+   "npb": {
+    "n": 2508,
+    "vs_actual_milesimas": 3.05,
+    "z_vs_actual": 2.73,
+    "vs_base_milesimas": 9.57,
+    "z_vs_base": 4.02,
+    "mitades": [
+     5.37,
+     0.73
+    ],
+    "p_media": 0.524,
+    "tasa_real": 0.529,
+    "pasa": true
+   }
+  },
+  "C": {
+   "kbo": {
+    "n": 2066,
+    "vs_actual_milesimas": 0.18,
+    "z_vs_actual": 1.33,
+    "vs_base_milesimas": 7.38,
+    "z_vs_base": 2.77,
+    "mitades": [
+     0.21,
+     0.14
+    ],
+    "p_media": 0.502,
+    "tasa_real": 0.499,
+    "pasa": false
+   },
+   "mlb": {
+    "n": 7108,
+    "vs_actual_milesimas": 0.24,
+    "z_vs_actual": 3.51,
+    "vs_base_milesimas": 6.82,
+    "z_vs_base": 3.5,
+    "mitades": [
+     0.46,
+     0.02
+    ],
+    "p_media": 0.532,
+    "tasa_real": 0.531,
+    "pasa": true
+   },
+   "npb": {
+    "n": 2508,
+    "vs_actual_milesimas": 0.63,
+    "z_vs_actual": 3.34,
+    "vs_base_milesimas": 7.15,
+    "z_vs_base": 2.97,
+    "mitades": [
+     1.17,
+     0.09
+    ],
+    "p_media": 0.523,
+    "tasa_real": 0.529,
+    "pasa": true
+   }
+  },
+  "D": {
+   "kbo": {
+    "n": 2066,
+    "vs_actual_milesimas": -2.03,
+    "z_vs_actual": -1.29,
+    "vs_base_milesimas": 5.17,
+    "z_vs_base": 1.78,
+    "mitades": [
+     -4.53,
+     0.47
+    ],
+    "p_media": 0.502,
+    "tasa_real": 0.499,
+    "pasa": false
+   },
+   "mlb": {
+    "n": 7108,
+    "vs_actual_milesimas": -3.32,
+    "z_vs_actual": -2.61,
+    "vs_base_milesimas": 3.27,
+    "z_vs_base": 1.41,
+    "mitades": [
+     -3.5,
+     -3.13
+    ],
+    "p_media": 0.532,
+    "tasa_real": 0.531,
+    "pasa": false
+   },
+   "npb": {
+    "n": 2508,
+    "vs_actual_milesimas": -2.06,
+    "z_vs_actual": -1.11,
+    "vs_base_milesimas": 4.45,
+    "z_vs_base": 1.69,
+    "mitades": [
+     -2.15,
+     -1.97
+    ],
+    "p_media": 0.524,
+    "tasa_real": 0.529,
+    "pasa": false
+   }
+  }
+ },
+ "impacto": {
+  "kbo": {
+   "n": 2066,
+   "dp_promedio_pp": 2.16,
+   "dp_mediana_pp": 1.65,
+   "dp_p90_pp": 4.73,
+   "dp_max_pp": 17.05,
+   "cruces": {
+    "cuota_1.70": {
+     "umbral_p": 0.594,
+     "cruces": 171,
+     "de_lados": 4132,
+     "pct": 4.14
+    },
+    "cuota_2.00": {
+     "umbral_p": 0.505,
+     "cruces": 538,
+     "de_lados": 4132,
+     "pct": 13.02
+    },
+    "cuota_2.40": {
+     "umbral_p": 0.421,
+     "cruces": 232,
+     "de_lados": 4132,
+     "pct": 5.61
+    }
+   }
+  },
+  "mlb": {
+   "n": 7108,
+   "dp_promedio_pp": 1.83,
+   "dp_mediana_pp": 1.04,
+   "dp_p90_pp": 4.54,
+   "dp_max_pp": 17.9,
+   "cruces": {
+    "cuota_1.70": {
+     "umbral_p": 0.594,
+     "cruces": 737,
+     "de_lados": 14216,
+     "pct": 5.18
+    },
+    "cuota_2.00": {
+     "umbral_p": 0.505,
+     "cruces": 1103,
+     "de_lados": 14216,
+     "pct": 7.76
+    },
+    "cuota_2.40": {
+     "umbral_p": 0.421,
+     "cruces": 802,
+     "de_lados": 14216,
+     "pct": 5.64
+    }
+   }
+  },
+  "npb": {
+   "n": 2508,
+   "dp_promedio_pp": 2.09,
+   "dp_mediana_pp": 1.59,
+   "dp_p90_pp": 4.49,
+   "dp_max_pp": 11.48,
+   "cruces": {
+    "cuota_1.70": {
+     "umbral_p": 0.594,
+     "cruces": 237,
+     "de_lados": 5016,
+     "pct": 4.72
+    },
+    "cuota_2.00": {
+     "umbral_p": 0.505,
+     "cruces": 642,
+     "de_lados": 5016,
+     "pct": 12.8
+    },
+    "cuota_2.40": {
+     "umbral_p": 0.421,
+     "cruces": 302,
+     "de_lados": 5016,
+     "pct": 6.02
+    }
+   }
+  }
+ },
+ "veredicto": "PASA en: B/MLB, B/NPB, C/MLB, C/NPB"
+}

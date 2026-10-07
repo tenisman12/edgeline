@@ -223,7 +223,10 @@ def main():
     try:
         activos = [x["key"] for x in get(API_SPORTS % KEY) if x.get("active")]
         extra = [k for k in activos if k.startswith(PREFIJOS) and k not in deportes]      # torneos de tenis en curso
-        deportes = [d for d in deportes if d in activos] + extra
+        # El tenis va PRIMERO: es donde esta la ventaja medida mas alta del sistema (breaks ATP +13.1% de skill,
+        # z 13.2) y sus torneos se descubren aqui, asi que si quedan al final el presupuesto los corta antes de
+        # pedirlos. Con priorizacion por partidos del dia esto se reordena igual; sin ella, este orden es el que manda.
+        deportes = extra + [d for d in deportes if d in activos]
         print("Deportes activos en The Odds API: %d; candidatos %d (tenis en curso: %s)" % (len(activos), len(deportes), ", ".join(extra) or "ninguno"))
     except Exception as e:
         print("No se pudo leer la lista de deportes (%s); se usan los configurados." % str(e)[:60])
