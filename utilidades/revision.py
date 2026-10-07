@@ -42,8 +42,14 @@ TEMPORADA = {
 ATRASO = defaultdict(lambda: 10, {
     "mlb": 3, "npb": 3, "kbo": 3, "nhl": 3, "nba": 3, "ncaamb": 5,
     "nfl": 9, "ncaafb": 9,            # juegan una vez por semana
-    "premier": 9, "laliga": 9, "seriea": 9, "bundesliga": 9, "ligue1": 9, "ligamx": 9, "mls": 9,
-    "champions": 20,                   # fase de grupos cada 2-3 semanas
+    # Ligas europeas: 25 dias. El paron internacional de septiembre de 2026 duro TRES SEMANAS (21-sep a 9-oct:
+    # ultima jornada 19-20 de septiembre, vuelven el 10-11 de octubre) porque la final del Mundial fue el 19 de
+    # julio y la FIFA paso de cinco ventanas a cuatro, con cuatro partidos por ventana. Con el tope de 9 dias,
+    # el chequeo marcaba las cinco ligas como atrasadas el 6-oct-2026 cuando simplemente no habia partidos.
+    # 25 = 19 dias de paron + unos dias de retraso de publicacion de football-data.co.uk.
+    "premier": 25, "laliga": 25, "seriea": 25, "bundesliga": 25, "ligue1": 25,
+    "ligamx": 12, "mls": 12,
+    "champions": 25,                   # fase de liga cada 2-3 semanas, mas los parones
 })
 ARCHIVOS = {"beisbol.csv": ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl"),
             "nba.csv": ("nba", "ncaamb"), "americano.csv": ("nfl", "ncaafb"),
