@@ -1,0 +1,197 @@
+{
+ "generado": "2026-10-07T01:10:57Z",
+ "metodo": "capas as-of (sin mirar el futuro) + minimos cuadrados con validacion cruzada en 4 bloques por tiempo",
+ "lastre_parque": 60.0,
+ "lastre_umpire": 40.0,
+ "ligas": {
+  "LMP": {
+   "n": 1550,
+   "cobertura": {
+    "parque": 1533,
+    "umpire": 1467,
+    "temp": 1491,
+    "viento": 481
+   },
+   "capas": {
+    "parque": {
+     "coef": 1.99596,
+     "mae_base": 3.686,
+     "mae_capa": 3.6293,
+     "mejora_milesimas": 56.7,
+     "n": 1550
+    },
+    "umpire": {
+     "coef": 0.4039,
+     "mae_base": 3.686,
+     "mae_capa": 3.6915,
+     "mejora_milesimas": -5.5,
+     "n": 1550
+    },
+    "temp": {
+     "coef": 0.03216,
+     "mae_base": 3.686,
+     "mae_capa": 3.6724,
+     "mejora_milesimas": 13.6,
+     "n": 1550
+    },
+    "viento": {
+     "coef": 0.02049,
+     "mae_base": 3.686,
+     "mae_capa": 3.6858,
+     "mejora_milesimas": 0.2,
+     "n": 1550
+    }
+   },
+   "juntas": {
+    "cols": [
+     "parque",
+     "umpire",
+     "temp",
+     "viento"
+    ],
+    "coef": [
+     2.1033,
+     0.59227,
+     0.03976,
+     0.001
+    ],
+    "mae_base": 3.686,
+    "mae_capas": 3.6132,
+    "mejora_milesimas": 72.8,
+    "n": 1550
+   }
+  },
+  "LVBP": {
+   "n": 1107,
+   "cobertura": {
+    "parque": 1101,
+    "umpire": 1070,
+    "temp": 1100,
+    "viento": 485
+   },
+   "capas": {
+    "parque": {
+     "coef": 0.93577,
+     "mae_base": 3.9741,
+     "mae_capa": 3.9778,
+     "mejora_milesimas": -3.7,
+     "n": 1107
+    },
+    "umpire": {
+     "coef": 1.59658,
+     "mae_base": 3.9741,
+     "mae_capa": 3.9791,
+     "mejora_milesimas": -5.0,
+     "n": 1107
+    },
+    "temp": {
+     "coef": 0.02257,
+     "mae_base": 3.9741,
+     "mae_capa": 3.9782,
+     "mejora_milesimas": -4.1,
+     "n": 1107
+    },
+    "viento": {
+     "coef": 0.03515,
+     "mae_base": 3.9741,
+     "mae_capa": 3.9814,
+     "mejora_milesimas": -7.3,
+     "n": 1107
+    }
+   },
+   "juntas": {
+    "cols": [
+     "parque",
+     "umpire",
+     "temp",
+     "viento"
+    ],
+    "coef": [
+     0.95825,
+     1.57551,
+     0.02888,
+     0.02223
+    ],
+    "mae_base": 3.9741,
+    "mae_capas": 3.9865,
+    "mejora_milesimas": -12.3,
+    "n": 1107
+   }
+  },
+  "MLB": {
+   "n": 9639,
+   "cobertura": {
+    "parque": 9625,
+    "umpire": 9607,
+    "temp": 9637,
+    "viento": 4985
+   },
+   "capas": {
+    "parque": {
+     "coef": 1.05805,
+     "mae_base": 3.5113,
+     "mae_capa": 3.4856,
+     "mejora_milesimas": 25.6,
+     "n": 9639
+    },
+    "umpire": {
+     "coef": 0.10933,
+     "mae_base": 3.5113,
+     "mae_capa": 3.5114,
+     "mejora_milesimas": -0.2,
+     "n": 9639
+    },
+    "temp": {
+     "coef": 0.04147,
+     "mae_base": 3.5113,
+     "mae_capa": 3.4955,
+     "mejora_milesimas": 15.7,
+     "n": 9639
+    },
+    "viento": {
+     "coef": 0.03719,
+     "mae_base": 3.5113,
+     "mae_capa": 3.5097,
+     "mejora_milesimas": 1.6,
+     "n": 9639
+    }
+   },
+   "juntas": {
+    "cols": [
+     "parque",
+     "umpire",
+     "temp",
+     "viento"
+    ],
+    "coef": [
+     0.96504,
+     0.14874,
+     0.03342,
+     0.03396
+    ],
+    "mae_base": 3.5113,
+    "mae_capas": 3.4787,
+    "mejora_milesimas": 32.6,
+    "n": 9639
+   }
+  },
+  "NPB": {
+   "n": 4160,
+   "cobertura": {
+    "parque": 4127,
+    "umpire": 0,
+    "temp": 0,
+    "viento": 0
+   },
+   "capas": {
+    "parque": {
+     "coef": 1.10889,
+     "mae_base": 3.0475,
+     "mae_capa": 3.016,
+     "mejora_milesimas": 31.5,
+     "n": 4160
+    }
+   }
+  }
+ }
+}

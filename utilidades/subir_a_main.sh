@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # utilidades/subir_a_main.sh "<mensaje>" archivo1 archivo2 ...
-# Sube a main SOLO los archivos que existen, resuelve choques a favor de la version recien generada
-# y reintenta si el push pierde la carrera. Los archivos modificados que NO van en la lista se apartan
-# (git stash) antes de traer main, para que el rebase no falle por "unstaged changes".
+# Sube a main SOLO los archivos que existen (git add -f falla si falta uno), resuelve choques con tus pushes
+# a favor de la version recien generada y reintenta una vez si el push pierde la carrera.
 set -u
 msg="$1"; shift
 git config user.name "edgeline-bot"
@@ -13,16 +12,13 @@ for f in "$@"; do
 done
 if [ -z "$lista" ]; then echo "Nada que subir."; exit 0; fi
 git add -f $lista
-git add -u -- salida 2>/dev/null || true      # tambien borrados/cambios de archivos ya versionados en salida/ (resumen de dias pasados)
 if git diff --cached --quiet; then echo "Sin cambios."; exit 0; fi
 git commit -q -m "$msg $(date -u +'%Y-%m-%d %H:%M')Z"
-if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
-  echo "Archivos modificados que no van en esta subida (se apartan):"
-  git status --short --untracked-files=no | head -20
-  git stash push -q -m "apartado por subir_a_main" || git checkout -q -- .
-fi
+# El rebase se niega a correr si quedan cambios sin seguir en el arbol (los pasos del workflow regeneran
+# archivos que no van en esta lista, p.ej. modelos/*.json o salidas intermedias). autoStash los guarda y
+# los devuelve solo. Si el rebase se cae a medias, el abort tambien deja el stash de vuelta.
 for intento in 1 2 3; do
-  git pull -q --rebase -X theirs origin main || { git rebase --abort 2>/dev/null; echo "rebase fallo (intento $intento)"; git status --short | head -10; sleep 5; continue; }
+  git -c rebase.autoStash=true pull -q --rebase -X theirs origin main || { git rebase --abort 2>/dev/null; echo "rebase fallo (intento $intento)"; sleep 5; continue; }
   if git push -q origin HEAD:main; then echo "Subido: $lista"; exit 0; fi
   echo "push fallo (intento $intento)"; sleep 5
 done
