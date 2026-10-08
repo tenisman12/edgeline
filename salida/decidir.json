@@ -1,209 +1,8 @@
 {
- "generado": "2026-10-07T20:46:49",
+ "generado": "2026-10-08T00:05:41",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
-  {
-   "liga": "mlb",
-   "id": "401908016",
-   "fecha": "2026-10-07",
-   "hora": "16:00",
-   "home": "Atlanta Braves",
-   "away": "Los Angeles Dodgers",
-   "p_modelo": 0.4522,
-   "p_sharp": 0.4186,
-   "p_final": 0.4269,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -0.79,
-   "linea_home": "+1.5",
-   "p_runline_home": 0.5438,
-   "detalle_modelo": {
-    "elo_h": 1538.4,
-    "elo_a": 1591.0,
-    "dif_h": 0.702,
-    "dif_a": 1.236,
-    "p_base": 0.4799,
-    "abridor_h": {
-     "nombre": "Tyler Mahle",
-     "fip_ventana": 3.38,
-     "fip_ultimas5": 3.43,
-     "k_pct": 0.209,
-     "bb_pct": 0.037,
-     "ip_ventana": "55.1",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 3.56,
-     "ga_equipo": 3.839
-    },
-    "abridor_a": {
-     "nombre": "Tyler Glasnow",
-     "fip_ventana": 2.15,
-     "fip_ultimas5": 2.46,
-     "k_pct": 0.35,
-     "bb_pct": 0.086,
-     "ip_ventana": "34.1",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 2.95,
-     "ga_equipo": 3.679
-    },
-    "carreras_abridor": -0.27
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "Atlanta Braves",
-     "p": 0.4269,
-     "cuota": 137.0,
-     "decimal": 2.37,
-     "casa": "gtbets",
-     "ev": 0.0119,
-     "cuota_min": 2.34,
-     "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 7,
-     "senales": {
-      "a_favor": [
-       "h2h",
-       "abridor"
-      ],
-      "en_contra": [
-       "forma",
-       "movimiento",
-       "consenso",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 37.0
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "Los Angeles Dodgers",
-     "p": 0.5731,
-     "cuota": -145.0,
-     "decimal": 1.69,
-     "casa": "onexbet",
-     "ev": -0.0317,
-     "cuota_min": 1.75,
-     "en_rango": false,
-     "senales_favor": 7,
-     "senales_contra": 2,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "movimiento",
-       "consenso",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ],
-      "en_contra": [
-       "h2h",
-       "abridor"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 55.1
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "Atlanta Braves +1.5",
-     "p": 0.5438,
-     "cuota": -121.0,
-     "decimal": 1.826,
-     "casa": "onexbet",
-     "ev": -0.0068,
-     "cuota_min": 1.84,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [
-       "abridor"
-      ],
-      "en_contra": [
-       "forma",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 43.3
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "Los Angeles Dodgers -1.5",
-     "p": 0.4562,
-     "cuota": 121.0,
-     "decimal": 2.21,
-     "casa": "pinnacle",
-     "ev": 0.0082,
-     "cuota_min": 2.19,
-     "en_rango": true,
-     "senales_favor": 5,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "forma",
-       "osciladores",
-       "fuerza",
-       "bullpen",
-       "racha"
-      ],
-      "en_contra": [
-       "abridor"
-      ]
-     },
-     "premium_nivel": "lean",
-     "premium_pts": 46.3
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Atlanta Braves",
-    "p": 0.4269,
-    "cuota": 137.0,
-    "decimal": 2.37,
-    "casa": "gtbets",
-    "ev": 0.0119,
-    "cuota_min": 2.34,
-    "en_rango": true,
-    "senales_favor": 2,
-    "senales_contra": 7,
-    "senales": {
-     "a_favor": [
-      "h2h",
-      "abridor"
-     ],
-     "en_contra": [
-      "forma",
-      "movimiento",
-      "consenso",
-      "osciladores",
-      "fuerza",
-      "bullpen",
-      "racha"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 37.0
-   },
-   "confianza": "baja",
-   "stake": 0.01,
-   "pretemporada": false
-  },
   {
    "liga": "mlb",
    "id": "401907987",
@@ -211,13 +10,13 @@
    "hora": "18:00",
    "home": "New York Yankees",
    "away": "Tampa Bay Rays",
-   "p_modelo": 0.5603,
-   "p_sharp": 0.6062,
-   "p_final": 0.5949,
+   "p_modelo": 0.5602,
+   "p_sharp": 0.6128,
+   "p_final": 0.5998,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 1.03,
+   "margen_esperado": 1.09,
    "linea_home": "-1.5",
-   "p_runline_home": 0.4135,
+   "p_runline_home": 0.4183,
    "detalle_modelo": {
     "elo_h": 1568.5,
     "elo_a": 1564.9,
@@ -226,26 +25,26 @@
     "p_base": 0.5384,
     "abridor_h": {
      "nombre": "Max Fried",
-     "fip_ventana": 3.35,
-     "fip_ultimas5": 2.76,
+     "fip_ventana": 3.36,
+     "fip_ultimas5": 2.77,
      "k_pct": 0.243,
      "bb_pct": 0.062,
      "ip_ventana": "37.1",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.33,
+     "era_ajustada": 3.34,
      "ga_equipo": 3.669
     },
     "abridor_a": {
      "nombre": "Nick Martinez",
      "fip_ventana": 3.84,
-     "fip_ultimas5": 4.17,
+     "fip_ultimas5": 4.18,
      "k_pct": 0.177,
      "bb_pct": 0.03,
      "ip_ventana": "51.0",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.99,
+     "era_ajustada": 4.0,
      "ga_equipo": 3.976
     },
     "carreras_abridor": 0.22
@@ -255,11 +54,11 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "New York Yankees",
-     "p": 0.5949,
-     "cuota": -156.0,
-     "decimal": 1.641,
+     "p": 0.5998,
+     "cuota": -159.0,
+     "decimal": 1.629,
      "casa": "onexbet",
-     "ev": -0.0238,
+     "ev": -0.0229,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 5,
@@ -277,18 +76,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 52.3
+     "premium_pts": 53.0
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Tampa Bay Rays",
-     "p": 0.4051,
-     "cuota": 152.0,
-     "decimal": 2.52,
+     "p": 0.4002,
+     "cuota": 154.0,
+     "decimal": 2.54,
      "casa": "gtbets",
-     "ev": 0.0209,
-     "cuota_min": 2.47,
+     "ev": 0.0164,
+     "cuota_min": 2.5,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 5,
@@ -305,18 +104,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 42.2
+     "premium_pts": 41.1
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "New York Yankees -1.5",
-     "p": 0.4135,
+     "p": 0.4183,
      "cuota": 140.0,
      "decimal": 2.4,
      "casa": "onexbet",
-     "ev": -0.0077,
-     "cuota_min": 2.42,
+     "ev": 0.004,
+     "cuota_min": 2.39,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 1,
@@ -329,18 +128,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.3
+     "premium_pts": 40.6
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Tampa Bay Rays +1.5",
-     "p": 0.5865,
-     "cuota": -148.0,
-     "decimal": 1.676,
-     "casa": "unibet_se",
-     "ev": -0.0171,
-     "cuota_min": 1.7,
+     "p": 0.5817,
+     "cuota": -150.0,
+     "decimal": 1.667,
+     "casa": "williamhill",
+     "ev": -0.0306,
+     "cuota_min": 1.72,
      "en_rango": false,
      "senales_favor": 1,
      "senales_contra": 1,
@@ -353,19 +152,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 43.8
+     "premium_pts": 41.5
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "away",
     "texto": "Tampa Bay Rays",
-    "p": 0.4051,
-    "cuota": 152.0,
-    "decimal": 2.52,
+    "p": 0.4002,
+    "cuota": 154.0,
+    "decimal": 2.54,
     "casa": "gtbets",
-    "ev": 0.0209,
-    "cuota_min": 2.47,
+    "ev": 0.0164,
+    "cuota_min": 2.5,
     "en_rango": true,
     "senales_favor": 1,
     "senales_contra": 5,
@@ -382,7 +181,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 42.2
+    "premium_pts": 41.1
    },
    "confianza": "baja",
    "stake": 0.01,
@@ -411,18 +210,18 @@
     "abridor_h": {
      "nombre": "Walker Buehler",
      "fip_ventana": 4.81,
-     "fip_ultimas5": 5.57,
+     "fip_ultimas5": 5.58,
      "k_pct": 0.202,
      "bb_pct": 0.067,
      "ip_ventana": "45.1",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 4.77,
+     "era_ajustada": 4.78,
      "ga_equipo": 4.144
     },
     "abridor_a": {
      "nombre": "Robert Gasser",
-     "fip_ventana": 3.83,
+     "fip_ventana": 3.84,
      "fip_ultimas5": 3.56,
      "k_pct": 0.225,
      "bb_pct": 0.095,
@@ -440,10 +239,10 @@
      "lado": "home",
      "texto": "San Diego Padres",
      "p": 0.4887,
-     "cuota": -105.0,
-     "decimal": 1.952,
+     "cuota": -104.0,
+     "decimal": 1.962,
      "casa": "onexbet",
-     "ev": -0.0459,
+     "ev": -0.0414,
      "cuota_min": 2.05,
      "en_rango": true,
      "senales_favor": 1,
@@ -462,17 +261,17 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 31.1
+     "premium_pts": 32.1
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Milwaukee Brewers",
      "p": 0.5113,
-     "cuota": 102.0,
-     "decimal": 2.02,
-     "casa": "betanysports",
-     "ev": 0.0328,
+     "cuota": -102.0,
+     "decimal": 1.98,
+     "casa": "lowvig",
+     "ev": 0.0126,
      "cuota_min": 1.96,
      "en_rango": true,
      "senales_favor": 6,
@@ -490,18 +289,18 @@
        "h2h"
       ]
      },
-     "premium_nivel": "pick",
-     "premium_pts": 62.6
+     "premium_nivel": "lean",
+     "premium_pts": 58.4
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "San Diego Padres +1.5",
      "p": 0.6033,
-     "cuota": -170.0,
-     "decimal": 1.588,
+     "cuota": -167.0,
+     "decimal": 1.599,
      "casa": "onexbet",
-     "ev": -0.0419,
+     "ev": -0.0355,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 0,
@@ -516,17 +315,17 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 41.1
+     "premium_pts": 39.3
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Milwaukee Brewers -1.5",
      "p": 0.3967,
-     "cuota": 170.0,
-     "decimal": 2.7,
-     "casa": "betrivers",
-     "ev": 0.0712,
+     "cuota": 166.0,
+     "decimal": 2.66,
+     "casa": "williamhill_us",
+     "ev": 0.0553,
      "cuota_min": 2.52,
      "en_rango": true,
      "senales_favor": 4,
@@ -541,7 +340,7 @@
       "en_contra": []
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.5
+     "premium_pts": 50.6
     }
    ],
    "pick": {
@@ -549,10 +348,10 @@
     "lado": "away",
     "texto": "Milwaukee Brewers",
     "p": 0.5113,
-    "cuota": 102.0,
-    "decimal": 2.02,
-    "casa": "betanysports",
-    "ev": 0.0328,
+    "cuota": -102.0,
+    "decimal": 1.98,
+    "casa": "lowvig",
+    "ev": 0.0126,
     "cuota_min": 1.96,
     "en_rango": true,
     "senales_favor": 6,
@@ -570,8 +369,8 @@
       "h2h"
      ]
     },
-    "premium_nivel": "pick",
-    "premium_pts": 62.6
+    "premium_nivel": "lean",
+    "premium_pts": 58.4
    },
    "confianza": "baja",
    "stake": 0.01,
@@ -759,6 +558,184 @@
     },
     "premium_nivel": "pasar",
     "premium_pts": 23.2
+   },
+   "confianza": "minima",
+   "stake": 0.0,
+   "pretemporada": false
+  },
+  {
+   "liga": "mlb",
+   "id": "401907993",
+   "fecha": "2026-10-08",
+   "hora": "15:00",
+   "home": "Chicago White Sox",
+   "away": "Cleveland Guardians",
+   "p_modelo": 0.4936,
+   "p_sharp": 0.4821,
+   "p_final": 0.485,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": -0.16,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.5998,
+   "detalle_modelo": {
+    "elo_h": 1521.9,
+    "elo_a": 1517.4,
+    "dif_h": 0.365,
+    "dif_a": 0.079,
+    "p_base": 0.5394,
+    "abridor_h": null,
+    "abridor_a": {
+     "nombre": "Parker Messick",
+     "fip_ventana": 2.87,
+     "fip_ultimas5": 3.03,
+     "k_pct": 0.283,
+     "bb_pct": 0.058,
+     "ip_ventana": "54.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.36,
+     "ga_equipo": 4.103
+    },
+    "carreras_abridor": -0.45
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Chicago White Sox",
+     "p": 0.485,
+     "cuota": 105.0,
+     "decimal": 2.05,
+     "casa": "gtbets",
+     "ev": -0.0058,
+     "cuota_min": 2.06,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 5,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "consenso"
+      ],
+      "en_contra": [
+       "movimiento",
+       "h2h",
+       "contexto",
+       "abridor",
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 51.3
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Cleveland Guardians",
+     "p": 0.515,
+     "cuota": -110.0,
+     "decimal": 1.909,
+     "casa": "williamhill",
+     "ev": -0.0168,
+     "cuota_min": 1.94,
+     "en_rango": true,
+     "senales_favor": 5,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "movimiento",
+       "h2h",
+       "contexto",
+       "abridor",
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "consenso"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 40.1
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Chicago White Sox +1.5",
+     "p": 0.5998,
+     "cuota": -154.0,
+     "decimal": 1.649,
+     "casa": "onexbet",
+     "ev": -0.0108,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 1,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "forma"
+      ],
+      "en_contra": [
+       "abridor",
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 57.0
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Cleveland Guardians -1.5",
+     "p": 0.4002,
+     "cuota": 155.0,
+     "decimal": 2.55,
+     "casa": "mybookieag",
+     "ev": 0.0206,
+     "cuota_min": 2.5,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "abridor",
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 33.8
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "Chicago White Sox",
+    "p": 0.485,
+    "cuota": 105.0,
+    "decimal": 2.05,
+    "casa": "gtbets",
+    "ev": -0.0058,
+    "cuota_min": 2.06,
+    "en_rango": true,
+    "senales_favor": 2,
+    "senales_contra": 5,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "consenso"
+     ],
+     "en_contra": [
+      "movimiento",
+      "h2h",
+      "contexto",
+      "abridor",
+      "bullpen"
+     ]
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 51.3
    },
    "confianza": "minima",
    "stake": 0.0,
