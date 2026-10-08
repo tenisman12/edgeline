@@ -1,192 +1,8 @@
 {
- "generado": "2026-10-08T00:05:41",
+ "generado": "2026-10-08T01:11:42",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
-  {
-   "liga": "mlb",
-   "id": "401907987",
-   "fecha": "2026-10-07",
-   "hora": "18:00",
-   "home": "New York Yankees",
-   "away": "Tampa Bay Rays",
-   "p_modelo": 0.5602,
-   "p_sharp": 0.6128,
-   "p_final": 0.5998,
-   "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 1.09,
-   "linea_home": "-1.5",
-   "p_runline_home": 0.4183,
-   "detalle_modelo": {
-    "elo_h": 1568.5,
-    "elo_a": 1564.9,
-    "dif_h": 0.904,
-    "dif_a": 0.549,
-    "p_base": 0.5384,
-    "abridor_h": {
-     "nombre": "Max Fried",
-     "fip_ventana": 3.36,
-     "fip_ultimas5": 2.77,
-     "k_pct": 0.243,
-     "bb_pct": 0.062,
-     "ip_ventana": "37.1",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 3.34,
-     "ga_equipo": 3.669
-    },
-    "abridor_a": {
-     "nombre": "Nick Martinez",
-     "fip_ventana": 3.84,
-     "fip_ultimas5": 4.18,
-     "k_pct": 0.177,
-     "bb_pct": 0.03,
-     "ip_ventana": "51.0",
-     "bullpen_game": false,
-     "innings": 5.5,
-     "era_ajustada": 4.0,
-     "ga_equipo": 3.976
-    },
-    "carreras_abridor": 0.22
-   },
-   "lados": [
-    {
-     "mercado": "Ganador",
-     "lado": "home",
-     "texto": "New York Yankees",
-     "p": 0.5998,
-     "cuota": -159.0,
-     "decimal": 1.629,
-     "casa": "onexbet",
-     "ev": -0.0229,
-     "cuota_min": 1.7,
-     "en_rango": false,
-     "senales_favor": 5,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "movimiento",
-       "consenso",
-       "h2h",
-       "contexto",
-       "abridor"
-      ],
-      "en_contra": [
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 53.0
-    },
-    {
-     "mercado": "Ganador",
-     "lado": "away",
-     "texto": "Tampa Bay Rays",
-     "p": 0.4002,
-     "cuota": 154.0,
-     "decimal": 2.54,
-     "casa": "gtbets",
-     "ev": 0.0164,
-     "cuota_min": 2.5,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 5,
-     "senales": {
-      "a_favor": [
-       "racha"
-      ],
-      "en_contra": [
-       "movimiento",
-       "consenso",
-       "h2h",
-       "contexto",
-       "abridor"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 41.1
-    },
-    {
-     "mercado": "Run line",
-     "lado": "home",
-     "texto": "New York Yankees -1.5",
-     "p": 0.4183,
-     "cuota": 140.0,
-     "decimal": 2.4,
-     "casa": "onexbet",
-     "ev": 0.004,
-     "cuota_min": 2.39,
-     "en_rango": true,
-     "senales_favor": 1,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "abridor"
-      ],
-      "en_contra": [
-       "racha"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 40.6
-    },
-    {
-     "mercado": "Run line",
-     "lado": "away",
-     "texto": "Tampa Bay Rays +1.5",
-     "p": 0.5817,
-     "cuota": -150.0,
-     "decimal": 1.667,
-     "casa": "williamhill",
-     "ev": -0.0306,
-     "cuota_min": 1.72,
-     "en_rango": false,
-     "senales_favor": 1,
-     "senales_contra": 1,
-     "senales": {
-      "a_favor": [
-       "racha"
-      ],
-      "en_contra": [
-       "abridor"
-      ]
-     },
-     "premium_nivel": "pasar",
-     "premium_pts": 41.5
-    }
-   ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "away",
-    "texto": "Tampa Bay Rays",
-    "p": 0.4002,
-    "cuota": 154.0,
-    "decimal": 2.54,
-    "casa": "gtbets",
-    "ev": 0.0164,
-    "cuota_min": 2.5,
-    "en_rango": true,
-    "senales_favor": 1,
-    "senales_contra": 5,
-    "senales": {
-     "a_favor": [
-      "racha"
-     ],
-     "en_contra": [
-      "movimiento",
-      "consenso",
-      "h2h",
-      "contexto",
-      "abridor"
-     ]
-    },
-    "premium_nivel": "pasar",
-    "premium_pts": 41.1
-   },
-   "confianza": "baja",
-   "stake": 0.01,
-   "pretemporada": false
-  },
   {
    "liga": "mlb",
    "id": "401908005",
@@ -383,19 +199,19 @@
    "hora": "03:00",
    "home": "Tigers",
    "away": "Swallows",
-   "p_modelo": 0.6642,
+   "p_modelo": 0.6654,
    "p_sharp": 0.6239,
-   "p_final": 0.6342,
+   "p_final": 0.6345,
    "fuente": "pinnacle 75% + modelo 25%",
    "margen_esperado": 1.48,
    "linea_home": "-1.5",
-   "p_runline_home": 0.4277,
+   "p_runline_home": 0.4279,
    "detalle_modelo": {
-    "elo_h": 1539.8,
+    "elo_h": 1541.3,
     "elo_a": 1404.3,
-    "dif_h": 0.582,
+    "dif_h": 0.585,
     "dif_a": -0.866,
-    "p_base": 0.6695,
+    "p_base": 0.6709,
     "abridor_h": {
      "nombre": "ルーカス",
      "fip_ventana": 3.44,
@@ -405,8 +221,8 @@
      "ip_ventana": "11.0",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.18,
-     "ga_equipo": 3.078
+     "era_ajustada": 3.16,
+     "ga_equipo": 3.063
     },
     "abridor_a": null,
     "carreras_abridor": -0.06
@@ -416,11 +232,11 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Tigers",
-     "p": 0.6342,
+     "p": 0.6345,
      "cuota": -175.0,
      "decimal": 1.571,
      "casa": "betonlineag",
-     "ev": -0.0035,
+     "ev": -0.003,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 7,
@@ -440,18 +256,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 63.7
+     "premium_pts": 62.8
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Swallows",
-     "p": 0.3658,
+     "p": 0.3655,
      "cuota": 160.0,
      "decimal": 2.6,
      "casa": "draftkings",
-     "ev": -0.0488,
-     "cuota_min": 2.73,
+     "ev": -0.0496,
+     "cuota_min": 2.74,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 7,
@@ -470,17 +286,17 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 23.2
+     "premium_pts": 24.1
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Tigers -1.5",
-     "p": 0.4277,
+     "p": 0.4279,
      "cuota": 137.0,
      "decimal": 2.37,
      "casa": "onexbet",
-     "ev": 0.0135,
+     "ev": 0.0142,
      "cuota_min": 2.34,
      "en_rango": true,
      "senales_favor": 5,
@@ -498,17 +314,17 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 66.5
+     "premium_pts": 65.1
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Swallows +1.5",
-     "p": 0.5723,
+     "p": 0.5721,
      "cuota": -150.0,
      "decimal": 1.667,
      "casa": "pinnacle",
-     "ev": -0.0461,
+     "ev": -0.0466,
      "cuota_min": 1.75,
      "en_rango": false,
      "senales_favor": 1,
@@ -526,19 +342,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 19.0
+     "premium_pts": 20.4
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "away",
     "texto": "Swallows",
-    "p": 0.3658,
+    "p": 0.3655,
     "cuota": 160.0,
     "decimal": 2.6,
     "casa": "draftkings",
-    "ev": -0.0488,
-    "cuota_min": 2.73,
+    "ev": -0.0496,
+    "cuota_min": 2.74,
     "en_rango": true,
     "senales_favor": 1,
     "senales_contra": 7,
@@ -557,7 +373,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 23.2
+    "premium_pts": 24.1
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -611,14 +427,13 @@
      "cuota_min": 2.06,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 5,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
        "forma",
        "consenso"
       ],
       "en_contra": [
-       "movimiento",
        "h2h",
        "contexto",
        "abridor",
@@ -626,7 +441,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 51.3
+     "premium_pts": 54.3
     },
     {
      "mercado": "Ganador",
@@ -639,11 +454,10 @@
      "ev": -0.0168,
      "cuota_min": 1.94,
      "en_rango": true,
-     "senales_favor": 5,
+     "senales_favor": 4,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
-       "movimiento",
        "h2h",
        "contexto",
        "abridor",
@@ -655,7 +469,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 40.1
+     "premium_pts": 37.2
     },
     {
      "mercado": "Run line",
@@ -720,14 +534,13 @@
     "cuota_min": 2.06,
     "en_rango": true,
     "senales_favor": 2,
-    "senales_contra": 5,
+    "senales_contra": 4,
     "senales": {
      "a_favor": [
       "forma",
       "consenso"
      ],
      "en_contra": [
-      "movimiento",
       "h2h",
       "contexto",
       "abridor",
@@ -735,7 +548,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 51.3
+    "premium_pts": 54.3
    },
    "confianza": "minima",
    "stake": 0.0,
