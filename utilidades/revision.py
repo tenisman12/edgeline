@@ -67,10 +67,39 @@ PISO_JUEGOS = {"mlb": 9000, "npb": 4000, "kbo": 4000, "nhl": 4000, "nba": 5000, 
                "ligamx": 1900, "mls": 2900}
 INVENTARIO = os.path.join(REPO, "salida", "inventario_datos.json")
 
-ERR, WARN = [], []
+# CONDICIONES CONOCIDAS. Un chequeo que SIEMPRE sale en rojo ensena a ignorarlo: a los tres dias nadie
+# distingue "lo de siempre" de "se rompio algo nuevo". Lo que ya esta diagnosticado y ya tiene su manejo baja
+# a aviso y NO pone la corrida en rojo, pero se sigue imprimiendo en su propia seccion para que no se olvide.
+# Cada entrada caduca: pasada la fecha vuelve a ser ERROR, asi nada queda silenciado para siempre.
+#   (bloque, fragmento que debe aparecer en el mensaje, motivo, revisar a partir de)
+CONOCIDOS = [
+    ("cuotas", "WTA",
+     "The Odds API no cubre Samsun ni Suzhou (si cubre China Open y Shanghai). Verificado el 7-oct-2026: "
+     "ATP salio 16 de 16 el mismo dia. No es defecto del codigo; hace falta otra fuente de precio.",
+     "2026-11-15"),
+    ("calibracion", "NCAAFB Total",
+     "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
+     "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
+     "2026-12-15"),
+]
+
+ERR, WARN, CONOC = [], [], []
+
+
+def _conocido(bloque, msg):
+    """(motivo, revisar) si la condicion esta reconocida y aun no caduca."""
+    hoy = _hoy().isoformat()
+    for b, frag, motivo, revisar in CONOCIDOS:
+        if b == bloque and frag in msg and hoy < revisar:
+            return motivo, revisar
+    return None
 
 
 def err(bloque, msg):
+    c = _conocido(bloque, msg)
+    if c:
+        CONOC.append((bloque, msg, c[0], c[1])); print("  CONOCIDO [%s] %s" % (bloque, msg))
+        return
     ERR.append((bloque, msg)); print("  ERROR  [%s] %s" % (bloque, msg))
 
 
@@ -386,11 +415,19 @@ def main():
         except Exception as e:
             warn(nombre, "el bloque fallo (%s: %s)" % (type(e).__name__, str(e)[:80]))
     print("\n" + "=" * 70)
-    print("RESULTADO: %d errores, %d avisos" % (len(ERR), len(WARN)))
+    print("RESULTADO: %d errores, %d avisos, %d condiciones conocidas" % (len(ERR), len(WARN), len(CONOC)))
     for b, m in ERR:
         print("  ERROR  [%s] %s" % (b, m))
+    if CONOC:
+        print("\nCONOCIDAS (no ponen la corrida en rojo; cada una caduca y vuelve a ser error):")
+        for b, m, motivo, revisar in CONOC:
+            print("  [%s] %s" % (b, m))
+            print("      por que se acepta: %s" % motivo)
+            print("      vuelve a ser error el: %s" % revisar)
     if ERR:
-        print("\nLa corrida se marca en rojo a proposito: hay algo que esta dando numeros equivocados.")
+        print("\nLa corrida se marca en rojo a proposito: hay algo NUEVO que esta dando numeros equivocados.")
+    else:
+        print("\nSin errores nuevos. Lo que queda son condiciones ya diagnosticadas y ya manejadas.")
     return 1 if (ERR or (a.avisos_como_error and WARN)) else 0
 
 
