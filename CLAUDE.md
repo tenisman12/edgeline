@@ -81,6 +81,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   `utilidades/pesos_ausencias_minutos.py`; K14 sigue pasando sobre la base de produccion, z 3.89). Se ven en
   modelo.capa_ausencias / modelo.capa_minutos y no se cuentan otra vez en la capa cualitativa. T3 carga de 14 dias en tenis mejora
   mucho pero al reves de lo registrado (el que trae mas partidos rinde mas): hipotesis nueva para medir en vivo.
+  Tanda 4 (9-oct, `utilidades/minar_angulos_tanda4.py`, `trabajo/minar/2026-10-09_tanda4.md`, k 81): agrupados por liga,
+  totales contra tasas de anotacion y contra el cierre (futbol O2.5, NFL), derbi y jugador local en tenis. Nada nuevo pasa
+  (T2 tenis pasa sobre el modelo pero sobre la capa T1 da z 0.25). Coors +2.1 carreras (ya en la capa de parque).
+  La parte A da el efecto de los 136 con IC y encogido (Bayes empirico): `2026-10-09_tanda4_resultados.json`.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,
