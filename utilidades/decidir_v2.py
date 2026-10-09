@@ -44,7 +44,7 @@ SOLO_VALIDADO = True
 AJUSTE_OVER = {"nfl": -0.034}           # el modelo de NFL sobreestima el over 3.4 pp (medido)
 CUOTA_MIN = 1.70
 CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel (sin tope de cuota: sigue siendo pick)
-UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0, "sin_cuota": 0, "no_validado": 0}
+UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0, "sin_cuota": 0, "solo_mercado": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 TZ = -6
 # total: desviacion del total real alrededor del esperado del modelo, por deporte (de los MAE medidos: sd ~ 1.25*MAE)
@@ -68,7 +68,7 @@ def confianza(ev):
     return "alta" if ev >= 0.08 else "media" if ev >= 0.04 else "baja" if ev >= 0.01 else "minima"
 
 
-UNIDADES_CERO = ("minima", "sin_cuota", "no_validado")
+UNIDADES_CERO = ("minima", "sin_cuota", "solo_mercado")
 
 
 def _lados(rec, tipo):
@@ -132,7 +132,7 @@ def _dudas(rec, tipo, lado_k, p_sharp, fuente):
     m = rec.get("modelo") or {}
     val = (rec.get("validacion") or {}).get(tipo)
     if val and val != "publicable":
-        d.append({"duda": "mercado %s sin validar en esta liga" % tipo, "efecto": "el modelo no vota: p_final = mercado; no se apuesta"})
+        d.append({"duda": "mercado %s: el modelo todavia no le gana a la tasa historica en esta liga" % tipo, "efecto": "el modelo no vota: p_final = mercado; no se apuesta"})
     if p_sharp is None:
         d.append({"duda": "sin cuota de mercado", "efecto": "p_final = modelo; el pick vale solo si pagan la cuota minima"})
     elif fuente == "una_casa":
@@ -339,8 +339,8 @@ def decidir_mercado(rec, tipo, movs=None):
     conf = confianza(mejor["ev"])
     razones_no = []
     if SOLO_VALIDADO and not validado:
-        razones_no.append("mercado %s de %s sin validar (walk-forward: el modelo no le gana a la base): lectura, no pick" % (tipo, liga.upper()))
-        conf = "no_validado"
+        razones_no.append("mercado %s de %s: el modelo todavia no le gana a la tasa historica (walk-forward), p final = mercado: lectura, no pick" % (tipo, liga.upper()))
+        conf = "solo_mercado"
     if mejor["decimal"] is not None and mejor["decimal"] < CUOTA_MIN:
         razones_no.append("cuota %.2f menor a %.2f" % (mejor["decimal"], CUOTA_MIN)); conf = "minima" if conf != "sin_cuota" else conf
     br = mejor["brecha_modelo_mercado"]

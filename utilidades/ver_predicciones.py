@@ -223,7 +223,7 @@ def _mercados_futbol(d, h, v):
     val = d.get("_validacion") or {}
     def f(k, nombre):
         if d.get(k) is None: return None
-        return "%-24s %6s  %s" % (nombre, pct(d[k]).strip(), "" if val.get(k) == "publicable" else "(sin validar)")
+        return "%-24s %6s  %s" % (nombre, pct(d[k]).strip(), "" if val.get(k) == "publicable" else "(modelo debajo de la base)")
     filas = [("1X", "Doble oport. %s o empate" % ab(h)), ("X2", "Doble oport. %s o empate" % ab(v)), ("12", "Doble oport. sin empate"),
              ("aa_si", "Ambos anotan SI"), ("aa_no", "Ambos anotan NO"),
              ("over_1.5", "Over 1.5"), ("over_2.5", "Over 2.5"), ("over_3.5", "Over 3.5"),
@@ -240,7 +240,7 @@ def _mercados_futbol(d, h, v):
         print("        CORNERS esperados %.1f:  " % d["corners_esperados"] + "  ".join("O%s %s%s" % (l, pct(d["corners_over_%s" % l]).strip(), "" if val.get("corners_over_%s" % l) == "publicable" else "*") for l in ("8.5", "9.5", "10.5", "11.5")))
     if d.get("tarjetas_esperadas"):
         print("        TARJETAS esperadas %.1f: " % d["tarjetas_esperadas"] + "  ".join("O%s %s%s" % (l, pct(d["tarjetas_over_%s" % l]).strip(), "" if val.get("tarjetas_over_%s" % l) == "publicable" else "*") for l in ("2.5", "3.5", "4.5", "5.5")))
-    print("        (* o '(sin validar)' = no supera a la linea base en esa liga)")
+    print("        (* o '(modelo debajo de la base)' = no supera a la linea base en esa liga)")
 
 
 def main():
@@ -280,7 +280,7 @@ def main():
                 if m.get("linea_total"):
                     print("      TOTAL %.1f (%s%s)   Over %s   Under %s" % (
                         m["linea_total"], "linea de mercado" if m.get("linea_es_mercado") else "linea de referencia",
-                        ", total sin validar" if (p.get("validacion") or {}).get("Total") == "sin_validar" else "",
+                        ", total: modelo debajo de la base" if (p.get("validacion") or {}).get("Total") == "sin_validar" else "",
                         pct(m.get("p_over")).strip(), pct(1 - m["p_over"] if m.get("p_over") is not None else None).strip()))
                 else:
                     print("      TOTAL sin linea publicada todavia (modelo %.2f)" % m["total"])
@@ -289,7 +289,7 @@ def main():
                     nom = {"beisbol": "RUN LINE", "hockey": "PUCK LINE", "futbol": "HANDICAP"}.get(p.get("deporte"), "SPREAD")
                     print("      %s %+g %s (%s%s)   %s %s   %s %s" % (
                         nom, sp["linea_home"], ab(h), "linea de mercado" if sp.get("linea_es_mercado") else "linea de referencia",
-                        ", sin validar" if (p.get("validacion") or {}).get("Spread") == "sin_validar" else "",
+                        ", modelo debajo de la base" if (p.get("validacion") or {}).get("Spread") == "sin_validar" else "",
                         ab(h), pct(sp.get("p_home")).strip(), ab(v), pct(sp.get("p_away")).strip()))
                 for nom, pr in m.get("extra") or []:
                     es_prob = isinstance(pr, float) and 0 <= pr <= 1 and ("rob" in nom or "%" in nom or "line" in nom.lower())
@@ -309,7 +309,7 @@ def main():
                             print("      %-22s %-9s %8s %9s %9s %+7.1f%% %6.1f%%%s" % (
                                 x["mercado"], x["lado"], cuota(x["cuota"]), pct(x["p_modelo"]).strip(), pct(x["p_mercado"]).strip(),
                                 100 * x["edge"], 100 * (x.get("kelly") or 0.0),
-                                "  <- VALOR" if x.get("estado") == "valor" else ("  (dif. sin validar: este mercado no vence al baseline)" if x.get("estado") == "sin_validar" else ("  (cuota < 1.70: no se marca)" if x.get("estado") == "cuota_baja" else ""))))
+                                "  <- VALOR" if x.get("estado") == "valor" else ("  (dif.: en este mercado el modelo no vence al baseline)" if x.get("estado") == "sin_validar" else ("  (cuota < 1.70: no se marca)" if x.get("estado") == "cuota_baja" else ""))))
                 else:
                     print("      CUOTAS: aun no publicadas")
                 if a.valor and p.get("picks"):

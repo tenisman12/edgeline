@@ -1,6 +1,6 @@
 {
  "generado": "2026-10-09",
- "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo y la sede, en toda la muestra, con IC 95 %. Ninguno tiene peso en p: los que dicen 'pasa' (K14 NBA, T1 ATP) esperan la aprobacion de Alejandro. Futbol de las tandas 1 y 2 se midio con el modelo de K 20 sin olvido; la tanda 3 con K 40 y olvido 0.98.",
+ "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo y la sede, en toda la muestra, con IC 95 %. beta_encogido = efecto en logit por unidad de x en toda la muestra, encogido por Bayes empirico (tanda 4); mueve_pp = lo que moveria un partido de 50 % con el x tipico. Ninguno cambia p salvo los aplicados con peso (K14 NBA, T1 ATP). Futbol de las tandas 1 y 2 se midio con el modelo de K 20 sin olvido; la tanda 3 con K 40 y olvido 0.98.",
  "angulos": {
   "NBA|K1": {
    "grupo": "NBA",
@@ -14,7 +14,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.3026,
+   "ee_toda": 0.0648,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 1193,
+   "beta_encogido": 0.20284,
+   "mueve_pp": 5.05,
+   "mueve_ic95_sin_encoger": [
+    4.38,
+    10.58
+   ]
   },
   "NBA|K2": {
    "grupo": "NBA",
@@ -28,7 +39,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.167,
+   "ee_toda": 0.0547,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 1661,
+   "beta_encogido": 0.12366,
+   "mueve_pp": 3.09,
+   "mueve_ic95_sin_encoger": [
+    1.49,
+    6.81
+   ]
   },
   "NBA|K3": {
    "grupo": "NBA",
@@ -42,7 +64,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1493,
+   "ee_toda": 0.037,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 2218,
+   "beta_encogido": 0.12867,
+   "mueve_pp": 3.21,
+   "mueve_ic95_sin_encoger": [
+    1.92,
+    5.52
+   ]
   },
   "NBA|K4": {
    "grupo": "NBA",
@@ -56,7 +89,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0858,
+   "ee_toda": 0.1352,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 266,
+   "beta_encogido": 0.02732,
+   "mueve_pp": 0.68,
+   "mueve_ic95_sin_encoger": [
+    -4.47,
+    8.68
+   ]
   },
   "NBA|K8a": {
    "grupo": "NBA",
@@ -70,7 +114,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0831,
+   "ee_toda": 0.0185,
+   "x_tipico": 2,
+   "n_toda": 5143,
+   "n_activos_toda": 2887,
+   "beta_encogido": -0.07162,
+   "mueve_pp": -3.58,
+   "mueve_ic95_sin_encoger": [
+    -5.94,
+    -2.34
+   ]
   },
   "NBA|K8b": {
    "grupo": "NBA",
@@ -84,7 +139,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.3605,
+   "ee_toda": 0.0772,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 785,
+   "beta_encogido": -0.2123,
+   "mueve_pp": -5.29,
+   "mueve_ic95_sin_encoger": [
+    -12.52,
+    -5.21
+   ]
   },
   "NBA|K10": {
    "grupo": "NBA",
@@ -98,7 +164,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.048,
+   "ee_toda": 0.0749,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 906,
+   "beta_encogido": 0.02897,
+   "mueve_pp": 0.72,
+   "mueve_ic95_sin_encoger": [
+    -2.47,
+    4.85
+   ]
   },
   "NBA|K11": {
    "grupo": "NBA",
@@ -112,7 +189,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1336,
+   "ee_toda": 0.1033,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 462,
+   "beta_encogido": 0.05938,
+   "mueve_pp": 1.48,
+   "mueve_ic95_sin_encoger": [
+    -1.72,
+    8.33
+   ]
   },
   "NCAAMB|K1": {
    "grupo": "NCAAMB",
@@ -126,7 +214,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0506,
+   "ee_toda": 0.1118,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 433,
+   "beta_encogido": 0.02054,
+   "mueve_pp": 0.51,
+   "mueve_ic95_sin_encoger": [
+    -4.2,
+    6.71
+   ]
   },
   "NCAAMB|K2": {
    "grupo": "NCAAMB",
@@ -140,7 +239,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0951,
+   "ee_toda": 0.2289,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 109,
+   "beta_encogido": 0.01333,
+   "mueve_pp": 0.33,
+   "mueve_ic95_sin_encoger": [
+    -8.75,
+    13.27
+   ]
   },
   "NCAAMB|K3": {
    "grupo": "NCAAMB",
@@ -154,7 +264,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0119,
+   "ee_toda": 0.0158,
+   "x_tipico": 2,
+   "n_toda": 16243,
+   "n_activos_toda": 7289,
+   "beta_encogido": -0.01065,
+   "mueve_pp": -0.53,
+   "mueve_ic95_sin_encoger": [
+    -2.15,
+    0.96
+   ]
   },
   "NCAAMB|K4": {
    "grupo": "NCAAMB",
@@ -168,7 +289,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0516,
+   "ee_toda": 0.0354,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 3964,
+   "beta_encogido": 0.045,
+   "mueve_pp": 1.12,
+   "mueve_ic95_sin_encoger": [
+    -0.44,
+    3.02
+   ]
   },
   "NCAAMB|K8a": {
    "grupo": "NCAAMB",
@@ -182,7 +314,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0767,
+   "ee_toda": 0.0152,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 6996,
+   "beta_encogido": 0.07468,
+   "mueve_pp": 1.87,
+   "mueve_ic95_sin_encoger": [
+    1.17,
+    2.66
+   ]
   },
   "NCAAMB|K8b": {
    "grupo": "NCAAMB",
@@ -196,7 +339,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0893,
+   "ee_toda": 0.065,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 1101,
+   "beta_encogido": -0.05974,
+   "mueve_pp": -1.49,
+   "mueve_ic95_sin_encoger": [
+    -5.4,
+    0.95
+   ]
   },
   "NCAAMB|K10": {
    "grupo": "NCAAMB",
@@ -210,7 +364,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.3922,
+   "ee_toda": 0.0463,
+   "x_tipico": 1,
+   "n_toda": 16243,
+   "n_activos_toda": 2545,
+   "beta_encogido": -0.31349,
+   "mueve_pp": -7.77,
+   "mueve_ic95_sin_encoger": [
+    -11.85,
+    -7.48
+   ]
   },
   "NFL|N4": {
    "grupo": "NFL",
@@ -224,7 +389,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0166,
+   "ee_toda": 0.1074,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 389,
+   "beta_encogido": 0.00706,
+   "mueve_pp": 0.18,
+   "mueve_ic95_sin_encoger": [
+    -4.83,
+    5.66
+   ]
   },
   "NFL|N5": {
    "grupo": "NFL",
@@ -252,7 +428,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0049,
+   "ee_toda": 0.0717,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 877,
+   "beta_encogido": 0.00306,
+   "mueve_pp": 0.08,
+   "mueve_ic95_sin_encoger": [
+    -3.39,
+    3.63
+   ]
   },
   "NFL|N12": {
    "grupo": "NFL",
@@ -266,7 +453,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0162,
+   "ee_toda": 0.1021,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 437,
+   "beta_encogido": 0.00729,
+   "mueve_pp": 0.18,
+   "mueve_ic95_sin_encoger": [
+    -4.59,
+    5.39
+   ]
   },
   "NFL|N13": {
    "grupo": "NFL",
@@ -280,7 +478,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.2671,
+   "ee_toda": 0.2097,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 104,
+   "beta_encogido": 0.04343,
+   "mueve_pp": 1.09,
+   "mueve_ic95_sin_encoger": [
+    -3.59,
+    16.33
+   ]
   },
   "NCAAFB|N5": {
    "grupo": "NCAAFB",
@@ -308,7 +517,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-09-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1388,
+   "ee_toda": 0.0727,
+   "x_tipico": 1,
+   "n_toda": 3034,
+   "n_activos_toda": 862,
+   "beta_encogido": 0.08573,
+   "mueve_pp": 2.14,
+   "mueve_ic95_sin_encoger": [
+    -0.1,
+    6.99
+   ]
   },
   "NCAAFB|N12": {
    "grupo": "NCAAFB",
@@ -322,7 +542,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-09-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.3385,
+   "ee_toda": 0.0782,
+   "x_tipico": 1,
+   "n_toda": 3034,
+   "n_activos_toda": 791,
+   "beta_encogido": -0.19723,
+   "mueve_pp": -4.91,
+   "mueve_ic95_sin_encoger": [
+    -12.05,
+    -4.62
+   ]
   },
   "TODAS|B1": {
    "grupo": "TODAS",
@@ -336,7 +567,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.6337,
+   "ee_toda": 0.2526,
+   "x_tipico": 1,
+   "n_toda": 15149,
+   "n_activos_toda": 70,
+   "beta_encogido": 0.07479,
+   "mueve_pp": 1.87,
+   "mueve_ic95_sin_encoger": [
+    3.46,
+    25.56
+   ]
   },
   "MLB|B1": {
    "grupo": "MLB",
@@ -350,7 +592,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0745,
+   "ee_toda": 0.3717,
+   "x_tipico": 1,
+   "n_toda": 11394,
+   "n_activos_toda": 30,
+   "beta_encogido": 0.00434,
+   "mueve_pp": 0.11,
+   "mueve_ic95_sin_encoger": [
+    -15.79,
+    19.06
+   ]
   },
   "TODAS|B2": {
    "grupo": "TODAS",
@@ -364,7 +617,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0455,
+   "ee_toda": 0.0566,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 1294,
+   "beta_encogido": 0.03309,
+   "mueve_pp": 0.83,
+   "mueve_ic95_sin_encoger": [
+    -1.63,
+    3.9
+   ]
   },
   "MLB|B2": {
    "grupo": "MLB",
@@ -378,7 +642,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0276,
+   "ee_toda": 0.0712,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 820,
+   "beta_encogido": -0.01732,
+   "mueve_pp": -0.43,
+   "mueve_ic95_sin_encoger": [
+    -4.17,
+    2.8
+   ]
   },
   "TODAS|B5": {
    "grupo": "TODAS",
@@ -392,7 +667,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0631,
+   "ee_toda": 0.0459,
+   "x_tipico": 0.3,
+   "n_toda": 20747,
+   "n_activos_toda": 7475,
+   "beta_encogido": -0.06173,
+   "mueve_pp": -0.46,
+   "mueve_ic95_sin_encoger": [
+    -1.15,
+    0.2
+   ]
   },
   "MLB|B5": {
    "grupo": "MLB",
@@ -406,7 +692,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0837,
+   "ee_toda": 0.0475,
+   "x_tipico": 0.4,
+   "n_toda": 11402,
+   "n_activos_toda": 5868,
+   "beta_encogido": -0.0803,
+   "mueve_pp": -0.8,
+   "mueve_ic95_sin_encoger": [
+    -1.77,
+    0.09
+   ]
   },
   "TODAS|B10": {
    "grupo": "TODAS",
@@ -420,7 +717,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0209,
+   "ee_toda": 0.0226,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 8071,
+   "beta_encogido": 0.01972,
+   "mueve_pp": 0.49,
+   "mueve_ic95_sin_encoger": [
+    -0.59,
+    1.63
+   ]
   },
   "MLB|B10": {
    "grupo": "MLB",
@@ -434,7 +742,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0449,
+   "ee_toda": 0.0332,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 3785,
+   "beta_encogido": 0.03977,
+   "mueve_pp": 1.0,
+   "mueve_ic95_sin_encoger": [
+    -0.5,
+    2.75
+   ]
   },
   "TODAS|B11": {
    "grupo": "TODAS",
@@ -448,7 +767,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0342,
+   "ee_toda": 0.0251,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 6562,
+   "beta_encogido": -0.03185,
+   "mueve_pp": -0.8,
+   "mueve_ic95_sin_encoger": [
+    -2.08,
+    0.37
+   ]
   },
   "MLB|B11": {
    "grupo": "MLB",
@@ -462,7 +792,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0078,
+   "ee_toda": 0.0336,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 3685,
+   "beta_encogido": 0.00689,
+   "mueve_pp": 0.17,
+   "mueve_ic95_sin_encoger": [
+    -1.45,
+    1.84
+   ]
   },
   "TODAS|B12": {
    "grupo": "TODAS",
@@ -476,7 +817,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1345,
+   "ee_toda": 0.0369,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 3024,
+   "beta_encogido": 0.116,
+   "mueve_pp": 2.9,
+   "mueve_ic95_sin_encoger": [
+    1.55,
+    5.15
+   ]
   },
   "MLB|B12": {
    "grupo": "MLB",
@@ -490,7 +842,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1587,
+   "ee_toda": 0.0461,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 1948,
+   "beta_encogido": 0.12707,
+   "mueve_pp": 3.17,
+   "mueve_ic95_sin_encoger": [
+    1.71,
+    6.2
+   ]
   },
   "TODAS|B13": {
    "grupo": "TODAS",
@@ -504,7 +867,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0117,
+   "ee_toda": 0.0447,
+   "x_tipico": 0.3,
+   "n_toda": 20747,
+   "n_activos_toda": 16054,
+   "beta_encogido": 0.01146,
+   "mueve_pp": 0.09,
+   "mueve_ic95_sin_encoger": [
+    -0.57,
+    0.75
+   ]
   },
   "MLB|B13": {
    "grupo": "MLB",
@@ -518,7 +892,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0268,
+   "ee_toda": 0.0513,
+   "x_tipico": 0.3,
+   "n_toda": 11402,
+   "n_activos_toda": 9561,
+   "beta_encogido": 0.02608,
+   "mueve_pp": 0.2,
+   "mueve_ic95_sin_encoger": [
+    -0.55,
+    0.96
+   ]
   },
   "TODAS|B14": {
    "grupo": "TODAS",
@@ -532,7 +917,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0052,
+   "ee_toda": 0.0468,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 1892,
+   "beta_encogido": -0.00414,
+   "mueve_pp": -0.1,
+   "mueve_ic95_sin_encoger": [
+    -2.42,
+    2.16
+   ]
   },
   "MLB|B14": {
    "grupo": "MLB",
@@ -546,7 +942,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0147,
+   "ee_toda": 0.054,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 1423,
+   "beta_encogido": -0.01096,
+   "mueve_pp": -0.27,
+   "mueve_ic95_sin_encoger": [
+    -3.01,
+    2.28
+   ]
   },
   "TODAS|B15": {
    "grupo": "TODAS",
@@ -560,7 +967,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0601,
+   "ee_toda": 0.0545,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 1391,
+   "beta_encogido": 0.04459,
+   "mueve_pp": 1.11,
+   "mueve_ic95_sin_encoger": [
+    -1.17,
+    4.16
+   ]
   },
   "MLB|B15": {
    "grupo": "MLB",
@@ -574,7 +992,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0345,
+   "ee_toda": 0.0753,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 736,
+   "beta_encogido": -0.02073,
+   "mueve_pp": -0.52,
+   "mueve_ic95_sin_encoger": [
+    -4.54,
+    2.82
+   ]
   },
   "TODAS|B18": {
    "grupo": "TODAS",
@@ -588,7 +1017,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0444,
+   "ee_toda": 0.1862,
+   "x_tipico": 1,
+   "n_toda": 4101,
+   "n_activos_toda": 119,
+   "beta_encogido": 0.00877,
+   "mueve_pp": 0.22,
+   "mueve_ic95_sin_encoger": [
+    -7.95,
+    10.09
+   ]
   },
   "TODAS|B19": {
    "grupo": "TODAS",
@@ -602,7 +1042,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.4501,
+   "ee_toda": 0.3065,
+   "x_tipico": 1,
+   "n_toda": 4101,
+   "n_activos_toda": 45,
+   "beta_encogido": -0.0375,
+   "mueve_pp": -0.94,
+   "mueve_ic95_sin_encoger": [
+    -24.09,
+    3.76
+   ]
   },
   "TODAS|B21": {
    "grupo": "TODAS",
@@ -616,7 +1067,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0275,
+   "ee_toda": 0.0397,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 2631,
+   "beta_encogido": 0.02321,
+   "mueve_pp": 0.58,
+   "mueve_ic95_sin_encoger": [
+    -1.26,
+    2.63
+   ]
   },
   "MLB|B21": {
    "grupo": "MLB",
@@ -630,7 +1092,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0251,
+   "ee_toda": 0.0525,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 1514,
+   "beta_encogido": 0.01897,
+   "mueve_pp": 0.48,
+   "mueve_ic95_sin_encoger": [
+    -1.94,
+    3.2
+   ]
   },
   "7 ligas|F1": {
    "grupo": "7 ligas",
@@ -644,7 +1117,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0692,
+   "ee_toda": 0.0454,
+   "x_tipico": 0.333,
+   "n_toda": 11369,
+   "n_activos_toda": 6740,
+   "beta_encogido": -0.0674,
+   "mueve_pp": -0.56,
+   "mueve_ic95_sin_encoger": [
+    -1.32,
+    0.16
+   ]
   },
   "7 ligas|F13": {
    "grupo": "7 ligas",
@@ -658,7 +1142,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0443,
+   "ee_toda": 0.053,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 1579,
+   "beta_encogido": -0.03333,
+   "mueve_pp": -0.83,
+   "mueve_ic95_sin_encoger": [
+    -3.7,
+    1.49
+   ]
   },
   "NHL|H1": {
    "grupo": "NHL",
@@ -672,7 +1167,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.1016,
+   "ee_toda": 0.0536,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 1493,
+   "beta_encogido": 0.07602,
+   "mueve_pp": 1.9,
+   "mueve_ic95_sin_encoger": [
+    -0.08,
+    5.15
+   ]
   },
   "NHL|H2": {
    "grupo": "NHL",
@@ -686,7 +1192,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.264,
+   "ee_toda": 0.0914,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 501,
+   "beta_encogido": -0.13344,
+   "mueve_pp": -3.33,
+   "mueve_ic95_sin_encoger": [
+    -10.9,
+    -2.12
+   ]
   },
   "NHL|H4": {
    "grupo": "NHL",
@@ -700,7 +1217,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0801,
+   "ee_toda": 0.0357,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 3279,
+   "beta_encogido": 0.0697,
+   "mueve_pp": 1.74,
+   "mueve_ic95_sin_encoger": [
+    0.25,
+    3.75
+   ]
   },
   "NHL|H6": {
    "grupo": "NHL",
@@ -714,7 +1242,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0907,
+   "ee_toda": 0.0417,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 2412,
+   "beta_encogido": 0.07535,
+   "mueve_pp": 1.88,
+   "mueve_ic95_sin_encoger": [
+    0.23,
+    4.3
+   ]
   },
   "NHL|H7": {
    "grupo": "NHL",
@@ -728,7 +1267,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0553,
+   "ee_toda": 0.0236,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 5074,
+   "beta_encogido": 0.05191,
+   "mueve_pp": 1.3,
+   "mueve_ic95_sin_encoger": [
+    0.23,
+    2.54
+   ]
   },
   "NHL|H8": {
    "grupo": "NHL",
@@ -742,7 +1292,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0039,
+   "ee_toda": 0.1402,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 212,
+   "beta_encogido": -0.00118,
+   "mueve_pp": -0.03,
+   "mueve_ic95_sin_encoger": [
+    -6.92,
+    6.73
+   ]
   },
   "NHL|H13": {
    "grupo": "NHL",
@@ -756,7 +1317,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0117,
+   "ee_toda": 0.0119,
+   "x_tipico": 2,
+   "n_toda": 10473,
+   "n_activos_toda": 5966,
+   "beta_encogido": -0.01097,
+   "mueve_pp": -0.55,
+   "mueve_ic95_sin_encoger": [
+    -1.75,
+    0.58
+   ]
   },
   "NHL|H14": {
    "grupo": "NHL",
@@ -770,7 +1342,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0244,
+   "ee_toda": 0.0501,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 1656,
+   "beta_encogido": 0.01886,
+   "mueve_pp": 0.47,
+   "mueve_ic95_sin_encoger": [
+    -1.84,
+    3.06
+   ]
   },
   "NHL|H15": {
    "grupo": "NHL",
@@ -784,7 +1367,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0541,
+   "ee_toda": 0.0501,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 1650,
+   "beta_encogido": -0.04181,
+   "mueve_pp": -1.04,
+   "mueve_ic95_sin_encoger": [
+    -3.8,
+    1.1
+   ]
   },
   "NHL|H16": {
    "grupo": "NHL",
@@ -798,7 +1392,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0656,
+   "ee_toda": 0.06,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 1147,
+   "beta_encogido": 0.04614,
+   "mueve_pp": 1.15,
+   "mueve_ic95_sin_encoger": [
+    -1.3,
+    4.57
+   ]
   },
   "NHL|H17": {
    "grupo": "NHL",
@@ -812,7 +1417,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-01",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0175,
+   "ee_toda": 0.0545,
+   "x_tipico": 1,
+   "n_toda": 4223,
+   "n_activos_toda": 1391,
+   "beta_encogido": -0.01298,
+   "mueve_pp": -0.32,
+   "mueve_ic95_sin_encoger": [
+    -3.1,
+    2.23
+   ]
   },
   "NHL|H18": {
    "grupo": "NHL",
@@ -826,7 +1442,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-01",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0167,
+   "ee_toda": 0.0315,
+   "x_tipico": 0.4,
+   "n_toda": 4223,
+   "n_activos_toda": 3709,
+   "beta_encogido": -0.0164,
+   "mueve_pp": -0.16,
+   "mueve_ic95_sin_encoger": [
+    -0.79,
+    0.45
+   ]
   },
   "NHL|H19": {
    "grupo": "NHL",
@@ -840,7 +1467,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-03",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.079,
+   "ee_toda": 0.0821,
+   "x_tipico": 1,
+   "n_toda": 4156,
+   "n_activos_toda": 620,
+   "beta_encogido": 0.04415,
+   "mueve_pp": 1.1,
+   "mueve_ic95_sin_encoger": [
+    -2.05,
+    5.97
+   ]
   },
   "NHL|H20": {
    "grupo": "NHL",
@@ -854,7 +1492,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-03",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0996,
+   "ee_toda": 0.1302,
+   "x_tipico": 0.2,
+   "n_toda": 4156,
+   "n_activos_toda": 2562,
+   "beta_encogido": 0.09227,
+   "mueve_pp": 0.46,
+   "mueve_ic95_sin_encoger": [
+    -0.78,
+    1.77
+   ]
   },
   "NHL|H21": {
    "grupo": "NHL",
@@ -868,7 +1517,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": 0.0538,
+   "ee_toda": 0.0509,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 1607,
+   "beta_encogido": 0.04127,
+   "mueve_pp": 1.03,
+   "mueve_ic95_sin_encoger": [
+    -1.15,
+    3.83
+   ]
   },
   "NHL|H22": {
    "grupo": "NHL",
@@ -882,7 +1542,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-11-01",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md"
+   "fuente": "trabajo/minar/2026-10-08_situacionales_tanda1.md",
+   "beta_toda": -0.0724,
+   "ee_toda": 0.0704,
+   "x_tipico": 1,
+   "n_toda": 4223,
+   "n_activos_toda": 833,
+   "beta_encogido": -0.04581,
+   "mueve_pp": -1.15,
+   "mueve_ic95_sin_encoger": [
+    -5.24,
+    1.64
+   ]
   },
   "NHL|Q1": {
    "grupo": "NHL",
@@ -899,7 +1570,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.004,
+   "ee_toda": 0.0244,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 6962,
+   "beta_encogido": 0.00374,
+   "mueve_pp": 0.09,
+   "mueve_ic95_sin_encoger": [
+    -1.1,
+    1.3
+   ]
   },
   "NHL|Q2": {
    "grupo": "NHL",
@@ -916,7 +1598,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.174,
+   "ee_toda": 0.1123,
+   "x_tipico": 1,
+   "n_toda": 10472,
+   "n_activos_toda": 350,
+   "beta_encogido": 0.07024,
+   "mueve_pp": 1.76,
+   "mueve_ic95_sin_encoger": [
+    -1.15,
+    9.73
+   ]
   },
   "NHL|Q3": {
    "grupo": "NHL",
@@ -933,7 +1626,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0122,
+   "ee_toda": 0.0737,
+   "x_tipico": 1,
+   "n_toda": 10450,
+   "n_activos_toda": 780,
+   "beta_encogido": -0.00746,
+   "mueve_pp": -0.19,
+   "mueve_ic95_sin_encoger": [
+    -3.91,
+    3.3
+   ]
   },
   "NHL|Q4": {
    "grupo": "NHL",
@@ -950,7 +1654,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0717,
+   "ee_toda": 0.1562,
+   "x_tipico": 1,
+   "n_toda": 10471,
+   "n_activos_toda": 172,
+   "beta_encogido": -0.01859,
+   "mueve_pp": -0.46,
+   "mueve_ic95_sin_encoger": [
+    -9.34,
+    5.83
+   ]
   },
   "NHL|Q5": {
    "grupo": "NHL",
@@ -967,7 +1682,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.1928,
+   "ee_toda": 0.1259,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 269,
+   "beta_encogido": 0.06749,
+   "mueve_pp": 1.69,
+   "mueve_ic95_sin_encoger": [
+    -1.35,
+    10.81
+   ]
   },
   "NHL|Q6a": {
    "grupo": "NHL",
@@ -984,7 +1710,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.1054,
+   "ee_toda": 0.0749,
+   "x_tipico": 1,
+   "n_toda": 10455,
+   "n_activos_toda": 772,
+   "beta_encogido": -0.06361,
+   "mueve_pp": -1.59,
+   "mueve_ic95_sin_encoger": [
+    -6.27,
+    1.03
+   ]
   },
   "NHL|Q6b": {
    "grupo": "NHL",
@@ -1001,7 +1738,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0113,
+   "ee_toda": 0.0715,
+   "x_tipico": 1,
+   "n_toda": 10465,
+   "n_activos_toda": 824,
+   "beta_encogido": 0.00707,
+   "mueve_pp": 0.18,
+   "mueve_ic95_sin_encoger": [
+    -3.22,
+    3.78
+   ]
   },
   "NHL|Q7": {
    "grupo": "NHL",
@@ -1018,7 +1766,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.3475,
+   "ee_toda": 0.1536,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 219,
+   "beta_encogido": -0.09234,
+   "mueve_pp": -2.31,
+   "mueve_ic95_sin_encoger": [
+    -15.67,
+    -1.16
+   ]
   },
   "NBA|Q1": {
    "grupo": "NBA",
@@ -1035,7 +1794,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0076,
+   "ee_toda": 0.0373,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 3524,
+   "beta_encogido": -0.00654,
+   "mueve_pp": -0.16,
+   "mueve_ic95_sin_encoger": [
+    -2.02,
+    1.64
+   ]
   },
   "NBA|Q2": {
    "grupo": "NBA",
@@ -1052,7 +1822,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.2599,
+   "ee_toda": 0.1714,
+   "x_tipico": 1,
+   "n_toda": 5142,
+   "n_activos_toda": 223,
+   "beta_encogido": 0.05852,
+   "mueve_pp": 1.46,
+   "mueve_ic95_sin_encoger": [
+    -1.9,
+    14.47
+   ]
   },
   "NBA|Q3": {
    "grupo": "NBA",
@@ -1069,7 +1850,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.1396,
+   "ee_toda": 0.099,
+   "x_tipico": 1,
+   "n_toda": 5113,
+   "n_activos_toda": 586,
+   "beta_encogido": 0.06499,
+   "mueve_pp": 1.62,
+   "mueve_ic95_sin_encoger": [
+    -1.36,
+    8.27
+   ]
   },
   "NBA|Q4": {
    "grupo": "NBA",
@@ -1086,7 +1878,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.1098,
+   "ee_toda": 0.1791,
+   "x_tipico": 1,
+   "n_toda": 5141,
+   "n_activos_toda": 175,
+   "beta_encogido": 0.02308,
+   "mueve_pp": 0.58,
+   "mueve_ic95_sin_encoger": [
+    -6.0,
+    11.32
+   ]
   },
   "NBA|Q5": {
    "grupo": "NBA",
@@ -1100,7 +1903,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.2018,
+   "ee_toda": 0.3432,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 43,
+   "beta_encogido": 0.01364,
+   "mueve_pp": 0.34,
+   "mueve_ic95_sin_encoger": [
+    -11.56,
+    20.57
+   ]
   },
   "NBA|Q6a": {
    "grupo": "NBA",
@@ -1117,7 +1931,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0199,
+   "ee_toda": 0.0984,
+   "x_tipico": 1,
+   "n_toda": 5123,
+   "n_activos_toda": 597,
+   "beta_encogido": 0.00932,
+   "mueve_pp": 0.23,
+   "mueve_ic95_sin_encoger": [
+    -4.31,
+    5.3
+   ]
   },
   "NBA|Q6b": {
    "grupo": "NBA",
@@ -1134,7 +1959,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0608,
+   "ee_toda": 0.0956,
+   "x_tipico": 1,
+   "n_toda": 5126,
+   "n_activos_toda": 556,
+   "beta_encogido": -0.02937,
+   "mueve_pp": -0.73,
+   "mueve_ic95_sin_encoger": [
+    -6.17,
+    3.16
+   ]
   },
   "NBA|Q7": {
    "grupo": "NBA",
@@ -1151,7 +1987,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.3715,
+   "ee_toda": 0.2363,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 166,
+   "beta_encogido": -0.04927,
+   "mueve_pp": -1.23,
+   "mueve_ic95_sin_encoger": [
+    -19.73,
+    2.29
+   ]
   },
   "BEISBOL|Q1": {
    "grupo": "BEISBOL",
@@ -1168,7 +2015,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0374,
+   "ee_toda": 0.015,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 18337,
+   "beta_encogido": 0.03644,
+   "mueve_pp": 0.91,
+   "mueve_ic95_sin_encoger": [
+    0.2,
+    1.67
+   ]
   },
   "BEISBOL|Q2": {
    "grupo": "BEISBOL",
@@ -1185,7 +2043,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0982,
+   "ee_toda": 0.1655,
+   "x_tipico": 1,
+   "n_toda": 20746,
+   "n_activos_toda": 152,
+   "beta_encogido": -0.02334,
+   "mueve_pp": -0.58,
+   "mueve_ic95_sin_encoger": [
+    -10.41,
+    5.63
+   ]
   },
   "BEISBOL|Q3": {
    "grupo": "BEISBOL",
@@ -1202,7 +2071,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.1506,
+   "ee_toda": 0.1113,
+   "x_tipico": 1,
+   "n_toda": 20742,
+   "n_activos_toda": 333,
+   "beta_encogido": -0.06145,
+   "mueve_pp": -1.54,
+   "mueve_ic95_sin_encoger": [
+    -9.11,
+    1.69
+   ]
   },
   "BEISBOL|Q4": {
    "grupo": "BEISBOL",
@@ -1216,7 +2096,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0636,
+   "ee_toda": 0.78,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 7,
+   "beta_encogido": 0.00088,
+   "mueve_pp": 0.02,
+   "mueve_ic95_sin_encoger": [
+    -31.23,
+    33.1
+   ]
   },
   "BEISBOL|Q5": {
    "grupo": "BEISBOL",
@@ -1230,7 +2121,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.4111,
+   "ee_toda": 0.2988,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 48,
+   "beta_encogido": 0.03588,
+   "mueve_pp": 0.9,
+   "mueve_ic95_sin_encoger": [
+    -4.35,
+    23.04
+   ]
   },
   "BEISBOL|Q6a": {
    "grupo": "BEISBOL",
@@ -1247,7 +2149,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.021,
+   "ee_toda": 0.0542,
+   "x_tipico": 1,
+   "n_toda": 20736,
+   "n_activos_toda": 1425,
+   "beta_encogido": 0.01562,
+   "mueve_pp": 0.39,
+   "mueve_ic95_sin_encoger": [
+    -2.13,
+    3.17
+   ]
   },
   "BEISBOL|Q6b": {
    "grupo": "BEISBOL",
@@ -1264,7 +2177,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0286,
+   "ee_toda": 0.0527,
+   "x_tipico": 1,
+   "n_toda": 20741,
+   "n_activos_toda": 1495,
+   "beta_encogido": -0.02158,
+   "mueve_pp": -0.54,
+   "mueve_ic95_sin_encoger": [
+    -3.29,
+    1.87
+   ]
   },
   "BEISBOL|Q7": {
    "grupo": "BEISBOL",
@@ -1281,7 +2205,18 @@
    ],
    "desde_prueba": "12022-12-11",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0923,
+   "ee_toda": 0.1414,
+   "x_tipico": 1,
+   "n_toda": 20747,
+   "n_activos_toda": 224,
+   "beta_encogido": 0.02762,
+   "mueve_pp": 0.69,
+   "mueve_ic95_sin_encoger": [
+    -4.61,
+    9.13
+   ]
   },
   "FUTBOL|Q1": {
    "grupo": "FUTBOL",
@@ -1298,7 +2233,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0136,
+   "ee_toda": 0.0332,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 4087,
+   "beta_encogido": 0.01204,
+   "mueve_pp": 0.3,
+   "mueve_ic95_sin_encoger": [
+    -1.29,
+    1.96
+   ]
   },
   "FUTBOL|Q2": {
    "grupo": "FUTBOL",
@@ -1315,7 +2261,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0864,
+   "ee_toda": 0.1181,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 352,
+   "beta_encogido": 0.03281,
+   "mueve_pp": 0.82,
+   "mueve_ic95_sin_encoger": [
+    -3.62,
+    7.88
+   ]
   },
   "FUTBOL|Q3": {
    "grupo": "FUTBOL",
@@ -1332,7 +2289,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0417,
+   "ee_toda": 0.06,
+   "x_tipico": 1,
+   "n_toda": 11302,
+   "n_activos_toda": 1272,
+   "beta_encogido": 0.02933,
+   "mueve_pp": 0.73,
+   "mueve_ic95_sin_encoger": [
+    -1.89,
+    3.97
+   ]
   },
   "FUTBOL|Q4": {
    "grupo": "FUTBOL",
@@ -1349,7 +2317,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.1332,
+   "ee_toda": 0.1129,
+   "x_tipico": 1,
+   "n_toda": 11359,
+   "n_activos_toda": 350,
+   "beta_encogido": -0.05343,
+   "mueve_pp": -1.34,
+   "mueve_ic95_sin_encoger": [
+    -8.77,
+    2.2
+   ]
   },
   "FUTBOL|Q5": {
    "grupo": "FUTBOL",
@@ -1366,7 +2345,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0705,
+   "ee_toda": 0.1139,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 348,
+   "beta_encogido": -0.02798,
+   "mueve_pp": -0.7,
+   "mueve_ic95_sin_encoger": [
+    -7.29,
+    3.81
+   ]
   },
   "FUTBOL|Q6a": {
    "grupo": "FUTBOL",
@@ -1383,7 +2373,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.2232,
+   "ee_toda": 0.1414,
+   "x_tipico": 1,
+   "n_toda": 11366,
+   "n_activos_toda": 245,
+   "beta_encogido": -0.06679,
+   "mueve_pp": -1.67,
+   "mueve_ic95_sin_encoger": [
+    -12.25,
+    1.35
+   ]
   },
   "FUTBOL|Q6b": {
    "grupo": "FUTBOL",
@@ -1400,7 +2401,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.1387,
+   "ee_toda": 0.1294,
+   "x_tipico": 1,
+   "n_toda": 11368,
+   "n_activos_toda": 295,
+   "beta_encogido": 0.04684,
+   "mueve_pp": 1.17,
+   "mueve_ic95_sin_encoger": [
+    -2.87,
+    9.68
+   ]
   },
   "FUTBOL|Q7": {
    "grupo": "FUTBOL",
@@ -1417,7 +2429,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0802,
+   "ee_toda": 0.1253,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 330,
+   "beta_encogido": 0.02825,
+   "mueve_pp": 0.71,
+   "mueve_ic95_sin_encoger": [
+    -4.13,
+    8.08
+   ]
   },
   "NFL|Q1": {
    "grupo": "NFL",
@@ -1434,7 +2457,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0391,
+   "ee_toda": 0.0887,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 583,
+   "beta_encogido": -0.02035,
+   "mueve_pp": -0.51,
+   "mueve_ic95_sin_encoger": [
+    -5.31,
+    3.36
+   ]
   },
   "NFL|Q2": {
    "grupo": "NFL",
@@ -1451,7 +2485,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0814,
+   "ee_toda": 0.2179,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 102,
+   "beta_encogido": -0.01241,
+   "mueve_pp": -0.31,
+   "mueve_ic95_sin_encoger": [
+    -12.45,
+    8.56
+   ]
   },
   "NFL|Q3": {
    "grupo": "NFL",
@@ -1468,7 +2513,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.0605,
+   "ee_toda": 0.1226,
+   "x_tipico": 1,
+   "n_toda": 2754,
+   "n_activos_toda": 324,
+   "beta_encogido": 0.02192,
+   "mueve_pp": 0.55,
+   "mueve_ic95_sin_encoger": [
+    -4.48,
+    7.46
+   ]
   },
   "NFL|Q4": {
    "grupo": "NFL",
@@ -1485,7 +2541,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.1825,
+   "ee_toda": 0.2059,
+   "x_tipico": 1,
+   "n_toda": 2780,
+   "n_activos_toda": 109,
+   "beta_encogido": -0.03059,
+   "mueve_pp": -0.76,
+   "mueve_ic95_sin_encoger": [
+    -14.25,
+    5.5
+   ]
   },
   "NFL|Q5": {
    "grupo": "NFL",
@@ -1502,7 +2569,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0473,
+   "ee_toda": 0.1628,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 166,
+   "beta_encogido": -0.01152,
+   "mueve_pp": -0.29,
+   "mueve_ic95_sin_encoger": [
+    -9.06,
+    6.75
+   ]
   },
   "NFL|Q6a": {
    "grupo": "NFL",
@@ -1519,7 +2597,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.1572,
+   "ee_toda": 0.1504,
+   "x_tipico": 1,
+   "n_toda": 2773,
+   "n_activos_toda": 232,
+   "beta_encogido": -0.04308,
+   "mueve_pp": -1.08,
+   "mueve_ic95_sin_encoger": [
+    -11.11,
+    3.44
+   ]
   },
   "NFL|Q6b": {
    "grupo": "NFL",
@@ -1536,7 +2625,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.2647,
+   "ee_toda": 0.1326,
+   "x_tipico": 1,
+   "n_toda": 2766,
+   "n_activos_toda": 289,
+   "beta_encogido": 0.08652,
+   "mueve_pp": 2.16,
+   "mueve_ic95_sin_encoger": [
+    0.12,
+    12.82
+   ]
   },
   "NFL|Q7": {
    "grupo": "NFL",
@@ -1567,7 +2667,18 @@
    ],
    "desde_prueba": "2023-09-17",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": -0.0872,
+   "ee_toda": 0.0791,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 732,
+   "beta_encogido": -0.05032,
+   "mueve_pp": -1.26,
+   "mueve_ic95_sin_encoger": [
+    -6.03,
+    1.7
+   ]
   },
   "NFL|Q9": {
    "grupo": "NFL",
@@ -1581,7 +2692,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+   "fuente": "trabajo/minar/2026-10-09_cualitativos.md",
+   "beta_toda": 0.1659,
+   "ee_toda": 0.3348,
+   "x_tipico": 1,
+   "n_toda": 2782,
+   "n_activos_toda": 41,
+   "beta_encogido": 0.01174,
+   "mueve_pp": 0.29,
+   "mueve_ic95_sin_encoger": [
+    -12.02,
+    19.47
+   ]
   },
   "NHL|H23": {
    "grupo": "NHL",
@@ -1598,7 +2720,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0736,
+   "ee_toda": 0.0399,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 2620,
+   "beta_encogido": 0.06203,
+   "mueve_pp": 1.55,
+   "mueve_ic95_sin_encoger": [
+    -0.12,
+    3.79
+   ]
   },
   "NHL|H24": {
    "grupo": "NHL",
@@ -1615,7 +2748,18 @@
    ],
    "desde_prueba": "2024-03-21",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0309,
+   "ee_toda": 0.0999,
+   "x_tipico": 1,
+   "n_toda": 10473,
+   "n_activos_toda": 432,
+   "beta_encogido": 0.01425,
+   "mueve_pp": 0.36,
+   "mueve_ic95_sin_encoger": [
+    -4.11,
+    5.65
+   ]
   },
   "NHL|P1": {
    "grupo": "NHL",
@@ -1632,7 +2776,18 @@
    ],
    "desde_prueba": "2024-04-30",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1375,
+   "ee_toda": 0.0828,
+   "x_tipico": 1,
+   "n_toda": 734,
+   "n_activos_toda": 597,
+   "beta_encogido": 0.07626,
+   "mueve_pp": 1.91,
+   "mueve_ic95_sin_encoger": [
+    -0.62,
+    7.44
+   ]
   },
   "NHL|P2": {
    "grupo": "NHL",
@@ -1649,7 +2804,18 @@
    ],
    "desde_prueba": "2024-04-30",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.1036,
+   "ee_toda": 0.1614,
+   "x_tipico": 1,
+   "n_toda": 734,
+   "n_activos_toda": 159,
+   "beta_encogido": -0.02557,
+   "mueve_pp": -0.64,
+   "mueve_ic95_sin_encoger": [
+    -10.35,
+    5.3
+   ]
   },
   "NHL|P3": {
    "grupo": "NHL",
@@ -1663,7 +2829,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0371,
+   "ee_toda": 0.3668,
+   "x_tipico": 1,
+   "n_toda": 734,
+   "n_activos_toda": 31,
+   "beta_encogido": 0.00221,
+   "mueve_pp": 0.06,
+   "mueve_ic95_sin_encoger": [
+    -16.41,
+    18.05
+   ]
   },
   "NBA|K12": {
    "grupo": "NBA",
@@ -1680,7 +2857,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1369,
+   "ee_toda": 0.0525,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 1806,
+   "beta_encogido": 0.10349,
+   "mueve_pp": 2.59,
+   "mueve_ic95_sin_encoger": [
+    0.85,
+    5.96
+   ]
   },
   "NBA|K13": {
    "grupo": "NBA",
@@ -1697,7 +2885,18 @@
    ],
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.0779,
+   "ee_toda": 0.1219,
+   "x_tipico": 1,
+   "n_toda": 5143,
+   "n_activos_toda": 332,
+   "beta_encogido": -0.02843,
+   "mueve_pp": -0.71,
+   "mueve_ic95_sin_encoger": [
+    -7.86,
+    4.02
+   ]
   },
   "NBA|K14": {
    "grupo": "NBA",
@@ -1711,7 +2910,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2025-03-25",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.3363,
+   "ee_toda": 0.0407,
+   "x_tipico": 0.625,
+   "n_toda": 5143,
+   "n_activos_toda": 3843,
+   "beta_encogido": 0.31261,
+   "mueve_pp": 4.87,
+   "mueve_ic95_sin_encoger": [
+    4.0,
+    6.46
+   ]
   },
   "NBA|P1": {
    "grupo": "NBA",
@@ -1728,7 +2938,18 @@
    ],
    "desde_prueba": "2025-05-22",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.2253,
+   "ee_toda": 0.1267,
+   "x_tipico": 1,
+   "n_toda": 335,
+   "n_activos_toda": 275,
+   "beta_encogido": 0.07822,
+   "mueve_pp": 1.95,
+   "mueve_ic95_sin_encoger": [
+    -0.58,
+    11.63
+   ]
   },
   "NBA|P2": {
    "grupo": "NBA",
@@ -1745,7 +2966,18 @@
    ],
    "desde_prueba": "2025-05-22",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0847,
+   "ee_toda": 0.2332,
+   "x_tipico": 1,
+   "n_toda": 335,
+   "n_activos_toda": 81,
+   "beta_encogido": 0.01149,
+   "mueve_pp": 0.29,
+   "mueve_ic95_sin_encoger": [
+    -9.2,
+    13.22
+   ]
   },
   "NBA|P3": {
    "grupo": "NBA",
@@ -1759,7 +2991,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.7935,
+   "ee_toda": 0.5216,
+   "x_tipico": 1,
+   "n_toda": 335,
+   "n_activos_toda": 15,
+   "beta_encogido": -0.02414,
+   "mueve_pp": -0.6,
+   "mueve_ic95_sin_encoger": [
+    -36.01,
+    5.7
+   ]
   },
   "NFL|N14": {
    "grupo": "NFL",
@@ -1776,7 +3019,18 @@
    ],
    "desde_prueba": "2023-12-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0631,
+   "ee_toda": 0.1811,
+   "x_tipico": 1,
+   "n_toda": 2101,
+   "n_activos_toda": 138,
+   "beta_encogido": 0.01303,
+   "mueve_pp": 0.33,
+   "mueve_ic95_sin_encoger": [
+    -7.24,
+    10.3
+   ]
   },
   "NFL|N15": {
    "grupo": "NFL",
@@ -1793,7 +3047,18 @@
    ],
    "desde_prueba": "2023-12-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.4518,
+   "ee_toda": 0.2196,
+   "x_tipico": 1,
+   "n_toda": 2101,
+   "n_activos_toda": 96,
+   "beta_encogido": -0.06796,
+   "mueve_pp": -1.7,
+   "mueve_ic95_sin_encoger": [
+    -20.73,
+    -0.53
+   ]
   },
   "NFL|N16": {
    "grupo": "NFL",
@@ -1807,7 +3072,18 @@
    "tmle_ic95": null,
    "desde_prueba": null,
    "signo_esperado": null,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.2831,
+   "ee_toda": 0.3101,
+   "x_tipico": 1,
+   "n_toda": 2101,
+   "n_activos_toda": 45,
+   "beta_encogido": -0.02309,
+   "mueve_pp": -0.58,
+   "mueve_ic95_sin_encoger": [
+    -20.91,
+    8.05
+   ]
   },
   "NFL|N17": {
    "grupo": "NFL",
@@ -1824,7 +3100,18 @@
    ],
    "desde_prueba": "2023-12-24",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0352,
+   "ee_toda": 0.079,
+   "x_tipico": 1,
+   "n_toda": 2101,
+   "n_activos_toda": 732,
+   "beta_encogido": 0.02034,
+   "mueve_pp": 0.51,
+   "mueve_ic95_sin_encoger": [
+    -2.99,
+    4.74
+   ]
   },
   "NCAAFB|N14": {
    "grupo": "NCAAFB",
@@ -1841,7 +3128,18 @@
    ],
    "desde_prueba": "2025-09-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1682,
+   "ee_toda": 0.2223,
+   "x_tipico": 1,
+   "n_toda": 3034,
+   "n_activos_toda": 89,
+   "beta_encogido": 0.02478,
+   "mueve_pp": 0.62,
+   "mueve_ic95_sin_encoger": [
+    -6.65,
+    14.66
+   ]
   },
   "MLB|B25": {
    "grupo": "MLB",
@@ -1858,7 +3156,18 @@
    ],
    "desde_prueba": "2024-08-27",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1482,
+   "ee_toda": 0.1052,
+   "x_tipico": 1,
+   "n_toda": 11402,
+   "n_activos_toda": 377,
+   "beta_encogido": 0.06454,
+   "mueve_pp": 1.61,
+   "mueve_ic95_sin_encoger": [
+    -1.45,
+    8.77
+   ]
   },
   "LigaMX|F14": {
    "grupo": "LigaMX",
@@ -1875,7 +3184,18 @@
    ],
    "desde_prueba": "2025-03-15",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.2427,
+   "ee_toda": 0.1084,
+   "x_tipico": 1,
+   "n_toda": 1546,
+   "n_activos_toda": 369,
+   "beta_encogido": 0.10213,
+   "mueve_pp": 2.55,
+   "mueve_ic95_sin_encoger": [
+    0.75,
+    11.19
+   ]
   },
   "7 ligas|F15": {
    "grupo": "7 ligas",
@@ -1892,7 +3212,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": -1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1795,
+   "ee_toda": 0.0633,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 1144,
+   "beta_encogido": 0.12217,
+   "mueve_pp": 3.05,
+   "mueve_ic95_sin_encoger": [
+    1.39,
+    7.53
+   ]
   },
   "7 ligas|F16": {
    "grupo": "7 ligas",
@@ -1909,7 +3240,18 @@
    ],
    "desde_prueba": "2025-04-13",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.1721,
+   "ee_toda": 0.1417,
+   "x_tipico": 1,
+   "n_toda": 11369,
+   "n_activos_toda": 268,
+   "beta_encogido": -0.05135,
+   "mueve_pp": -1.28,
+   "mueve_ic95_sin_encoger": [
+    -11.06,
+    2.64
+   ]
   },
   "5 ligas|F17": {
    "grupo": "5 ligas",
@@ -1926,7 +3268,18 @@
    ],
    "desde_prueba": "2025-04-12",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.285,
+   "ee_toda": 0.1183,
+   "x_tipico": 1,
+   "n_toda": 7307,
+   "n_activos_toda": 305,
+   "beta_encogido": 0.10799,
+   "mueve_pp": 2.7,
+   "mueve_ic95_sin_encoger": [
+    1.33,
+    12.64
+   ]
   },
   "ATP|T1": {
    "grupo": "ATP",
@@ -1940,7 +3293,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2018-01-15",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1637,
+   "ee_toda": 0.0153,
+   "x_tipico": 0.533,
+   "n_toda": 28890,
+   "n_activos_toda": 28612,
+   "beta_encogido": 0.16243,
+   "mueve_pp": 2.16,
+   "mueve_ic95_sin_encoger": [
+    1.78,
+    2.58
+   ]
   },
   "ATP|T2": {
    "grupo": "ATP",
@@ -1957,7 +3321,18 @@
    ],
    "desde_prueba": "2018-01-15",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1395,
+   "ee_toda": 0.019,
+   "x_tipico": 1,
+   "n_toda": 29704,
+   "n_activos_toda": 12488,
+   "beta_encogido": 0.13384,
+   "mueve_pp": 3.34,
+   "mueve_ic95_sin_encoger": [
+    2.55,
+    4.41
+   ]
   },
   "ATP|T3": {
    "grupo": "ATP",
@@ -1971,7 +3346,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2018-05-28",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.3179,
+   "ee_toda": 0.0181,
+   "x_tipico": 0.4,
+   "n_toda": 65333,
+   "n_activos_toda": 47985,
+   "beta_encogido": -0.31596,
+   "mueve_pp": -3.16,
+   "mueve_ic95_sin_encoger": [
+    -3.53,
+    -2.82
+   ]
   },
   "ATP|T4": {
    "grupo": "ATP",
@@ -1988,7 +3374,18 @@
    ],
    "desde_prueba": "2018-04-30",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1469,
+   "ee_toda": 0.0272,
+   "x_tipico": 1,
+   "n_toda": 59916,
+   "n_activos_toda": 5983,
+   "beta_encogido": 0.13519,
+   "mueve_pp": 3.37,
+   "mueve_ic95_sin_encoger": [
+    2.34,
+    4.99
+   ]
   },
   "ATP|T5": {
    "grupo": "ATP",
@@ -2005,7 +3402,18 @@
    ],
    "desde_prueba": "2018-05-28",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.2398,
+   "ee_toda": 0.0312,
+   "x_tipico": 1,
+   "n_toda": 65333,
+   "n_activos_toda": 4701,
+   "beta_encogido": -0.21526,
+   "mueve_pp": -5.36,
+   "mueve_ic95_sin_encoger": [
+    -7.47,
+    -4.45
+   ]
   },
   "WTA|T1": {
    "grupo": "WTA",
@@ -2019,7 +3427,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2023-05-29",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1863,
+   "ee_toda": 0.0266,
+   "x_tipico": 0.517,
+   "n_toda": 10359,
+   "n_activos_toda": 10260,
+   "beta_encogido": 0.18226,
+   "mueve_pp": 2.35,
+   "mueve_ic95_sin_encoger": [
+    1.73,
+    3.08
+   ]
   },
   "WTA|T2": {
    "grupo": "WTA",
@@ -2036,7 +3455,18 @@
    ],
    "desde_prueba": "2022-03-07",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.1707,
+   "ee_toda": 0.0253,
+   "x_tipico": 1,
+   "n_toda": 15609,
+   "n_activos_toda": 6878,
+   "beta_encogido": 0.15879,
+   "mueve_pp": 3.96,
+   "mueve_ic95_sin_encoger": [
+    3.02,
+    5.48
+   ]
   },
   "WTA|T3": {
    "grupo": "WTA",
@@ -2050,7 +3480,18 @@
    "tmle_ic95": null,
    "desde_prueba": "2022-04-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.4401,
+   "ee_toda": 0.0264,
+   "x_tipico": 0.4,
+   "n_toda": 34142,
+   "n_activos_toda": 24272,
+   "beta_encogido": -0.43443,
+   "mueve_pp": -4.33,
+   "mueve_ic95_sin_encoger": [
+    -4.9,
+    -3.88
+   ]
   },
   "WTA|T4": {
    "grupo": "WTA",
@@ -2067,7 +3508,18 @@
    ],
    "desde_prueba": "2022-04-04",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": 0.0925,
+   "ee_toda": 0.0407,
+   "x_tipico": 1,
+   "n_toda": 30853,
+   "n_activos_toda": 2612,
+   "beta_encogido": 0.07747,
+   "mueve_pp": 1.93,
+   "mueve_ic95_sin_encoger": [
+    0.32,
+    4.29
+   ]
   },
   "WTA|T5": {
    "grupo": "WTA",
@@ -2084,7 +3536,18 @@
    ],
    "desde_prueba": "2022-04-11",
    "signo_esperado": 1,
-   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md",
+   "beta_toda": -0.309,
+   "ee_toda": 0.043,
+   "x_tipico": 1,
+   "n_toda": 34142,
+   "n_activos_toda": 2425,
+   "beta_encogido": -0.25399,
+   "mueve_pp": -6.31,
+   "mueve_ic95_sin_encoger": [
+    -9.71,
+    -5.59
+   ]
   }
  }
 }

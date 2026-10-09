@@ -28,6 +28,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
    Cualquier cambio a un modelo pasa primero por la validación (regla 4) y lo aprueba Alejandro.
 3. **Nunca esconder datos.** Todos los partidos, todos los mercados, mismos bloques en todos los deportes.
    Un mercado que no pasa la validación se muestra como `sin_validar`, no se borra.
+   En los textos (lecturas, por_que_si/no, páginas) no se escribe "sin validar" ni "no validado" (9-oct-2026): se dice la
+   consecuencia ("el modelo pesa la mitad", "p final = mercado") y la z. Los campos internos (`estado`, `veredicto`) no cambian;
+   la confianza `no_validado` de decidir_v2 ahora se llama `solo_mercado`. Los ángulos dicen a quién favorecen y cuánto moverían
+   (efecto de toda la muestra encogido, tanda 4; tope de 2 veces el x típico).
 4. **Validación única y estricta** (walk-forward as-of contra línea base): n>=300, mejora a la base, z>=2.0
    (fútbol 1.64), mejora en ambas mitades, calibrado |p media - tasa real|<=0.04 (conteos: sesgo<=0.10 desv.).
    "Publicable" = supera la tasa histórica, NO a las casas. No hay edge demostrado contra el cierre (CLV pendiente).

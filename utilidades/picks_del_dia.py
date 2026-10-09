@@ -247,7 +247,7 @@ def apostabilidad(rec, v2, dec_bb):
         out["ganador"] = {"apostable": mot is None, "motivo": mot, "confianza": d.get("confianza"),
                           "ev": k.get("ev"), "cuota": k.get("decimal"), "cuota_min": k.get("cuota_min")}
         out["total"] = {"apostable": False, "motivo": _descal("total") or
-                        "el total de beisbol no pasa validacion walk-forward en ninguna liga"}
+                        "en ninguna liga el total de beisbol del modelo le gana a la tasa historica (walk-forward)"}
         return out
     for nombre, d in (("ganador", (v2 or {}).get("ganador")), ("total", (v2 or {}).get("total"))):
         if not d:
@@ -257,8 +257,8 @@ def apostabilidad(rec, v2, dec_bb):
         motivo = _descal(nombre)
         if motivo:
             pass
-        elif conf == "no_validado":
-            motivo = "mercado %s de %s sin validar (el modelo no le gana a la base)" % (nombre, (rec.get("liga") or "").upper())
+        elif conf in ("solo_mercado", "no_validado"):
+            motivo = "mercado %s de %s: el modelo todavia no le gana a la tasa historica, p final = mercado" % (nombre, (rec.get("liga") or "").upper())
         elif d.get("fuente") == "sin_cuota" or dec is None:
             motivo = "sin cuota de mercado"
         elif dec < CUOTA_MIN:

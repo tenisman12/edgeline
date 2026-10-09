@@ -1392,7 +1392,7 @@ def _razonar(rec, k):
                               o.get("tendencia"), t.get("status")) if x and x not in ("Estable", "Average", "New")]
         return ", ".join(partes)
     fr = []
-    fr.append("Modelo %.0f%% a %s%s." % (100 * k["p_modelo"], k["texto"], "" if k["validado"] else " (mercado sin validar)"))
+    fr.append("Modelo %.0f%% a %s%s." % (100 * k["p_modelo"], k["texto"], "" if k["validado"] else " (en este mercado el modelo pesa la mitad)"))
     if tipo == "Ganador" and lado in ("home", "away") and (me or op):
         a, b = desc(me), desc(op)
         if a or b:
@@ -1517,7 +1517,7 @@ def decidir_picks(rec, g, eventos):
             if puntaje < CORTE[nivel] + 5:
                 nivel = _bajar(nivel); razones.append("local/over sobreapostado en %s: pide 5 pts mas" % liga.upper())
         if not validado and nivel != "pasar":
-            razones.append("modelo sin validar en este mercado (pesa la mitad)")
+            razones.append("en este mercado el modelo pesa la mitad (todavia no le gana a la tasa historica)")
         if validado and p_sharp is not None and (p_mod - p_sharp) >= EDGE_SOSPECHOSO and nivel != "pasar":
             nivel = "revisar"; razones.append("modelo %.0f pts arriba del mercado: revisar (lesion, abridor, portero)" % (100 * (p_mod - p_sharp)))
         if nivel in ("pick", "premium") and tipo == "Ganador" and lado in ("home", "away"):
@@ -1653,7 +1653,7 @@ def registrar(partidos, ruta):
             ml = c.get("ml_home") if lado == "home" else (c.get("ml_away") if lado == "away" else None)
             notas = []
             if (p["liga"], "Ganador") in NO_PUBLICABLE:
-                notas.append("ganador sin validar")
+                notas.append("ganador: el modelo pesa la mitad")
             notas.append(("cuota ML %+d (%s)" % (ml, c.get("casa", ""))) if ml is not None else "sin cuotas")
             nuevos.append({"registrado": _ahora_utc(), "inicio_utc": (_inicio_utc(p).strftime("%Y-%m-%dT%H:%MZ") if _inicio_utc(p) else ""), "liga": p["liga"], "id": p["id"],
                            "fecha": p["fecha"], "home": p["home"]["nombre"], "away": p["away"]["nombre"],

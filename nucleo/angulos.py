@@ -19,7 +19,7 @@ Que hace:
 Catalogo:  python -m nucleo.angulos --catalogo     (lee trabajo/minar/*_resultados.json y escribe modelos/angulos_medidos.json)
 Solo stdlib.
 """
-import bisect, csv, datetime as dt, io as _io, json, os, sys
+import bisect, csv, datetime as dt, io as _io, json, math, os, sys
 
 try:
     from nucleo import io
@@ -101,12 +101,28 @@ def construir_catalogo():
                           # +1: la hipotesis registrada dice que el lado al que apunta el angulo rinde MAS que el modelo
                           "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
                           "fuente": md}
+    # tanda 4, parte A: efecto en TODA la muestra (offset sobre el modelo) y encogido por Bayes empirico entre angulos
+    ruta4 = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda4_resultados.json")
+    if os.path.exists(ruta4):
+        with _io.open(ruta4, encoding="utf-8") as f:
+            t4 = json.load(f)
+        tau2 = (t4.get("tau_logit") or 0.0) ** 2
+        for e in t4.get("A_estimacion") or []:
+            k = "%s|%s" % (e["liga"], e["codigo"])
+            if k not in cat or e.get("beta") is None:
+                continue
+            s = (e["ee"] or 0.0) * (e["x_tipico"] or 0.0)
+            f_enc = tau2 / (tau2 + s * s) if tau2 > 0 else 0.0
+            cat[k].update({"beta_toda": e["beta"], "ee_toda": e["ee"], "x_tipico": e["x_tipico"], "n_toda": e["n"],
+                           "n_activos_toda": e["n_activos"], "beta_encogido": round(e["beta"] * f_enc, 5),
+                           "mueve_pp": e.get("pp_50_encogido"), "mueve_ic95_sin_encoger": e.get("ic95_50")})
     out = {"generado": dt.date.today().isoformat(),
            "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo "
                         "recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo "
-                        "y la sede, en toda la muestra, con IC 95 %. Ninguno tiene peso en p: los que dicen 'pasa' (K14 NBA, "
-                        "T1 ATP) esperan la aprobacion de Alejandro. Futbol de las tandas 1 y 2 se midio con el modelo de K 20 sin "
-                        "olvido; la tanda 3 con K 40 y olvido 0.98.",
+                        "y la sede, en toda la muestra, con IC 95 %. beta_encogido = efecto en logit por unidad de x en toda la "
+                        "muestra, encogido por Bayes empirico (tanda 4); mueve_pp = lo que moveria un partido de 50 % con el x "
+                        "tipico. Ninguno cambia p salvo los aplicados con peso (K14 NBA, T1 ATP). Futbol de las tandas 1 y 2 se "
+                        "midio con el modelo de K 20 sin olvido; la tanda 3 con K 40 y olvido 0.98.",
            "angulos": cat}
     with _io.open(RUTA_CATALOGO, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
@@ -554,7 +570,7 @@ def _tenis(p, liga):
     for c, v in x.items():
         if v:
             lado = "home" if v > 0 else "away"
-            out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado]["nombre"], "x": round(v, 3),
+            out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado]["nombre"], "otro": p["away" if lado == "home" else "home"]["nombre"], "x": round(v, 3),
                         "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
     return out
 
@@ -731,14 +747,27 @@ def calcular(p, todos=None):
             continue
         lado = "home" if v > 0 else "away"
         out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado].get("abrev") or p[lado]["nombre"],
+                    "otro": p["away" if lado == "home" else "home"].get("abrev") or p["away" if lado == "home" else "home"]["nombre"],
                     "x": v, "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
     return out
 
 
-def efecto(a):
-    """efecto medido para el lado al que apunta el angulo (pp) y su signo de conteo: +1 a favor de ese lado, -1 en contra, 0 neutro."""
+def mueve(a):
+    """pp que moveria un partido de 50 % hacia el lado al que apunta el angulo, con el x de hoy y el efecto encogido de toda
+    la muestra (tanda 4). Sin esa estimacion, el efecto fuera de muestra del minado."""
     m = a.get("medicion") or {}
-    e = m.get("efecto_pp")
+    b = m.get("beta_encogido")
+    if b is not None and a.get("x") is not None:
+        xa = abs(a["x"])
+        if m.get("x_tipico"):
+            xa = min(xa, 2 * m["x_tipico"])      # sin extrapolar: tope de 2 veces el x tipico de los casos medidos
+        return round(100 * (1 / (1 + math.exp(-b * xa)) - 0.5), 2)
+    return m.get("efecto_pp")
+
+
+def efecto(a):
+    """efecto para el lado al que apunta el angulo (pp) y su signo de conteo: +1 a favor de ese lado, -1 en contra, 0 neutro."""
+    e = mueve(a)
     if e is None:
         return None, 0
     if a.get("con_peso"):
@@ -750,19 +779,26 @@ def _miles(n):
     return "{:,}".format(n) if isinstance(n, int) else str(n)
 
 
+def favorece(a):
+    e = mueve(a)
+    if e is None:
+        return None
+    return a["equipo"] if e >= 0 else (a.get("otro") or "el rival")
+
+
 def texto(a):
-    """una linea: que angulo, para quien se midio y que dio."""
+    """una linea: que angulo, a quien favorece hoy, cuanto moveria y con cuanta muestra se midio."""
     m = a.get("medicion")
     base = "%s %s" % (a["codigo"], a["nombre"])
-    if not m or m.get("efecto_pp") is None:
+    e = mueve(a)
+    if not m or e is None:
         return base + ": sin medicion"
-    t = "%s: %s rindio %+.1f pp contra el modelo fuera de muestra (%s casos, z %s, %s)" % (
-        base, a["equipo"], m["efecto_pp"], _miles(m.get("n_activo_prueba")), m.get("z"), m.get("veredicto"))
-    if m.get("tmle_pp") is not None and m.get("tmle_ic95"):
-        t += "; TMLE %+.1f pp [%+.1f, %+.1f]" % (m["tmle_pp"], m["tmle_ic95"][0], m["tmle_ic95"][1])
+    n = m.get("n_activos_toda") or m.get("n_activo_prueba")
     if a.get("con_peso"):
-        return t + "; con peso: ya esta dentro de la probabilidad del modelo"
-    return t + ("; pasa, sin peso hasta que Alejandro lo apruebe" if m.get("veredicto") == "pasa" else "; sin peso")
+        return "%s: favorece a %s; ya esta dentro de la probabilidad del modelo (%s partidos, z fuera de muestra %s)" % (
+            base, favorece(a), _miles(n), m.get("z"))
+    return "%s: favorece a %s, moveria %+.1f pp (%s partidos con el angulo; z fuera de muestra %s)" % (
+        base, favorece(a), abs(e), _miles(n), m.get("z"))
 
 
 def conteo(angs):
@@ -778,7 +814,8 @@ def conteo(angs):
 def resumen_json(a):
     m = a.get("medicion") or {}
     return {"codigo": a["codigo"], "nombre": a["nombre"], "lado": a["lado"], "equipo": a["equipo"], "x": a["x"], "con_peso": bool(a.get("con_peso")),
-            "efecto_pp": m.get("efecto_pp"), "n_medido": m.get("n_activo_prueba"), "z": m.get("z"), "veredicto": m.get("veredicto"),
+            "efecto_pp": m.get("efecto_pp"), "mueve_pp": mueve(a), "favorece": favorece(a), "otro": a.get("otro"),
+            "n_medido": m.get("n_activos_toda") or m.get("n_activo_prueba"), "z": m.get("z"), "veredicto": m.get("veredicto"),
             "tmle_pp": m.get("tmle_pp"), "tmle_ic95": m.get("tmle_ic95"), "texto": texto(a)}
 
 
