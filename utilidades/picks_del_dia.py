@@ -483,6 +483,11 @@ def main():
                 "decision_v2": v2}
         angs = _angulos(p, D["partidos"])
         fila["angulos"] = [ANG.resumen_json(x) for x in angs] if angs else []
+        try:
+            angs_t = ANG.calcular_totales(p, D["partidos"]) if ANG is not None else []
+        except Exception as _e:
+            angs_t = []; print("  angulos de totales fallo en %s %s: %s" % (p.get("liga"), p.get("id"), _e))
+        fila["angulos_total"] = angs_t
         fila["angulos_conteo"] = ANG.conteo(angs) if angs else None
         if ANG is not None and not p.get("pretemporada") and not _empezado(p, ahora_cdmx) and ANG._grupos(p.get("liga")):
             m_ = p.get("modelo") or {}
@@ -529,6 +534,11 @@ def main():
             if angs and c["lado"] in ("home", "away") and not str(c["mercado"]).startswith(("Total", "Games")):
                 fa, co, s_a, n_a = ANG.para_pick(angs, c["lado"])
                 cc["angulos_favor"], cc["angulos_contra"] = fa, co
+                si += s_a[:3]; no += n_a[:3]
+            elif angs_t and c["lado"] in ("over", "under"):
+                fa, co, s_a, n_a = ANG.totales_para_pick(angs_t, c["lado"])
+                cc["angulos_favor"], cc["angulos_contra"] = fa, co
+                cc["angulos"] = "; ".join("%s:%+.2f" % (x["codigo"], x["moveria"]) for x in angs_t)
                 si += s_a[:3]; no += n_a[:3]
             cc["por_que_si"] = si; cc["por_que_no"] = no
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank

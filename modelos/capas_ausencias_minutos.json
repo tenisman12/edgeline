@@ -29,5 +29,16 @@
   "desde": "2000-01-10",
   "hasta": "2026-10-06",
   "x": "(minutos del partido anterior del rival en el torneo - propios) / 60, desde el lado local; solo si los dos ya jugaron en el torneo"
+ },
+ "beisbol_S4": {
+  "beta": 0.161,
+  "ee": 0.0497,
+  "n": 20747,
+  "activos": 1674,
+  "desde": "2018-12-01",
+  "hasta": "2026-10-07",
+  "x": "+1 si el local viene de 3 derrotas seguidas y la visita de 3 victorias seguidas (misma temporada, juegos a 20 dias o menos), -1 al reves, 0 si no",
+  "fuente": "trabajo/minar/2026-10-09_tanda5.md (z 2.02 fuera de muestra); aprobado 9-oct-2026",
+  "generado": "2026-10-09"
  }
 }

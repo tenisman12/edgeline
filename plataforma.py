@@ -659,7 +659,15 @@ def _pred(g, c, fecha, eventos=None):
                            "ajuste_pp": round(100 * (p - p0), 1)}
             else:
                 capa_ab = {"aplicado": False, "motivo": "abridor anunciado sin aperturas en %s" % os.path.basename(AB._ruta(BASE, g["liga"]))}
-        m = {"p_home": p, "p_away": 1 - p, "unidad": "carreras", "capa_abridores": capa_ab,
+        # S4 frio contra caliente (tanda 5, z 2.02; aprobado 9-oct-2026 "se aplica todo a beisbol"): +1 local con 3 derrotas
+        # seguidas contra visita con 3 victorias seguidas, -1 al reves. nucleo/angulos.py + modelos/capas_ausencias_minutos.json
+        capa_fc = None
+        try:
+            from nucleo import angulos as _ANG
+            p, capa_fc = _ANG.aplicar_capa(p, g["liga"], "S4", _ANG.x_frio_caliente(g, fecha))
+        except Exception as _e:
+            capa_fc = {"aplicado": False, "motivo": "error: %s" % _e}
+        m = {"p_home": p, "p_away": 1 - p, "unidad": "carreras", "capa_abridores": capa_ab, "capa_frio_caliente": capa_fc,
              "x_home": r["esperado_home"], "x_away": r["esperado_away"], "total": r["total"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
              "confianza": _conf(max(p, 1 - p)), "extra": []}

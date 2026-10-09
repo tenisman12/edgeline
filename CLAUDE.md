@@ -91,7 +91,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   La parte A da el efecto de los 136 con IC y encogido (Bayes empirico): `2026-10-09_tanda4_resultados.json`.
   Tanda 5 (9-oct, `utilidades/minar_angulos_tanda5.py`, `trabajo/minar/2026-10-09_tanda5.md`, k 77; ideas de professormj):
   rachas cortadas, frio vs caliente, sequia, sorpresa, paliza, abridor vapuleado (LMP). Pasa S4 frio contra caliente en
-  beisbol (z 2.02, +4.0 pp en toda la muestra; en los demas deportes va al reves). Pendiente de aprobacion para darle peso.
+  beisbol (z 2.02, +4.0 pp en toda la muestra; en los demas deportes va al reves). APLICADO con peso en beisbol (aprobado
+  9-oct: "se aplica todo a beisbol"): plataforma.py suma beta 0.161 * x al logit (x +1 local frio contra visita caliente,
+  `utilidades/pesos_frio_caliente.py`, clave beisbol_S4 en `modelos/capas_ausencias_minutos.json`); se ve en
+  modelo.capa_frio_caliente y decidir.py lo suma a p_modelo.
+- REGLA (9-oct-2026, Alejandro: "nunca lo olvides"): TODOS los angulos medidos se ponen donde apliquen, en cada partido y en
+  cada analisis, con lo que moverian. Ganador: `nucleo/angulos.calcular` (tandas 1-5, derbi F18, abridor vapuleado S9 en LMP).
+  Totales: `nucleo/angulos.calcular_totales` (TH/TK/TB/TF/TN de la tanda 4 y TS de la tanda 5: moveria +-x goles/carreras/
+  puntos con su IC); `picks_del_dia.json` los trae en `angulos_total` y en por_que_si/no de los picks de total.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,

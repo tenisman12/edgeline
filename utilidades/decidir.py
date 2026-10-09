@@ -136,8 +136,13 @@ def p_modelo(rec, C):
     sh, ih = abridor(rec, "home"); sa, ia = abridor(rec, "away")
     k = C.get("logit_por_carrera", 0.4)
     logit = base + k * (sh - sa)
+    # S4 frio contra caliente (aprobado 9-oct-2026): el mismo ajuste que plataforma.py guarda en modelo.capa_frio_caliente
+    fc = (rec.get("modelo") or {}).get("capa_frio_caliente") or {}
+    if fc.get("aplicado") and fc.get("x"):
+        logit += fc["beta"] * fc["x"]
     return _sig(logit), {"elo_h": H.get("elo"), "elo_a": A.get("elo"), "dif_h": dif(H), "dif_a": dif(A),
-                         "p_base": round(_sig(base), 4), "abridor_h": ih, "abridor_a": ia, "carreras_abridor": round(sh - sa, 2)}
+                         "p_base": round(_sig(base), 4), "abridor_h": ih, "abridor_a": ia, "carreras_abridor": round(sh - sa, 2),
+                         "frio_caliente": fc.get("x") if fc.get("aplicado") else None}
 
 
 def precios(rec):

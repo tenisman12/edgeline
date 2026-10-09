@@ -33,6 +33,9 @@ FUERTE, DEBIL, MIN_J = 0.60, 0.40, 8          # iguales a minar_cualitativos.py
 NEUTRO_PP = 1.0                               # |efecto medido| menor a esto no cuenta ni a favor ni en contra
 
 NOMBRES = {
+    "S1": "tras ganar por mucho", "S2": "racha de victorias cortada", "S3": "racha de derrotas cortada",
+    "S4": "frio contra caliente (hacia el frio)", "S7": "sequia de anotacion", "S9": "abridor vapuleado en su salida anterior",
+    "F18": "derbi (el no favorito)",
     "H1": "visita en segunda noche, local descansado", "H2": "local en segunda noche, visita descansada",
     "H4": "un dia de diferencia de descanso", "H6": "tercer juego en 4 noches", "H7": "carga de 7 dias",
     "H8": "regreso de pausa de 7+ dias", "H13": "gira del visitante (2+ seguidos de visita)", "H14": "regreso a casa tras gira de 3+",
@@ -69,16 +72,16 @@ _FUT = ("premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls")
 
 def _grupos(liga):
     lg = (liga or "").lower()
-    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"]}
-    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"]}
+    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"], "S": ["NHL"]}
+    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"], "S": ["NBA"]}
     if lg == "atp": return {"T": ["ATP"]}
     if lg == "wta": return {"T": ["WTA"]}
-    if lg == "ncaamb": return {"K": ["NCAAMB"]}
-    if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"]}
-    if lg == "ncaafb": return {"N": ["NCAAFB"]}
-    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"]}
-    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"]}
-    if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"]}
+    if lg == "ncaamb": return {"K": ["NCAAMB"], "S": ["NCAAMB"]}
+    if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"], "S": ["NFL"]}
+    if lg == "ncaafb": return {"N": ["NCAAFB"], "S": ["NCAAFB"]}
+    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"]}
+    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"]}
+    if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"], "S": ["FUTBOL"]}
     return {}
 
 
@@ -101,6 +104,29 @@ def construir_catalogo():
                           # +1: la hipotesis registrada dice que el lado al que apunta el angulo rinde MAS que el modelo
                           "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
                           "fuente": md}
+    # tanda 5 (resultados por deporte, base modelo) y nuevos de la tanda 4 (F18 derbi, T6 jugador local)
+    ruta5 = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda5_resultados.json")
+    t5 = None
+    if os.path.exists(ruta5):
+        with _io.open(ruta5, encoding="utf-8") as f:
+            t5 = json.load(f)
+        for rr in t5.get("ganador") or []:
+            k = "%s|%s" % (rr["liga"], rr["codigo"])
+            cat[k] = {"grupo": rr["liga"], "codigo": rr["codigo"], "angulo": rr["angulo"], "veredicto": rr["veredicto"],
+                      "n_activo_prueba": rr.get("n_activo_prueba"), "z": rr.get("z"), "efecto_pp": rr.get("residuo_firmado_pp"),
+                      "tmle_pp": None, "tmle_ic95": None, "desde_prueba": rr.get("desde_prueba"),
+                      "signo_esperado": None, "fuente": "trabajo/minar/2026-10-09_tanda5.md"}
+    ruta4n = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda4_resultados.json")
+    if os.path.exists(ruta4n):
+        with _io.open(ruta4n, encoding="utf-8") as f:
+            for rr in json.load(f).get("D_nuevos") or []:
+                if rr.get("base") != "modelo":
+                    continue
+                k = "%s|%s" % (rr["liga"], rr["codigo"])
+                cat[k] = {"grupo": rr["liga"], "codigo": rr["codigo"], "angulo": rr["angulo"], "veredicto": rr["veredicto"],
+                          "n_activo_prueba": rr.get("n_activo_prueba"), "z": rr.get("z"), "efecto_pp": rr.get("residuo_firmado_pp"),
+                          "tmle_pp": None, "tmle_ic95": None, "desde_prueba": rr.get("desde_prueba"), "signo_esperado": None,
+                          "fuente": "trabajo/minar/2026-10-09_tanda4.md", "_pp_toda": rr.get("pp_50_toda"), "_ic_toda": rr.get("ic95_toda")}
     # tanda 4, parte A: efecto en TODA la muestra (offset sobre el modelo) y encogido por Bayes empirico entre angulos
     ruta4 = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda4_resultados.json")
     if os.path.exists(ruta4):
@@ -116,6 +142,25 @@ def construir_catalogo():
             cat[k].update({"beta_toda": e["beta"], "ee_toda": e["ee"], "x_tipico": e["x_tipico"], "n_toda": e["n"],
                            "n_activos_toda": e["n_activos"], "beta_encogido": round(e["beta"] * f_enc, 5),
                            "mueve_pp": e.get("pp_50_encogido"), "mueve_ic95_sin_encoger": e.get("ic95_50")})
+    # tanda 5 y nuevos: efecto de toda la muestra (x de -1/0/+1) encogido con el mismo tau
+    tau2_ = ((t4.get("tau_logit") if os.path.exists(ruta4) else 0.0924) or 0.0924) ** 2 if os.path.exists(ruta4) else 0.0924 ** 2
+    lg_ = lambda q: math.log(q / (1 - q))
+    for e in ((t5 or {}).get("estimacion") or []):
+        k = "%s|%s" % (e["liga"], e["codigo"])
+        if k in cat and e.get("pp_50") is not None:
+            b = lg_(0.5 + e["pp_50"] / 100); lo, hi = e["ic95_50"]
+            se = (lg_(0.5 + hi / 100) - lg_(0.5 + lo / 100)) / 3.92
+            cat[k].update({"beta_toda": round(b, 4), "ee_toda": round(se, 4), "x_tipico": 1, "n_toda": e["n"], "n_activos_toda": e["n_activos"],
+                           "beta_encogido": round(b * tau2_ / (tau2_ + se * se), 5), "mueve_pp": e.get("pp_50_encogido"),
+                           "mueve_ic95_sin_encoger": e["ic95_50"]})
+    for k, v in cat.items():
+        if v.get("_pp_toda") is not None and v.get("_ic_toda"):
+            b = lg_(0.5 + v["_pp_toda"] / 100); lo, hi = v["_ic_toda"]
+            se = (lg_(0.5 + hi / 100) - lg_(0.5 + lo / 100)) / 3.92
+            be = b * tau2_ / (tau2_ + se * se)
+            v.update({"beta_toda": round(b, 4), "ee_toda": round(se, 4), "x_tipico": 1, "beta_encogido": round(be, 5),
+                      "mueve_pp": round(100 * (1 / (1 + math.exp(-be)) - 0.5), 2), "mueve_ic95_sin_encoger": v["_ic_toda"]})
+        v.pop("_pp_toda", None); v.pop("_ic_toda", None)
     out = {"generado": dt.date.today().isoformat(),
            "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo "
                         "recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo "
@@ -273,6 +318,108 @@ def _dias_seguidos(P, fecha):
 
 def _ind(v):
     return 1 if v else 0
+
+
+# ------------------------------------------------------------------ tanda 5 (9-oct-2026): mismas definiciones del minado
+PARAM5 = {"NHL": dict(m=4, larga=5, fc=3, gap=20), "NBA": dict(m=20, larga=5, fc=3, gap=20), "NCAAMB": dict(m=20, larga=5, fc=3, gap=20),
+          "NFL": dict(m=20, larga=3, fc=2, gap=21), "NCAAFB": dict(m=20, larga=3, fc=2, gap=21),
+          "BEISBOL": dict(m=7, larga=5, fc=3, gap=20), "FUTBOL": dict(m=3, larga=3, fc=2, gap=30)}
+
+
+def _dep5(liga):
+    lg = (liga or "").lower()
+    if lg in _BEIS: return "BEISBOL"
+    if lg in _FUT: return "FUTBOL"
+    return {"nhl": "NHL", "nba": "NBA", "ncaamb": "NCAAMB", "nfl": "NFL", "ncaafb": "NCAAFB"}.get(lg)
+
+
+def _estado5(P, fecha, dep):
+    """S1, S2, S3, frio, caliente y sequia de un equipo con sus juegos anteriores de la misma temporada."""
+    k = PARAM5[dep]
+    Q = []; f = fecha
+    for g in reversed(P):
+        if g.get("gf") is None:
+            continue
+        if (f - g["fecha"]).days > k["gap"]:
+            break
+        Q.append(g); f = g["fecha"]
+    res = lambda g: "W" if g["gf"] > g["ga"] else ("L" if g["gf"] < g["ga"] else "D")
+    d = {"S1": 0, "S2": 0, "S3": 0, "frio": False, "cal": False, "S7": False, "paliza": 0}
+    if not Q:
+        return d
+    u = Q[0]; resto = Q[1:1 + k["larga"]]
+    d["S1"] = _ind(u["gf"] - u["ga"] >= k["m"]); d["paliza"] = _ind(abs(u["gf"] - u["ga"]) >= k["m"])
+    d["S2"] = _ind(res(u) != "W" and len(resto) == k["larga"] and all(res(g) == "W" for g in resto))
+    d["S3"] = _ind(res(u) == "W" and len(resto) == k["larga"] and all(res(g) == "L" for g in resto))
+    d["frio"] = len(Q) >= k["fc"] and all(res(g) == "L" for g in Q[:k["fc"]])
+    d["cal"] = len(Q) >= k["fc"] and all(res(g) == "W" for g in Q[:k["fc"]])
+    if dep == "BEISBOL":
+        d["S7"] = len(Q) >= 3 and all(g["gf"] <= 2 for g in Q[:3])
+    elif dep == "NHL":
+        d["S7"] = len(Q) >= 3 and all(g["gf"] <= 1 for g in Q[:3])
+    elif dep in ("NBA", "NCAAMB"):
+        d["S7"] = None if len(Q) < 8 else all(g["gf"] < 0.9 * sum(x["gf"] for x in Q) / len(Q) for g in Q[:3])
+    elif dep in ("NFL", "NCAAFB"):
+        d["S7"] = len(Q) >= 2 and all(g["gf"] <= 13 for g in Q[:2])
+    else:
+        d["S7"] = len(Q) >= 2 and all(g["gf"] == 0 for g in Q[:2])
+    return d
+
+
+def x_frio_caliente(p, fecha):
+    """S4 para la capa con peso de beisbol: +1 local frio contra visita caliente, -1 al reves, 0 si no; None sin calendario."""
+    hoy = fecha if isinstance(fecha, dt.date) else _d(fecha)
+    dep = _dep5(p.get("liga"))
+    if not hoy or not dep:
+        return None
+    T = _calendario(p.get("liga"))
+    eh, ea = _equipo(p, "home"), _equipo(p, "away")
+    if eh not in T or ea not in T:
+        return None
+    h, a = _estado5(_previos(T[eh], hoy), hoy, dep), _estado5(_previos(T[ea], hoy), hoy, dep)
+    return 1 if (h["frio"] and a["cal"]) else (-1 if (a["frio"] and h["cal"]) else 0)
+
+
+_LMP_ABR = None
+
+
+def _vapuleado_lmp(nombre, fecha):
+    """1 si el abridor anunciado de LMP permitio 5+ carreras limpias en su salida anterior (20 dias o menos); None sin dato."""
+    global _LMP_ABR
+    if not nombre:
+        return None
+    if _LMP_ABR is None:
+        _LMP_ABR = {}
+        ruta = io.ruta("datos", "abridores", "lmp_lanzadores.csv")
+        if os.path.exists(ruta):
+            with _io.open(ruta, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    if str(r.get("abridor")) in ("1", "1.0", "True"):
+                        _LMP_ABR.setdefault((r.get("jugador") or "").strip().lower(), []).append((_d(r.get("game_date")), _f(r.get("er"))))
+            for L in _LMP_ABR.values():
+                L.sort(key=lambda t: t[0] or dt.date.min)
+    L = [t for t in _LMP_ABR.get(nombre.strip().lower(), []) if t[0] and t[0] < fecha]
+    if not L or (fecha - L[-1][0]).days > 20 or L[-1][1] is None:
+        return None
+    return _ind(L[-1][1] >= 5)
+
+
+_CIUDADES = None
+
+
+def _derbi(p, eh, ea):
+    global _CIUDADES
+    if _CIUDADES is None:
+        try:
+            with _io.open(os.path.join(CODIGO, "modelos", "ciudades_futbol.json"), encoding="utf-8") as f:
+                _CIUDADES = json.load(f)["ciudades"]
+        except Exception:
+            _CIUDADES = {}
+    lgn = {"premier": "Premier", "laliga": "LaLiga", "seriea": "SerieA", "bundesliga": "Bundesliga", "ligue1": "Ligue1",
+           "ligamx": "LigaMX", "mls": "MLS"}.get((p.get("liga") or "").lower())
+    C = _CIUDADES.get(lgn) or {}
+    a, b = C.get(eh), C.get(ea)
+    return None if a is None or b is None else a == b
 
 
 # ------------------------------------------------------------------ angulos de un partido
@@ -477,7 +624,7 @@ def _tenis_hist():
 
 
 # ------------------------------------------------------------------ capas con peso (aprobadas el 9-oct-2026)
-CON_PESO = {("nba", "K14"), ("atp", "T1")}     # ya entran en p (plataforma.py); en la capa cualitativa no se cuentan dos veces
+CON_PESO = {("nba", "K14"), ("atp", "T1")} | {(lg, "S4") for lg in ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl")}     # ya entran en p (plataforma.py); en la capa cualitativa no se cuentan dos veces
 _CAPAS = None
 
 
@@ -522,6 +669,8 @@ def aplicar_capa(p_home, liga, codigo, x):
     """logit(p) + beta * x con el beta de modelos/capas_ausencias_minutos.json. Devuelve (p, detalle)."""
     import math as _m
     clave = {("nba", "K14"): "nba_K14", ("atp", "T1"): "atp_T1"}.get(((liga or "").lower(), codigo))
+    if codigo == "S4" and (liga or "").lower() in _BEIS:
+        clave = "beisbol_S4"
     c = (capas_aprobadas() or {}).get(clave) or {}
     if x is None or c.get("beta") is None:
         return p_home, {"aplicado": False, "motivo": "sin dato para %s" % codigo if x is None else "sin coeficiente"}
@@ -529,7 +678,7 @@ def aplicar_capa(p_home, liga, codigo, x):
     p1 = 1.0 / (1.0 + _m.exp(-(_m.log(p0 / (1 - p0)) + c["beta"] * x)))
     return p1, {"aplicado": True, "codigo": codigo, "nombre": NOMBRES.get(codigo), "x": round(x, 3), "beta": c["beta"],
                 "ajuste_pp": round(100 * (p1 - p0), 1), "p_sin_capa": round(p0, 4),
-                "fuente": "modelos/capas_ausencias_minutos.json (tanda 3, aprobada 9-oct-2026)"}
+                "fuente": "modelos/capas_ausencias_minutos.json (tandas 3 y 5, aprobadas 9-oct-2026)"}
 
 
 def _tenis(p, liga):
@@ -740,6 +889,23 @@ def calcular(p, todos=None):
             f17 = _descenso(T, eh, ea, fecha)
             if f17 is not None:
                 x["F17"] = f17
+    # ---------------- tanda 5 (9-oct-2026) y nuevos de la tanda 4
+    dep5 = _dep5(liga)
+    if dep5:
+        h5, a5 = _estado5(Ph, fecha, dep5), _estado5(Pa, fecha, dep5)
+        x["S1"] = h5["S1"] - a5["S1"]; x["S2"] = h5["S2"] - a5["S2"]; x["S3"] = h5["S3"] - a5["S3"]
+        x["S4"] = 1 if (h5["frio"] and a5["cal"]) else (-1 if (a5["frio"] and h5["cal"]) else 0)
+        if h5["S7"] is not None and a5["S7"] is not None:
+            x["S7"] = _ind(h5["S7"]) - _ind(a5["S7"])
+        if liga == "lmp":
+            vh, va = _vapuleado_lmp(p["home"].get("probable"), fecha), _vapuleado_lmp(p["away"].get("probable"), fecha)
+            if vh is not None and va is not None:
+                x["S9"] = vh - va
+    if "F" in G:
+        dz = _derbi(p, eh, ea)
+        m_ = p.get("modelo") or {}
+        if dz and m_.get("p_home") is not None and m_.get("p_away") is not None:
+            x["F18"] = 1 if m_["p_home"] < m_["p_away"] else -1
     # x con el MISMO signo que en el minado: + apunta al local, - a la visita. El efecto medido es para ese lado.
     out = []
     for c, v in x.items():
@@ -833,6 +999,156 @@ def para_pick(angs, lado_pick):
             con += 1; no.append("angulo " + texto(a))
     return fav, con, si, no
 
+
+
+# ------------------------------------------------------------------ angulos de TOTALES (tandas 4 y 5): lo que moverian en goles,
+# carreras o puntos. Efecto de toda la muestra contra el total esperado as-of (tasas de anotacion), con su IC 95 %.
+NOMBRES_T = {"TH1": "segunda noche (cuenta)", "TH2": "carga de 7 dias (suma)", "TH3": "prorroga en el anterior (cuenta)",
+             "TH4": "castigos del anterior (suma/10)", "TH5": "altitud (Colorado, Utah)", "TH6": "gira del visitante 3+",
+             "TH8": "descanso largo de los dos (3+ dias)", "TK1": "segunda noche (cuenta)", "TK2": "tercer juego en 4 noches (cuenta)",
+             "TK3": "altitud (Denver, Utah)", "TK4": "prorroga en el anterior (cuenta)", "TK5": "descanso largo de los dos (3+ dias)",
+             "TK6": "gira del visitante 3+", "TB1": "Coors Field", "TB2": "extra innings en el anterior (cuenta)",
+             "TB3": "dias seguidos jugando (suma/10)", "TB4": "los dos vienen de dia libre", "TB5": "gira del visitante 6+",
+             "TF1": "Champions entre semana (cuenta)", "TF2": "descanso corto, 3 dias o menos (cuenta)", "TF3": "regreso de fecha FIFA",
+             "TF4": "altitud en Liga MX", "TF6": "pelea por no descender", "TF7": "derbi (misma ciudad)", "TN1": "jueves por la noche",
+             "TN2": "viene de semana libre (cuenta)", "TN3": "semana corta (cuenta)", "TN5": "partido divisional",
+             "TS1": "tras paliza (cuenta)", "TS5": "los dos frios", "TS6": "los dos calientes", "TS7": "sequia de anotacion (cuenta)"}
+_TOT = None
+
+
+def catalogo_totales():
+    global _TOT
+    if _TOT is None:
+        _TOT = {}
+        for ruta, clave in (("2026-10-09_tanda4_resultados.json", "C_totales"), ("2026-10-09_tanda5_resultados.json", "totales")):
+            rr = os.path.join(CODIGO, "trabajo", "minar", ruta)
+            if not os.path.exists(rr):
+                continue
+            with _io.open(rr, encoding="utf-8") as f:
+                for r in json.load(f).get(clave) or []:
+                    if r.get("base") != "total esperado" or r.get("efecto_toda_muestra") is None:
+                        continue
+                    _TOT["%s|%s" % (r["liga"], r["codigo"])] = r
+    return _TOT
+
+
+def _grupo_total(liga):
+    lg = (liga or "").lower()
+    if lg in _BEIS: return ["BEISBOL"]
+    if lg in _FUT: return ["7 ligas", "FUTBOL"]
+    return [{"nhl": "NHL", "nba": "NBA", "ncaamb": "NCAAMB", "nfl": "NFL", "ncaafb": "NCAAFB"}.get(lg, "?")]
+
+
+def calcular_totales(p, todos=None):
+    """angulos de totales activos: codigo, nombre, x, moveria (unidades del deporte), ic95, z, n, unidad."""
+    liga = (p.get("liga") or "").lower()
+    dep5 = _dep5(liga)
+    fecha = _d(p.get("fecha"))
+    if not dep5 or not fecha or p.get("pretemporada"):
+        return []
+    T = _calendario(liga)
+    eh, ea = _equipo(p, "home"), _equipo(p, "away")
+    if eh not in T or ea not in T:
+        return []
+    Ph, Pa = _previos(T[eh], fecha), _previos(T[ea], fecha)
+    if not Ph or not Pa:
+        return []
+    Lh = [g for g in Ph if g["gf"] is not None]; La = [g for g in Pa if g["gf"] is not None]
+    if not Lh or not La:
+        return []
+    ph, pa = Lh[-1], La[-1]
+    rh, ra = (fecha - Ph[-1]["fecha"]).days, (fecha - Pa[-1]["fecha"]).days
+    x = {}
+    if liga == "nhl":
+        x["TH1"] = _ind(rh == 1) + _ind(ra == 1)
+        x["TH2"] = _en_ventana(Ph, fecha, 7) + _en_ventana(Pa, fecha, 7) if rh <= 20 and ra <= 20 else None
+        if ph.get("ot") is not None and pa.get("ot") is not None:
+            x["TH3"] = _ind(ph["ot"]) + _ind(pa["ot"])
+        if ph.get("pim") is not None and pa.get("pim") is not None:
+            x["TH4"] = (ph["pim"] + pa["pim"]) / 10.0
+        x["TH5"] = 1 if (eh in ALT_NHL and ea not in ALT_NHL) else 0
+        x["TH6"] = _ind(_visitas_seguidas(Pa, False) >= 3)
+        x["TH8"] = _ind(rh >= 3 and ra >= 3)
+    elif liga in ("nba", "ncaamb"):
+        x["TK1"] = _ind(rh == 1) + _ind(ra == 1)
+        x["TK2"] = _ind(_en_ventana(Ph, fecha, 3) >= 2) + _ind(_en_ventana(Pa, fecha, 3) >= 2)
+        if liga == "nba":
+            x["TK3"] = 1 if (eh in ALT_NBA and ea not in ALT_NBA) else 0
+            if ph.get("ot") is not None and pa.get("ot") is not None:
+                x["TK4"] = _ind(ph["ot"]) + _ind(pa["ot"])
+        x["TK5"] = _ind(rh >= 3 and ra >= 3)
+        x["TK6"] = _ind(_visitas_seguidas(Pa, False) >= 3)
+    elif dep5 == "BEISBOL":
+        if liga == "mlb":
+            x["TB1"] = 1 if eh == "Colorado Rockies" else 0
+        if ph.get("ip") is not None and pa.get("ip") is not None:
+            x["TB2"] = _ind(ph["ip"] >= 9.95) + _ind(pa["ip"] >= 9.95)
+        x["TB3"] = (min(_dias_seguidos(Ph, fecha), 20) + min(_dias_seguidos(Pa, fecha), 20)) / 10.0
+        x["TB4"] = _ind(rh >= 2 and ra >= 2)
+        x["TB5"] = _ind(_visitas_seguidas(Pa, False) >= 6)
+    elif dep5 == "FUTBOL":
+        ch = lambda P: any(str(g["gp"]).startswith("ch") and 0 < (fecha - g["fecha"]).days <= 4 for g in P[-3:])
+        x["TF1"] = _ind(ch(Ph)) + _ind(ch(Pa))
+        x["TF2"] = _ind(rh <= 3) + _ind(ra <= 3)
+        dh, da = (fecha - ph["fecha"]).days, (fecha - pa["fecha"]).days
+        x["TF3"] = _ind(12 <= dh <= 30 and 12 <= da <= 30)
+        if liga == "ligamx":
+            x["TF4"] = 1 if (eh in ALT_MX and ea not in ALT_MX) else 0
+        if liga in DESCENSO:
+            f17 = _descenso(T, eh, ea, fecha)
+            if f17 is not None:
+                x["TF6"] = _ind(f17 != 0)
+        dz = _derbi(p, eh, ea)
+        if dz is not None:
+            x["TF7"] = _ind(dz)
+    elif dep5 in ("NFL", "NCAAFB"):
+        x["TN1"] = 1 if fecha.weekday() == 3 else 0
+        x["TN2"] = _ind(13 <= rh <= 20) + _ind(13 <= ra <= 20)
+        x["TN3"] = _ind(rh <= 5) + _ind(ra <= 5)
+        if liga == "nfl":
+            try:
+                x["TN5"] = 1 if frozenset((_alias_nfl(eh), _alias_nfl(ea))) in _nfl_lineas()["div"] else 0
+            except Exception:
+                pass
+    h5, a5 = _estado5(Ph, fecha, dep5), _estado5(Pa, fecha, dep5)
+    x["TS1"] = h5["paliza"] + a5["paliza"]
+    x["TS5"] = _ind(h5["frio"] and a5["frio"]); x["TS6"] = _ind(h5["cal"] and a5["cal"])
+    if h5["S7"] is not None and a5["S7"] is not None:
+        x["TS7"] = _ind(h5["S7"]) + _ind(a5["S7"])
+    cat = catalogo_totales()
+    unidad = {"BEISBOL": "carreras", "FUTBOL": "goles", "NHL": "goles"}.get(dep5, "puntos")
+    out = []
+    for c, v in x.items():
+        if not v:
+            continue
+        m = next((cat["%s|%s" % (g, c)] for g in _grupo_total(liga) if "%s|%s" % (g, c) in cat), None)
+        if not m:
+            continue
+        xt = m.get("x_tipico") or 1.0
+        por_u = m["efecto_toda_muestra"] / xt
+        ic = m.get("ic95_toda_muestra")
+        out.append({"codigo": c, "nombre": NOMBRES_T.get(c, m.get("angulo") or c), "x": round(v, 3), "unidad": unidad,
+                    "moveria": round(por_u * v, 3), "ic95": None if not ic else [round(ic[0] / xt * v, 3), round(ic[1] / xt * v, 3)],
+                    "z": m.get("z"), "n": m.get("n_activo_total"),
+                    "texto": "%s %s: moveria %+.2f %s al total (IC %s; %s partidos con el angulo; z fuera de muestra %s)" % (
+                        c, NOMBRES_T.get(c, c), por_u * v, unidad,
+                        ("%+.2f a %+.2f" % (ic[0] / xt * v, ic[1] / xt * v)) if ic else "sin dato", m.get("n_activo_total"), m.get("z"))})
+    return out
+
+
+def totales_para_pick(angs_t, lado, umbral=None):
+    """(a_favor, en_contra, textos_si, textos_no) de los angulos de totales respecto a over/under."""
+    fav = con = 0; si = []; no = []
+    for a in angs_t or []:
+        u = umbral if umbral is not None else {"goles": 0.1, "carreras": 0.2, "puntos": 0.75}.get(a["unidad"], 0.1)
+        if abs(a["moveria"]) < u:
+            continue
+        bueno = (a["moveria"] > 0) == (lado == "over")
+        if bueno:
+            fav += 1; si.append("angulo total " + a["texto"])
+        else:
+            con += 1; no.append("angulo total " + a["texto"])
+    return fav, con, si, no
 
 if __name__ == "__main__":
     if "--catalogo" in sys.argv:
