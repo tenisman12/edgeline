@@ -29,8 +29,8 @@ OUT = os.path.join(BASE, "hoy.csv")
 STATS = "https://statsapi.mlb.com/api/v1"
 KBO_LIST = "https://www.koreabaseball.com/ws/Main.asmx/GetKboGameList"
 ODDS = "https://api.the-odds-api.com/v4/sports/%s/odds/"
-# tu llave de The Odds API (reemplazala si cambia)
-ODDS_KEY = os.environ.get("EDGELINE_ODDS_KEY", "21cc03bffa0bf0cc576c768039b50301")
+# llave de The Odds API: solo desde la variable de entorno (regla 7 de CLAUDE.md)
+ODDS_KEY = os.environ.get("EDGELINE_ODDS_KEY", "")
 
 # liga -> (sportId, leagueId) para la MLB Stats API (None = todo el sport)
 STATS_LIGAS = {"MLB": (1, None), "NPB": (31, None),
