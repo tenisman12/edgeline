@@ -48,7 +48,17 @@ NOMBRES = {
     "F1": "diferencia de descanso", "F13": "tras perder por 3 o mas",
     "Q1": "revancha (perdio el ultimo cruce)", "Q2": "bajon tras ganarle a un fuerte", "Q3": "mirando adelante",
     "Q4": "sandwich", "Q5": "primer juego en casa", "Q6a": "racha de 5+ derrotas", "Q6b": "racha de 5+ victorias",
-    "Q7": "fin de temporada: debil vs en contienda",
+    "Q7": "fin de temporada: debil vs en contienda", "Q8": "partido divisional (local)", "Q9": "entrenador nuevo",
+    "H18": "partido anterior fisico (castigos)", "N13": "tras ganar en tiempo extra",
+    # tanda 3 (9-oct-2026)
+    "H23": "cuarto juego en 6 noches", "H24": "altitud (Colorado, Utah)", "K12": "cuarto juego en 6 noches",
+    "K13": "altitud (Denver, Utah)", "K14": "ausencias (minutos de los que faltan)",
+    "P1": "rebote en playoffs (perdio el anterior)", "P2": "al borde de la eliminacion", "P3": "juego 7",
+    "N14": "jueves por la noche", "N15": "costa oeste a la 1 pm en el este", "N17": "perro divisional",
+    "B25": "altitud (Coors Field)", "F14": "altitud en Liga MX", "F15": "favorito tras fecha FIFA",
+    "F16": "Champions entre semana", "F17": "pelea por no descender",
+    "T1": "minutos del partido anterior", "T2": "partido anterior a la distancia", "T3": "carga de 14 dias",
+    "T4": "cambio de superficie", "T5": "primer torneo tras un Grand Slam",
 }
 
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
@@ -58,14 +68,16 @@ _FUT = ("premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls")
 
 def _grupos(liga):
     lg = (liga or "").lower()
-    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"]}
-    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"]}
+    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"]}
+    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"]}
+    if lg == "atp": return {"T": ["ATP"]}
+    if lg == "wta": return {"T": ["WTA"]}
     if lg == "ncaamb": return {"K": ["NCAAMB"]}
     if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"]}
     if lg == "ncaafb": return {"N": ["NCAAFB"]}
     if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"]}
     if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"]}
-    if lg in _FUT: return {"F": ["7 ligas"], "Q": ["FUTBOL"]}
+    if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"]}
     return {}
 
 
@@ -73,7 +85,8 @@ def _grupos(liga):
 def construir_catalogo():
     """Lee los resultados del minado (base = modelo) y escribe modelos/angulos_medidos.json. Ningun numero se escribe a mano."""
     fuentes = [("trabajo/minar/2026-10-08_situacionales_tanda1_resultados.json", "trabajo/minar/2026-10-08_situacionales_tanda1.md"),
-               ("trabajo/minar/2026-10-09_cualitativos_resultados.json", "trabajo/minar/2026-10-09_cualitativos.md")]
+               ("trabajo/minar/2026-10-09_cualitativos_resultados.json", "trabajo/minar/2026-10-09_cualitativos.md"),
+               ("trabajo/minar/2026-10-09_tanda3_resultados.json", "trabajo/minar/2026-10-09_tanda3.md")]
     cat = {}
     for ruta, md in fuentes:
         with _io.open(os.path.join(CODIGO, ruta), encoding="utf-8") as f:
@@ -90,8 +103,9 @@ def construir_catalogo():
     out = {"generado": dt.date.today().isoformat(),
            "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo "
                         "recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo "
-                        "y la sede, en toda la muestra, con IC 95 %. Ninguno paso: no tienen peso en p. Futbol se midio con el "
-                        "modelo de K 20 sin olvido (antes del 9-oct).",
+                        "y la sede, en toda la muestra, con IC 95 %. Ninguno tiene peso en p: los que dicen 'pasa' (K14 NBA, "
+                        "T1 ATP) esperan la aprobacion de Alejandro. Futbol de las tandas 1 y 2 se midio con el modelo de K 20 sin "
+                        "olvido; la tanda 3 con K 40 y olvido 0.98.",
            "angulos": cat}
     with _io.open(RUTA_CATALOGO, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
@@ -168,9 +182,11 @@ def _calendario(liga):
             ot = (fin in ("OT", "SO")) if fin else None
         elif lg == "nba":
             mins = _f(r.get("nba_min")); ot = bool(mins and mins > 241)
-        T.setdefault(r.get("team"), []).append(dict(fecha=f, gp=str(r.get("gamePk") or r.get("game_id") or ""),
-                                                    local=str(r.get("is_home")) in ("1", "1.0", "True"), gf=gf, ga=ga,
-                                                    rival=r.get("opp"), ot=ot, ip=_f(r.get("pit_inningsPitched"))))
+        gpk = str(r.get("gamePk") or r.get("game_id") or "")
+        post = (r.get("tipo") == "POST") or (dep == "hockey" and len(gpk) == 10 and gpk[4:6] == "03")
+        T.setdefault(r.get("team"), []).append(dict(fecha=f, gp=gpk, local=str(r.get("is_home")) in ("1", "1.0", "True"), gf=gf, ga=ga,
+                                                    rival=r.get("opp"), ot=ot, ip=_f(r.get("pit_inningsPitched")),
+                                                    pim=_f(r.get("pim")), post=post))
     if dep == "futbol":                                   # Champions solo para el descanso (como en el minado)
         ruta = io.ruta("datos", "equipos", "espn_champions_equipos.csv")
         if os.path.exists(ruta) and T:
@@ -265,6 +281,227 @@ def _siguiente(p, equipo, todos):
     return mejor
 
 
+# ------------------------------------------------------------------ ayudas de la tanda 3 y de los medidos que faltaban
+ALT_NHL = {"COL", "UTA"}
+ALT_NBA = {"DEN", "UTA"}
+ALT_MX = {"Toluca", "Club America", "Cruz Azul", "UNAM Pumas", "Pachuca", "Puebla"}
+DESCENSO = {"premier", "laliga", "seriea", "bundesliga", "ligue1"}
+PAC_NFL = {"SEA", "SF", "LA", "LAC", "LV"}
+ESTE_NFL = {"ATL", "BAL", "BUF", "CAR", "CIN", "CLE", "DET", "IND", "JAX", "MIA", "NE", "NYG", "NYJ", "PHI", "PIT", "TB", "WAS"}
+_ALIAS_NFL = {"LAR": "LA", "WSH": "WAS", "JAC": "JAX", "OAK": "LV", "SD": "LAC", "STL": "LA"}
+SLAMS = ("australian open", "roland garros", "french open", "wimbledon", "us open")
+
+
+def _alias_nfl(t):
+    return _ALIAS_NFL.get(t, t)
+
+
+def _hora_et(p):
+    """hora de inicio en el este (texto 'HH:MM', 24 h) desde el estado de ESPN ('10/12 - 1:00 PM EDT'); None si no viene."""
+    import re
+    m = re.search(r"(\d{1,2}):(\d{2})\s*([AP]M)\s*E[DS]T", str(p.get("estado") or ""))
+    if not m:
+        return None
+    h = int(m.group(1)) % 12 + (12 if m.group(3) == "PM" else 0)
+    return "%02d:%s" % (h, m.group(2))
+
+
+_NFL = None
+
+
+def _nfl_lineas():
+    """de datos/mercado/nfl_lineas.csv: pares divisionales, quien gano en tiempo extra y la secuencia de entrenadores."""
+    global _NFL
+    if _NFL is not None:
+        return _NFL
+    _NFL = {"div": set(), "ot_gano": {}, "coach": {}}
+    ruta = io.ruta("datos", "mercado", "nfl_lineas.csv")
+    if not os.path.exists(ruta):
+        return _NFL
+    with _io.open(ruta, encoding="utf-8-sig") as fh:
+        for x in csv.DictReader(fh):
+            h, a = _alias_nfl(x.get("home_team")), _alias_nfl(x.get("away_team"))
+            f = (x.get("gameday") or "")[:10]
+            if x.get("div_game") == "1":
+                _NFL["div"].add(frozenset((h, a)))
+            hs, as_ = _f(x.get("home_score")), _f(x.get("away_score"))
+            if x.get("overtime") == "1" and hs is not None and as_ is not None:
+                _NFL["ot_gano"][(h if hs > as_ else a, f)] = True
+            for t, c in ((h, x.get("home_coach")), (a, x.get("away_coach"))):
+                if c and hs is not None:
+                    _NFL["coach"].setdefault(t, []).append((f, c))
+    for v in _NFL["coach"].values():
+        v.sort()
+    return _NFL
+
+
+def _coach_nuevo(L, team, fecha):
+    """igual que minar_cualitativos: primeros 3 juegos tras un cambio de entrenador a media temporada. Hoy se asume el
+    entrenador del ultimo juego."""
+    S = [c for c in L["coach"].get(team, []) if c[0] < fecha.isoformat()]
+    if len(S) < 2:
+        return False
+    hoy = S[-1][1]; cambio = None
+    for i in range(1, len(S)):
+        mismo = (_d(S[i][0]) - _d(S[i - 1][0])).days <= 60
+        if mismo and S[i][1] != S[i - 1][1]:
+            cambio = i
+        elif not mismo:
+            cambio = None
+    if (fecha - _d(S[-1][0])).days > 60 or cambio is None:
+        return False
+    return len(S) - cambio < 3 and S[cambio][1] == hoy
+
+
+def _playoffs(Ph, eh, ea, fecha):
+    """serie de playoffs en curso entre los dos (juegos POST de la temporada entre ellos, el ultimo hace 7 dias o menos)."""
+    S = _temporada(Ph, fecha)
+    juegos = [g for g in S if g.get("post") and g["rival"] == ea]
+    if not juegos or (fecha - juegos[-1]["fecha"]).days > 7:
+        return {}
+    wh = sum(1 for g in juegos if g["gf"] > g["ga"]); wa = len(juegos) - wh
+    out = {"P1": 1 if juegos[-1]["gf"] < juegos[-1]["ga"] else -1, "P3": 1 if (wh == 3 and wa == 3) else 0}
+    out["P2"] = 0 if out["P3"] else (1 if (wa == 3 and wh < 3) else (-1 if (wh == 3 and wa < 3) else 0))
+    return out
+
+
+def _descenso(T, eh, ea, fecha):
+    """F17: tabla as-of con los juegos de liga de la temporada en curso (3 puntos por victoria)."""
+    tab = {}
+    for e, L in T.items():
+        S = [g for g in _temporada([g for g in _previos(L, fecha) if g["gf"] is not None], fecha)]
+        if S:
+            tab[e] = (sum(3 if g["gf"] > g["ga"] else (1 if g["gf"] == g["ga"] else 0) for g in S), len(S))
+    n = len(tab)
+    if n < 16 or eh not in tab or ea not in tab:
+        return None
+    tot = 2 * (n - 1)
+    orden = sorted((v[0] for v in tab.values()), reverse=True)
+    linea, cuarto = orden[n - 4], orden[3]
+    amen = lambda e: tab[e][1] >= tot - 10 and tab[e][0] <= linea + 3
+    tranq = lambda e: linea + 8 < tab[e][0] < cuarto - 8
+    return 1 if (amen(eh) and tranq(ea)) else (-1 if (amen(ea) and tranq(eh)) else 0)
+
+
+_NBA_MIN = None
+
+
+def _ausencias_nba(p, fecha):
+    """K14 en vivo: jugadores 'Out' en el reporte de ESPN que en los ultimos 5 juegos del equipo jugaron 3 o mas con 20+
+    minutos de promedio (misma regla que utilidades/nba_ausencias.py). x = (minutos de la visita - del local) / 48."""
+    global _NBA_MIN
+    les = (p.get("contexto") or {}).get("lesiones") or {}
+    if not les:
+        return None
+    if _NBA_MIN is None:
+        _NBA_MIN = {}
+        for sub in ("jugadores", "jugadores_recientes"):
+            ruta = io.ruta("datos", sub, "espn_nba_jugadores.csv")
+            if not os.path.exists(ruta):
+                continue
+            with _io.open(ruta, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    if (r.get("liga") or "nba").lower() != "nba":
+                        continue
+                    g = _NBA_MIN.setdefault(r.get("team"), {}).setdefault((r.get("game_date") or "")[:10] + "|" + str(r.get("game_id")), {})
+                    g[r.get("jugador")] = _f(r.get("minutes")) or 0.0
+    def perdidos(lado):
+        juegos = sorted((k, v) for k, v in (_NBA_MIN.get(p[lado]["nombre"]) or {}).items() if k[:10] < fecha.isoformat())[-5:]
+        if len(juegos) < 3:
+            return None
+        tot = 0.0
+        for l in les.get(lado) or []:
+            if (l.get("estado") or "") != "Out":
+                continue
+            ms = [v.get(l.get("jugador"), 0.0) for _, v in juegos]
+            jugados = [m for m in ms if m > 0]
+            if len(jugados) >= 3 and sum(jugados) / len(jugados) >= 20.0:
+                tot += sum(jugados) / len(jugados)
+        return tot
+    mh, ma = perdidos("home"), perdidos("away")
+    if mh is None or ma is None:
+        return None
+    return (ma - mh) / 48.0
+
+
+_TEN = None
+_RONDA = {"Q1": 0, "Q2": 1, "Q3": 2, "Q4": 3, "ER": 3.5, "R128": 4, "R64": 5, "R32": 6, "RR": 6.5, "R16": 7, "QF": 8, "SF": 9, "BR": 9.5, "F": 10}
+
+
+def _tenis_hist():
+    global _TEN
+    if _TEN is not None:
+        return _TEN
+    _TEN = {}
+    ruta = io.ruta("datos", "tenis.csv")
+    if not os.path.exists(ruta):
+        return _TEN
+    with _io.open(ruta, encoding="utf-8-sig", errors="replace") as fh:
+        for r in csv.DictReader(fh):
+            td = r.get("tourney_date") or ""
+            try:
+                f = dt.date(int(td[:4]), int(td[4:6]), int(td[6:8]))
+            except ValueError:
+                continue
+            if f.year < 2025:
+                continue
+            bo = 5 if str(r.get("best_of")) == "5" else 3
+            sc = str(r.get("score") or "")
+            sets = sum(1 for t in sc.split() if "-" in t and t[:1].isdigit())
+            m = {"fecha": f, "tid": r.get("tourney_id"), "torneo": (r.get("tourney_name") or "").lower(), "sup": r.get("surface"),
+                 "nivel": r.get("tourney_level"), "min": _f(r.get("minutes")), "orden": (td, _RONDA.get(r.get("round"), 5)),
+                 "distancia": sets >= bo and "RET" not in sc and "W/O" not in sc}
+            for n in (r.get("winner_name"), r.get("loser_name")):
+                if n:
+                    _TEN.setdefault(n, []).append(m)
+    for v in _TEN.values():
+        v.sort(key=lambda m: m["orden"])
+    return _TEN
+
+
+def _tenis(p, liga):
+    """T1-T5 en vivo con las definiciones de minar_angulos_tanda3.tenis. x + apunta al jugador local (home)."""
+    H = _tenis_hist()
+    hoy = _d(p.get("fecha"))
+    torneo = (p.get("torneo") or "").lower(); sup = p.get("superficie") or p.get("superficie_estimada")
+    if not hoy or not H:
+        return []
+    def info(lado):
+        n = ((p.get("forma") or {}).get(lado) or {}).get("jugador") or p[lado]["nombre"]
+        L = [m for m in H.get(n, []) if m["fecha"] <= hoy]
+        if not L:
+            return None
+        mismo = [m for m in L if (hoy - m["fecha"]).days <= 14 and m["torneo"] and m["torneo"] in torneo]
+        ini = mismo[0]["fecha"] if mismo else hoy
+        prev_t = mismo[-1] if mismo else None
+        carga = len(mismo) + sum(1 for m in L if m not in mismo and 0 < (ini - m["fecha"]).days <= 14)
+        antes = [m for m in L if m not in mismo]
+        prev = antes[-1] if antes else None
+        cambio = None if (prev is None or (ini - prev["fecha"]).days > 60) else (False if mismo else (prev["sup"] != sup))
+        gs = (not any(s in torneo for s in SLAMS)) and any(m["nivel"] == "G" and 0 < (ini - m["fecha"]).days <= 28 for m in antes[-12:])
+        return prev_t, carga, cambio, gs
+    ih, ia = info("home"), info("away")
+    if not ih or not ia:
+        return []
+    x = {}
+    mh, ma = (ih[0] or {}).get("min"), (ia[0] or {}).get("min")
+    if mh and ma:
+        x["T1"] = (ma - mh) / 60.0
+    if ih[0] and ia[0]:
+        x["T2"] = _ind(ia[0]["distancia"]) - _ind(ih[0]["distancia"])
+    x["T3"] = (ia[1] - ih[1]) / 5.0
+    if ih[2] is not None and ia[2] is not None:
+        x["T4"] = _ind(ia[2]) - _ind(ih[2])
+    x["T5"] = _ind(ia[3]) - _ind(ih[3])
+    out = []
+    for c, v in x.items():
+        if v:
+            lado = "home" if v > 0 else "away"
+            out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado]["nombre"], "x": round(v, 3),
+                        "medicion": medicion(liga, c)})
+    return out
+
+
 def calcular(p, todos=None):
     """Angulos activos del partido. Devuelve lista de dicts: codigo, nombre, lado (home/away al que apunta el angulo),
     equipo, x, medicion (o None). Vacia si no hay calendario o la liga no tiene angulos medidos."""
@@ -272,6 +509,8 @@ def calcular(p, todos=None):
     G = _grupos(liga)
     if not G or p.get("pretemporada"):
         return []
+    if "T" in G:
+        return _tenis(p, liga)
     fecha = _d(p.get("fecha"))
     T = _calendario(liga)
     eh, ea = _equipo(p, "home"), _equipo(p, "away")
@@ -381,6 +620,53 @@ def calcular(p, todos=None):
         for c in ("Q1", "Q2", "Q3", "Q4", "Q5", "Q6a", "Q6b", "Q7"):
             h, a = info["H"][c], info["A"][c]
             x[c] = 0 if (h and a) else (1 if h else (-1 if a else 0))
+    # ---------------- medidos en la tanda 1 que faltaban en vivo, y tanda 3 (9-oct-2026)
+    if "H" in G:
+        if ph.get("pim") is not None and pa.get("pim") is not None:
+            x["H18"] = (pa["pim"] - ph["pim"]) / 10.0
+        x["H23"] = _ind(_en_ventana(Pa, fecha, 5) >= 3) - _ind(_en_ventana(Ph, fecha, 5) >= 3)
+        x["H24"] = 1 if (eh in ALT_NHL and ea not in ALT_NHL) else 0
+    if "K" in G and liga == "nba":
+        x["K12"] = _ind(_en_ventana(Pa, fecha, 5) >= 3) - _ind(_en_ventana(Ph, fecha, 5) >= 3)
+        x["K13"] = 1 if (eh in ALT_NBA and ea not in ALT_NBA) else 0
+        k14 = _ausencias_nba(p, fecha)
+        if k14 is not None:
+            x["K14"] = k14
+    if "P" in G:
+        x.update(_playoffs(Ph, eh, ea, fecha))
+    if liga == "nfl":
+        L = _nfl_lineas()
+        hk, ak = _alias_nfl(eh), _alias_nfl(ea)
+        x["N14"] = 1 if fecha.weekday() == 3 else 0
+        et = _hora_et(p)
+        x["N15"] = 1 if (ak in PAC_NFL and hk in ESTE_NFL and et is not None and et < "14:00") else 0
+        div = frozenset((hk, ak)) in L["div"]
+        x["Q8"] = 1 if div else 0
+        ph_p = (p.get("modelo") or {}).get("p_home")
+        x["N17"] = ((1 if ph_p < 0.5 else -1) if (div and ph_p is not None and ph_p != 0.5) else 0)
+        x["N13"] = _ind(L["ot_gano"].get((ak, pa["fecha"].isoformat()))) - _ind(L["ot_gano"].get((hk, ph["fecha"].isoformat())))
+        x["Q9"] = _ind(_coach_nuevo(L, hk, fecha)) - _ind(_coach_nuevo(L, ak, fecha))
+        if abs(x["Q9"]) != 1:
+            x["Q9"] = 0
+    if liga == "ncaafb":
+        x["N14"] = 1 if fecha.weekday() == 3 else 0
+    if liga == "mlb":
+        x["B25"] = 1 if eh == "Colorado Rockies" else 0
+    if "F" in G:
+        if liga == "ligamx":
+            x["F14"] = 1 if (eh in ALT_MX and ea not in ALT_MX) else 0
+        lh = next((g for g in reversed(Ph) if g["gf"] is not None), None); la = next((g for g in reversed(Pa) if g["gf"] is not None), None)
+        if lh and la:
+            dh, da = (fecha - lh["fecha"]).days, (fecha - la["fecha"]).days
+            m_ = p.get("modelo") or {}
+            if 12 <= dh <= 30 and 12 <= da <= 30 and m_.get("p_home") is not None and m_.get("p_away") is not None:
+                x["F15"] = 1 if m_["p_home"] >= m_["p_away"] else -1
+        ch = lambda P: any(str(g["gp"]).startswith("ch") and 0 < (fecha - g["fecha"]).days <= 4 for g in P[-3:])
+        x["F16"] = _ind(ch(Pa)) - _ind(ch(Ph))
+        if liga in DESCENSO:
+            f17 = _descenso(T, eh, ea, fecha)
+            if f17 is not None:
+                x["F17"] = f17
     # x con el MISMO signo que en el minado: + apunta al local, - a la visita. El efecto medido es para ese lado.
     out = []
     for c, v in x.items():
@@ -415,7 +701,7 @@ def texto(a):
         base, a["equipo"], m["efecto_pp"], _miles(m.get("n_activo_prueba")), m.get("z"), m.get("veredicto"))
     if m.get("tmle_pp") is not None and m.get("tmle_ic95"):
         t += "; TMLE %+.1f pp [%+.1f, %+.1f]" % (m["tmle_pp"], m["tmle_ic95"][0], m["tmle_ic95"][1])
-    return t + "; sin peso"
+    return t + ("; pasa, sin peso hasta que Alejandro lo apruebe" if m.get("veredicto") == "pasa" else "; sin peso")
 
 
 def conteo(angs):

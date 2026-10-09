@@ -74,6 +74,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   cuenta) en por_que_si / por_que_no y en `historial_picks_dia.csv` (angulos, angulos_favor, angulos_contra). Todos los partidos se
   registran antes de empezar en `salida/historial_angulos.csv`; `utilidades/medir_angulos_vivo.py` los mide contra el resultado
   (`salida/angulos_vivo.json`, mismo protocolo). Uno que pase se le lleva a Alejandro; nada gana peso solo.
+  Tanda 3 (9-oct, `utilidades/minar_angulos_tanda3.py`, `trabajo/minar/2026-10-09_tanda3.md`, k 35): pasan K14 ausencias NBA
+  (z 3.97, +7.3 pp por 48 min de ausentes; en vivo sale del reporte de lesiones 'Out') y T1 minutos del partido anterior ATP
+  (z 3.87, +3.4 pp por hora de mas del rival). Los dos esperan aprobacion para tener peso. T3 carga de 14 dias en tenis mejora
+  mucho pero al reves de lo registrado (el que trae mas partidos rinde mas): hipotesis nueva para medir en vivo.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,

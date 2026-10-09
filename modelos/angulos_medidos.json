@@ -1,6 +1,6 @@
 {
  "generado": "2026-10-09",
- "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo y la sede, en toda la muestra, con IC 95 %. Ninguno paso: no tienen peso en p. Futbol se midio con el modelo de K 20 sin olvido (antes del 9-oct).",
+ "como_leer": "efecto_pp = cuanto gano de mas (+) o de menos (-) el lado al que apunta el angulo contra el modelo recalibrado, en el 30 % final (fuera de muestra). tmle_pp = efecto ajustado por la probabilidad del modelo y la sede, en toda la muestra, con IC 95 %. Ninguno tiene peso en p: los que dicen 'pasa' (K14 NBA, T1 ATP) esperan la aprobacion de Alejandro. Futbol de las tandas 1 y 2 se midio con el modelo de K 20 sin olvido; la tanda 3 con K 40 y olvido 0.98.",
  "angulos": {
   "NBA|K1": {
    "grupo": "NBA",
@@ -1582,6 +1582,509 @@
    "desde_prueba": "2023-09-17",
    "signo_esperado": 1,
    "fuente": "trabajo/minar/2026-10-09_cualitativos.md"
+  },
+  "NHL|H23": {
+   "grupo": "NHL",
+   "codigo": "H23",
+   "angulo": "cuarto juego en 6 noches",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 775,
+   "z": 1.22,
+   "efecto_pp": 2.95,
+   "tmle_pp": 2.14,
+   "tmle_ic95": [
+    -0.03,
+    4.3
+   ],
+   "desde_prueba": "2024-03-21",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NHL|H24": {
+   "grupo": "NHL",
+   "codigo": "H24",
+   "angulo": "altitud (Colorado, Utah)",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 186,
+   "z": -1.16,
+   "efecto_pp": -1.53,
+   "tmle_pp": -1.14,
+   "tmle_ic95": [
+    -3.89,
+    1.62
+   ],
+   "desde_prueba": "2024-03-21",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NHL|P1": {
+   "grupo": "NHL",
+   "codigo": "P1",
+   "angulo": "rebote en playoffs (perdio el anterior)",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 184,
+   "z": 0.84,
+   "efecto_pp": 2.38,
+   "tmle_pp": 9.39,
+   "tmle_ic95": [
+    -0.02,
+    18.8
+   ],
+   "desde_prueba": "2024-04-30",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NHL|P2": {
+   "grupo": "NHL",
+   "codigo": "P2",
+   "angulo": "al borde de la eliminacion",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 57,
+   "z": 0.13,
+   "efecto_pp": -6.59,
+   "tmle_pp": -4.02,
+   "tmle_ic95": [
+    -13.69,
+    5.65
+   ],
+   "desde_prueba": "2024-04-30",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NHL|P3": {
+   "grupo": "NHL",
+   "codigo": "P3",
+   "angulo": "juego 7",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 9,
+   "z": null,
+   "efecto_pp": null,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": null,
+   "signo_esperado": null,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|K12": {
+   "grupo": "NBA",
+   "codigo": "K12",
+   "angulo": "cuarto juego en 6 noches",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 532,
+   "z": 0.29,
+   "efecto_pp": 2.03,
+   "tmle_pp": 2.59,
+   "tmle_ic95": [
+    -0.06,
+    5.24
+   ],
+   "desde_prueba": "2025-03-25",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|K13": {
+   "grupo": "NBA",
+   "codigo": "K13",
+   "angulo": "altitud (Denver, Utah)",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 96,
+   "z": -0.13,
+   "efecto_pp": -0.14,
+   "tmle_pp": 3.01,
+   "tmle_ic95": [
+    0.04,
+    5.98
+   ],
+   "desde_prueba": "2025-03-25",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|K14": {
+   "grupo": "NBA",
+   "codigo": "K14",
+   "angulo": "ausencias (minutos de los que faltan)",
+   "veredicto": "pasa",
+   "n_activo_prueba": 1143,
+   "z": 3.97,
+   "efecto_pp": 6.58,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": "2025-03-25",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|P1": {
+   "grupo": "NBA",
+   "codigo": "P1",
+   "angulo": "rebote en playoffs (perdio el anterior)",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 85,
+   "z": 0.28,
+   "efecto_pp": 3.97,
+   "tmle_pp": 16.87,
+   "tmle_ic95": [
+    4.47,
+    29.27
+   ],
+   "desde_prueba": "2025-05-22",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|P2": {
+   "grupo": "NBA",
+   "codigo": "P2",
+   "angulo": "al borde de la eliminacion",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 24,
+   "z": -0.91,
+   "efecto_pp": 7.9,
+   "tmle_pp": 0.63,
+   "tmle_ic95": [
+    -14.07,
+    15.34
+   ],
+   "desde_prueba": "2025-05-22",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NBA|P3": {
+   "grupo": "NBA",
+   "codigo": "P3",
+   "angulo": "juego 7",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 6,
+   "z": null,
+   "efecto_pp": null,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": null,
+   "signo_esperado": null,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NFL|N14": {
+   "grupo": "NFL",
+   "codigo": "N14",
+   "angulo": "jueves por la noche",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 42,
+   "z": -1.48,
+   "efecto_pp": 9.52,
+   "tmle_pp": 3.05,
+   "tmle_ic95": [
+    -1.71,
+    7.81
+   ],
+   "desde_prueba": "2023-12-24",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NFL|N15": {
+   "grupo": "NFL",
+   "codigo": "N15",
+   "angulo": "costa oeste a la 1 pm en el este",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 35,
+   "z": 0.64,
+   "efecto_pp": -10.41,
+   "tmle_pp": -5.91,
+   "tmle_ic95": [
+    -11.26,
+    -0.56
+   ],
+   "desde_prueba": "2023-12-24",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NFL|N16": {
+   "grupo": "NFL",
+   "codigo": "N16",
+   "angulo": "sede neutral",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 16,
+   "z": null,
+   "efecto_pp": null,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": null,
+   "signo_esperado": null,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NFL|N17": {
+   "grupo": "NFL",
+   "codigo": "N17",
+   "angulo": "perro divisional",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 216,
+   "z": -1.92,
+   "efecto_pp": 3.31,
+   "tmle_pp": -1.42,
+   "tmle_ic95": [
+    -5.69,
+    2.84
+   ],
+   "desde_prueba": "2023-12-24",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "NCAAFB|N14": {
+   "grupo": "NCAAFB",
+   "codigo": "N14",
+   "angulo": "jueves por la noche",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 23,
+   "z": -0.45,
+   "efecto_pp": -0.8,
+   "tmle_pp": 0.62,
+   "tmle_ic95": [
+    -4.56,
+    5.79
+   ],
+   "desde_prueba": "2025-09-13",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "MLB|B25": {
+   "grupo": "MLB",
+   "codigo": "B25",
+   "angulo": "altitud (Coors Field)",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 180,
+   "z": -2.13,
+   "efecto_pp": -3.91,
+   "tmle_pp": 5.32,
+   "tmle_ic95": [
+    2.64,
+    8.01
+   ],
+   "desde_prueba": "2024-08-27",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "LigaMX|F14": {
+   "grupo": "LigaMX",
+   "codigo": "F14",
+   "angulo": "altitud en Liga MX",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 110,
+   "z": 0.03,
+   "efecto_pp": 1.46,
+   "tmle_pp": 6.68,
+   "tmle_ic95": [
+    2.27,
+    11.09
+   ],
+   "desde_prueba": "2025-03-15",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "7 ligas|F15": {
+   "grupo": "7 ligas",
+   "codigo": "F15",
+   "angulo": "favorito tras fecha FIFA",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 360,
+   "z": 0.06,
+   "efecto_pp": 2.21,
+   "tmle_pp": 4.49,
+   "tmle_ic95": [
+    1.81,
+    7.17
+   ],
+   "desde_prueba": "2025-04-13",
+   "signo_esperado": -1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "7 ligas|F16": {
+   "grupo": "7 ligas",
+   "codigo": "F16",
+   "angulo": "Champions entre semana",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 107,
+   "z": 0.96,
+   "efecto_pp": -5.0,
+   "tmle_pp": -4.01,
+   "tmle_ic95": [
+    -7.16,
+    -0.87
+   ],
+   "desde_prueba": "2025-04-13",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "5 ligas|F17": {
+   "grupo": "5 ligas",
+   "codigo": "F17",
+   "angulo": "pelea por no descender",
+   "veredicto": "muestra insuficiente",
+   "n_activo_prueba": 89,
+   "z": -0.91,
+   "efecto_pp": 0.4,
+   "tmle_pp": 7.76,
+   "tmle_ic95": [
+    3.28,
+    12.25
+   ],
+   "desde_prueba": "2025-04-12",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "ATP|T1": {
+   "grupo": "ATP",
+   "codigo": "T1",
+   "angulo": "minutos del partido anterior",
+   "veredicto": "pasa",
+   "n_activo_prueba": 8590,
+   "z": 3.87,
+   "efecto_pp": 2.52,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": "2018-01-15",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "ATP|T2": {
+   "grupo": "ATP",
+   "codigo": "T2",
+   "angulo": "partido anterior a la distancia",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 3764,
+   "z": 1.77,
+   "efecto_pp": 2.32,
+   "tmle_pp": 2.5,
+   "tmle_ic95": [
+    1.44,
+    3.56
+   ],
+   "desde_prueba": "2018-01-15",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "ATP|T3": {
+   "grupo": "ATP",
+   "codigo": "T3",
+   "angulo": "carga de 14 dias",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 14452,
+   "z": 4.81,
+   "efecto_pp": -2.77,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": "2018-05-28",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "ATP|T4": {
+   "grupo": "ATP",
+   "codigo": "T4",
+   "angulo": "cambio de superficie",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 1714,
+   "z": 1.19,
+   "efecto_pp": 3.51,
+   "tmle_pp": 3.47,
+   "tmle_ic95": [
+    2.22,
+    4.72
+   ],
+   "desde_prueba": "2018-04-30",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "ATP|T5": {
+   "grupo": "ATP",
+   "codigo": "T5",
+   "angulo": "primer torneo tras un Grand Slam",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 1535,
+   "z": 1.06,
+   "efecto_pp": -3.33,
+   "tmle_pp": -5.14,
+   "tmle_ic95": [
+    -6.59,
+    -3.7
+   ],
+   "desde_prueba": "2018-05-28",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "WTA|T1": {
+   "grupo": "WTA",
+   "codigo": "T1",
+   "angulo": "minutos del partido anterior",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 3079,
+   "z": 0.75,
+   "efecto_pp": 1.28,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": "2023-05-29",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "WTA|T2": {
+   "grupo": "WTA",
+   "codigo": "T2",
+   "angulo": "partido anterior a la distancia",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 2111,
+   "z": 1.42,
+   "efecto_pp": 3.03,
+   "tmle_pp": 3.66,
+   "tmle_ic95": [
+    2.17,
+    5.15
+   ],
+   "desde_prueba": "2022-03-07",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "WTA|T3": {
+   "grupo": "WTA",
+   "codigo": "T3",
+   "angulo": "carga de 14 dias",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 7082,
+   "z": 3.57,
+   "efecto_pp": -3.78,
+   "tmle_pp": null,
+   "tmle_ic95": null,
+   "desde_prueba": "2022-04-11",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "WTA|T4": {
+   "grupo": "WTA",
+   "codigo": "T4",
+   "angulo": "cambio de superficie",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 757,
+   "z": 1.24,
+   "efecto_pp": 3.34,
+   "tmle_pp": 2.22,
+   "tmle_ic95": [
+    0.32,
+    4.12
+   ],
+   "desde_prueba": "2022-04-04",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
+  },
+  "WTA|T5": {
+   "grupo": "WTA",
+   "codigo": "T5",
+   "angulo": "primer torneo tras un Grand Slam",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 791,
+   "z": 0.31,
+   "efecto_pp": -3.63,
+   "tmle_pp": -7.08,
+   "tmle_ic95": [
+    -9.09,
+    -5.07
+   ],
+   "desde_prueba": "2022-04-11",
+   "signo_esperado": 1,
+   "fuente": "trabajo/minar/2026-10-09_tanda3.md"
   }
  }
 }
