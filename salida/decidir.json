@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-09T21:20:11",
+ "generado": "2026-10-09T23:49:14",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -47,7 +47,8 @@
      "era_ajustada": 4.43,
      "ga_equipo": 5.063
     },
-    "carreras_abridor": 0.11
+    "carreras_abridor": 0.11,
+    "frio_caliente": 0
    },
    "lados": [
     {
@@ -247,7 +248,8 @@
      "era_ajustada": 5.58,
      "ga_equipo": 5.517
     },
-    "carreras_abridor": 0.19
+    "carreras_abridor": 0.19,
+    "frio_caliente": 0
    },
    "lados": [
     {
@@ -432,7 +434,8 @@
      "era_ajustada": 5.76,
      "ga_equipo": 5.343
     },
-    "carreras_abridor": 0.1
+    "carreras_abridor": 0.1,
+    "frio_caliente": 0
    },
    "lados": [
     {
@@ -588,41 +591,66 @@
    "hora": "18:00",
    "home": "Cleveland Guardians",
    "away": "Chicago White Sox",
-   "p_modelo": 0.5411,
-   "p_sharp": 0.5518,
-   "p_final": 0.5491,
+   "p_modelo": 0.5899,
+   "p_sharp": 0.553,
+   "p_final": 0.5623,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.53,
+   "margen_esperado": 0.68,
    "linea_home": "-1.5",
-   "p_runline_home": 0.3702,
+   "p_runline_home": 0.3823,
    "detalle_modelo": {
     "elo_h": 1522.6,
     "elo_a": 1516.7,
     "dif_h": 0.102,
     "dif_a": 0.339,
     "p_base": 0.5411,
-    "abridor_h": null,
-    "abridor_a": null,
-    "carreras_abridor": 0.0
+    "abridor_h": {
+     "nombre": "Gavin Williams",
+     "fip_ventana": 3.25,
+     "fip_ultimas5": 2.24,
+     "k_pct": 0.379,
+     "bb_pct": 0.116,
+     "ip_ventana": "45.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.29,
+     "ga_equipo": 4.108
+    },
+    "abridor_a": {
+     "nombre": "Sean Burke",
+     "fip_ventana": 4.42,
+     "fip_ultimas5": 4.42,
+     "k_pct": 0.244,
+     "bb_pct": 0.107,
+     "ip_ventana": "53.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.43,
+     "ga_equipo": 4.446
+    },
+    "carreras_abridor": 0.49,
+    "frio_caliente": 0
    },
    "lados": [
     {
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Cleveland Guardians",
-     "p": 0.5491,
+     "p": 0.5623,
      "cuota": -137.0,
      "decimal": 1.73,
      "casa": "DraftKings",
-     "ev": -0.05,
-     "cuota_min": 1.82,
+     "ev": -0.0273,
+     "cuota_min": 1.78,
      "en_rango": true,
-     "senales_favor": 4,
+     "senales_favor": 6,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
        "consenso",
        "h2h",
+       "contexto",
+       "abridor",
        "bullpen",
        "racha"
       ],
@@ -632,21 +660,21 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 34.8
+     "premium_pts": 39.0
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Chicago White Sox",
-     "p": 0.4509,
-     "cuota": 113.0,
-     "decimal": 2.13,
+     "p": 0.4377,
+     "cuota": 114.0,
+     "decimal": 2.14,
      "casa": "DraftKings",
-     "ev": -0.0397,
-     "cuota_min": 2.22,
+     "ev": -0.0633,
+     "cuota_min": 2.28,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 5,
+     "senales_contra": 6,
      "senales": {
       "a_favor": [
        "forma",
@@ -656,28 +684,30 @@
        "consenso",
        "h2h",
        "contexto",
+       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.5
+     "premium_pts": 39.3
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Cleveland Guardians -1.5",
-     "p": 0.3702,
+     "p": 0.3823,
      "cuota": 158.0,
      "decimal": 2.58,
      "casa": "DraftKings",
-     "ev": -0.045,
-     "cuota_min": 2.7,
+     "ev": -0.0136,
+     "cuota_min": 2.62,
      "en_rango": true,
-     "senales_favor": 2,
+     "senales_favor": 3,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
+       "abridor",
        "bullpen",
        "racha"
       ],
@@ -686,62 +716,64 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 25.0
+     "premium_pts": 29.6
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Chicago White Sox +1.5",
-     "p": 0.6298,
+     "p": 0.6177,
      "cuota": -193.0,
      "decimal": 1.518,
      "casa": "DraftKings",
-     "ev": -0.0438,
+     "ev": -0.0623,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
-     "senales_contra": 2,
+     "senales_contra": 3,
      "senales": {
       "a_favor": [
        "forma"
       ],
       "en_contra": [
+       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.7
+     "premium_pts": 36.2
     }
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "away",
-    "texto": "Chicago White Sox",
-    "p": 0.4509,
-    "cuota": 113.0,
-    "decimal": 2.13,
+    "lado": "home",
+    "texto": "Cleveland Guardians",
+    "p": 0.5623,
+    "cuota": -137.0,
+    "decimal": 1.73,
     "casa": "DraftKings",
-    "ev": -0.0397,
-    "cuota_min": 2.22,
+    "ev": -0.0273,
+    "cuota_min": 1.78,
     "en_rango": true,
-    "senales_favor": 2,
-    "senales_contra": 5,
+    "senales_favor": 6,
+    "senales_contra": 2,
     "senales": {
      "a_favor": [
-      "forma",
-      "movimiento"
-     ],
-     "en_contra": [
       "consenso",
       "h2h",
       "contexto",
+      "abridor",
       "bullpen",
       "racha"
+     ],
+     "en_contra": [
+      "forma",
+      "movimiento"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 39.5
+    "premium_pts": 39.0
    },
    "confianza": "minima",
    "stake": 0.0,
