@@ -52,3 +52,17 @@ NFL (2,953 partidos as-of; la pasada reproduce exacto a `modelos/americano`; pru
 - Racha de 5+ victorias en la prueba (99 casos): +5.5 pp sobre el ELO solo, +4.5 pp sobre la base de producción; los dos
   intervalos incluyen el cero. La capa L5 ya cubre parte; lo que queda no se distingue del azar.
 - Contra el cierre: el modelo no aporta (coef. −0.06, z −0.45).
+
+## Validación oficial con el candidato (`utilidades/validar_futbol_candidato.py`, 2026-10-09)
+
+`validar_futbol_mercados.py` sin cambios salvo K 40 y el olvido 0.98; ventana 2024-10-12 a 2026-10-02. La corrida con el modelo
+actual reproduce exacto `salida/validacion_futbol.json` (80 publicables, 0 diferencias). La ventana se traslapa seis meses con el
+70 % donde se eligió K y δ.
+- Publicables: 80 → 89. Skill sube en 143 mercados y baja en 84.
+- Pasan a publicable: MLS 2, X, 1X, 12, over 2.5, under 2.5 (z 0.76 → 2.46; calibración −0.047 → −0.011), visita gana por 2;
+  Premier 1T visita y visita gana por 2 (z 1.41 → 2.75); Serie A local gana por 2.
+- Deja de ser publicable: MLS local gana por 2, solo por calibración (0.029 → 0.042; skill sube 0.025 → 0.031).
+- Ganador 1 y 2: siguen publicables en las 7 ligas. Suben Premier, Liga MX, MLS, Serie A (1), Ligue 1 (1);
+  bajan poco Bundesliga y LaLiga (Bundesliga 1: z 6.89 → 6.50).
+- Totales 2.5: LaLiga z 1.75 → 2.05 y Liga MX 0.00 → 1.05 con la calibración de −0.060 a −0.011; Premier, Serie A y
+  Bundesliga bajan un poco (siguen sin validar).

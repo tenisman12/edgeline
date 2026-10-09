@@ -1,0 +1,7587 @@
+{
+ "k": 40.0,
+ "delta": 0.98,
+ "ventana": [
+  "2024-10-12",
+  "2026-10-02"
+ ],
+ "publicables": {
+  "actual": 80,
+  "candidato": 89
+ },
+ "skill_sube": 143,
+ "skill_baja": 84,
+ "cambios": {
+  "gana": [
+   "MLS 12",
+   "MLS 1X",
+   "MLS 2",
+   "MLS X",
+   "MLS over_2.5",
+   "MLS under_2.5",
+   "MLS visita_gana_por_2",
+   "Premier 1T_2",
+   "Premier visita_gana_por_2",
+   "SerieA local_gana_por_2"
+  ],
+  "pierde": [
+   "MLS local_gana_por_2"
+  ]
+ },
+ "mercados": [
+  {
+   "liga": "Bundesliga",
+   "mercado": "1",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2066,
+    "brier_base": 0.2448,
+    "skill": 0.156,
+    "logloss": 0.6014,
+    "logloss_base": 0.6828,
+    "z": 6.89,
+    "tasa_real": 0.422,
+    "p_media": 0.451,
+    "n_mercado": 580,
+    "brier_modelo_en_mercado": 0.2066,
+    "brier_mercado": 0.1981,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.207,
+    "brier_base": 0.2447,
+    "skill": 0.1542,
+    "logloss": 0.6016,
+    "logloss_base": 0.6825,
+    "z": 6.5,
+    "tasa_real": 0.421,
+    "p_media": 0.45,
+    "n_mercado": 577,
+    "brier_modelo_en_mercado": 0.207,
+    "brier_mercado": 0.1987,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "12",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1836,
+    "brier_base": 0.1859,
+    "skill": 0.0125,
+    "logloss": 0.5524,
+    "logloss_base": 0.5589,
+    "z": 1.58,
+    "tasa_real": 0.753,
+    "p_media": 0.764,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1849,
+    "brier_base": 0.1866,
+    "skill": 0.0091,
+    "logloss": 0.5558,
+    "logloss_base": 0.5604,
+    "z": 1.16,
+    "tasa_real": 0.752,
+    "p_media": 0.765,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1T_1",
+   "n": 579,
+   "actual": {
+    "n": 579,
+    "brier": 0.21,
+    "brier_base": 0.2313,
+    "skill": 0.092,
+    "logloss": 0.608,
+    "logloss_base": 0.6553,
+    "z": 4.77,
+    "tasa_real": 0.363,
+    "p_media": 0.366,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 576,
+    "brier": 0.2122,
+    "brier_base": 0.2309,
+    "skill": 0.0807,
+    "logloss": 0.6126,
+    "logloss_base": 0.6544,
+    "z": 4.2,
+    "tasa_real": 0.361,
+    "p_media": 0.367,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1T_2",
+   "n": 579,
+   "actual": {
+    "n": 579,
+    "brier": 0.1972,
+    "brier_base": 0.2101,
+    "skill": 0.0618,
+    "logloss": 0.5787,
+    "logloss_base": 0.6114,
+    "z": 3.43,
+    "tasa_real": 0.299,
+    "p_media": 0.267,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 576,
+    "brier": 0.1967,
+    "brier_base": 0.21,
+    "skill": 0.0637,
+    "logloss": 0.5778,
+    "logloss_base": 0.6111,
+    "z": 3.55,
+    "tasa_real": 0.299,
+    "p_media": 0.269,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1T_X",
+   "n": 579,
+   "actual": {
+    "n": 579,
+    "brier": 0.2236,
+    "brier_base": 0.2245,
+    "skill": 0.0039,
+    "logloss": 0.639,
+    "logloss_base": 0.6413,
+    "z": 0.47,
+    "tasa_real": 0.339,
+    "p_media": 0.366,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 576,
+    "brier": 0.2249,
+    "brier_base": 0.225,
+    "skill": 0.0005,
+    "logloss": 0.6418,
+    "logloss_base": 0.6423,
+    "z": 0.06,
+    "tasa_real": 0.34,
+    "p_media": 0.365,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1T_over_0.5",
+   "n": 579,
+   "actual": {
+    "n": 579,
+    "brier": 0.1717,
+    "brier_base": 0.1724,
+    "skill": 0.0039,
+    "logloss": 0.5264,
+    "logloss_base": 0.5287,
+    "z": 0.34,
+    "tasa_real": 0.779,
+    "p_media": 0.761,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 576,
+    "brier": 0.1731,
+    "brier_base": 0.173,
+    "skill": -0.0004,
+    "logloss": 0.5301,
+    "logloss_base": 0.5301,
+    "z": -0.04,
+    "tasa_real": 0.778,
+    "p_media": 0.763,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1T_over_1.5",
+   "n": 579,
+   "actual": {
+    "n": 579,
+    "brier": 0.2377,
+    "brier_base": 0.2442,
+    "skill": 0.0265,
+    "logloss": 0.6677,
+    "logloss_base": 0.6816,
+    "z": 2.12,
+    "tasa_real": 0.42,
+    "p_media": 0.425,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 576,
+    "brier": 0.2389,
+    "brier_base": 0.2445,
+    "skill": 0.0226,
+    "logloss": 0.6702,
+    "logloss_base": 0.682,
+    "z": 1.86,
+    "tasa_real": 0.422,
+    "p_media": 0.428,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "1X",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1985,
+    "brier_base": 0.2223,
+    "skill": 0.107,
+    "logloss": 0.5815,
+    "logloss_base": 0.637,
+    "z": 4.5,
+    "tasa_real": 0.669,
+    "p_media": 0.687,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1994,
+    "brier_base": 0.2223,
+    "skill": 0.1031,
+    "logloss": 0.5842,
+    "logloss_base": 0.6369,
+    "z": 4.1,
+    "tasa_real": 0.669,
+    "p_media": 0.685,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "2",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1985,
+    "brier_base": 0.2223,
+    "skill": 0.107,
+    "logloss": 0.5815,
+    "logloss_base": 0.637,
+    "z": 4.5,
+    "tasa_real": 0.331,
+    "p_media": 0.313,
+    "n_mercado": 580,
+    "brier_modelo_en_mercado": 0.1985,
+    "brier_mercado": 0.1934,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1994,
+    "brier_base": 0.2223,
+    "skill": 0.1031,
+    "logloss": 0.5842,
+    "logloss_base": 0.6369,
+    "z": 4.1,
+    "tasa_real": 0.331,
+    "p_media": 0.315,
+    "n_mercado": 577,
+    "brier_modelo_en_mercado": 0.1994,
+    "brier_mercado": 0.1938,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "X",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1836,
+    "brier_base": 0.1859,
+    "skill": 0.0125,
+    "logloss": 0.5524,
+    "logloss_base": 0.5589,
+    "z": 1.58,
+    "tasa_real": 0.247,
+    "p_media": 0.236,
+    "n_mercado": 580,
+    "brier_modelo_en_mercado": 0.1836,
+    "brier_mercado": 0.1823,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1849,
+    "brier_base": 0.1866,
+    "skill": 0.0091,
+    "logloss": 0.5558,
+    "logloss_base": 0.5604,
+    "z": 1.16,
+    "tasa_real": 0.248,
+    "p_media": 0.235,
+    "n_mercado": 577,
+    "brier_modelo_en_mercado": 0.1849,
+    "brier_mercado": 0.183,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "X2",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2066,
+    "brier_base": 0.2448,
+    "skill": 0.156,
+    "logloss": 0.6014,
+    "logloss_base": 0.6828,
+    "z": 6.89,
+    "tasa_real": 0.578,
+    "p_media": 0.549,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.207,
+    "brier_base": 0.2447,
+    "skill": 0.1542,
+    "logloss": 0.6016,
+    "logloss_base": 0.6825,
+    "z": 6.5,
+    "tasa_real": 0.579,
+    "p_media": 0.55,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "aa_no",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2418,
+    "brier_base": 0.241,
+    "skill": -0.0032,
+    "logloss": 0.6764,
+    "logloss_base": 0.675,
+    "z": -0.28,
+    "tasa_real": 0.403,
+    "p_media": 0.414,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2417,
+    "brier_base": 0.241,
+    "skill": -0.0026,
+    "logloss": 0.6763,
+    "logloss_base": 0.6751,
+    "z": -0.23,
+    "tasa_real": 0.404,
+    "p_media": 0.41,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "aa_si",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2418,
+    "brier_base": 0.241,
+    "skill": -0.0032,
+    "logloss": 0.6764,
+    "logloss_base": 0.675,
+    "z": -0.28,
+    "tasa_real": 0.597,
+    "p_media": 0.586,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2417,
+    "brier_base": 0.241,
+    "skill": -0.0026,
+    "logloss": 0.6763,
+    "logloss_base": 0.6751,
+    "z": -0.23,
+    "tasa_real": 0.596,
+    "p_media": 0.59,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_over_10.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.24,
+    "brier_base": 0.2399,
+    "skill": -0.0005,
+    "logloss": 0.6734,
+    "logloss_base": 0.6727,
+    "z": -0.04,
+    "tasa_real": 0.398,
+    "p_media": 0.37,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2406,
+    "brier_base": 0.2403,
+    "skill": -0.0012,
+    "logloss": 0.6747,
+    "logloss_base": 0.6736,
+    "z": -0.09,
+    "tasa_real": 0.4,
+    "p_media": 0.37,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_over_11.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2129,
+    "brier_base": 0.2117,
+    "skill": -0.0058,
+    "logloss": 0.6192,
+    "logloss_base": 0.6146,
+    "z": -0.46,
+    "tasa_real": 0.303,
+    "p_media": 0.263,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2137,
+    "brier_base": 0.2124,
+    "skill": -0.0063,
+    "logloss": 0.621,
+    "logloss_base": 0.616,
+    "z": -0.5,
+    "tasa_real": 0.305,
+    "p_media": 0.263,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_over_8.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2393,
+    "brier_base": 0.2365,
+    "skill": -0.0119,
+    "logloss": 0.6722,
+    "logloss_base": 0.6658,
+    "z": -0.97,
+    "tasa_real": 0.617,
+    "p_media": 0.618,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2391,
+    "brier_base": 0.2361,
+    "skill": -0.0128,
+    "logloss": 0.672,
+    "logloss_base": 0.6651,
+    "z": -1.04,
+    "tasa_real": 0.619,
+    "p_media": 0.619,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_over_9.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2511,
+    "brier_base": 0.2499,
+    "skill": -0.0046,
+    "logloss": 0.6955,
+    "logloss_base": 0.693,
+    "z": -0.36,
+    "tasa_real": 0.522,
+    "p_media": 0.491,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2513,
+    "brier_base": 0.2499,
+    "skill": -0.0056,
+    "logloss": 0.6959,
+    "logloss_base": 0.693,
+    "z": -0.43,
+    "tasa_real": 0.523,
+    "p_media": 0.492,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_under_10.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.24,
+    "brier_base": 0.2399,
+    "skill": -0.0005,
+    "logloss": 0.6734,
+    "logloss_base": 0.6727,
+    "z": -0.04,
+    "tasa_real": 0.602,
+    "p_media": 0.63,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2406,
+    "brier_base": 0.2403,
+    "skill": -0.0012,
+    "logloss": 0.6747,
+    "logloss_base": 0.6736,
+    "z": -0.09,
+    "tasa_real": 0.6,
+    "p_media": 0.63,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_under_11.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2129,
+    "brier_base": 0.2117,
+    "skill": -0.0058,
+    "logloss": 0.6192,
+    "logloss_base": 0.6146,
+    "z": -0.46,
+    "tasa_real": 0.697,
+    "p_media": 0.737,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2137,
+    "brier_base": 0.2124,
+    "skill": -0.0063,
+    "logloss": 0.621,
+    "logloss_base": 0.616,
+    "z": -0.5,
+    "tasa_real": 0.695,
+    "p_media": 0.737,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_under_8.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2393,
+    "brier_base": 0.2365,
+    "skill": -0.0119,
+    "logloss": 0.6722,
+    "logloss_base": 0.6658,
+    "z": -0.97,
+    "tasa_real": 0.383,
+    "p_media": 0.382,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2391,
+    "brier_base": 0.2361,
+    "skill": -0.0128,
+    "logloss": 0.672,
+    "logloss_base": 0.6651,
+    "z": -1.04,
+    "tasa_real": 0.381,
+    "p_media": 0.381,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "corners_under_9.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2511,
+    "brier_base": 0.2499,
+    "skill": -0.0046,
+    "logloss": 0.6955,
+    "logloss_base": 0.693,
+    "z": -0.36,
+    "tasa_real": 0.478,
+    "p_media": 0.509,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2513,
+    "brier_base": 0.2499,
+    "skill": -0.0056,
+    "logloss": 0.6959,
+    "logloss_base": 0.693,
+    "z": -0.43,
+    "tasa_real": 0.477,
+    "p_media": 0.508,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "local_gana_por_2",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1609,
+    "brier_base": 0.1889,
+    "skill": 0.1484,
+    "logloss": 0.4929,
+    "logloss_base": 0.5657,
+    "z": 5.31,
+    "tasa_real": 0.252,
+    "p_media": 0.263,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1622,
+    "brier_base": 0.1895,
+    "skill": 0.1442,
+    "logloss": 0.4948,
+    "logloss_base": 0.567,
+    "z": 5.28,
+    "tasa_real": 0.253,
+    "p_media": 0.263,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "marcador_exacto_ll",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "logloss": 3.1021,
+    "logloss_base": 3.2381,
+    "skill": 0.042,
+    "z": 5.81,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "logloss": 3.1093,
+    "logloss_base": 3.2407,
+    "skill": 0.0405,
+    "z": 5.63,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "over_1.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1428,
+    "brier_base": 0.1442,
+    "skill": 0.0097,
+    "logloss": 0.4568,
+    "logloss_base": 0.4637,
+    "z": 0.58,
+    "tasa_real": 0.826,
+    "p_media": 0.815,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1442,
+    "brier_base": 0.1448,
+    "skill": 0.0038,
+    "logloss": 0.4614,
+    "logloss_base": 0.4652,
+    "z": 0.25,
+    "tasa_real": 0.825,
+    "p_media": 0.818,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "over_2.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2286,
+    "brier_base": 0.235,
+    "skill": 0.0271,
+    "logloss": 0.6486,
+    "logloss_base": 0.6628,
+    "z": 1.57,
+    "tasa_real": 0.624,
+    "p_media": 0.594,
+    "n_mercado": 580,
+    "brier_modelo_en_mercado": 0.2286,
+    "brier_mercado": 0.2221,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2294,
+    "brier_base": 0.235,
+    "skill": 0.0238,
+    "logloss": 0.6501,
+    "logloss_base": 0.6629,
+    "z": 1.44,
+    "tasa_real": 0.624,
+    "p_media": 0.599,
+    "n_mercado": 577,
+    "brier_modelo_en_mercado": 0.2294,
+    "brier_mercado": 0.2224,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "over_3.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2386,
+    "brier_base": 0.2467,
+    "skill": 0.0325,
+    "logloss": 0.6685,
+    "logloss_base": 0.6865,
+    "z": 1.96,
+    "tasa_real": 0.434,
+    "p_media": 0.379,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2393,
+    "brier_base": 0.2471,
+    "skill": 0.0317,
+    "logloss": 0.6701,
+    "logloss_base": 0.6874,
+    "z": 1.96,
+    "tasa_real": 0.437,
+    "p_media": 0.382,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_over_2.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2039,
+    "brier_base": 0.2028,
+    "skill": -0.0055,
+    "logloss": 0.6008,
+    "logloss_base": 0.5959,
+    "z": -0.38,
+    "tasa_real": 0.719,
+    "p_media": 0.778,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2048,
+    "brier_base": 0.2035,
+    "skill": -0.0064,
+    "logloss": 0.603,
+    "logloss_base": 0.5975,
+    "z": -0.44,
+    "tasa_real": 0.718,
+    "p_media": 0.777,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_over_3.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2516,
+    "brier_base": 0.2488,
+    "skill": -0.0113,
+    "logloss": 0.6972,
+    "logloss_base": 0.6907,
+    "z": -0.68,
+    "tasa_real": 0.543,
+    "p_media": 0.594,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2513,
+    "brier_base": 0.2486,
+    "skill": -0.0108,
+    "logloss": 0.6966,
+    "logloss_base": 0.6904,
+    "z": -0.64,
+    "tasa_real": 0.544,
+    "p_media": 0.594,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_over_4.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2335,
+    "brier_base": 0.2316,
+    "skill": -0.0082,
+    "logloss": 0.6599,
+    "logloss_base": 0.6559,
+    "z": -0.48,
+    "tasa_real": 0.359,
+    "p_media": 0.406,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2335,
+    "brier_base": 0.2319,
+    "skill": -0.0067,
+    "logloss": 0.6599,
+    "logloss_base": 0.6567,
+    "z": -0.4,
+    "tasa_real": 0.36,
+    "p_media": 0.405,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_over_5.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1679,
+    "brier_base": 0.1664,
+    "skill": -0.0086,
+    "logloss": 0.52,
+    "logloss_base": 0.5159,
+    "z": -0.5,
+    "tasa_real": 0.209,
+    "p_media": 0.248,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1682,
+    "brier_base": 0.167,
+    "skill": -0.0076,
+    "logloss": 0.5208,
+    "logloss_base": 0.517,
+    "z": -0.44,
+    "tasa_real": 0.21,
+    "p_media": 0.248,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_under_2.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2039,
+    "brier_base": 0.2028,
+    "skill": -0.0055,
+    "logloss": 0.6008,
+    "logloss_base": 0.5959,
+    "z": -0.38,
+    "tasa_real": 0.281,
+    "p_media": 0.222,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2048,
+    "brier_base": 0.2035,
+    "skill": -0.0064,
+    "logloss": 0.603,
+    "logloss_base": 0.5975,
+    "z": -0.44,
+    "tasa_real": 0.282,
+    "p_media": 0.223,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_under_3.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2516,
+    "brier_base": 0.2488,
+    "skill": -0.0113,
+    "logloss": 0.6972,
+    "logloss_base": 0.6907,
+    "z": -0.68,
+    "tasa_real": 0.457,
+    "p_media": 0.406,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2513,
+    "brier_base": 0.2486,
+    "skill": -0.0108,
+    "logloss": 0.6966,
+    "logloss_base": 0.6904,
+    "z": -0.64,
+    "tasa_real": 0.456,
+    "p_media": 0.406,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_under_4.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2335,
+    "brier_base": 0.2316,
+    "skill": -0.0082,
+    "logloss": 0.6599,
+    "logloss_base": 0.6559,
+    "z": -0.48,
+    "tasa_real": 0.641,
+    "p_media": 0.594,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2335,
+    "brier_base": 0.2319,
+    "skill": -0.0067,
+    "logloss": 0.6599,
+    "logloss_base": 0.6567,
+    "z": -0.4,
+    "tasa_real": 0.64,
+    "p_media": 0.595,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "tarjetas_under_5.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1679,
+    "brier_base": 0.1664,
+    "skill": -0.0086,
+    "logloss": 0.52,
+    "logloss_base": 0.5159,
+    "z": -0.5,
+    "tasa_real": 0.791,
+    "p_media": 0.752,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1682,
+    "brier_base": 0.167,
+    "skill": -0.0076,
+    "logloss": 0.5208,
+    "logloss_base": 0.517,
+    "z": -0.44,
+    "tasa_real": 0.79,
+    "p_media": 0.752,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "under_1.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1428,
+    "brier_base": 0.1442,
+    "skill": 0.0097,
+    "logloss": 0.4568,
+    "logloss_base": 0.4637,
+    "z": 0.58,
+    "tasa_real": 0.174,
+    "p_media": 0.185,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1442,
+    "brier_base": 0.1448,
+    "skill": 0.0038,
+    "logloss": 0.4614,
+    "logloss_base": 0.4652,
+    "z": 0.25,
+    "tasa_real": 0.175,
+    "p_media": 0.182,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "under_2.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2286,
+    "brier_base": 0.235,
+    "skill": 0.0271,
+    "logloss": 0.6486,
+    "logloss_base": 0.6628,
+    "z": 1.57,
+    "tasa_real": 0.376,
+    "p_media": 0.406,
+    "n_mercado": 580,
+    "brier_modelo_en_mercado": 0.2286,
+    "brier_mercado": 0.2221,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2294,
+    "brier_base": 0.235,
+    "skill": 0.0238,
+    "logloss": 0.6501,
+    "logloss_base": 0.6629,
+    "z": 1.44,
+    "tasa_real": 0.376,
+    "p_media": 0.401,
+    "n_mercado": 577,
+    "brier_modelo_en_mercado": 0.2294,
+    "brier_mercado": 0.2224,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "under_3.5",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.2386,
+    "brier_base": 0.2467,
+    "skill": 0.0325,
+    "logloss": 0.6685,
+    "logloss_base": 0.6865,
+    "z": 1.96,
+    "tasa_real": 0.566,
+    "p_media": 0.621,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.2393,
+    "brier_base": 0.2471,
+    "skill": 0.0317,
+    "logloss": 0.6701,
+    "logloss_base": 0.6874,
+    "z": 1.96,
+    "tasa_real": 0.563,
+    "p_media": 0.618,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Bundesliga",
+   "mercado": "visita_gana_por_2",
+   "n": 580,
+   "actual": {
+    "n": 580,
+    "brier": 0.1305,
+    "brier_base": 0.1407,
+    "skill": 0.0725,
+    "logloss": 0.4186,
+    "logloss_base": 0.4552,
+    "z": 2.62,
+    "tasa_real": 0.169,
+    "p_media": 0.153,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 577,
+    "brier": 0.1299,
+    "brier_base": 0.1401,
+    "skill": 0.0725,
+    "logloss": 0.4169,
+    "logloss_base": 0.4537,
+    "z": 2.64,
+    "tasa_real": 0.168,
+    "p_media": 0.154,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2156,
+    "brier_base": 0.249,
+    "skill": 0.1343,
+    "logloss": 0.6206,
+    "logloss_base": 0.6912,
+    "z": 6.58,
+    "tasa_real": 0.465,
+    "p_media": 0.434,
+    "n_mercado": 716,
+    "brier_modelo_en_mercado": 0.2156,
+    "brier_mercado": 0.2084,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2161,
+    "brier_base": 0.249,
+    "skill": 0.1324,
+    "logloss": 0.622,
+    "logloss_base": 0.6912,
+    "z": 6.37,
+    "tasa_real": 0.465,
+    "p_media": 0.435,
+    "n_mercado": 712,
+    "brier_modelo_en_mercado": 0.2161,
+    "brier_mercado": 0.2084,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "12",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1798,
+    "brier_base": 0.1846,
+    "skill": 0.0257,
+    "logloss": 0.5421,
+    "logloss_base": 0.5561,
+    "z": 3.8,
+    "tasa_real": 0.757,
+    "p_media": 0.734,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1797,
+    "brier_base": 0.1846,
+    "skill": 0.0262,
+    "logloss": 0.5416,
+    "logloss_base": 0.5561,
+    "z": 4.0,
+    "tasa_real": 0.757,
+    "p_media": 0.738,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1T_1",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2114,
+    "brier_base": 0.2266,
+    "skill": 0.0671,
+    "logloss": 0.6125,
+    "logloss_base": 0.6457,
+    "z": 3.9,
+    "tasa_real": 0.346,
+    "p_media": 0.333,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.211,
+    "brier_base": 0.2263,
+    "skill": 0.0679,
+    "logloss": 0.6117,
+    "logloss_base": 0.6451,
+    "z": 4.02,
+    "tasa_real": 0.346,
+    "p_media": 0.338,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1T_2",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1677,
+    "brier_base": 0.1737,
+    "skill": 0.0342,
+    "logloss": 0.5141,
+    "logloss_base": 0.5317,
+    "z": 1.8,
+    "tasa_real": 0.223,
+    "p_media": 0.24,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1677,
+    "brier_base": 0.1736,
+    "skill": 0.0342,
+    "logloss": 0.5137,
+    "logloss_base": 0.5315,
+    "z": 1.82,
+    "tasa_real": 0.223,
+    "p_media": 0.243,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1T_X",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2412,
+    "brier_base": 0.2455,
+    "skill": 0.0174,
+    "logloss": 0.6753,
+    "logloss_base": 0.6841,
+    "z": 2.29,
+    "tasa_real": 0.43,
+    "p_media": 0.427,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2414,
+    "brier_base": 0.2456,
+    "skill": 0.0174,
+    "logloss": 0.6755,
+    "logloss_base": 0.6844,
+    "z": 2.11,
+    "tasa_real": 0.431,
+    "p_media": 0.419,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1T_over_0.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2109,
+    "brier_base": 0.2155,
+    "skill": 0.0211,
+    "logloss": 0.6121,
+    "logloss_base": 0.6225,
+    "z": 2.32,
+    "tasa_real": 0.687,
+    "p_media": 0.673,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2107,
+    "brier_base": 0.2156,
+    "skill": 0.0226,
+    "logloss": 0.6114,
+    "logloss_base": 0.6227,
+    "z": 2.33,
+    "tasa_real": 0.687,
+    "p_media": 0.685,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1T_over_1.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2116,
+    "brier_base": 0.2177,
+    "skill": 0.028,
+    "logloss": 0.6127,
+    "logloss_base": 0.6271,
+    "z": 2.69,
+    "tasa_real": 0.32,
+    "p_media": 0.313,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2105,
+    "brier_base": 0.2178,
+    "skill": 0.0337,
+    "logloss": 0.6104,
+    "logloss_base": 0.6274,
+    "z": 2.83,
+    "tasa_real": 0.32,
+    "p_media": 0.327,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "1X",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1855,
+    "brier_base": 0.207,
+    "skill": 0.1039,
+    "logloss": 0.5514,
+    "logloss_base": 0.6045,
+    "z": 4.55,
+    "tasa_real": 0.708,
+    "p_media": 0.7,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1857,
+    "brier_base": 0.2071,
+    "skill": 0.103,
+    "logloss": 0.5518,
+    "logloss_base": 0.6048,
+    "z": 4.42,
+    "tasa_real": 0.708,
+    "p_media": 0.698,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "2",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1855,
+    "brier_base": 0.207,
+    "skill": 0.1039,
+    "logloss": 0.5514,
+    "logloss_base": 0.6045,
+    "z": 4.55,
+    "tasa_real": 0.292,
+    "p_media": 0.3,
+    "n_mercado": 716,
+    "brier_modelo_en_mercado": 0.1855,
+    "brier_mercado": 0.1806,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1857,
+    "brier_base": 0.2071,
+    "skill": 0.103,
+    "logloss": 0.5518,
+    "logloss_base": 0.6048,
+    "z": 4.42,
+    "tasa_real": 0.292,
+    "p_media": 0.302,
+    "n_mercado": 712,
+    "brier_modelo_en_mercado": 0.1857,
+    "brier_mercado": 0.1802,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "X",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1798,
+    "brier_base": 0.1846,
+    "skill": 0.0257,
+    "logloss": 0.5421,
+    "logloss_base": 0.5561,
+    "z": 3.8,
+    "tasa_real": 0.243,
+    "p_media": 0.266,
+    "n_mercado": 716,
+    "brier_modelo_en_mercado": 0.1798,
+    "brier_mercado": 0.1789,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1797,
+    "brier_base": 0.1846,
+    "skill": 0.0262,
+    "logloss": 0.5416,
+    "logloss_base": 0.5561,
+    "z": 4.0,
+    "tasa_real": 0.243,
+    "p_media": 0.262,
+    "n_mercado": 712,
+    "brier_modelo_en_mercado": 0.1797,
+    "brier_mercado": 0.1789,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "X2",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2156,
+    "brier_base": 0.249,
+    "skill": 0.1343,
+    "logloss": 0.6206,
+    "logloss_base": 0.6912,
+    "z": 6.58,
+    "tasa_real": 0.535,
+    "p_media": 0.566,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2161,
+    "brier_base": 0.249,
+    "skill": 0.1324,
+    "logloss": 0.622,
+    "logloss_base": 0.6912,
+    "z": 6.37,
+    "tasa_real": 0.535,
+    "p_media": 0.565,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "aa_no",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2499,
+    "brier_base": 0.2491,
+    "skill": -0.0029,
+    "logloss": 0.693,
+    "logloss_base": 0.6914,
+    "z": -0.27,
+    "tasa_real": 0.446,
+    "p_media": 0.516,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2466,
+    "brier_base": 0.2491,
+    "skill": 0.0102,
+    "logloss": 0.6863,
+    "logloss_base": 0.6914,
+    "z": 0.95,
+    "tasa_real": 0.445,
+    "p_media": 0.496,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "aa_si",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2499,
+    "brier_base": 0.2491,
+    "skill": -0.0029,
+    "logloss": 0.693,
+    "logloss_base": 0.6914,
+    "z": -0.27,
+    "tasa_real": 0.554,
+    "p_media": 0.484,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2466,
+    "brier_base": 0.2491,
+    "skill": 0.0102,
+    "logloss": 0.6863,
+    "logloss_base": 0.6914,
+    "z": 0.95,
+    "tasa_real": 0.555,
+    "p_media": 0.504,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_over_10.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.232,
+    "brier_base": 0.2314,
+    "skill": -0.0027,
+    "logloss": 0.6567,
+    "logloss_base": 0.6555,
+    "z": -0.22,
+    "tasa_real": 0.363,
+    "p_media": 0.352,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2312,
+    "brier_base": 0.2312,
+    "skill": -0.0001,
+    "logloss": 0.655,
+    "logloss_base": 0.6551,
+    "z": -0.01,
+    "tasa_real": 0.362,
+    "p_media": 0.352,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_over_11.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1992,
+    "brier_base": 0.1982,
+    "skill": -0.0047,
+    "logloss": 0.5884,
+    "logloss_base": 0.586,
+    "z": -0.41,
+    "tasa_real": 0.271,
+    "p_media": 0.249,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1981,
+    "brier_base": 0.1976,
+    "skill": -0.0024,
+    "logloss": 0.5858,
+    "logloss_base": 0.5846,
+    "z": -0.21,
+    "tasa_real": 0.27,
+    "p_media": 0.248,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_over_8.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2408,
+    "brier_base": 0.2448,
+    "skill": 0.0164,
+    "logloss": 0.6749,
+    "logloss_base": 0.6828,
+    "z": 1.27,
+    "tasa_real": 0.577,
+    "p_media": 0.6,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2405,
+    "brier_base": 0.245,
+    "skill": 0.0183,
+    "logloss": 0.6742,
+    "logloss_base": 0.6831,
+    "z": 1.43,
+    "tasa_real": 0.576,
+    "p_media": 0.6,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_over_9.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2457,
+    "brier_base": 0.249,
+    "skill": 0.013,
+    "logloss": 0.6843,
+    "logloss_base": 0.691,
+    "z": 1.01,
+    "tasa_real": 0.461,
+    "p_media": 0.473,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.245,
+    "brier_base": 0.2489,
+    "skill": 0.0157,
+    "logloss": 0.6828,
+    "logloss_base": 0.691,
+    "z": 1.23,
+    "tasa_real": 0.461,
+    "p_media": 0.472,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_under_10.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.232,
+    "brier_base": 0.2314,
+    "skill": -0.0027,
+    "logloss": 0.6567,
+    "logloss_base": 0.6555,
+    "z": -0.22,
+    "tasa_real": 0.637,
+    "p_media": 0.648,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2312,
+    "brier_base": 0.2312,
+    "skill": -0.0001,
+    "logloss": 0.655,
+    "logloss_base": 0.6551,
+    "z": -0.01,
+    "tasa_real": 0.638,
+    "p_media": 0.648,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_under_11.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1992,
+    "brier_base": 0.1982,
+    "skill": -0.0047,
+    "logloss": 0.5884,
+    "logloss_base": 0.586,
+    "z": -0.41,
+    "tasa_real": 0.729,
+    "p_media": 0.751,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1981,
+    "brier_base": 0.1976,
+    "skill": -0.0024,
+    "logloss": 0.5858,
+    "logloss_base": 0.5846,
+    "z": -0.21,
+    "tasa_real": 0.73,
+    "p_media": 0.752,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_under_8.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2408,
+    "brier_base": 0.2448,
+    "skill": 0.0164,
+    "logloss": 0.6749,
+    "logloss_base": 0.6828,
+    "z": 1.27,
+    "tasa_real": 0.423,
+    "p_media": 0.4,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2405,
+    "brier_base": 0.245,
+    "skill": 0.0183,
+    "logloss": 0.6742,
+    "logloss_base": 0.6831,
+    "z": 1.43,
+    "tasa_real": 0.424,
+    "p_media": 0.4,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "corners_under_9.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2457,
+    "brier_base": 0.249,
+    "skill": 0.013,
+    "logloss": 0.6843,
+    "logloss_base": 0.691,
+    "z": 1.01,
+    "tasa_real": 0.539,
+    "p_media": 0.527,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.245,
+    "brier_base": 0.2489,
+    "skill": 0.0157,
+    "logloss": 0.6828,
+    "logloss_base": 0.691,
+    "z": 1.23,
+    "tasa_real": 0.539,
+    "p_media": 0.528,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "local_gana_por_2",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1393,
+    "brier_base": 0.1624,
+    "skill": 0.1424,
+    "logloss": 0.4415,
+    "logloss_base": 0.5061,
+    "z": 4.62,
+    "tasa_real": 0.204,
+    "p_media": 0.235,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1381,
+    "brier_base": 0.1623,
+    "skill": 0.1491,
+    "logloss": 0.4402,
+    "logloss_base": 0.5057,
+    "z": 4.8,
+    "tasa_real": 0.204,
+    "p_media": 0.238,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "marcador_exacto_ll",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "logloss": 2.8218,
+    "logloss_base": 2.9389,
+    "skill": 0.0399,
+    "z": 6.01,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "logloss": 2.8136,
+    "logloss_base": 2.9377,
+    "skill": 0.0422,
+    "z": 6.34,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "over_1.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1802,
+    "brier_base": 0.1869,
+    "skill": 0.0358,
+    "logloss": 0.5432,
+    "logloss_base": 0.5614,
+    "z": 2.8,
+    "tasa_real": 0.754,
+    "p_media": 0.725,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.179,
+    "brier_base": 0.1868,
+    "skill": 0.0419,
+    "logloss": 0.5398,
+    "logloss_base": 0.5614,
+    "z": 3.14,
+    "tasa_real": 0.754,
+    "p_media": 0.741,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "over_2.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2448,
+    "brier_base": 0.2512,
+    "skill": 0.0255,
+    "logloss": 0.6828,
+    "logloss_base": 0.6956,
+    "z": 1.75,
+    "tasa_real": 0.503,
+    "p_media": 0.468,
+    "n_mercado": 716,
+    "brier_modelo_en_mercado": 0.2448,
+    "brier_mercado": 0.2366,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2431,
+    "brier_base": 0.2512,
+    "skill": 0.0321,
+    "logloss": 0.6791,
+    "logloss_base": 0.6956,
+    "z": 2.05,
+    "tasa_real": 0.503,
+    "p_media": 0.489,
+    "n_mercado": 712,
+    "brier_modelo_en_mercado": 0.2431,
+    "brier_mercado": 0.2366,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "over_3.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1878,
+    "brier_base": 0.1939,
+    "skill": 0.0315,
+    "logloss": 0.562,
+    "logloss_base": 0.5764,
+    "z": 1.97,
+    "tasa_real": 0.263,
+    "p_media": 0.259,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1871,
+    "brier_base": 0.1939,
+    "skill": 0.035,
+    "logloss": 0.5603,
+    "logloss_base": 0.5765,
+    "z": 1.87,
+    "tasa_real": 0.263,
+    "p_media": 0.279,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_over_2.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1628,
+    "brier_base": 0.1615,
+    "skill": -0.0077,
+    "logloss": 0.515,
+    "logloss_base": 0.506,
+    "z": -0.83,
+    "tasa_real": 0.8,
+    "p_media": 0.87,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1626,
+    "brier_base": 0.1613,
+    "skill": -0.0081,
+    "logloss": 0.5148,
+    "logloss_base": 0.5056,
+    "z": -0.86,
+    "tasa_real": 0.801,
+    "p_media": 0.87,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_over_3.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2321,
+    "brier_base": 0.2322,
+    "skill": 0.0003,
+    "logloss": 0.6611,
+    "logloss_base": 0.6581,
+    "z": 0.02,
+    "tasa_real": 0.647,
+    "p_media": 0.729,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2325,
+    "brier_base": 0.2324,
+    "skill": -0.0003,
+    "logloss": 0.6619,
+    "logloss_base": 0.6587,
+    "z": -0.03,
+    "tasa_real": 0.646,
+    "p_media": 0.73,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_over_4.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2548,
+    "brier_base": 0.2564,
+    "skill": 0.0062,
+    "logloss": 0.7033,
+    "logloss_base": 0.706,
+    "z": 0.46,
+    "tasa_real": 0.471,
+    "p_media": 0.558,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2551,
+    "brier_base": 0.2565,
+    "skill": 0.0057,
+    "logloss": 0.7039,
+    "logloss_base": 0.7063,
+    "z": 0.42,
+    "tasa_real": 0.469,
+    "p_media": 0.558,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_over_5.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2236,
+    "brier_base": 0.225,
+    "skill": 0.0061,
+    "logloss": 0.6394,
+    "logloss_base": 0.6425,
+    "z": 0.4,
+    "tasa_real": 0.327,
+    "p_media": 0.387,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2231,
+    "brier_base": 0.2244,
+    "skill": 0.006,
+    "logloss": 0.6384,
+    "logloss_base": 0.6414,
+    "z": 0.39,
+    "tasa_real": 0.324,
+    "p_media": 0.388,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_under_2.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1628,
+    "brier_base": 0.1615,
+    "skill": -0.0077,
+    "logloss": 0.515,
+    "logloss_base": 0.506,
+    "z": -0.83,
+    "tasa_real": 0.2,
+    "p_media": 0.13,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1626,
+    "brier_base": 0.1613,
+    "skill": -0.0081,
+    "logloss": 0.5148,
+    "logloss_base": 0.5056,
+    "z": -0.86,
+    "tasa_real": 0.199,
+    "p_media": 0.13,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_under_3.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2321,
+    "brier_base": 0.2322,
+    "skill": 0.0003,
+    "logloss": 0.6611,
+    "logloss_base": 0.6581,
+    "z": 0.02,
+    "tasa_real": 0.353,
+    "p_media": 0.271,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2325,
+    "brier_base": 0.2324,
+    "skill": -0.0003,
+    "logloss": 0.6619,
+    "logloss_base": 0.6587,
+    "z": -0.03,
+    "tasa_real": 0.354,
+    "p_media": 0.27,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_under_4.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2548,
+    "brier_base": 0.2564,
+    "skill": 0.0062,
+    "logloss": 0.7033,
+    "logloss_base": 0.706,
+    "z": 0.46,
+    "tasa_real": 0.529,
+    "p_media": 0.442,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2551,
+    "brier_base": 0.2565,
+    "skill": 0.0057,
+    "logloss": 0.7039,
+    "logloss_base": 0.7063,
+    "z": 0.42,
+    "tasa_real": 0.531,
+    "p_media": 0.442,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "tarjetas_under_5.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2236,
+    "brier_base": 0.225,
+    "skill": 0.0061,
+    "logloss": 0.6394,
+    "logloss_base": 0.6425,
+    "z": 0.4,
+    "tasa_real": 0.673,
+    "p_media": 0.613,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2231,
+    "brier_base": 0.2244,
+    "skill": 0.006,
+    "logloss": 0.6384,
+    "logloss_base": 0.6414,
+    "z": 0.39,
+    "tasa_real": 0.676,
+    "p_media": 0.612,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "under_1.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1802,
+    "brier_base": 0.1869,
+    "skill": 0.0358,
+    "logloss": 0.5432,
+    "logloss_base": 0.5614,
+    "z": 2.8,
+    "tasa_real": 0.246,
+    "p_media": 0.275,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.179,
+    "brier_base": 0.1868,
+    "skill": 0.0419,
+    "logloss": 0.5398,
+    "logloss_base": 0.5614,
+    "z": 3.14,
+    "tasa_real": 0.246,
+    "p_media": 0.259,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "under_2.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.2448,
+    "brier_base": 0.2512,
+    "skill": 0.0255,
+    "logloss": 0.6828,
+    "logloss_base": 0.6956,
+    "z": 1.75,
+    "tasa_real": 0.497,
+    "p_media": 0.532,
+    "n_mercado": 716,
+    "brier_modelo_en_mercado": 0.2448,
+    "brier_mercado": 0.2366,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.2431,
+    "brier_base": 0.2512,
+    "skill": 0.0321,
+    "logloss": 0.6791,
+    "logloss_base": 0.6956,
+    "z": 2.05,
+    "tasa_real": 0.497,
+    "p_media": 0.511,
+    "n_mercado": 712,
+    "brier_modelo_en_mercado": 0.2431,
+    "brier_mercado": 0.2366,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "under_3.5",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.1878,
+    "brier_base": 0.1939,
+    "skill": 0.0315,
+    "logloss": 0.562,
+    "logloss_base": 0.5764,
+    "z": 1.97,
+    "tasa_real": 0.737,
+    "p_media": 0.741,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.1871,
+    "brier_base": 0.1939,
+    "skill": 0.035,
+    "logloss": 0.5603,
+    "logloss_base": 0.5765,
+    "z": 1.87,
+    "tasa_real": 0.737,
+    "p_media": 0.721,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LaLiga",
+   "mercado": "visita_gana_por_2",
+   "n": 716,
+   "actual": {
+    "n": 716,
+    "brier": 0.0936,
+    "brier_base": 0.1004,
+    "skill": 0.0681,
+    "logloss": 0.3229,
+    "logloss_base": 0.3534,
+    "z": 2.09,
+    "tasa_real": 0.113,
+    "p_media": 0.132,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 712,
+    "brier": 0.0941,
+    "brier_base": 0.1009,
+    "skill": 0.0675,
+    "logloss": 0.3245,
+    "logloss_base": 0.3547,
+    "z": 2.08,
+    "tasa_real": 0.114,
+    "p_media": 0.134,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "1",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2266,
+    "brier_base": 0.2493,
+    "skill": 0.0911,
+    "logloss": 0.6444,
+    "logloss_base": 0.6918,
+    "z": 4.99,
+    "tasa_real": 0.466,
+    "p_media": 0.434,
+    "n_mercado": 657,
+    "brier_modelo_en_mercado": 0.2266,
+    "brier_mercado": 0.2163,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2226,
+    "brier_base": 0.2494,
+    "skill": 0.1074,
+    "logloss": 0.6357,
+    "logloss_base": 0.6919,
+    "z": 5.27,
+    "tasa_real": 0.466,
+    "p_media": 0.442,
+    "n_mercado": 656,
+    "brier_modelo_en_mercado": 0.2226,
+    "brier_mercado": 0.2163,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "12",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1816,
+    "brier_base": 0.1835,
+    "skill": 0.0104,
+    "logloss": 0.5486,
+    "logloss_base": 0.5538,
+    "z": 2.25,
+    "tasa_real": 0.76,
+    "p_media": 0.735,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1802,
+    "brier_base": 0.1829,
+    "skill": 0.0149,
+    "logloss": 0.5452,
+    "logloss_base": 0.5526,
+    "z": 2.73,
+    "tasa_real": 0.761,
+    "p_media": 0.749,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "1X",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1923,
+    "brier_base": 0.2077,
+    "skill": 0.0741,
+    "logloss": 0.5688,
+    "logloss_base": 0.606,
+    "z": 3.8,
+    "tasa_real": 0.706,
+    "p_media": 0.699,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1898,
+    "brier_base": 0.2079,
+    "skill": 0.0871,
+    "logloss": 0.5628,
+    "logloss_base": 0.6064,
+    "z": 3.86,
+    "tasa_real": 0.706,
+    "p_media": 0.692,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "2",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1923,
+    "brier_base": 0.2077,
+    "skill": 0.0741,
+    "logloss": 0.5688,
+    "logloss_base": 0.606,
+    "z": 3.8,
+    "tasa_real": 0.294,
+    "p_media": 0.301,
+    "n_mercado": 657,
+    "brier_modelo_en_mercado": 0.1923,
+    "brier_mercado": 0.1862,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1898,
+    "brier_base": 0.2079,
+    "skill": 0.0871,
+    "logloss": 0.5628,
+    "logloss_base": 0.6064,
+    "z": 3.86,
+    "tasa_real": 0.294,
+    "p_media": 0.308,
+    "n_mercado": 656,
+    "brier_modelo_en_mercado": 0.1898,
+    "brier_mercado": 0.1864,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "X",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1816,
+    "brier_base": 0.1835,
+    "skill": 0.0104,
+    "logloss": 0.5486,
+    "logloss_base": 0.5538,
+    "z": 2.25,
+    "tasa_real": 0.24,
+    "p_media": 0.265,
+    "n_mercado": 657,
+    "brier_modelo_en_mercado": 0.1816,
+    "brier_mercado": 0.1796,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1802,
+    "brier_base": 0.1829,
+    "skill": 0.0149,
+    "logloss": 0.5452,
+    "logloss_base": 0.5526,
+    "z": 2.73,
+    "tasa_real": 0.239,
+    "p_media": 0.251,
+    "n_mercado": 656,
+    "brier_modelo_en_mercado": 0.1802,
+    "brier_mercado": 0.179,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "X2",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2266,
+    "brier_base": 0.2493,
+    "skill": 0.0911,
+    "logloss": 0.6444,
+    "logloss_base": 0.6918,
+    "z": 4.99,
+    "tasa_real": 0.534,
+    "p_media": 0.566,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2226,
+    "brier_base": 0.2494,
+    "skill": 0.1074,
+    "logloss": 0.6357,
+    "logloss_base": 0.6919,
+    "z": 5.27,
+    "tasa_real": 0.534,
+    "p_media": 0.558,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "aa_no",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.249,
+    "brier_base": 0.2454,
+    "skill": -0.0148,
+    "logloss": 0.6911,
+    "logloss_base": 0.6839,
+    "z": -1.83,
+    "tasa_real": 0.425,
+    "p_media": 0.475,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2466,
+    "brier_base": 0.2454,
+    "skill": -0.0045,
+    "logloss": 0.6864,
+    "logloss_base": 0.684,
+    "z": -0.54,
+    "tasa_real": 0.425,
+    "p_media": 0.441,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "aa_si",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.249,
+    "brier_base": 0.2454,
+    "skill": -0.0148,
+    "logloss": 0.6911,
+    "logloss_base": 0.6839,
+    "z": -1.83,
+    "tasa_real": 0.575,
+    "p_media": 0.525,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2466,
+    "brier_base": 0.2454,
+    "skill": -0.0045,
+    "logloss": 0.6864,
+    "logloss_base": 0.684,
+    "z": -0.54,
+    "tasa_real": 0.575,
+    "p_media": 0.559,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_over_10.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2567,
+    "brier_base": 0.2401,
+    "skill": -0.0694,
+    "logloss": 0.7276,
+    "logloss_base": 0.6734,
+    "z": -3.35,
+    "tasa_real": 0.393,
+    "p_media": 0.309,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2568,
+    "brier_base": 0.2402,
+    "skill": -0.069,
+    "logloss": 0.7279,
+    "logloss_base": 0.6737,
+    "z": -3.33,
+    "tasa_real": 0.393,
+    "p_media": 0.309,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_over_11.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2151,
+    "brier_base": 0.2047,
+    "skill": -0.0506,
+    "logloss": 0.6479,
+    "logloss_base": 0.5998,
+    "z": -2.66,
+    "tasa_real": 0.286,
+    "p_media": 0.215,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2153,
+    "brier_base": 0.2049,
+    "skill": -0.0504,
+    "logloss": 0.6483,
+    "logloss_base": 0.6003,
+    "z": -2.64,
+    "tasa_real": 0.287,
+    "p_media": 0.215,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_over_8.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2552,
+    "brier_base": 0.2379,
+    "skill": -0.0726,
+    "logloss": 0.7077,
+    "logloss_base": 0.6688,
+    "z": -3.05,
+    "tasa_real": 0.619,
+    "p_media": 0.545,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2548,
+    "brier_base": 0.2378,
+    "skill": -0.0718,
+    "logloss": 0.707,
+    "logloss_base": 0.6685,
+    "z": -3.01,
+    "tasa_real": 0.62,
+    "p_media": 0.544,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_over_9.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2679,
+    "brier_base": 0.2514,
+    "skill": -0.0658,
+    "logloss": 0.74,
+    "logloss_base": 0.696,
+    "z": -2.91,
+    "tasa_real": 0.499,
+    "p_media": 0.421,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2679,
+    "brier_base": 0.2514,
+    "skill": -0.0653,
+    "logloss": 0.7399,
+    "logloss_base": 0.6961,
+    "z": -2.88,
+    "tasa_real": 0.5,
+    "p_media": 0.421,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_under_10.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2567,
+    "brier_base": 0.2401,
+    "skill": -0.0694,
+    "logloss": 0.7276,
+    "logloss_base": 0.6734,
+    "z": -3.35,
+    "tasa_real": 0.607,
+    "p_media": 0.691,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2568,
+    "brier_base": 0.2402,
+    "skill": -0.069,
+    "logloss": 0.7279,
+    "logloss_base": 0.6737,
+    "z": -3.33,
+    "tasa_real": 0.607,
+    "p_media": 0.691,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_under_11.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2151,
+    "brier_base": 0.2047,
+    "skill": -0.0506,
+    "logloss": 0.6479,
+    "logloss_base": 0.5998,
+    "z": -2.66,
+    "tasa_real": 0.714,
+    "p_media": 0.785,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2153,
+    "brier_base": 0.2049,
+    "skill": -0.0504,
+    "logloss": 0.6483,
+    "logloss_base": 0.6003,
+    "z": -2.64,
+    "tasa_real": 0.713,
+    "p_media": 0.785,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_under_8.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2552,
+    "brier_base": 0.2379,
+    "skill": -0.0726,
+    "logloss": 0.7077,
+    "logloss_base": 0.6688,
+    "z": -3.05,
+    "tasa_real": 0.381,
+    "p_media": 0.455,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2548,
+    "brier_base": 0.2378,
+    "skill": -0.0718,
+    "logloss": 0.707,
+    "logloss_base": 0.6685,
+    "z": -3.01,
+    "tasa_real": 0.38,
+    "p_media": 0.456,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "corners_under_9.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2679,
+    "brier_base": 0.2514,
+    "skill": -0.0658,
+    "logloss": 0.74,
+    "logloss_base": 0.696,
+    "z": -2.91,
+    "tasa_real": 0.501,
+    "p_media": 0.579,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2679,
+    "brier_base": 0.2514,
+    "skill": -0.0653,
+    "logloss": 0.7399,
+    "logloss_base": 0.6961,
+    "z": -2.88,
+    "tasa_real": 0.5,
+    "p_media": 0.579,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "local_gana_por_2",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1654,
+    "brier_base": 0.1791,
+    "skill": 0.0765,
+    "logloss": 0.5071,
+    "logloss_base": 0.5439,
+    "z": 3.63,
+    "tasa_real": 0.233,
+    "p_media": 0.232,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1627,
+    "brier_base": 0.1793,
+    "skill": 0.0924,
+    "logloss": 0.4978,
+    "logloss_base": 0.5444,
+    "z": 3.76,
+    "tasa_real": 0.233,
+    "p_media": 0.247,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "marcador_exacto_ll",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "logloss": 2.975,
+    "logloss_base": 3.0551,
+    "skill": 0.0262,
+    "z": 5.05,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "logloss": 2.9507,
+    "logloss_base": 3.0565,
+    "skill": 0.0346,
+    "z": 5.95,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "over_1.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1753,
+    "brier_base": 0.1747,
+    "skill": -0.0033,
+    "logloss": 0.5354,
+    "logloss_base": 0.5344,
+    "z": -0.4,
+    "tasa_real": 0.776,
+    "p_media": 0.753,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1748,
+    "brier_base": 0.1749,
+    "skill": 0.0006,
+    "logloss": 0.5353,
+    "logloss_base": 0.5347,
+    "z": 0.05,
+    "tasa_real": 0.776,
+    "p_media": 0.788,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "over_2.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2494,
+    "brier_base": 0.2494,
+    "skill": 0.0,
+    "logloss": 0.6919,
+    "logloss_base": 0.6919,
+    "z": 0.0,
+    "tasa_real": 0.559,
+    "p_media": 0.499,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2463,
+    "brier_base": 0.2493,
+    "skill": 0.0123,
+    "logloss": 0.6856,
+    "logloss_base": 0.6918,
+    "z": 1.05,
+    "tasa_real": 0.559,
+    "p_media": 0.548,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "over_3.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2184,
+    "brier_base": 0.2181,
+    "skill": -0.0012,
+    "logloss": 0.6304,
+    "logloss_base": 0.6284,
+    "z": -0.13,
+    "tasa_real": 0.318,
+    "p_media": 0.281,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2174,
+    "brier_base": 0.2183,
+    "skill": 0.0041,
+    "logloss": 0.6267,
+    "logloss_base": 0.6288,
+    "z": 0.31,
+    "tasa_real": 0.319,
+    "p_media": 0.328,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_over_2.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1702,
+    "brier_base": 0.1669,
+    "skill": -0.0196,
+    "logloss": 0.526,
+    "logloss_base": 0.5168,
+    "z": -1.41,
+    "tasa_real": 0.79,
+    "p_media": 0.787,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1703,
+    "brier_base": 0.1671,
+    "skill": -0.0194,
+    "logloss": 0.5263,
+    "logloss_base": 0.5171,
+    "z": -1.4,
+    "tasa_real": 0.79,
+    "p_media": 0.787,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_over_3.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2348,
+    "brier_base": 0.2273,
+    "skill": -0.0331,
+    "logloss": 0.6625,
+    "logloss_base": 0.6472,
+    "z": -2.35,
+    "tasa_real": 0.656,
+    "p_media": 0.605,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2348,
+    "brier_base": 0.2274,
+    "skill": -0.0325,
+    "logloss": 0.6625,
+    "logloss_base": 0.6474,
+    "z": -2.31,
+    "tasa_real": 0.655,
+    "p_media": 0.605,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_over_4.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2607,
+    "brier_base": 0.2493,
+    "skill": -0.0457,
+    "logloss": 0.7171,
+    "logloss_base": 0.6918,
+    "z": -3.09,
+    "tasa_real": 0.469,
+    "p_media": 0.416,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2604,
+    "brier_base": 0.2493,
+    "skill": -0.0447,
+    "logloss": 0.7165,
+    "logloss_base": 0.6917,
+    "z": -3.03,
+    "tasa_real": 0.468,
+    "p_media": 0.416,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_over_5.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2155,
+    "brier_base": 0.2083,
+    "skill": -0.0348,
+    "logloss": 0.6299,
+    "logloss_base": 0.6072,
+    "z": -2.4,
+    "tasa_real": 0.295,
+    "p_media": 0.255,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2158,
+    "brier_base": 0.2084,
+    "skill": -0.0352,
+    "logloss": 0.6306,
+    "logloss_base": 0.6076,
+    "z": -2.43,
+    "tasa_real": 0.296,
+    "p_media": 0.255,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_under_2.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1702,
+    "brier_base": 0.1669,
+    "skill": -0.0196,
+    "logloss": 0.526,
+    "logloss_base": 0.5168,
+    "z": -1.41,
+    "tasa_real": 0.21,
+    "p_media": 0.213,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1703,
+    "brier_base": 0.1671,
+    "skill": -0.0194,
+    "logloss": 0.5263,
+    "logloss_base": 0.5171,
+    "z": -1.4,
+    "tasa_real": 0.21,
+    "p_media": 0.213,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_under_3.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2348,
+    "brier_base": 0.2273,
+    "skill": -0.0331,
+    "logloss": 0.6625,
+    "logloss_base": 0.6472,
+    "z": -2.35,
+    "tasa_real": 0.344,
+    "p_media": 0.395,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2348,
+    "brier_base": 0.2274,
+    "skill": -0.0325,
+    "logloss": 0.6625,
+    "logloss_base": 0.6474,
+    "z": -2.31,
+    "tasa_real": 0.345,
+    "p_media": 0.395,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_under_4.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2607,
+    "brier_base": 0.2493,
+    "skill": -0.0457,
+    "logloss": 0.7171,
+    "logloss_base": 0.6918,
+    "z": -3.09,
+    "tasa_real": 0.531,
+    "p_media": 0.584,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2604,
+    "brier_base": 0.2493,
+    "skill": -0.0447,
+    "logloss": 0.7165,
+    "logloss_base": 0.6917,
+    "z": -3.03,
+    "tasa_real": 0.532,
+    "p_media": 0.584,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "tarjetas_under_5.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2155,
+    "brier_base": 0.2083,
+    "skill": -0.0348,
+    "logloss": 0.6299,
+    "logloss_base": 0.6072,
+    "z": -2.4,
+    "tasa_real": 0.705,
+    "p_media": 0.745,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2158,
+    "brier_base": 0.2084,
+    "skill": -0.0352,
+    "logloss": 0.6306,
+    "logloss_base": 0.6076,
+    "z": -2.43,
+    "tasa_real": 0.704,
+    "p_media": 0.745,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "under_1.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.1753,
+    "brier_base": 0.1747,
+    "skill": -0.0033,
+    "logloss": 0.5354,
+    "logloss_base": 0.5344,
+    "z": -0.4,
+    "tasa_real": 0.224,
+    "p_media": 0.247,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.1748,
+    "brier_base": 0.1749,
+    "skill": 0.0006,
+    "logloss": 0.5353,
+    "logloss_base": 0.5347,
+    "z": 0.05,
+    "tasa_real": 0.224,
+    "p_media": 0.212,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "under_2.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2494,
+    "brier_base": 0.2494,
+    "skill": 0.0,
+    "logloss": 0.6919,
+    "logloss_base": 0.6919,
+    "z": 0.0,
+    "tasa_real": 0.441,
+    "p_media": 0.501,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2463,
+    "brier_base": 0.2493,
+    "skill": 0.0123,
+    "logloss": 0.6856,
+    "logloss_base": 0.6918,
+    "z": 1.05,
+    "tasa_real": 0.441,
+    "p_media": 0.452,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "under_3.5",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.2184,
+    "brier_base": 0.2181,
+    "skill": -0.0012,
+    "logloss": 0.6304,
+    "logloss_base": 0.6284,
+    "z": -0.13,
+    "tasa_real": 0.682,
+    "p_media": 0.719,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.2174,
+    "brier_base": 0.2183,
+    "skill": 0.0041,
+    "logloss": 0.6267,
+    "logloss_base": 0.6288,
+    "z": 0.31,
+    "tasa_real": 0.681,
+    "p_media": 0.672,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "LigaMX",
+   "mercado": "visita_gana_por_2",
+   "n": 657,
+   "actual": {
+    "n": 657,
+    "brier": 0.0932,
+    "brier_base": 0.0977,
+    "skill": 0.0455,
+    "logloss": 0.3247,
+    "logloss_base": 0.3462,
+    "z": 2.06,
+    "tasa_real": 0.11,
+    "p_media": 0.132,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 656,
+    "brier": 0.0919,
+    "brier_base": 0.0978,
+    "skill": 0.0609,
+    "logloss": 0.3179,
+    "logloss_base": 0.3465,
+    "z": 2.27,
+    "tasa_real": 0.11,
+    "p_media": 0.141,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2226,
+    "brier_base": 0.2493,
+    "skill": 0.1071,
+    "logloss": 0.6341,
+    "logloss_base": 0.6918,
+    "z": 4.7,
+    "tasa_real": 0.458,
+    "p_media": 0.427,
+    "n_mercado": 583,
+    "brier_modelo_en_mercado": 0.2226,
+    "brier_mercado": 0.2149,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2217,
+    "brier_base": 0.2492,
+    "skill": 0.1104,
+    "logloss": 0.6325,
+    "logloss_base": 0.6915,
+    "z": 4.74,
+    "tasa_real": 0.457,
+    "p_media": 0.428,
+    "n_mercado": 582,
+    "brier_modelo_en_mercado": 0.2217,
+    "brier_mercado": 0.2149,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "12",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1723,
+    "brier_base": 0.1742,
+    "skill": 0.0106,
+    "logloss": 0.5277,
+    "logloss_base": 0.5332,
+    "z": 1.48,
+    "tasa_real": 0.777,
+    "p_media": 0.748,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1725,
+    "brier_base": 0.1744,
+    "skill": 0.0106,
+    "logloss": 0.5282,
+    "logloss_base": 0.5336,
+    "z": 1.57,
+    "tasa_real": 0.777,
+    "p_media": 0.751,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1T_1",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2116,
+    "brier_base": 0.2193,
+    "skill": 0.0353,
+    "logloss": 0.6107,
+    "logloss_base": 0.6305,
+    "z": 1.87,
+    "tasa_real": 0.324,
+    "p_media": 0.334,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2099,
+    "brier_base": 0.2189,
+    "skill": 0.0413,
+    "logloss": 0.6074,
+    "logloss_base": 0.6297,
+    "z": 2.25,
+    "tasa_real": 0.323,
+    "p_media": 0.337,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1T_2",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.196,
+    "brier_base": 0.2072,
+    "skill": 0.054,
+    "logloss": 0.5784,
+    "logloss_base": 0.6051,
+    "z": 2.93,
+    "tasa_real": 0.292,
+    "p_media": 0.269,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1957,
+    "brier_base": 0.2074,
+    "skill": 0.0566,
+    "logloss": 0.5765,
+    "logloss_base": 0.6056,
+    "z": 3.23,
+    "tasa_real": 0.292,
+    "p_media": 0.271,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1T_X",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2386,
+    "brier_base": 0.2369,
+    "skill": -0.0072,
+    "logloss": 0.6703,
+    "logloss_base": 0.6668,
+    "z": -1.1,
+    "tasa_real": 0.384,
+    "p_media": 0.398,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2379,
+    "brier_base": 0.2371,
+    "skill": -0.0037,
+    "logloss": 0.6689,
+    "logloss_base": 0.6671,
+    "z": -0.58,
+    "tasa_real": 0.385,
+    "p_media": 0.392,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1T_over_0.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2079,
+    "brier_base": 0.2061,
+    "skill": -0.0088,
+    "logloss": 0.6069,
+    "logloss_base": 0.6026,
+    "z": -1.18,
+    "tasa_real": 0.71,
+    "p_media": 0.716,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2083,
+    "brier_base": 0.2063,
+    "skill": -0.0098,
+    "logloss": 0.6083,
+    "logloss_base": 0.6031,
+    "z": -1.27,
+    "tasa_real": 0.71,
+    "p_media": 0.725,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1T_over_1.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2234,
+    "brier_base": 0.2223,
+    "skill": -0.0049,
+    "logloss": 0.639,
+    "logloss_base": 0.6368,
+    "z": -0.5,
+    "tasa_real": 0.331,
+    "p_media": 0.362,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2249,
+    "brier_base": 0.222,
+    "skill": -0.013,
+    "logloss": 0.642,
+    "logloss_base": 0.6361,
+    "z": -1.26,
+    "tasa_real": 0.33,
+    "p_media": 0.374,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "1X",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1944,
+    "brier_base": 0.2174,
+    "skill": 0.1058,
+    "logloss": 0.573,
+    "logloss_base": 0.6265,
+    "z": 4.37,
+    "tasa_real": 0.681,
+    "p_media": 0.679,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1949,
+    "brier_base": 0.2176,
+    "skill": 0.1042,
+    "logloss": 0.5737,
+    "logloss_base": 0.6269,
+    "z": 4.22,
+    "tasa_real": 0.68,
+    "p_media": 0.677,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "2",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1944,
+    "brier_base": 0.2174,
+    "skill": 0.1058,
+    "logloss": 0.573,
+    "logloss_base": 0.6265,
+    "z": 4.37,
+    "tasa_real": 0.319,
+    "p_media": 0.321,
+    "n_mercado": 583,
+    "brier_modelo_en_mercado": 0.1944,
+    "brier_mercado": 0.1909,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1949,
+    "brier_base": 0.2176,
+    "skill": 0.1042,
+    "logloss": 0.5737,
+    "logloss_base": 0.6269,
+    "z": 4.22,
+    "tasa_real": 0.32,
+    "p_media": 0.323,
+    "n_mercado": 582,
+    "brier_modelo_en_mercado": 0.1949,
+    "brier_mercado": 0.1911,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "X",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1723,
+    "brier_base": 0.1742,
+    "skill": 0.0106,
+    "logloss": 0.5277,
+    "logloss_base": 0.5332,
+    "z": 1.48,
+    "tasa_real": 0.223,
+    "p_media": 0.252,
+    "n_mercado": 583,
+    "brier_modelo_en_mercado": 0.1723,
+    "brier_mercado": 0.1706,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1725,
+    "brier_base": 0.1744,
+    "skill": 0.0106,
+    "logloss": 0.5282,
+    "logloss_base": 0.5336,
+    "z": 1.57,
+    "tasa_real": 0.223,
+    "p_media": 0.249,
+    "n_mercado": 582,
+    "brier_modelo_en_mercado": 0.1725,
+    "brier_mercado": 0.1708,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "X2",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2226,
+    "brier_base": 0.2493,
+    "skill": 0.1071,
+    "logloss": 0.6341,
+    "logloss_base": 0.6918,
+    "z": 4.7,
+    "tasa_real": 0.542,
+    "p_media": 0.573,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2217,
+    "brier_base": 0.2492,
+    "skill": 0.1104,
+    "logloss": 0.6325,
+    "logloss_base": 0.6915,
+    "z": 4.74,
+    "tasa_real": 0.543,
+    "p_media": 0.572,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "aa_no",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2503,
+    "brier_base": 0.2499,
+    "skill": -0.0016,
+    "logloss": 0.6939,
+    "logloss_base": 0.693,
+    "z": -0.17,
+    "tasa_real": 0.47,
+    "p_media": 0.464,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2509,
+    "brier_base": 0.2498,
+    "skill": -0.0043,
+    "logloss": 0.6953,
+    "logloss_base": 0.6928,
+    "z": -0.46,
+    "tasa_real": 0.469,
+    "p_media": 0.447,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "aa_si",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2503,
+    "brier_base": 0.2499,
+    "skill": -0.0016,
+    "logloss": 0.6939,
+    "logloss_base": 0.693,
+    "z": -0.17,
+    "tasa_real": 0.53,
+    "p_media": 0.536,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2509,
+    "brier_base": 0.2498,
+    "skill": -0.0043,
+    "logloss": 0.6953,
+    "logloss_base": 0.6928,
+    "z": -0.46,
+    "tasa_real": 0.531,
+    "p_media": 0.553,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_over_10.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2317,
+    "brier_base": 0.2282,
+    "skill": -0.0154,
+    "logloss": 0.6569,
+    "logloss_base": 0.649,
+    "z": -1.56,
+    "tasa_real": 0.352,
+    "p_media": 0.349,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2319,
+    "brier_base": 0.2284,
+    "skill": -0.0151,
+    "logloss": 0.6571,
+    "logloss_base": 0.6494,
+    "z": -1.53,
+    "tasa_real": 0.352,
+    "p_media": 0.349,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_over_11.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1878,
+    "brier_base": 0.187,
+    "skill": -0.0039,
+    "logloss": 0.5637,
+    "logloss_base": 0.5614,
+    "z": -0.41,
+    "tasa_real": 0.249,
+    "p_media": 0.244,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1879,
+    "brier_base": 0.1872,
+    "skill": -0.0037,
+    "logloss": 0.5641,
+    "logloss_base": 0.5619,
+    "z": -0.39,
+    "tasa_real": 0.249,
+    "p_media": 0.244,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_over_8.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.245,
+    "brier_base": 0.2427,
+    "skill": -0.0095,
+    "logloss": 0.6835,
+    "logloss_base": 0.6785,
+    "z": -0.97,
+    "tasa_real": 0.587,
+    "p_media": 0.599,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2447,
+    "brier_base": 0.2425,
+    "skill": -0.0089,
+    "logloss": 0.6829,
+    "logloss_base": 0.6781,
+    "z": -0.92,
+    "tasa_real": 0.588,
+    "p_media": 0.599,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_over_9.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2524,
+    "brier_base": 0.2489,
+    "skill": -0.0141,
+    "logloss": 0.6982,
+    "logloss_base": 0.691,
+    "z": -1.41,
+    "tasa_real": 0.465,
+    "p_media": 0.47,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2524,
+    "brier_base": 0.249,
+    "skill": -0.0137,
+    "logloss": 0.6981,
+    "logloss_base": 0.6911,
+    "z": -1.36,
+    "tasa_real": 0.466,
+    "p_media": 0.47,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_under_10.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2317,
+    "brier_base": 0.2282,
+    "skill": -0.0154,
+    "logloss": 0.6569,
+    "logloss_base": 0.649,
+    "z": -1.56,
+    "tasa_real": 0.648,
+    "p_media": 0.651,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2319,
+    "brier_base": 0.2284,
+    "skill": -0.0151,
+    "logloss": 0.6571,
+    "logloss_base": 0.6494,
+    "z": -1.53,
+    "tasa_real": 0.648,
+    "p_media": 0.651,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_under_11.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1878,
+    "brier_base": 0.187,
+    "skill": -0.0039,
+    "logloss": 0.5637,
+    "logloss_base": 0.5614,
+    "z": -0.41,
+    "tasa_real": 0.751,
+    "p_media": 0.756,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1879,
+    "brier_base": 0.1872,
+    "skill": -0.0037,
+    "logloss": 0.5641,
+    "logloss_base": 0.5619,
+    "z": -0.39,
+    "tasa_real": 0.751,
+    "p_media": 0.756,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_under_8.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.245,
+    "brier_base": 0.2427,
+    "skill": -0.0095,
+    "logloss": 0.6835,
+    "logloss_base": 0.6785,
+    "z": -0.97,
+    "tasa_real": 0.413,
+    "p_media": 0.401,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2447,
+    "brier_base": 0.2425,
+    "skill": -0.0089,
+    "logloss": 0.6829,
+    "logloss_base": 0.6781,
+    "z": -0.92,
+    "tasa_real": 0.412,
+    "p_media": 0.401,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "corners_under_9.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2524,
+    "brier_base": 0.2489,
+    "skill": -0.0141,
+    "logloss": 0.6982,
+    "logloss_base": 0.691,
+    "z": -1.41,
+    "tasa_real": 0.535,
+    "p_media": 0.53,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2524,
+    "brier_base": 0.249,
+    "skill": -0.0137,
+    "logloss": 0.6981,
+    "logloss_base": 0.6911,
+    "z": -1.36,
+    "tasa_real": 0.534,
+    "p_media": 0.53,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "local_gana_por_2",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1717,
+    "brier_base": 0.1828,
+    "skill": 0.0604,
+    "logloss": 0.5228,
+    "logloss_base": 0.5521,
+    "z": 2.2,
+    "tasa_real": 0.24,
+    "p_media": 0.23,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1706,
+    "brier_base": 0.1821,
+    "skill": 0.0632,
+    "logloss": 0.5198,
+    "logloss_base": 0.5505,
+    "z": 2.36,
+    "tasa_real": 0.239,
+    "p_media": 0.233,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "marcador_exacto_ll",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "logloss": 3.023,
+    "logloss_base": 3.1262,
+    "skill": 0.033,
+    "z": 5.08,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "logloss": 3.018,
+    "logloss_base": 3.1269,
+    "skill": 0.0348,
+    "z": 5.54,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "over_1.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1846,
+    "brier_base": 0.1828,
+    "skill": -0.0097,
+    "logloss": 0.5574,
+    "logloss_base": 0.5521,
+    "z": -0.94,
+    "tasa_real": 0.76,
+    "p_media": 0.773,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1854,
+    "brier_base": 0.183,
+    "skill": -0.013,
+    "logloss": 0.5607,
+    "logloss_base": 0.5527,
+    "z": -1.23,
+    "tasa_real": 0.759,
+    "p_media": 0.785,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "over_2.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2458,
+    "brier_base": 0.2487,
+    "skill": 0.0118,
+    "logloss": 0.6845,
+    "logloss_base": 0.6905,
+    "z": 0.91,
+    "tasa_real": 0.539,
+    "p_media": 0.528,
+    "n_mercado": 583,
+    "brier_modelo_en_mercado": 0.2458,
+    "brier_mercado": 0.2372,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2458,
+    "brier_base": 0.2486,
+    "skill": 0.0115,
+    "logloss": 0.6846,
+    "logloss_base": 0.6904,
+    "z": 0.87,
+    "tasa_real": 0.54,
+    "p_media": 0.546,
+    "n_mercado": 582,
+    "brier_modelo_en_mercado": 0.2458,
+    "brier_mercado": 0.2371,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "over_3.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.22,
+    "brier_base": 0.2221,
+    "skill": 0.0095,
+    "logloss": 0.632,
+    "logloss_base": 0.6363,
+    "z": 0.71,
+    "tasa_real": 0.331,
+    "p_media": 0.31,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2194,
+    "brier_base": 0.2223,
+    "skill": 0.0128,
+    "logloss": 0.6306,
+    "logloss_base": 0.6368,
+    "z": 0.9,
+    "tasa_real": 0.332,
+    "p_media": 0.327,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_over_2.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1835,
+    "brier_base": 0.1852,
+    "skill": 0.0092,
+    "logloss": 0.552,
+    "logloss_base": 0.5574,
+    "z": 0.73,
+    "tasa_real": 0.755,
+    "p_media": 0.742,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.183,
+    "brier_base": 0.1846,
+    "skill": 0.0083,
+    "logloss": 0.5509,
+    "logloss_base": 0.556,
+    "z": 0.66,
+    "tasa_real": 0.756,
+    "p_media": 0.742,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_over_3.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2461,
+    "brier_base": 0.2473,
+    "skill": 0.0047,
+    "logloss": 0.6854,
+    "logloss_base": 0.6878,
+    "z": 0.35,
+    "tasa_real": 0.554,
+    "p_media": 0.545,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2462,
+    "brier_base": 0.2472,
+    "skill": 0.0041,
+    "logloss": 0.6855,
+    "logloss_base": 0.6875,
+    "z": 0.3,
+    "tasa_real": 0.555,
+    "p_media": 0.545,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_over_4.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2279,
+    "brier_base": 0.2301,
+    "skill": 0.0094,
+    "logloss": 0.6478,
+    "logloss_base": 0.6528,
+    "z": 0.69,
+    "tasa_real": 0.357,
+    "p_media": 0.354,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2282,
+    "brier_base": 0.2302,
+    "skill": 0.0089,
+    "logloss": 0.6483,
+    "logloss_base": 0.6531,
+    "z": 0.66,
+    "tasa_real": 0.357,
+    "p_media": 0.354,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_over_5.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1436,
+    "brier_base": 0.1453,
+    "skill": 0.0117,
+    "logloss": 0.4593,
+    "logloss_base": 0.4667,
+    "z": 0.9,
+    "tasa_real": 0.175,
+    "p_media": 0.204,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1438,
+    "brier_base": 0.1455,
+    "skill": 0.0115,
+    "logloss": 0.4598,
+    "logloss_base": 0.4671,
+    "z": 0.88,
+    "tasa_real": 0.175,
+    "p_media": 0.204,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_under_2.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1835,
+    "brier_base": 0.1852,
+    "skill": 0.0092,
+    "logloss": 0.552,
+    "logloss_base": 0.5574,
+    "z": 0.73,
+    "tasa_real": 0.245,
+    "p_media": 0.258,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.183,
+    "brier_base": 0.1846,
+    "skill": 0.0083,
+    "logloss": 0.5509,
+    "logloss_base": 0.556,
+    "z": 0.66,
+    "tasa_real": 0.244,
+    "p_media": 0.258,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_under_3.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2461,
+    "brier_base": 0.2473,
+    "skill": 0.0047,
+    "logloss": 0.6854,
+    "logloss_base": 0.6878,
+    "z": 0.35,
+    "tasa_real": 0.446,
+    "p_media": 0.455,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2462,
+    "brier_base": 0.2472,
+    "skill": 0.0041,
+    "logloss": 0.6855,
+    "logloss_base": 0.6875,
+    "z": 0.3,
+    "tasa_real": 0.445,
+    "p_media": 0.455,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_under_4.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2279,
+    "brier_base": 0.2301,
+    "skill": 0.0094,
+    "logloss": 0.6478,
+    "logloss_base": 0.6528,
+    "z": 0.69,
+    "tasa_real": 0.643,
+    "p_media": 0.646,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2282,
+    "brier_base": 0.2302,
+    "skill": 0.0089,
+    "logloss": 0.6483,
+    "logloss_base": 0.6531,
+    "z": 0.66,
+    "tasa_real": 0.643,
+    "p_media": 0.646,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "tarjetas_under_5.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1436,
+    "brier_base": 0.1453,
+    "skill": 0.0117,
+    "logloss": 0.4593,
+    "logloss_base": 0.4667,
+    "z": 0.9,
+    "tasa_real": 0.825,
+    "p_media": 0.796,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1438,
+    "brier_base": 0.1455,
+    "skill": 0.0115,
+    "logloss": 0.4598,
+    "logloss_base": 0.4671,
+    "z": 0.88,
+    "tasa_real": 0.825,
+    "p_media": 0.796,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "under_1.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1846,
+    "brier_base": 0.1828,
+    "skill": -0.0097,
+    "logloss": 0.5574,
+    "logloss_base": 0.5521,
+    "z": -0.94,
+    "tasa_real": 0.24,
+    "p_media": 0.227,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1854,
+    "brier_base": 0.183,
+    "skill": -0.013,
+    "logloss": 0.5607,
+    "logloss_base": 0.5527,
+    "z": -1.23,
+    "tasa_real": 0.241,
+    "p_media": 0.215,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "under_2.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.2458,
+    "brier_base": 0.2487,
+    "skill": 0.0118,
+    "logloss": 0.6845,
+    "logloss_base": 0.6905,
+    "z": 0.91,
+    "tasa_real": 0.461,
+    "p_media": 0.472,
+    "n_mercado": 583,
+    "brier_modelo_en_mercado": 0.2458,
+    "brier_mercado": 0.2372,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2458,
+    "brier_base": 0.2486,
+    "skill": 0.0115,
+    "logloss": 0.6846,
+    "logloss_base": 0.6904,
+    "z": 0.87,
+    "tasa_real": 0.46,
+    "p_media": 0.454,
+    "n_mercado": 582,
+    "brier_modelo_en_mercado": 0.2458,
+    "brier_mercado": 0.2371,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "under_3.5",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.22,
+    "brier_base": 0.2221,
+    "skill": 0.0095,
+    "logloss": 0.632,
+    "logloss_base": 0.6363,
+    "z": 0.71,
+    "tasa_real": 0.669,
+    "p_media": 0.69,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.2194,
+    "brier_base": 0.2223,
+    "skill": 0.0128,
+    "logloss": 0.6306,
+    "logloss_base": 0.6368,
+    "z": 0.9,
+    "tasa_real": 0.668,
+    "p_media": 0.673,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Ligue1",
+   "mercado": "visita_gana_por_2",
+   "n": 583,
+   "actual": {
+    "n": 583,
+    "brier": 0.1275,
+    "brier_base": 0.1367,
+    "skill": 0.0672,
+    "logloss": 0.4155,
+    "logloss_base": 0.4456,
+    "z": 2.36,
+    "tasa_real": 0.163,
+    "p_media": 0.158,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 582,
+    "brier": 0.1272,
+    "brier_base": 0.1369,
+    "skill": 0.071,
+    "logloss": 0.4123,
+    "logloss_base": 0.4461,
+    "z": 2.6,
+    "tasa_real": 0.163,
+    "p_media": 0.159,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "1",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2393,
+    "brier_base": 0.2482,
+    "skill": 0.0359,
+    "logloss": 0.6713,
+    "logloss_base": 0.6896,
+    "z": 3.23,
+    "tasa_real": 0.454,
+    "p_media": 0.459,
+    "n_mercado": 980,
+    "brier_modelo_en_mercado": 0.2394,
+    "brier_mercado": 0.2282,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2367,
+    "brier_base": 0.2482,
+    "skill": 0.0462,
+    "logloss": 0.6659,
+    "logloss_base": 0.6895,
+    "z": 3.42,
+    "tasa_real": 0.453,
+    "p_media": 0.466,
+    "n_mercado": 979,
+    "brier_modelo_en_mercado": 0.2368,
+    "brier_mercado": 0.2281,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "12",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1877,
+    "brier_base": 0.1884,
+    "skill": 0.0035,
+    "logloss": 0.5626,
+    "logloss_base": 0.5643,
+    "z": 1.0,
+    "tasa_real": 0.749,
+    "p_media": 0.747,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1869,
+    "brier_base": 0.1885,
+    "skill": 0.0083,
+    "logloss": 0.5604,
+    "logloss_base": 0.5646,
+    "z": 1.86,
+    "tasa_real": 0.748,
+    "p_media": 0.757,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "1X",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2053,
+    "brier_base": 0.2089,
+    "skill": 0.0172,
+    "logloss": 0.6007,
+    "logloss_base": 0.6088,
+    "z": 1.53,
+    "tasa_real": 0.705,
+    "p_media": 0.712,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2041,
+    "brier_base": 0.209,
+    "skill": 0.0237,
+    "logloss": 0.5987,
+    "logloss_base": 0.6091,
+    "z": 1.67,
+    "tasa_real": 0.705,
+    "p_media": 0.709,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "2",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2053,
+    "brier_base": 0.2089,
+    "skill": 0.0172,
+    "logloss": 0.6007,
+    "logloss_base": 0.6088,
+    "z": 1.53,
+    "tasa_real": 0.295,
+    "p_media": 0.288,
+    "n_mercado": 980,
+    "brier_modelo_en_mercado": 0.2048,
+    "brier_mercado": 0.1978,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2041,
+    "brier_base": 0.209,
+    "skill": 0.0237,
+    "logloss": 0.5987,
+    "logloss_base": 0.6091,
+    "z": 1.67,
+    "tasa_real": 0.295,
+    "p_media": 0.291,
+    "n_mercado": 979,
+    "brier_modelo_en_mercado": 0.2036,
+    "brier_mercado": 0.198,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "X",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1877,
+    "brier_base": 0.1884,
+    "skill": 0.0035,
+    "logloss": 0.5626,
+    "logloss_base": 0.5643,
+    "z": 1.0,
+    "tasa_real": 0.251,
+    "p_media": 0.253,
+    "n_mercado": 980,
+    "brier_modelo_en_mercado": 0.1881,
+    "brier_mercado": 0.1869,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1869,
+    "brier_base": 0.1885,
+    "skill": 0.0083,
+    "logloss": 0.5604,
+    "logloss_base": 0.5646,
+    "z": 1.86,
+    "tasa_real": 0.252,
+    "p_media": 0.243,
+    "n_mercado": 979,
+    "brier_modelo_en_mercado": 0.1873,
+    "brier_mercado": 0.187,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "X2",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2393,
+    "brier_base": 0.2482,
+    "skill": 0.0359,
+    "logloss": 0.6713,
+    "logloss_base": 0.6896,
+    "z": 3.23,
+    "tasa_real": 0.546,
+    "p_media": 0.541,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2367,
+    "brier_base": 0.2482,
+    "skill": 0.0462,
+    "logloss": 0.6659,
+    "logloss_base": 0.6895,
+    "z": 3.42,
+    "tasa_real": 0.547,
+    "p_media": 0.534,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "aa_no",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2368,
+    "brier_base": 0.2385,
+    "skill": 0.0071,
+    "logloss": 0.6663,
+    "logloss_base": 0.67,
+    "z": 1.09,
+    "tasa_real": 0.392,
+    "p_media": 0.424,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2361,
+    "brier_base": 0.2384,
+    "skill": 0.0095,
+    "logloss": 0.6647,
+    "logloss_base": 0.6697,
+    "z": 1.42,
+    "tasa_real": 0.391,
+    "p_media": 0.4,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "aa_si",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2368,
+    "brier_base": 0.2385,
+    "skill": 0.0071,
+    "logloss": 0.6663,
+    "logloss_base": 0.67,
+    "z": 1.09,
+    "tasa_real": 0.608,
+    "p_media": 0.576,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2361,
+    "brier_base": 0.2384,
+    "skill": 0.0095,
+    "logloss": 0.6647,
+    "logloss_base": 0.6697,
+    "z": 1.42,
+    "tasa_real": 0.609,
+    "p_media": 0.6,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_over_10.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2382,
+    "brier_base": 0.2402,
+    "skill": 0.0083,
+    "logloss": 0.6688,
+    "logloss_base": 0.6734,
+    "z": 0.66,
+    "tasa_real": 0.4,
+    "p_media": 0.368,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2383,
+    "brier_base": 0.2403,
+    "skill": 0.0084,
+    "logloss": 0.669,
+    "logloss_base": 0.6736,
+    "z": 0.66,
+    "tasa_real": 0.401,
+    "p_media": 0.368,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_over_11.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2149,
+    "brier_base": 0.2133,
+    "skill": -0.0075,
+    "logloss": 0.6222,
+    "logloss_base": 0.618,
+    "z": -0.63,
+    "tasa_real": 0.308,
+    "p_media": 0.263,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2151,
+    "brier_base": 0.2135,
+    "skill": -0.0075,
+    "logloss": 0.6225,
+    "logloss_base": 0.6183,
+    "z": -0.63,
+    "tasa_real": 0.308,
+    "p_media": 0.263,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_over_8.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2397,
+    "brier_base": 0.2368,
+    "skill": -0.0122,
+    "logloss": 0.6732,
+    "logloss_base": 0.6665,
+    "z": -0.97,
+    "tasa_real": 0.616,
+    "p_media": 0.613,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2395,
+    "brier_base": 0.2366,
+    "skill": -0.0122,
+    "logloss": 0.6728,
+    "logloss_base": 0.6662,
+    "z": -0.96,
+    "tasa_real": 0.617,
+    "p_media": 0.613,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_over_9.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2527,
+    "brier_base": 0.25,
+    "skill": -0.0106,
+    "logloss": 0.6992,
+    "logloss_base": 0.6932,
+    "z": -0.8,
+    "tasa_real": 0.508,
+    "p_media": 0.488,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2527,
+    "brier_base": 0.25,
+    "skill": -0.0106,
+    "logloss": 0.6991,
+    "logloss_base": 0.6932,
+    "z": -0.8,
+    "tasa_real": 0.509,
+    "p_media": 0.488,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_under_10.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2382,
+    "brier_base": 0.2402,
+    "skill": 0.0083,
+    "logloss": 0.6688,
+    "logloss_base": 0.6734,
+    "z": 0.66,
+    "tasa_real": 0.6,
+    "p_media": 0.632,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2383,
+    "brier_base": 0.2403,
+    "skill": 0.0084,
+    "logloss": 0.669,
+    "logloss_base": 0.6736,
+    "z": 0.66,
+    "tasa_real": 0.599,
+    "p_media": 0.632,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_under_11.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2149,
+    "brier_base": 0.2133,
+    "skill": -0.0075,
+    "logloss": 0.6222,
+    "logloss_base": 0.618,
+    "z": -0.63,
+    "tasa_real": 0.692,
+    "p_media": 0.737,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2151,
+    "brier_base": 0.2135,
+    "skill": -0.0075,
+    "logloss": 0.6225,
+    "logloss_base": 0.6183,
+    "z": -0.63,
+    "tasa_real": 0.692,
+    "p_media": 0.737,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_under_8.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2397,
+    "brier_base": 0.2368,
+    "skill": -0.0122,
+    "logloss": 0.6732,
+    "logloss_base": 0.6665,
+    "z": -0.97,
+    "tasa_real": 0.384,
+    "p_media": 0.387,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2395,
+    "brier_base": 0.2366,
+    "skill": -0.0122,
+    "logloss": 0.6728,
+    "logloss_base": 0.6662,
+    "z": -0.96,
+    "tasa_real": 0.383,
+    "p_media": 0.387,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "corners_under_9.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2527,
+    "brier_base": 0.25,
+    "skill": -0.0106,
+    "logloss": 0.6992,
+    "logloss_base": 0.6932,
+    "z": -0.8,
+    "tasa_real": 0.492,
+    "p_media": 0.512,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2527,
+    "brier_base": 0.25,
+    "skill": -0.0106,
+    "logloss": 0.6991,
+    "logloss_base": 0.6932,
+    "z": -0.8,
+    "tasa_real": 0.491,
+    "p_media": 0.512,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "local_gana_por_2",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1749,
+    "brier_base": 0.1793,
+    "skill": 0.0246,
+    "logloss": 0.531,
+    "logloss_base": 0.5443,
+    "z": 1.92,
+    "tasa_real": 0.234,
+    "p_media": 0.263,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1734,
+    "brier_base": 0.1789,
+    "skill": 0.031,
+    "logloss": 0.5272,
+    "logloss_base": 0.5434,
+    "z": 1.93,
+    "tasa_real": 0.233,
+    "p_media": 0.275,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "marcador_exacto_ll",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "logloss": 3.1287,
+    "logloss_base": 3.1518,
+    "skill": 0.0073,
+    "z": 2.11,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 982,
+    "logloss": 3.1093,
+    "logloss_base": 3.1519,
+    "skill": 0.0135,
+    "z": 3.35,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "over_1.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1608,
+    "brier_base": 0.1622,
+    "skill": 0.0086,
+    "logloss": 0.5012,
+    "logloss_base": 0.5055,
+    "z": 1.26,
+    "tasa_real": 0.797,
+    "p_media": 0.795,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1617,
+    "brier_base": 0.1623,
+    "skill": 0.0039,
+    "logloss": 0.5029,
+    "logloss_base": 0.5058,
+    "z": 0.51,
+    "tasa_real": 0.796,
+    "p_media": 0.818,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "over_2.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2383,
+    "brier_base": 0.2398,
+    "skill": 0.0063,
+    "logloss": 0.6695,
+    "logloss_base": 0.6727,
+    "z": 0.76,
+    "tasa_real": 0.605,
+    "p_media": 0.558,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2345,
+    "brier_base": 0.2399,
+    "skill": 0.0224,
+    "logloss": 0.6614,
+    "logloss_base": 0.6728,
+    "z": 2.46,
+    "tasa_real": 0.605,
+    "p_media": 0.594,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "over_3.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2336,
+    "brier_base": 0.2344,
+    "skill": 0.0031,
+    "logloss": 0.6603,
+    "logloss_base": 0.6617,
+    "z": 0.4,
+    "tasa_real": 0.37,
+    "p_media": 0.337,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2311,
+    "brier_base": 0.2345,
+    "skill": 0.0143,
+    "logloss": 0.6552,
+    "logloss_base": 0.662,
+    "z": 1.28,
+    "tasa_real": 0.371,
+    "p_media": 0.373,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_over_2.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.1642,
+    "brier_base": 0.1673,
+    "skill": 0.0187,
+    "logloss": 0.5082,
+    "logloss_base": 0.5174,
+    "z": 2.58,
+    "tasa_real": 0.788,
+    "p_media": 0.777,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.1643,
+    "brier_base": 0.1674,
+    "skill": 0.0187,
+    "logloss": 0.5084,
+    "logloss_base": 0.5176,
+    "z": 2.56,
+    "tasa_real": 0.788,
+    "p_media": 0.777,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_over_3.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2325,
+    "brier_base": 0.2363,
+    "skill": 0.016,
+    "logloss": 0.6575,
+    "logloss_base": 0.6655,
+    "z": 1.87,
+    "tasa_real": 0.618,
+    "p_media": 0.589,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2326,
+    "brier_base": 0.2364,
+    "skill": 0.016,
+    "logloss": 0.6577,
+    "logloss_base": 0.6657,
+    "z": 1.87,
+    "tasa_real": 0.618,
+    "p_media": 0.589,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_over_4.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2411,
+    "brier_base": 0.2447,
+    "skill": 0.0149,
+    "logloss": 0.675,
+    "logloss_base": 0.6825,
+    "z": 1.8,
+    "tasa_real": 0.426,
+    "p_media": 0.396,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2411,
+    "brier_base": 0.2448,
+    "skill": 0.0149,
+    "logloss": 0.6751,
+    "logloss_base": 0.6827,
+    "z": 1.81,
+    "tasa_real": 0.426,
+    "p_media": 0.396,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_over_5.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.1836,
+    "brier_base": 0.1847,
+    "skill": 0.0062,
+    "logloss": 0.5531,
+    "logloss_base": 0.5563,
+    "z": 0.81,
+    "tasa_real": 0.244,
+    "p_media": 0.237,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.1837,
+    "brier_base": 0.1849,
+    "skill": 0.0062,
+    "logloss": 0.5534,
+    "logloss_base": 0.5566,
+    "z": 0.82,
+    "tasa_real": 0.245,
+    "p_media": 0.237,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_under_2.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.1642,
+    "brier_base": 0.1673,
+    "skill": 0.0187,
+    "logloss": 0.5082,
+    "logloss_base": 0.5174,
+    "z": 2.58,
+    "tasa_real": 0.212,
+    "p_media": 0.223,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.1643,
+    "brier_base": 0.1674,
+    "skill": 0.0187,
+    "logloss": 0.5084,
+    "logloss_base": 0.5176,
+    "z": 2.56,
+    "tasa_real": 0.212,
+    "p_media": 0.223,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_under_3.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2325,
+    "brier_base": 0.2363,
+    "skill": 0.016,
+    "logloss": 0.6575,
+    "logloss_base": 0.6655,
+    "z": 1.87,
+    "tasa_real": 0.382,
+    "p_media": 0.411,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2326,
+    "brier_base": 0.2364,
+    "skill": 0.016,
+    "logloss": 0.6577,
+    "logloss_base": 0.6657,
+    "z": 1.87,
+    "tasa_real": 0.382,
+    "p_media": 0.411,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_under_4.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.2411,
+    "brier_base": 0.2447,
+    "skill": 0.0149,
+    "logloss": 0.675,
+    "logloss_base": 0.6825,
+    "z": 1.8,
+    "tasa_real": 0.574,
+    "p_media": 0.604,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.2411,
+    "brier_base": 0.2448,
+    "skill": 0.0149,
+    "logloss": 0.6751,
+    "logloss_base": 0.6827,
+    "z": 1.81,
+    "tasa_real": 0.574,
+    "p_media": 0.604,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "tarjetas_under_5.5",
+   "n": 982,
+   "actual": {
+    "n": 982,
+    "brier": 0.1836,
+    "brier_base": 0.1847,
+    "skill": 0.0062,
+    "logloss": 0.5531,
+    "logloss_base": 0.5563,
+    "z": 0.81,
+    "tasa_real": 0.756,
+    "p_media": 0.763,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 981,
+    "brier": 0.1837,
+    "brier_base": 0.1849,
+    "skill": 0.0062,
+    "logloss": 0.5534,
+    "logloss_base": 0.5566,
+    "z": 0.82,
+    "tasa_real": 0.755,
+    "p_media": 0.763,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "under_1.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1608,
+    "brier_base": 0.1622,
+    "skill": 0.0086,
+    "logloss": 0.5012,
+    "logloss_base": 0.5055,
+    "z": 1.26,
+    "tasa_real": 0.203,
+    "p_media": 0.205,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1617,
+    "brier_base": 0.1623,
+    "skill": 0.0039,
+    "logloss": 0.5029,
+    "logloss_base": 0.5058,
+    "z": 0.51,
+    "tasa_real": 0.204,
+    "p_media": 0.182,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "under_2.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2383,
+    "brier_base": 0.2398,
+    "skill": 0.0063,
+    "logloss": 0.6695,
+    "logloss_base": 0.6727,
+    "z": 0.76,
+    "tasa_real": 0.395,
+    "p_media": 0.442,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2345,
+    "brier_base": 0.2399,
+    "skill": 0.0224,
+    "logloss": 0.6614,
+    "logloss_base": 0.6728,
+    "z": 2.46,
+    "tasa_real": 0.395,
+    "p_media": 0.406,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "under_3.5",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.2336,
+    "brier_base": 0.2344,
+    "skill": 0.0031,
+    "logloss": 0.6603,
+    "logloss_base": 0.6617,
+    "z": 0.4,
+    "tasa_real": 0.63,
+    "p_media": 0.663,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.2311,
+    "brier_base": 0.2345,
+    "skill": 0.0143,
+    "logloss": 0.6552,
+    "logloss_base": 0.662,
+    "z": 1.28,
+    "tasa_real": 0.629,
+    "p_media": 0.627,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "MLS",
+   "mercado": "visita_gana_por_2",
+   "n": 983,
+   "actual": {
+    "n": 983,
+    "brier": 0.1088,
+    "brier_base": 0.1103,
+    "skill": 0.0141,
+    "logloss": 0.3734,
+    "logloss_base": 0.3816,
+    "z": 1.3,
+    "tasa_real": 0.125,
+    "p_media": 0.119,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 982,
+    "brier": 0.1079,
+    "brier_base": 0.1104,
+    "skill": 0.0232,
+    "logloss": 0.3695,
+    "logloss_base": 0.3819,
+    "z": 1.66,
+    "tasa_real": 0.125,
+    "p_media": 0.125,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2205,
+    "brier_base": 0.2439,
+    "skill": 0.0959,
+    "logloss": 0.6299,
+    "logloss_base": 0.6809,
+    "z": 4.53,
+    "tasa_real": 0.415,
+    "p_media": 0.432,
+    "n_mercado": 725,
+    "brier_modelo_en_mercado": 0.2205,
+    "brier_mercado": 0.2106,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2172,
+    "brier_base": 0.2438,
+    "skill": 0.1091,
+    "logloss": 0.6223,
+    "logloss_base": 0.6807,
+    "z": 5.3,
+    "tasa_real": 0.414,
+    "p_media": 0.432,
+    "n_mercado": 724,
+    "brier_modelo_en_mercado": 0.2172,
+    "brier_mercado": 0.2106,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "12",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1917,
+    "brier_base": 0.1927,
+    "skill": 0.0054,
+    "logloss": 0.5714,
+    "logloss_base": 0.5741,
+    "z": 0.8,
+    "tasa_real": 0.741,
+    "p_media": 0.755,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1912,
+    "brier_base": 0.1929,
+    "skill": 0.0087,
+    "logloss": 0.5697,
+    "logloss_base": 0.5746,
+    "z": 1.47,
+    "tasa_real": 0.74,
+    "p_media": 0.755,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1T_1",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.222,
+    "brier_base": 0.2343,
+    "skill": 0.0522,
+    "logloss": 0.6343,
+    "logloss_base": 0.6614,
+    "z": 3.13,
+    "tasa_real": 0.372,
+    "p_media": 0.338,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2193,
+    "brier_base": 0.234,
+    "skill": 0.0627,
+    "logloss": 0.6277,
+    "logloss_base": 0.6609,
+    "z": 4.16,
+    "tasa_real": 0.372,
+    "p_media": 0.34,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1T_2",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1863,
+    "brier_base": 0.1889,
+    "skill": 0.0137,
+    "logloss": 0.5584,
+    "logloss_base": 0.5654,
+    "z": 0.74,
+    "tasa_real": 0.252,
+    "p_media": 0.27,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1834,
+    "brier_base": 0.189,
+    "skill": 0.0296,
+    "logloss": 0.5512,
+    "logloss_base": 0.5658,
+    "z": 1.74,
+    "tasa_real": 0.253,
+    "p_media": 0.271,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1T_X",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2323,
+    "brier_base": 0.2347,
+    "skill": 0.0102,
+    "logloss": 0.657,
+    "logloss_base": 0.6623,
+    "z": 1.81,
+    "tasa_real": 0.375,
+    "p_media": 0.392,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2323,
+    "brier_base": 0.2348,
+    "skill": 0.0106,
+    "logloss": 0.6571,
+    "logloss_base": 0.6625,
+    "z": 1.98,
+    "tasa_real": 0.376,
+    "p_media": 0.389,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1T_over_0.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1942,
+    "brier_base": 0.1954,
+    "skill": 0.0063,
+    "logloss": 0.5762,
+    "logloss_base": 0.5796,
+    "z": 0.89,
+    "tasa_real": 0.734,
+    "p_media": 0.724,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1942,
+    "brier_base": 0.1956,
+    "skill": 0.0073,
+    "logloss": 0.5759,
+    "logloss_base": 0.58,
+    "z": 1.08,
+    "tasa_real": 0.733,
+    "p_media": 0.731,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1T_over_1.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.227,
+    "brier_base": 0.229,
+    "skill": 0.0088,
+    "logloss": 0.6465,
+    "logloss_base": 0.6507,
+    "z": 1.11,
+    "tasa_real": 0.352,
+    "p_media": 0.371,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2282,
+    "brier_base": 0.2288,
+    "skill": 0.0026,
+    "logloss": 0.649,
+    "logloss_base": 0.6503,
+    "z": 0.33,
+    "tasa_real": 0.351,
+    "p_media": 0.38,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "1X",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2009,
+    "brier_base": 0.2197,
+    "skill": 0.0856,
+    "logloss": 0.5858,
+    "logloss_base": 0.6314,
+    "z": 3.91,
+    "tasa_real": 0.674,
+    "p_media": 0.677,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1974,
+    "brier_base": 0.2199,
+    "skill": 0.1025,
+    "logloss": 0.5782,
+    "logloss_base": 0.6317,
+    "z": 4.74,
+    "tasa_real": 0.674,
+    "p_media": 0.677,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "2",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2009,
+    "brier_base": 0.2197,
+    "skill": 0.0856,
+    "logloss": 0.5858,
+    "logloss_base": 0.6314,
+    "z": 3.91,
+    "tasa_real": 0.326,
+    "p_media": 0.323,
+    "n_mercado": 725,
+    "brier_modelo_en_mercado": 0.2009,
+    "brier_mercado": 0.1942,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1974,
+    "brier_base": 0.2199,
+    "skill": 0.1025,
+    "logloss": 0.5782,
+    "logloss_base": 0.6317,
+    "z": 4.74,
+    "tasa_real": 0.326,
+    "p_media": 0.323,
+    "n_mercado": 724,
+    "brier_modelo_en_mercado": 0.1974,
+    "brier_mercado": 0.1944,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "X",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1917,
+    "brier_base": 0.1927,
+    "skill": 0.0054,
+    "logloss": 0.5714,
+    "logloss_base": 0.5741,
+    "z": 0.8,
+    "tasa_real": 0.259,
+    "p_media": 0.245,
+    "n_mercado": 725,
+    "brier_modelo_en_mercado": 0.1917,
+    "brier_mercado": 0.1916,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1912,
+    "brier_base": 0.1929,
+    "skill": 0.0087,
+    "logloss": 0.5697,
+    "logloss_base": 0.5746,
+    "z": 1.47,
+    "tasa_real": 0.26,
+    "p_media": 0.245,
+    "n_mercado": 724,
+    "brier_modelo_en_mercado": 0.1912,
+    "brier_mercado": 0.1918,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "X2",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2205,
+    "brier_base": 0.2439,
+    "skill": 0.0959,
+    "logloss": 0.6299,
+    "logloss_base": 0.6809,
+    "z": 4.53,
+    "tasa_real": 0.585,
+    "p_media": 0.568,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2172,
+    "brier_base": 0.2438,
+    "skill": 0.1091,
+    "logloss": 0.6223,
+    "logloss_base": 0.6807,
+    "z": 5.3,
+    "tasa_real": 0.586,
+    "p_media": 0.568,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "aa_no",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2462,
+    "brier_base": 0.2464,
+    "skill": 0.0005,
+    "logloss": 0.6856,
+    "logloss_base": 0.6858,
+    "z": 0.06,
+    "tasa_real": 0.437,
+    "p_media": 0.448,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2466,
+    "brier_base": 0.2463,
+    "skill": -0.0014,
+    "logloss": 0.6865,
+    "logloss_base": 0.6857,
+    "z": -0.16,
+    "tasa_real": 0.436,
+    "p_media": 0.431,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "aa_si",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2462,
+    "brier_base": 0.2464,
+    "skill": 0.0005,
+    "logloss": 0.6856,
+    "logloss_base": 0.6858,
+    "z": 0.06,
+    "tasa_real": 0.563,
+    "p_media": 0.552,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2466,
+    "brier_base": 0.2463,
+    "skill": -0.0014,
+    "logloss": 0.6865,
+    "logloss_base": 0.6857,
+    "z": -0.16,
+    "tasa_real": 0.564,
+    "p_media": 0.569,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_over_10.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2473,
+    "brier_base": 0.2478,
+    "skill": 0.0024,
+    "logloss": 0.688,
+    "logloss_base": 0.6888,
+    "z": 0.18,
+    "tasa_real": 0.448,
+    "p_media": 0.458,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2473,
+    "brier_base": 0.2479,
+    "skill": 0.0024,
+    "logloss": 0.6881,
+    "logloss_base": 0.6889,
+    "z": 0.18,
+    "tasa_real": 0.449,
+    "p_media": 0.458,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_over_11.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2135,
+    "brier_base": 0.2171,
+    "skill": 0.0165,
+    "logloss": 0.6178,
+    "logloss_base": 0.626,
+    "z": 1.25,
+    "tasa_real": 0.314,
+    "p_media": 0.344,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2136,
+    "brier_base": 0.2172,
+    "skill": 0.0165,
+    "logloss": 0.6181,
+    "logloss_base": 0.6263,
+    "z": 1.25,
+    "tasa_real": 0.315,
+    "p_media": 0.344,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_over_8.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2243,
+    "brier_base": 0.2238,
+    "skill": -0.0025,
+    "logloss": 0.6431,
+    "logloss_base": 0.64,
+    "z": -0.2,
+    "tasa_real": 0.665,
+    "p_media": 0.697,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2239,
+    "brier_base": 0.2234,
+    "skill": -0.0023,
+    "logloss": 0.6423,
+    "logloss_base": 0.6392,
+    "z": -0.18,
+    "tasa_real": 0.666,
+    "p_media": 0.697,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_over_9.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2445,
+    "brier_base": 0.2466,
+    "skill": 0.0085,
+    "logloss": 0.6827,
+    "logloss_base": 0.6864,
+    "z": 0.65,
+    "tasa_real": 0.563,
+    "p_media": 0.579,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2443,
+    "brier_base": 0.2465,
+    "skill": 0.0087,
+    "logloss": 0.6824,
+    "logloss_base": 0.6861,
+    "z": 0.65,
+    "tasa_real": 0.564,
+    "p_media": 0.579,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_under_10.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2473,
+    "brier_base": 0.2478,
+    "skill": 0.0024,
+    "logloss": 0.688,
+    "logloss_base": 0.6888,
+    "z": 0.18,
+    "tasa_real": 0.552,
+    "p_media": 0.542,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2473,
+    "brier_base": 0.2479,
+    "skill": 0.0024,
+    "logloss": 0.6881,
+    "logloss_base": 0.6889,
+    "z": 0.18,
+    "tasa_real": 0.551,
+    "p_media": 0.542,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_under_11.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2135,
+    "brier_base": 0.2171,
+    "skill": 0.0165,
+    "logloss": 0.6178,
+    "logloss_base": 0.626,
+    "z": 1.25,
+    "tasa_real": 0.686,
+    "p_media": 0.656,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2136,
+    "brier_base": 0.2172,
+    "skill": 0.0165,
+    "logloss": 0.6181,
+    "logloss_base": 0.6263,
+    "z": 1.25,
+    "tasa_real": 0.685,
+    "p_media": 0.656,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_under_8.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2243,
+    "brier_base": 0.2238,
+    "skill": -0.0025,
+    "logloss": 0.6431,
+    "logloss_base": 0.64,
+    "z": -0.2,
+    "tasa_real": 0.335,
+    "p_media": 0.303,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2239,
+    "brier_base": 0.2234,
+    "skill": -0.0023,
+    "logloss": 0.6423,
+    "logloss_base": 0.6392,
+    "z": -0.18,
+    "tasa_real": 0.334,
+    "p_media": 0.303,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "corners_under_9.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2445,
+    "brier_base": 0.2466,
+    "skill": 0.0085,
+    "logloss": 0.6827,
+    "logloss_base": 0.6864,
+    "z": 0.65,
+    "tasa_real": 0.437,
+    "p_media": 0.421,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2443,
+    "brier_base": 0.2465,
+    "skill": 0.0087,
+    "logloss": 0.6824,
+    "logloss_base": 0.6861,
+    "z": 0.65,
+    "tasa_real": 0.436,
+    "p_media": 0.421,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "local_gana_por_2",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1626,
+    "brier_base": 0.1727,
+    "skill": 0.0586,
+    "logloss": 0.4978,
+    "logloss_base": 0.5297,
+    "z": 2.29,
+    "tasa_real": 0.221,
+    "p_media": 0.238,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1603,
+    "brier_base": 0.1721,
+    "skill": 0.0689,
+    "logloss": 0.4911,
+    "logloss_base": 0.5285,
+    "z": 3.0,
+    "tasa_real": 0.22,
+    "p_media": 0.238,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "marcador_exacto_ll",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "logloss": 2.9619,
+    "logloss_base": 3.0325,
+    "skill": 0.0233,
+    "z": 4.08,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 724,
+    "logloss": 2.9461,
+    "logloss_base": 3.0329,
+    "skill": 0.0286,
+    "z": 5.54,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "over_1.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1611,
+    "brier_base": 0.1609,
+    "skill": -0.0008,
+    "logloss": 0.5024,
+    "logloss_base": 0.5026,
+    "z": -0.08,
+    "tasa_real": 0.799,
+    "p_media": 0.789,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1612,
+    "brier_base": 0.1611,
+    "skill": -0.0008,
+    "logloss": 0.5032,
+    "logloss_base": 0.503,
+    "z": -0.09,
+    "tasa_real": 0.798,
+    "p_media": 0.798,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "over_2.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.244,
+    "brier_base": 0.2466,
+    "skill": 0.0107,
+    "logloss": 0.6812,
+    "logloss_base": 0.6863,
+    "z": 0.95,
+    "tasa_real": 0.56,
+    "p_media": 0.552,
+    "n_mercado": 725,
+    "brier_modelo_en_mercado": 0.244,
+    "brier_mercado": 0.243,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2454,
+    "brier_base": 0.2465,
+    "skill": 0.0045,
+    "logloss": 0.6841,
+    "logloss_base": 0.6861,
+    "z": 0.4,
+    "tasa_real": 0.561,
+    "p_media": 0.565,
+    "n_mercado": 724,
+    "brier_modelo_en_mercado": 0.2454,
+    "brier_mercado": 0.2429,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "over_3.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2176,
+    "brier_base": 0.2181,
+    "skill": 0.0025,
+    "logloss": 0.6269,
+    "logloss_base": 0.6281,
+    "z": 0.23,
+    "tasa_real": 0.319,
+    "p_media": 0.332,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2197,
+    "brier_base": 0.2183,
+    "skill": -0.0064,
+    "logloss": 0.6313,
+    "logloss_base": 0.6284,
+    "z": -0.56,
+    "tasa_real": 0.319,
+    "p_media": 0.345,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_over_2.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.196,
+    "brier_base": 0.1981,
+    "skill": 0.0105,
+    "logloss": 0.5799,
+    "logloss_base": 0.5854,
+    "z": 0.85,
+    "tasa_real": 0.728,
+    "p_media": 0.752,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1961,
+    "brier_base": 0.1982,
+    "skill": 0.0107,
+    "logloss": 0.5802,
+    "logloss_base": 0.5858,
+    "z": 0.87,
+    "tasa_real": 0.728,
+    "p_media": 0.752,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_over_3.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2438,
+    "brier_base": 0.2461,
+    "skill": 0.0096,
+    "logloss": 0.6807,
+    "logloss_base": 0.6854,
+    "z": 0.67,
+    "tasa_real": 0.566,
+    "p_media": 0.559,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2437,
+    "brier_base": 0.2462,
+    "skill": 0.0102,
+    "logloss": 0.6805,
+    "logloss_base": 0.6855,
+    "z": 0.71,
+    "tasa_real": 0.565,
+    "p_media": 0.56,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_over_4.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2322,
+    "brier_base": 0.2324,
+    "skill": 0.0008,
+    "logloss": 0.657,
+    "logloss_base": 0.6576,
+    "z": 0.06,
+    "tasa_real": 0.367,
+    "p_media": 0.37,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2318,
+    "brier_base": 0.2322,
+    "skill": 0.0017,
+    "logloss": 0.6561,
+    "logloss_base": 0.6571,
+    "z": 0.11,
+    "tasa_real": 0.366,
+    "p_media": 0.37,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_over_5.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1692,
+    "brier_base": 0.1666,
+    "skill": -0.0158,
+    "logloss": 0.5225,
+    "logloss_base": 0.5157,
+    "z": -1.13,
+    "tasa_real": 0.211,
+    "p_media": 0.219,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1695,
+    "brier_base": 0.1668,
+    "skill": -0.0161,
+    "logloss": 0.5231,
+    "logloss_base": 0.516,
+    "z": -1.14,
+    "tasa_real": 0.211,
+    "p_media": 0.219,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_under_2.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.196,
+    "brier_base": 0.1981,
+    "skill": 0.0105,
+    "logloss": 0.5799,
+    "logloss_base": 0.5854,
+    "z": 0.85,
+    "tasa_real": 0.272,
+    "p_media": 0.248,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1961,
+    "brier_base": 0.1982,
+    "skill": 0.0107,
+    "logloss": 0.5802,
+    "logloss_base": 0.5858,
+    "z": 0.87,
+    "tasa_real": 0.272,
+    "p_media": 0.248,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_under_3.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2438,
+    "brier_base": 0.2461,
+    "skill": 0.0096,
+    "logloss": 0.6807,
+    "logloss_base": 0.6854,
+    "z": 0.67,
+    "tasa_real": 0.434,
+    "p_media": 0.441,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2437,
+    "brier_base": 0.2462,
+    "skill": 0.0102,
+    "logloss": 0.6805,
+    "logloss_base": 0.6855,
+    "z": 0.71,
+    "tasa_real": 0.435,
+    "p_media": 0.44,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_under_4.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2322,
+    "brier_base": 0.2324,
+    "skill": 0.0008,
+    "logloss": 0.657,
+    "logloss_base": 0.6576,
+    "z": 0.06,
+    "tasa_real": 0.633,
+    "p_media": 0.63,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2318,
+    "brier_base": 0.2322,
+    "skill": 0.0017,
+    "logloss": 0.6561,
+    "logloss_base": 0.6571,
+    "z": 0.11,
+    "tasa_real": 0.634,
+    "p_media": 0.63,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "tarjetas_under_5.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1692,
+    "brier_base": 0.1666,
+    "skill": -0.0158,
+    "logloss": 0.5225,
+    "logloss_base": 0.5157,
+    "z": -1.13,
+    "tasa_real": 0.789,
+    "p_media": 0.781,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1695,
+    "brier_base": 0.1668,
+    "skill": -0.0161,
+    "logloss": 0.5231,
+    "logloss_base": 0.516,
+    "z": -1.14,
+    "tasa_real": 0.789,
+    "p_media": 0.781,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "under_1.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1611,
+    "brier_base": 0.1609,
+    "skill": -0.0008,
+    "logloss": 0.5024,
+    "logloss_base": 0.5026,
+    "z": -0.08,
+    "tasa_real": 0.201,
+    "p_media": 0.211,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1612,
+    "brier_base": 0.1611,
+    "skill": -0.0008,
+    "logloss": 0.5032,
+    "logloss_base": 0.503,
+    "z": -0.09,
+    "tasa_real": 0.202,
+    "p_media": 0.202,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "under_2.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.244,
+    "brier_base": 0.2466,
+    "skill": 0.0107,
+    "logloss": 0.6812,
+    "logloss_base": 0.6863,
+    "z": 0.95,
+    "tasa_real": 0.44,
+    "p_media": 0.448,
+    "n_mercado": 725,
+    "brier_modelo_en_mercado": 0.244,
+    "brier_mercado": 0.243,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2454,
+    "brier_base": 0.2465,
+    "skill": 0.0045,
+    "logloss": 0.6841,
+    "logloss_base": 0.6861,
+    "z": 0.4,
+    "tasa_real": 0.439,
+    "p_media": 0.435,
+    "n_mercado": 724,
+    "brier_modelo_en_mercado": 0.2454,
+    "brier_mercado": 0.2429,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "under_3.5",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.2176,
+    "brier_base": 0.2181,
+    "skill": 0.0025,
+    "logloss": 0.6269,
+    "logloss_base": 0.6281,
+    "z": 0.23,
+    "tasa_real": 0.681,
+    "p_media": 0.668,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.2197,
+    "brier_base": 0.2183,
+    "skill": -0.0064,
+    "logloss": 0.6313,
+    "logloss_base": 0.6284,
+    "z": -0.56,
+    "tasa_real": 0.681,
+    "p_media": 0.655,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "Premier",
+   "mercado": "visita_gana_por_2",
+   "n": 725,
+   "actual": {
+    "n": 725,
+    "brier": 0.1214,
+    "brier_base": 0.1261,
+    "skill": 0.0368,
+    "logloss": 0.3959,
+    "logloss_base": 0.4194,
+    "z": 1.41,
+    "tasa_real": 0.148,
+    "p_media": 0.162,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 724,
+    "brier": 0.1179,
+    "brier_base": 0.1262,
+    "skill": 0.0658,
+    "logloss": 0.3853,
+    "logloss_base": 0.4197,
+    "z": 2.75,
+    "tasa_real": 0.148,
+    "p_media": 0.16,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2056,
+    "brier_base": 0.2393,
+    "skill": 0.1409,
+    "logloss": 0.5969,
+    "logloss_base": 0.6716,
+    "z": 6.55,
+    "tasa_real": 0.395,
+    "p_media": 0.413,
+    "n_mercado": 734,
+    "brier_modelo_en_mercado": 0.2056,
+    "brier_mercado": 0.1981,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2044,
+    "brier_base": 0.2394,
+    "skill": 0.1462,
+    "logloss": 0.5946,
+    "logloss_base": 0.6718,
+    "z": 6.83,
+    "tasa_real": 0.396,
+    "p_media": 0.408,
+    "n_mercado": 733,
+    "brier_modelo_en_mercado": 0.2044,
+    "brier_mercado": 0.1982,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "12",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1891,
+    "brier_base": 0.1922,
+    "skill": 0.0158,
+    "logloss": 0.5646,
+    "logloss_base": 0.5727,
+    "z": 2.48,
+    "tasa_real": 0.741,
+    "p_media": 0.736,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.189,
+    "brier_base": 0.1917,
+    "skill": 0.0144,
+    "logloss": 0.5645,
+    "logloss_base": 0.5717,
+    "z": 2.36,
+    "tasa_real": 0.742,
+    "p_media": 0.729,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1T_1",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1921,
+    "brier_base": 0.2037,
+    "skill": 0.0571,
+    "logloss": 0.567,
+    "logloss_base": 0.5979,
+    "z": 3.25,
+    "tasa_real": 0.279,
+    "p_media": 0.313,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1919,
+    "brier_base": 0.2038,
+    "skill": 0.0584,
+    "logloss": 0.5672,
+    "logloss_base": 0.5982,
+    "z": 3.52,
+    "tasa_real": 0.28,
+    "p_media": 0.308,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1T_2",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.189,
+    "brier_base": 0.2015,
+    "skill": 0.0621,
+    "logloss": 0.5628,
+    "logloss_base": 0.5928,
+    "z": 3.65,
+    "tasa_real": 0.279,
+    "p_media": 0.264,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1886,
+    "brier_base": 0.2017,
+    "skill": 0.0647,
+    "logloss": 0.5621,
+    "logloss_base": 0.5931,
+    "z": 4.01,
+    "tasa_real": 0.28,
+    "p_media": 0.26,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1T_X",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2466,
+    "brier_base": 0.2483,
+    "skill": 0.0071,
+    "logloss": 0.6864,
+    "logloss_base": 0.6899,
+    "z": 1.05,
+    "tasa_real": 0.441,
+    "p_media": 0.423,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2466,
+    "brier_base": 0.2482,
+    "skill": 0.0063,
+    "logloss": 0.6865,
+    "logloss_base": 0.6896,
+    "z": 0.88,
+    "tasa_real": 0.441,
+    "p_media": 0.432,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1T_over_0.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2248,
+    "brier_base": 0.2265,
+    "skill": 0.0073,
+    "logloss": 0.6422,
+    "logloss_base": 0.646,
+    "z": 0.85,
+    "tasa_real": 0.661,
+    "p_media": 0.679,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2248,
+    "brier_base": 0.2261,
+    "skill": 0.0058,
+    "logloss": 0.6422,
+    "logloss_base": 0.6452,
+    "z": 0.61,
+    "tasa_real": 0.662,
+    "p_media": 0.667,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1T_over_1.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.206,
+    "brier_base": 0.2069,
+    "skill": 0.0043,
+    "logloss": 0.6024,
+    "logloss_base": 0.6045,
+    "z": 0.48,
+    "tasa_real": 0.289,
+    "p_media": 0.318,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2055,
+    "brier_base": 0.207,
+    "skill": 0.0073,
+    "logloss": 0.6014,
+    "logloss_base": 0.6048,
+    "z": 0.81,
+    "tasa_real": 0.289,
+    "p_media": 0.304,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "1X",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1875,
+    "brier_base": 0.2271,
+    "skill": 0.1746,
+    "logloss": 0.5554,
+    "logloss_base": 0.6468,
+    "z": 8.22,
+    "tasa_real": 0.654,
+    "p_media": 0.677,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.188,
+    "brier_base": 0.2273,
+    "skill": 0.1726,
+    "logloss": 0.5567,
+    "logloss_base": 0.6472,
+    "z": 8.08,
+    "tasa_real": 0.653,
+    "p_media": 0.679,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "2",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1875,
+    "brier_base": 0.2271,
+    "skill": 0.1746,
+    "logloss": 0.5554,
+    "logloss_base": 0.6468,
+    "z": 8.22,
+    "tasa_real": 0.346,
+    "p_media": 0.323,
+    "n_mercado": 734,
+    "brier_modelo_en_mercado": 0.1875,
+    "brier_mercado": 0.1824,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.188,
+    "brier_base": 0.2273,
+    "skill": 0.1726,
+    "logloss": 0.5567,
+    "logloss_base": 0.6472,
+    "z": 8.08,
+    "tasa_real": 0.347,
+    "p_media": 0.321,
+    "n_mercado": 733,
+    "brier_modelo_en_mercado": 0.188,
+    "brier_mercado": 0.1825,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "X",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1891,
+    "brier_base": 0.1922,
+    "skill": 0.0158,
+    "logloss": 0.5646,
+    "logloss_base": 0.5727,
+    "z": 2.48,
+    "tasa_real": 0.259,
+    "p_media": 0.264,
+    "n_mercado": 734,
+    "brier_modelo_en_mercado": 0.1891,
+    "brier_mercado": 0.1882,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.189,
+    "brier_base": 0.1917,
+    "skill": 0.0144,
+    "logloss": 0.5645,
+    "logloss_base": 0.5717,
+    "z": 2.36,
+    "tasa_real": 0.258,
+    "p_media": 0.271,
+    "n_mercado": 733,
+    "brier_modelo_en_mercado": 0.189,
+    "brier_mercado": 0.1878,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "X2",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2056,
+    "brier_base": 0.2393,
+    "skill": 0.1409,
+    "logloss": 0.5969,
+    "logloss_base": 0.6716,
+    "z": 6.55,
+    "tasa_real": 0.605,
+    "p_media": 0.587,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2044,
+    "brier_base": 0.2394,
+    "skill": 0.1462,
+    "logloss": 0.5946,
+    "logloss_base": 0.6718,
+    "z": 6.83,
+    "tasa_real": 0.604,
+    "p_media": 0.592,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "aa_no",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2503,
+    "brier_base": 0.2515,
+    "skill": 0.0049,
+    "logloss": 0.6938,
+    "logloss_base": 0.6962,
+    "z": 0.49,
+    "tasa_real": 0.516,
+    "p_media": 0.509,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2514,
+    "brier_base": 0.2515,
+    "skill": 0.0006,
+    "logloss": 0.696,
+    "logloss_base": 0.6962,
+    "z": 0.05,
+    "tasa_real": 0.516,
+    "p_media": 0.522,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "aa_si",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2503,
+    "brier_base": 0.2515,
+    "skill": 0.0049,
+    "logloss": 0.6938,
+    "logloss_base": 0.6962,
+    "z": 0.49,
+    "tasa_real": 0.484,
+    "p_media": 0.491,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2514,
+    "brier_base": 0.2515,
+    "skill": 0.0006,
+    "logloss": 0.696,
+    "logloss_base": 0.6962,
+    "z": 0.05,
+    "tasa_real": 0.484,
+    "p_media": 0.478,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_over_10.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2116,
+    "brier_base": 0.2168,
+    "skill": 0.0241,
+    "logloss": 0.6142,
+    "logloss_base": 0.6255,
+    "z": 1.54,
+    "tasa_real": 0.313,
+    "p_media": 0.331,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2113,
+    "brier_base": 0.2166,
+    "skill": 0.0244,
+    "logloss": 0.6136,
+    "logloss_base": 0.6249,
+    "z": 1.55,
+    "tasa_real": 0.312,
+    "p_media": 0.331,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_over_11.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1654,
+    "brier_base": 0.1705,
+    "skill": 0.0297,
+    "logloss": 0.5107,
+    "logloss_base": 0.5247,
+    "z": 1.91,
+    "tasa_real": 0.217,
+    "p_media": 0.231,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1656,
+    "brier_base": 0.1706,
+    "skill": 0.0297,
+    "logloss": 0.5111,
+    "logloss_base": 0.5251,
+    "z": 1.9,
+    "tasa_real": 0.217,
+    "p_media": 0.231,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_over_8.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.246,
+    "brier_base": 0.2513,
+    "skill": 0.0211,
+    "logloss": 0.6851,
+    "logloss_base": 0.6959,
+    "z": 1.47,
+    "tasa_real": 0.537,
+    "p_media": 0.575,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2461,
+    "brier_base": 0.2515,
+    "skill": 0.0211,
+    "logloss": 0.6853,
+    "logloss_base": 0.6962,
+    "z": 1.47,
+    "tasa_real": 0.536,
+    "p_media": 0.575,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_over_9.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2385,
+    "brier_base": 0.2466,
+    "skill": 0.0329,
+    "logloss": 0.6695,
+    "logloss_base": 0.6863,
+    "z": 2.18,
+    "tasa_real": 0.425,
+    "p_media": 0.448,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2384,
+    "brier_base": 0.2465,
+    "skill": 0.033,
+    "logloss": 0.6693,
+    "logloss_base": 0.6862,
+    "z": 2.19,
+    "tasa_real": 0.424,
+    "p_media": 0.448,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_under_10.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2116,
+    "brier_base": 0.2168,
+    "skill": 0.0241,
+    "logloss": 0.6142,
+    "logloss_base": 0.6255,
+    "z": 1.54,
+    "tasa_real": 0.687,
+    "p_media": 0.669,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2113,
+    "brier_base": 0.2166,
+    "skill": 0.0244,
+    "logloss": 0.6136,
+    "logloss_base": 0.6249,
+    "z": 1.55,
+    "tasa_real": 0.688,
+    "p_media": 0.669,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_under_11.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1654,
+    "brier_base": 0.1705,
+    "skill": 0.0297,
+    "logloss": 0.5107,
+    "logloss_base": 0.5247,
+    "z": 1.91,
+    "tasa_real": 0.783,
+    "p_media": 0.769,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1656,
+    "brier_base": 0.1706,
+    "skill": 0.0297,
+    "logloss": 0.5111,
+    "logloss_base": 0.5251,
+    "z": 1.9,
+    "tasa_real": 0.783,
+    "p_media": 0.769,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_under_8.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.246,
+    "brier_base": 0.2513,
+    "skill": 0.0211,
+    "logloss": 0.6851,
+    "logloss_base": 0.6959,
+    "z": 1.47,
+    "tasa_real": 0.463,
+    "p_media": 0.425,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2461,
+    "brier_base": 0.2515,
+    "skill": 0.0211,
+    "logloss": 0.6853,
+    "logloss_base": 0.6962,
+    "z": 1.47,
+    "tasa_real": 0.464,
+    "p_media": 0.425,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "corners_under_9.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2385,
+    "brier_base": 0.2466,
+    "skill": 0.0329,
+    "logloss": 0.6695,
+    "logloss_base": 0.6863,
+    "z": 2.18,
+    "tasa_real": 0.575,
+    "p_media": 0.552,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2384,
+    "brier_base": 0.2465,
+    "skill": 0.033,
+    "logloss": 0.6693,
+    "logloss_base": 0.6862,
+    "z": 2.19,
+    "tasa_real": 0.576,
+    "p_media": 0.552,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "local_gana_por_2",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1292,
+    "brier_base": 0.1411,
+    "skill": 0.0843,
+    "logloss": 0.412,
+    "logloss_base": 0.4566,
+    "z": 2.77,
+    "tasa_real": 0.169,
+    "p_media": 0.212,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1271,
+    "brier_base": 0.1413,
+    "skill": 0.1004,
+    "logloss": 0.406,
+    "logloss_base": 0.4569,
+    "z": 3.61,
+    "tasa_real": 0.169,
+    "p_media": 0.204,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "marcador_exacto_ll",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "logloss": 2.7722,
+    "logloss_base": 2.899,
+    "skill": 0.0437,
+    "z": 7.12,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "logloss": 2.766,
+    "logloss_base": 2.8992,
+    "skill": 0.0459,
+    "z": 7.63,
+    "estado": "publicable"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "over_1.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2035,
+    "brier_base": 0.2024,
+    "skill": -0.0051,
+    "logloss": 0.5983,
+    "logloss_base": 0.5953,
+    "z": -0.46,
+    "tasa_real": 0.721,
+    "p_media": 0.733,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2036,
+    "brier_base": 0.202,
+    "skill": -0.008,
+    "logloss": 0.5982,
+    "logloss_base": 0.5942,
+    "z": -0.68,
+    "tasa_real": 0.722,
+    "p_media": 0.716,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "over_2.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2506,
+    "brier_base": 0.25,
+    "skill": -0.0022,
+    "logloss": 0.6944,
+    "logloss_base": 0.6932,
+    "z": -0.18,
+    "tasa_real": 0.463,
+    "p_media": 0.475,
+    "n_mercado": 734,
+    "brier_modelo_en_mercado": 0.2506,
+    "brier_mercado": 0.2481,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2517,
+    "brier_base": 0.25,
+    "skill": -0.0066,
+    "logloss": 0.6968,
+    "logloss_base": 0.6932,
+    "z": -0.5,
+    "tasa_real": 0.464,
+    "p_media": 0.454,
+    "n_mercado": 733,
+    "brier_modelo_en_mercado": 0.2517,
+    "brier_mercado": 0.2482,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "over_3.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1836,
+    "brier_base": 0.1815,
+    "skill": -0.0119,
+    "logloss": 0.5538,
+    "logloss_base": 0.5495,
+    "z": -0.97,
+    "tasa_real": 0.236,
+    "p_media": 0.263,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1825,
+    "brier_base": 0.1816,
+    "skill": -0.0052,
+    "logloss": 0.5519,
+    "logloss_base": 0.5498,
+    "z": -0.43,
+    "tasa_real": 0.236,
+    "p_media": 0.245,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_over_2.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1916,
+    "brier_base": 0.1955,
+    "skill": 0.0203,
+    "logloss": 0.5745,
+    "logloss_base": 0.5862,
+    "z": 1.77,
+    "tasa_real": 0.747,
+    "p_media": 0.814,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1917,
+    "brier_base": 0.1958,
+    "skill": 0.0208,
+    "logloss": 0.5748,
+    "logloss_base": 0.5867,
+    "z": 1.81,
+    "tasa_real": 0.746,
+    "p_media": 0.814,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_over_3.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2418,
+    "brier_base": 0.2571,
+    "skill": 0.0596,
+    "logloss": 0.6759,
+    "logloss_base": 0.7087,
+    "z": 4.36,
+    "tasa_real": 0.556,
+    "p_media": 0.645,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2417,
+    "brier_base": 0.2573,
+    "skill": 0.0605,
+    "logloss": 0.6758,
+    "logloss_base": 0.7091,
+    "z": 4.44,
+    "tasa_real": 0.555,
+    "p_media": 0.646,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_over_4.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2234,
+    "brier_base": 0.2421,
+    "skill": 0.0772,
+    "logloss": 0.6384,
+    "logloss_base": 0.6773,
+    "z": 5.11,
+    "tasa_real": 0.36,
+    "p_media": 0.462,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.223,
+    "brier_base": 0.242,
+    "skill": 0.0787,
+    "logloss": 0.6375,
+    "logloss_base": 0.6772,
+    "z": 5.23,
+    "tasa_real": 0.359,
+    "p_media": 0.462,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_over_5.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1636,
+    "brier_base": 0.1717,
+    "skill": 0.0469,
+    "logloss": 0.5078,
+    "logloss_base": 0.5293,
+    "z": 2.58,
+    "tasa_real": 0.207,
+    "p_media": 0.298,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1628,
+    "brier_base": 0.1712,
+    "skill": 0.049,
+    "logloss": 0.5058,
+    "logloss_base": 0.5284,
+    "z": 2.7,
+    "tasa_real": 0.206,
+    "p_media": 0.298,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_under_2.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1916,
+    "brier_base": 0.1955,
+    "skill": 0.0203,
+    "logloss": 0.5745,
+    "logloss_base": 0.5862,
+    "z": 1.77,
+    "tasa_real": 0.253,
+    "p_media": 0.186,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1917,
+    "brier_base": 0.1958,
+    "skill": 0.0208,
+    "logloss": 0.5748,
+    "logloss_base": 0.5867,
+    "z": 1.81,
+    "tasa_real": 0.254,
+    "p_media": 0.186,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_under_3.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2418,
+    "brier_base": 0.2571,
+    "skill": 0.0596,
+    "logloss": 0.6759,
+    "logloss_base": 0.7087,
+    "z": 4.36,
+    "tasa_real": 0.444,
+    "p_media": 0.355,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2417,
+    "brier_base": 0.2573,
+    "skill": 0.0605,
+    "logloss": 0.6758,
+    "logloss_base": 0.7091,
+    "z": 4.44,
+    "tasa_real": 0.445,
+    "p_media": 0.354,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_under_4.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2234,
+    "brier_base": 0.2421,
+    "skill": 0.0772,
+    "logloss": 0.6384,
+    "logloss_base": 0.6773,
+    "z": 5.11,
+    "tasa_real": 0.64,
+    "p_media": 0.538,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.223,
+    "brier_base": 0.242,
+    "skill": 0.0787,
+    "logloss": 0.6375,
+    "logloss_base": 0.6772,
+    "z": 5.23,
+    "tasa_real": 0.641,
+    "p_media": 0.538,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "tarjetas_under_5.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1636,
+    "brier_base": 0.1717,
+    "skill": 0.0469,
+    "logloss": 0.5078,
+    "logloss_base": 0.5293,
+    "z": 2.58,
+    "tasa_real": 0.793,
+    "p_media": 0.702,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1628,
+    "brier_base": 0.1712,
+    "skill": 0.049,
+    "logloss": 0.5058,
+    "logloss_base": 0.5284,
+    "z": 2.7,
+    "tasa_real": 0.794,
+    "p_media": 0.702,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "under_1.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2035,
+    "brier_base": 0.2024,
+    "skill": -0.0051,
+    "logloss": 0.5983,
+    "logloss_base": 0.5953,
+    "z": -0.46,
+    "tasa_real": 0.279,
+    "p_media": 0.267,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2036,
+    "brier_base": 0.202,
+    "skill": -0.008,
+    "logloss": 0.5982,
+    "logloss_base": 0.5942,
+    "z": -0.68,
+    "tasa_real": 0.278,
+    "p_media": 0.284,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "under_2.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.2506,
+    "brier_base": 0.25,
+    "skill": -0.0022,
+    "logloss": 0.6944,
+    "logloss_base": 0.6932,
+    "z": -0.18,
+    "tasa_real": 0.537,
+    "p_media": 0.525,
+    "n_mercado": 734,
+    "brier_modelo_en_mercado": 0.2506,
+    "brier_mercado": 0.2481,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.2517,
+    "brier_base": 0.25,
+    "skill": -0.0066,
+    "logloss": 0.6968,
+    "logloss_base": 0.6932,
+    "z": -0.5,
+    "tasa_real": 0.536,
+    "p_media": 0.546,
+    "n_mercado": 733,
+    "brier_modelo_en_mercado": 0.2517,
+    "brier_mercado": 0.2482,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "under_3.5",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1836,
+    "brier_base": 0.1815,
+    "skill": -0.0119,
+    "logloss": 0.5538,
+    "logloss_base": 0.5495,
+    "z": -0.97,
+    "tasa_real": 0.764,
+    "p_media": 0.737,
+    "estado": "sin_validar"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1825,
+    "brier_base": 0.1816,
+    "skill": -0.0052,
+    "logloss": 0.5519,
+    "logloss_base": 0.5498,
+    "z": -0.43,
+    "tasa_real": 0.764,
+    "p_media": 0.755,
+    "estado": "sin_validar"
+   }
+  },
+  {
+   "liga": "SerieA",
+   "mercado": "visita_gana_por_2",
+   "n": 734,
+   "actual": {
+    "n": 734,
+    "brier": 0.1131,
+    "brier_base": 0.1257,
+    "skill": 0.1,
+    "logloss": 0.3692,
+    "logloss_base": 0.4186,
+    "z": 3.44,
+    "tasa_real": 0.147,
+    "p_media": 0.157,
+    "estado": "publicable"
+   },
+   "candidato": {
+    "n": 733,
+    "brier": 0.1129,
+    "brier_base": 0.1258,
+    "skill": 0.1029,
+    "logloss": 0.3689,
+    "logloss_base": 0.419,
+    "z": 3.81,
+    "tasa_real": 0.147,
+    "p_media": 0.152,
+    "estado": "publicable"
+   }
+  }
+ ]
+}
