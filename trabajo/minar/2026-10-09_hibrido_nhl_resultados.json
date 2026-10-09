@@ -1,0 +1,164 @@
+{
+ "n": 10473,
+ "prueba_desde": "2024-03-21",
+ "pesos": {
+  "modelo": 0.0,
+  "elo": 0.0,
+  "modelo+fatiga": 0.0,
+  "modelo+tiros/PDO": 0.2767,
+  "todo (ridge)": 0.6769,
+  "gradient boosting": 0.0464
+ },
+ "oof_logloss": {
+  "modelo": 0.6648253960236038,
+  "elo": 0.6650614964330641,
+  "modelo+fatiga": 0.6656077586390052,
+  "modelo+tiros/PDO": 0.6645182846820894,
+  "todo (ridge)": 0.6628639484653497,
+  "gradient boosting": 0.6773026966075952
+ },
+ "prueba": {
+  "mejora_milesimas": 1.267,
+  "z": 0.93,
+  "mitades": [
+   4.893,
+   -2.359
+  ],
+  "brier_modelo": 0.23992,
+  "brier_sl": 0.23939,
+  "calibracion": -0.008,
+  "veredicto": "no pasa"
+ },
+ "acierto_modelo": {
+  "acierto": 57.1,
+  "tramos": [
+   {
+    "tramo": "50-55%",
+    "n": 1330,
+    "prometido": 52.5,
+    "real": 51.5
+   },
+   {
+    "tramo": "55-60%",
+    "n": 980,
+    "prometido": 57.3,
+    "real": 55.4
+   },
+   {
+    "tramo": "60-65%",
+    "n": 542,
+    "prometido": 62.2,
+    "real": 65.9
+   },
+   {
+    "tramo": "65-70%",
+    "n": 223,
+    "prometido": 67.0,
+    "real": 68.6
+   },
+   {
+    "tramo": "70-100%",
+    "n": 67,
+    "prometido": 72.5,
+    "real": 83.6
+   }
+  ]
+ },
+ "acierto_super_learner": {
+  "acierto": 57.07,
+  "tramos": [
+   {
+    "tramo": "50-55%",
+    "n": 1049,
+    "prometido": 52.5,
+    "real": 50.3
+   },
+   {
+    "tramo": "55-60%",
+    "n": 851,
+    "prometido": 57.3,
+    "real": 54.5
+   },
+   {
+    "tramo": "60-65%",
+    "n": 636,
+    "prometido": 62.3,
+    "real": 58.5
+   },
+   {
+    "tramo": "65-70%",
+    "n": 353,
+    "prometido": 67.2,
+    "real": 68.3
+   },
+   {
+    "tramo": "70-100%",
+    "n": 253,
+    "prometido": 74.2,
+    "real": 74.3
+   }
+  ]
+ },
+ "tmle": {
+  "E1 visita en segunda noche (local descansado) vs nadie": {
+   "efecto_pp": 7.51,
+   "ic95": [
+    4.87,
+    10.15
+   ],
+   "crudo_pp": 6.68,
+   "n_expuestos": 1493,
+   "n_control": 7914
+  },
+  "E2 local en segunda noche (visita descansada) vs nadie": {
+   "efecto_pp": -8.32,
+   "ic95": [
+    -12.77,
+    -3.87
+   ],
+   "crudo_pp": -8.42,
+   "n_expuestos": 501,
+   "n_control": 7914
+  },
+  "E3 visita en tercer juego en 4 noches": {
+   "efecto_pp": 3.06,
+   "ic95": [
+    0.79,
+    5.32
+   ],
+   "crudo_pp": 2.69,
+   "n_expuestos": 2227,
+   "n_control": 8246
+  },
+  "E4 visita viene de prorroga o shootout": {
+   "efecto_pp": -2.73,
+   "ic95": [
+    -6.28,
+    0.82
+   ],
+   "crudo_pp": -2.38,
+   "n_expuestos": 922,
+   "n_control": 3305
+  },
+  "E5 local perdio su ultimo juego por 4+": {
+   "efecto_pp": 0.96,
+   "ic95": [
+    -2.84,
+    4.76
+   ],
+   "crudo_pp": -1.23,
+   "n_expuestos": 854,
+   "n_control": 9619
+  },
+  "E6 visita con 2+ juegos mas en 7 dias": {
+   "efecto_pp": 4.41,
+   "ic95": [
+    -0.59,
+    9.4
+   ],
+   "crudo_pp": 4.96,
+   "n_expuestos": 403,
+   "n_control": 5399
+  }
+ }
+}

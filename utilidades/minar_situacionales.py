@@ -268,7 +268,8 @@ def correr_hockey():
     for f, gp, h, a in todos:
         gh, ga = _num(h.get("goals")), _num(h.get("goals_opp"))
         if gh is None or ga is None: continue
-        ot = (h.get("ended_in") or "") in ("OT", "SO")
+        fin = (h.get("ended_in") or "").strip()
+        ot = (fin in ("OT", "SO")) if fin else None      # None = el archivo no dice como termino (temporadas viejas)
         for row, loc, gf, gc, riv in ((h, True, gh, ga, a.get("team")), (a, False, ga, gh, h.get("team"))):
             C.agregar(row.get("team"), f, gp, loc, gf, gc, riv, ot=ot, pim=_num(row.get("pim")),
                       portero=(row.get("starter_goalie") or "").strip() or None)
@@ -298,10 +299,11 @@ def correr_hockey():
         if ph and pa and ph["rival"] == ta and ph["gp"] == pa["gp"] and (nh["fecha"] - ph["fecha"]).days <= 3:
             x16 = 1 if ph["gf"] < ph["ga"] else -1
         r["H16"] = x16
-        r["H17"] = _ind(pa and pa["ot"]) - _ind(ph and ph["ot"])
+        ot_ok = ph is not None and pa is not None and ph["ot"] is not None and pa["ot"] is not None
+        r["H17"] = (_ind(pa["ot"]) - _ind(ph["ot"])) if ot_ok else None
         r["H18"] = None if not (ph and pa and ph["pim"] is not None and pa["pim"] is not None) else (pa["pim"] - ph["pim"]) / 10.0
         r["H21"] = _ind(ph and ph["ga"] - ph["gf"] >= 4) - _ind(pa and pa["ga"] - pa["gf"] >= 4)
-        r["H22"] = _ind(ph and ph["ot"] and ph["gf"] < ph["ga"]) - _ind(pa and pa["ot"] and pa["gf"] < pa["ga"])
+        r["H22"] = (_ind(ph["ot"] and ph["gf"] < ph["ga"]) - _ind(pa["ot"] and pa["gf"] < pa["ga"])) if ot_ok else None
         # porteros
         def portero_info(e):
             i = C.i(e, gp); act = C.t[e][i]["portero"]

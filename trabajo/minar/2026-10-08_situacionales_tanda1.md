@@ -91,8 +91,10 @@ Método unificado, segunda noche NHL (10,473 predicciones as-of; prueba 3,142 pa
 
 Lo más cercano (dirección registrada, mejora en las dos mitades, z < 2): H7 carga de 7 días NHL (z +1.78),
 NCAA básquet K8a gira larga (z +1.95, pero una mitad negativa), NFL N13 tras ganar en tiempo extra (z +1.89, 41 activos).
-Contra la dirección registrada: H17 tras prórroga NHL (β −4.2 pp: el equipo que viene de prórroga rinde mejor, z −1.81),
-H14 regreso a casa NHL (β +1.3 pp, z +1.84).
+Contra la dirección registrada: H14 regreso a casa NHL (β +1.3 pp, z +1.84).
+Corrección del 9-oct: H17 y H22 contaban como "sin prórroga" los juegos de temporadas viejas donde `hockey.csv` no dice cómo
+terminó el partido. Restringido a juegos con dato: H17 β −1.5 pp, z −0.84, 451 activos (no pasa, sin dirección clara);
+H22 280 activos (muestra insuficiente). El "rinde mejor tras prórroga" del 8-oct era ese artefacto y se retira.
 Contra el cierre (NFL y fútbol): nada se acerca.
 
 Notas de datos:
