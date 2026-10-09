@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-RECOLECTAR HOCKEY LIGAS - SHL, Liiga y AHL (DEL: por ahora solo guarda paginas para revisar su formato).
+RECOLECTAR HOCKEY LIGAS - SHL, Liiga, AHL y DEL.
 
 Mismo esquema que recolectar_hockey.py (NHL): una fila por equipo-juego, con columna league.
 Todas las ligas llevan las mismas columnas; lo que una fuente no trae queda vacio (raya en la plataforma).
@@ -9,6 +9,7 @@ Fuentes (solo stdlib):
   SHL   stats.swehockey.se  (federacion sueca): calendario, marcador por periodo, tiros, atajadas
   Liiga liiga.fi/api/v2     (oficial): marcador por periodo, expectedGoals, power play
   AHL   lscluster.hockeytech.com (oficial de la liga): calendario, OT/SO, boxscore con tiros
+  DEL   penny-del.org (oficial): pagina de cada juego con marcador por periodo, tiros y power play
 
 Columnas extra frente a NHL:
   final_tipo     REG / OT / SO  (como termino el partido)
@@ -21,7 +22,6 @@ Uso:
   python colectores\\recolectar_hockey_ligas.py --ligas SHL,AHL
 Escribe: <EDGELINE_BASE>\\data_maestra\\hockey_ligas.csv
          <EDGELINE_BASE>\\salida\\cobertura_hockey_ligas.txt  (que columnas trajo cada liga)
-         <EDGELINE_BASE>\\salida\\del_muestra\\*.html         (paginas de la DEL para armar su lector)
 """
 import argparse, csv, html as htmlmod, io, json, os, re, time
 import urllib.request
@@ -29,7 +29,6 @@ import urllib.request
 BASE = os.environ.get("EDGELINE_BASE", r"C:\Edgeline")
 OUT = os.path.join(BASE, "data_maestra", "hockey_ligas.csv")
 COB = os.path.join(BASE, "salida", "cobertura_hockey_ligas.txt")
-DEL_DIR = os.path.join(BASE, "salida", "del_muestra")
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36",
       "Accept-Language": "en,de;q=0.8"}
 HT = "https://lscluster.hockeytech.com/feed/?key=50c2cd9b5e18e390&client_code=ahl&"
@@ -291,21 +290,120 @@ def shl(n_atras, conocidos):
     return juegos
 
 
-# ------------------------------------------------------------------ DEL (muestra)
-def del_muestra():
-    """guarda la pagina de juegos y un juego terminado para armar el lector con su formato real."""
-    os.makedirs(DEL_DIR, exist_ok=True)
+# ------------------------------------------------------------------ DEL
+DEL_WEB = "https://www.penny-del.org"
+EXTRA_SO = {"P", "PS", "SO", "PEN", "S", "N.P.", "NP"}
+
+
+def del_leer_juego(h, gid):
+    """pagina de spieldetails -> juego (o None si no termino / no se entiende)."""
+    t = re.search(r"<title>(.*?)</title>", h, re.S)
+    t = limpio(t.group(1)) if t else ""
+    ms = re.search(r"Saison (\d{4})/(\d{4})", t)
+    mf = re.search(r"am (\d{2})\.(\d{2})\.(\d{4})", t)
+    sb = re.search(r"<table[^>]*scoreboard-table.*?</table>", h, re.S)
+    if not (ms and mf and sb):
+        return None
+    cab = [limpio(x).upper() for x in re.findall(r"<th[^>]*>(.*?)</th>", sb.group(0), re.S)]
+    filas = re.findall(r"<tr[^>]*>(.*?)</tr>", sb.group(0).split("<tbody", 1)[-1], re.S)
+    eq = []
+    for f in filas:
+        celdas = [limpio(c) for c in re.findall(r"<td[^>]*>(.*?)</td>", f, re.S)]
+        if len(celdas) >= 5:
+            eq.append(celdas)
+    if len(eq) < 2:
+        return None
     try:
-        h = get_txt("https://www.penny-del.org/spiele")
-        io.open(os.path.join(DEL_DIR, "spiele.html"), "w", encoding="utf-8").write(h)
-        links = sorted(set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", h)))
-        print("  DEL: pagina de juegos guardada, %d ligas a juegos" % len(links))
+        hs, as_ = float(eq[0][-1]), float(eq[1][-1])
+        ph = [int(x) for x in eq[0][1:4]]; pa = [int(x) for x in eq[1][1:4]]
+    except ValueError:
+        return None
+    extras = cab[4:-1] if len(cab) > 5 else []
+    tipo = "REG"
+    if extras or sum(ph) != hs or sum(pa) != as_:
+        tipo = "SO" if (len(extras) >= 2 or (extras and extras[-1] in EXTRA_SO)) else "OT"
+    tipo, rh, ra = tipo_y_regulacion(hs, as_, tipo, ph, pa)
+    stats = {lab.strip(): (a, b) for lab, a, b in re.findall(
+        r'progress-labels__title">([^<]+)</div>\s*</div>\s*<div class="progress-wrapper">\s*'
+        r'<div class="progress-labels__value">([^<]*)</div>\s*<div class="progress-labels__value">([^<]*)</div>', h)}
+    j = {"id": "DEL-%s" % gid, "liga": "DEL", "season": ms.group(1) + ms.group(2),
+         "fecha": "%s-%s-%s" % (mf.group(3), mf.group(2), mf.group(1)),
+         "eq_h": eq[0][0], "eq_a": eq[1][0], "g_h": hs, "g_a": as_, "r_h": rh, "r_a": ra, "tipo": tipo}
+    sog = stats.get("Schüsse auf Tor")
+    if sog:
+        sh, sa = num(sog[0]), num(sog[1])
+        j["h_sog_h"], j["h_sog_a"] = sh, sa
+        if sa:
+            j["goalie_sv_h"] = round(1.0 - (as_ - (1 if (tipo == "SO" and as_ > hs) else 0)) / sa, 3)
+        if sh:
+            j["goalie_sv_a"] = round(1.0 - (hs - (1 if (tipo == "SO" and hs > as_) else 0)) / sh, 3)
+    ppq = stats.get("Powerplayquote")
+    if ppq:
+        j["h_powerPlayPctg_h"], j["h_powerPlayPctg_a"] = num(ppq[0]), num(ppq[1])
+    return j
+
+
+def del_juegos(n_atras, conocidos):
+    """los juegos ya guardados se saltan: sus filas se conservan del CSV anterior."""
+    juegos = []
+    # temporada actual: lista completa de juegos
+    links = set()
+    for url in ("/spiele/team", "/spiele"):
+        try:
+            links |= set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", get_txt(DEL_WEB + url)))
+        except Exception as e:
+            print("  DEL %s: falla %s" % (url, e))
         if links:
-            g = get_txt("https://www.penny-del.org" + links[0])
-            io.open(os.path.join(DEL_DIR, "juego.html"), "w", encoding="utf-8").write(g)
-            print("  DEL: juego de muestra guardado (%s)" % links[0])
-    except Exception as e:
-        print("  DEL: falla %s" % e)
+            break
+    hoy = time.strftime("%d%m%Y")
+    ids = {}
+    for l in links:
+        m = re.search(r"/(\d{2})(\d{2})(\d{4})_[\w\-]+_(\d+)$", l)
+        if m and (m.group(3) + m.group(2) + m.group(1)) < (hoy[4:] + hoy[2:4] + hoy[:2]):
+            ids[int(m.group(4))] = l
+    for gid, l in sorted(ids.items()):
+        if "DEL-%d" % gid in conocidos:
+            continue
+        try:
+            j = del_leer_juego(get_txt(DEL_WEB + l), gid)
+            if j:
+                juegos.append(j)
+            time.sleep(0.2)
+        except Exception:
+            pass
+    print("  DEL temporada actual: %d juegos nuevos leidos (de %d terminados en el calendario)" % (len(juegos), len(ids)))
+    if not n_atras or not ids:
+        return juegos
+    # temporadas anteriores: los ids son consecutivos; se prueba si la pagina abre solo con el id
+    prueba = min(ids)
+    try:
+        ok = del_leer_juego(get_txt(DEL_WEB + "/statistik/spieldetails/0_x_gg_y_%d" % prueba), prueba)
+    except Exception:
+        ok = None
+    if not ok:
+        print("  DEL: la pagina no abre solo con el id; temporadas anteriores pendientes")
+        return juegos
+    corte = int(time.strftime("%Y")) - n_atras - 1          # p.ej. 2023 -> se queda con 2024-25 en adelante
+    fallas, gid, n0 = 0, prueba - 1, len(juegos)
+    while gid > 0 and fallas < 60:
+        if "DEL-%d" % gid in conocidos:
+            fallas = 0; gid -= 1; continue
+        try:
+            j = del_leer_juego(get_txt(DEL_WEB + "/statistik/spieldetails/0_x_gg_y_%d" % gid, intentos=1), gid)
+        except Exception:
+            j = None
+        if j:
+            if int(j["season"][:4]) <= corte:
+                break
+            juegos.append(j); fallas = 0
+            if (len(juegos) - n0) % 100 == 0:
+                print("   ... %d juegos DEL anteriores" % (len(juegos) - n0))
+        else:
+            fallas += 1
+        gid -= 1
+        time.sleep(0.2)
+    print("  DEL temporadas anteriores: %d juegos" % (len(juegos) - n0))
+    return juegos
 
 
 # ------------------------------------------------------------------ main
@@ -332,7 +430,7 @@ def main():
     if "SHL" in ligas:
         print("SHL ..."); juegos += shl(n_atras, conocidos)
     if "DEL" in ligas:
-        print("DEL (muestra) ..."); del_muestra()
+        print("DEL ..."); juegos += del_juegos(n_atras, conocidos)
 
     nuevas = [f for j in juegos for f in filas_de(j)]
     # se conservan los detalles ya bajados de juegos conocidos
