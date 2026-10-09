@@ -77,11 +77,18 @@ CONOCIDOS = [
      "The Odds API no cubre Samsun ni Suzhou (si cubre China Open y Shanghai). Verificado el 7-oct-2026: "
      "ATP salio 16 de 16 el mismo dia. No es defecto del codigo; hace falta otra fuente de precio.",
      "2026-11-15"),
+    ("cuotas", "NPB",
+     "The Odds API dejo de listar beisbol NPB al terminar la temporada regular (en salida/cuotas_sharp_2026.csv hay NPB "
+     "del 2 al 8-oct y ninguna fila desde el 9-oct, cuando empezo la Climax Series) y ESPN no publica cuotas de NPB. "
+     "No es defecto del codigo: en postemporada de NPB no hay precio; hace falta otra fuente.",
+     "2026-11-10"),
     ("calibracion", "NCAAFB Total",
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
      "2026-12-15"),
 ]
+
+VENTANA_CUOTAS = 24     # horas hacia adelante en las que se exige precio
 
 ERR, WARN, CONOC = [], [], []
 
@@ -291,11 +298,21 @@ def revisar_cuotas():
     prx = _cargar("proximos.json")
     if not prx:
         warn("cuotas", "no existe salida/proximos.json"); return
-    hoy = _hoy().isoformat()
-    man = (_hoy() + dt.timedelta(days=1)).isoformat()
+    # Solo cuentan los partidos que empiezan en las proximas VENTANA_CUOTAS horas: las casas publican la linea de muchos
+    # partidos (NHL, KBO) apenas la vispera, asi que exigir precio a todo lo de manana marcaba error a una hora en que
+    # nadie tiene linea todavia (9-oct-2026: 14 de 18 de NHL eran del dia siguiente y ninguna casa los listaba).
+    # Pretemporada fuera (no genera picks, regla 6). Hay precio si lo trae ESPN o cualquier casa de The Odds API
+    # (picks[].cuota), que es la que usan NPB, KBO y tenis.
+    ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=-6)
     por = defaultdict(lambda: [0, 0])
     for p in prx.get("partidos") or []:
-        if p.get("fecha") not in (hoy, man):
+        if p.get("pretemporada"):
+            continue
+        try:
+            ini = dt.datetime.fromisoformat("%s %s" % (p.get("fecha"), (p.get("hora") or "12:00")[:5]))
+        except ValueError:
+            continue
+        if not (ahora <= ini <= ahora + dt.timedelta(hours=VENTANA_CUOTAS)):
             continue
         val = p.get("validacion") or {}
         if val.get("Ganador") != "publicable":
@@ -303,10 +320,11 @@ def revisar_cuotas():
         q = p.get("cuotas") or {}
         a = por[p.get("liga")]
         a[0] += 1
-        if q.get("ml_home") is not None and q.get("ml_away") is not None:
+        casas = any(k.get("cuota") is not None for k in (p.get("picks") or []) if k.get("mercado") == "Ganador")
+        if (q.get("ml_home") is not None and q.get("ml_away") is not None) or casas:
             a[1] += 1
     if not por:
-        warn("cuotas", "ningun partido de hoy o manana con el ganador publicable"); return
+        ok("cuotas", "ningun partido con ganador publicable empieza en las proximas %d h" % VENTANA_CUOTAS); return
     for lg, (n, con) in sorted(por.items()):
         pct = 100.0 * con / n
         if n >= 4 and pct < 50.0:
