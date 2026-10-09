@@ -182,7 +182,7 @@ def liga_run(liga, desde, cuotas):
         exp = F._sig((th.elo + F.HFA_ELO - ta.elo) / (F.ESCALA / math.log(10)))
         res = 1.0 if gh > ga_ else (0.5 if gh == ga_ else 0.0)
         d = F.K_ELO * (res - exp); th.elo += d; ta.elo -= d
-        th.gf += gh; th.ga += ga_; th.n += 1; ta.gf += ga_; ta.ga += gh; ta.n += 1
+        F._sumar(th, gh, ga_); F._sumar(ta, ga_, gh)      # mismo olvido que modelos/futbol.py
         sh += gh; sa += ga_; ng += 1
         T = gh + ga_
         eventos = {"1": gh > ga_, "X": gh == ga_, "2": ga_ > gh, "1X": gh >= ga_, "X2": ga_ >= gh, "12": gh != ga_,

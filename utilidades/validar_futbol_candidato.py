@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 utilidades/validar_futbol_candidato.py - corre la validacion oficial de futbol (validar_futbol_mercados.py, sin cambiarle
-nada mas) con el modelo actual y con un candidato (ELO K y olvido delta en las tasas de goles), y compara mercado por mercado.
+nada mas) con el modelo de referencia y con un candidato (ELO K y olvido delta en las tasas de goles), y compara mercado por mercado.
 
 No escribe salida/validacion_futbol.json: deja la comparacion en trabajo/minar/<fecha>_validacion_futbol_candidato.json.
 
 Uso (PowerShell):
     cd C:\\Edgeline_repo
     $env:EDGELINE_BASE = "C:\\Edgeline_repo"
-    python utilidades/validar_futbol_candidato.py --k 40 --delta 0.98
+    python utilidades/validar_futbol_candidato.py --k 40 --delta 0.98 --k0 20 --d0 1.0
 """
 import sys as _sys
 try:
@@ -18,25 +18,17 @@ except Exception:
 import argparse, datetime as dt, json, os, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(AQUI))
+sys.path.insert(0, os.path.dirname(AQUI)); sys.path.insert(0, AQUI)
 from nucleo import io  # noqa: E402
 
-UPD_VIEJO = "th.gf += gh; th.ga += ga_; th.n += 1; ta.gf += ga_; ta.ga += gh; ta.n += 1"
-UPD_NUEVO = ("th.gf = DL * th.gf + gh; th.ga = DL * th.ga + ga_; th.n = DL * th.n + 1; "
-             "ta.gf = DL * ta.gf + ga_; ta.ga = DL * ta.ga + gh; ta.n = DL * ta.n + 1")
-ELO_VIEJO = "d = F.K_ELO * (res - exp)"
-
-
 def validador(K, DL):
-    src = open(os.path.join(AQUI, "validar_futbol_mercados.py"), encoding="utf-8").read()
-    for v in (UPD_VIEJO, ELO_VIEJO):
-        if src.count(v) != 1:
-            raise RuntimeError("validar_futbol_mercados.py cambio: no encuentro '%s'" % v)
-    src = src.replace(UPD_VIEJO, UPD_NUEVO).replace(ELO_VIEJO, "d = KX * (res - exp)")
-    ns = {"__name__": "validador_candidato", "__file__": os.path.join(AQUI, "validar_futbol_mercados.py")}
-    exec(compile(src, "validar_futbol_mercados(candidato)", "exec"), ns)
-    ns["KX"] = K; ns["DL"] = DL
-    return ns
+    """El validador oficial lee F.K_ELO y F.OLVIDO (modelos/futbol.py); se fijan antes de cada corrida."""
+    import importlib
+    from modelos import futbol as F
+    import validar_futbol_mercados as V
+    importlib.reload(V)
+    F.K_ELO = K; F.OLVIDO = DL
+    return vars(V)
 
 
 def correr(K, DL, meses):
@@ -59,11 +51,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--k", type=float, default=40.0); ap.add_argument("--delta", type=float, default=0.98)
     ap.add_argument("--meses", type=int, default=24)
+    ap.add_argument("--k0", type=float, default=None, help="K de referencia (por omision, el de modelos/futbol.py)")
+    ap.add_argument("--d0", type=float, default=1.0, help="olvido de referencia cuando se da --k0")
     a = ap.parse_args()
     from modelos import futbol as FU
-    base = correr(FU.K_ELO, 1.0, a.meses); cand = correr(a.k, a.delta, a.meses)
-    print("VALIDACION FUTBOL: actual (K %.0f, sin olvido) contra candidato (K %.0f, olvido %.3f) | ventana %s a %s" % (
-        FU.K_ELO, a.k, a.delta, base["desde"], base["hasta"]))
+    k0, d0 = FU.K_ELO, FU.OLVIDO
+    base = correr(a.k0, a.d0, a.meses) if a.k0 else correr(k0, d0, a.meses)
+    cand = correr(a.k, a.delta, a.meses)
+    FU.K_ELO, FU.OLVIDO = k0, d0
+    print("VALIDACION FUTBOL: actual (K %.0f, olvido %.3f) contra candidato (K %.0f, olvido %.3f) | ventana %s a %s" % (
+        a.k0 or k0, a.d0 if a.k0 else d0, a.k, a.delta, base["desde"], base["hasta"]))
     filas = []; cambios = {"gana": [], "pierde": []}; n_pub = [0, 0]; mejor = peor = 0
     for liga in sorted(base["ligas"]):
         print("\n== %s ==" % liga)

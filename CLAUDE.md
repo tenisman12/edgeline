@@ -114,6 +114,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   `trabajo/minar/2026-10-06_velocidad_tenis.md`): O/U de breaks ATP bo3 skill 11.2% -> 12.6% (z 17.3), ATP bo5 5.3% -> 8.1%
   (z 5.2), WTA bo3 4.1% -> 4.6% (z 8.4). Aplicado en plataforma y en la validacion. Torneo rapido -> menos breaks.
   El torneo de ESPN se casa con el de TML por el ultimo partido de los dos jugadores (o alias).
+- Futbol forma rapida (9-oct-2026, aprobado por Alejandro): `modelos/futbol.py` ELO K 20 -> 40 y OLVIDO 0.98 en las tasas de goles
+  (antes todo el historial pesaba igual). Fuera de muestra 1X2 z 1.82 (umbral 1.64), over 2.5 z 1.19; validacion oficial 80 -> 89
+  publicables (MLS ganador/empate/totales, Premier y Serie A por 2 goles). La mejora viene de MLS, Liga MX y Premier; Serie A,
+  Bundesliga y Ligue 1 bajan poco. Contra el cierre de Pinnacle sigue sin aportar. `trabajo/minar/2026-10-09_forma_rapida.md`.
 - CLV (`utilidades/clv.py`, salida/clv.json): picks contra el cierre de Pinnacle y si el cierre se mueve hacia el modelo.
   NHL/MLB: las fotos h2h a 3 vias (casas europeas, tiempo regular) se pasan a 2 vias; desde el 6-oct el colector guarda
   2 vias fuera del futbol. El CLV solo se calcula cuando el partido ya empezo.

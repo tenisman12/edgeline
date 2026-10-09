@@ -16,7 +16,10 @@ except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from nucleo import io
 
-SHRINK=6; RHO=-0.08; HFA_ELO=60.0; K_ELO=20.0; ESCALA=400.0; W_ENS=0.4   # validar() con datos reales: mejor w=0.4 (2026-09-29)
+SHRINK=6; RHO=-0.08; HFA_ELO=60.0; K_ELO=40.0; ESCALA=400.0; W_ENS=0.4   # validar() con datos reales: mejor w=0.4 (2026-09-29)
+# K_ELO 20 -> 40 y OLVIDO 1.0 -> 0.98 (aprobado por Alejandro el 9-oct-2026): forma mas rapida. Fuera de muestra 1X2 z 1.82;
+# validacion oficial 80 -> 89 mercados publicables. trabajo/minar/2026-10-09_forma_rapida.md
+OLVIDO=0.98   # peso de cada juego anterior del equipo en las tasas de goles (0.98: el juego de hace 35 pesa la mitad)
 
 
 def _f(x):
@@ -47,6 +50,9 @@ class Eq:
     def atk(s,lg): return ((s.gf+SHRINK*lg)/(s.n+SHRINK))/lg if s.n else 1.0
     def dfn(s,lg): return ((s.ga+SHRINK*lg)/(s.n+SHRINK))/lg if s.n else 1.0
 
+def _sumar(t,gf,ga):
+    t.gf=OLVIDO*t.gf+gf; t.ga=OLVIDO*t.ga+ga; t.n=OLVIDO*t.n+1
+
 def entrenar(liga=None, w=W_ENS):
     juegos=_juegos(liga); eq={}; sh=sa=0.0; n=0
     for f,gp,h,a in juegos:
@@ -62,7 +68,7 @@ def entrenar(liga=None, w=W_ENS):
         exp=_sig((th.elo+HFA_ELO-ta.elo)/(ESCALA/math.log(10)))
         res=1.0 if gh>ga_ else (0.5 if gh==ga_ else 0.0)
         d=K_ELO*(res-exp); th.elo+=d; ta.elo-=d
-        th.gf+=gh; th.ga+=ga_; th.n+=1; ta.gf+=ga_; ta.ga+=gh; ta.n+=1
+        _sumar(th,gh,ga_); _sumar(ta,ga_,gh)
         _acum_conteos(cnt,h,a,gh,ga_)
     return {"eq":eq,"lg":lg,"lg_home":lg_home,"lg_away":lg_away,"w":w,"cnt":cnt}
 
@@ -163,7 +169,7 @@ def validar(liga=None, min_j=6):
         exp=_sig((th.elo+HFA_ELO-ta.elo)/(ESCALA/math.log(10)))
         res=1.0 if gh>ga_ else (0.5 if gh==ga_ else 0.0)
         d=K_ELO*(res-exp); th.elo+=d; ta.elo-=d
-        th.gf+=gh; th.ga+=ga_; th.n+=1; ta.gf+=ga_; ta.ga+=gh; ta.n+=1
+        _sumar(th,gh,ga_); _sumar(ta,ga_,gh)
         sh+=gh; sa+=ga_; ng+=1
     if len(datos)<150: print("Muestra insuficiente (%d)."%len(datos)); return
     def evalw(w):
