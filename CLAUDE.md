@@ -67,6 +67,13 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   Se excluye (liga, mercado) cuando el historial en vivo promete ≥10 pp más de lo que acierta (n≥30, z≥2): `picks_del_dia.descalibrados()`.
   Al 6-oct-2026: totales de NCAAF (60% vs 39%, n 57) y games de WTA (58% vs 44%, n 57). Leans, mínima, revisar y lecturas
   sin precio se miden pero no son picks. Es lo único que se recomienda y lo que mide el track record público.
+- Capa cualitativa (9-oct-2026, `nucleo/angulos.py`): cada partido de `picks_del_dia.json` trae `angulos` (situacionales activos con las
+  mismas definiciones del minado: descanso, segunda noche, gira, rachas de 5, revancha, bajon, sandwich, primer juego en casa, fin de
+  temporada, tras perder por mucho) con su efecto medido fuera de muestra (`modelos/angulos_medidos.json`, de trabajo/minar; se regenera con
+  `python -m nucleo.angulos --catalogo`). Ninguno paso: no cambian p ni EV; se cuentan a favor / en contra del pick (|efecto| < 1 pp no
+  cuenta) en por_que_si / por_que_no y en `historial_picks_dia.csv` (angulos, angulos_favor, angulos_contra). Todos los partidos se
+  registran antes de empezar en `salida/historial_angulos.csv`; `utilidades/medir_angulos_vivo.py` los mide contra el resultado
+  (`salida/angulos_vivo.json`, mismo protocolo). Uno que pase se le lleva a Alejandro; nada gana peso solo.
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,

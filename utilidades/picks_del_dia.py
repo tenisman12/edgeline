@@ -21,6 +21,11 @@ Solo stdlib.
 import argparse, csv, datetime as dt, io, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import decidir_v2 as V2
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from nucleo import angulos as ANG     # capa cualitativa: angulos activos con su medicion, sin peso en p
+except Exception as _e:                   # sin la capa la lista sigue saliendo igual
+    ANG = None; print("  capa de angulos no disponible: %s" % _e)
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))   # maximo 4 al dia, cada uno con confianza y por que si / por que no (Alejandro, 6-oct-2026)
@@ -325,6 +330,48 @@ def _candidatos(rec, dec_bb, v2=None):
     return out
 
 
+def _angulos(p, todos):
+    if ANG is None:
+        return []
+    try:
+        return ANG.calcular(p, todos)
+    except Exception as e:
+        print("  angulos fallo en %s %s: %s" % (p.get("liga"), p.get("id"), e))
+        return []
+
+
+def _empezado(p, ahora_cdmx):
+    try:
+        h = (p.get("hora") or "00:00")[:5]
+        return dt.datetime.fromisoformat("%s %s" % (p["fecha"], h)) <= ahora_cdmx
+    except ValueError:
+        return p["fecha"] < ahora_cdmx.date().isoformat()
+
+
+COLS_ANG = ["registrado", "liga", "id", "fecha", "home", "away", "home_key", "away_key", "codigo", "angulo", "lado", "x",
+            "p_modelo_lado", "efecto_medido_pp", "veredicto_medido", "signo_esperado"]
+
+
+def registrar_angulos(regs, ahora):
+    """salida/historial_angulos.csv: para cada partido no empezado, los angulos activos (y una fila _TODOS por lado, que
+    sirve para restar la calibracion del modelo en la liga). Se reescribe lo de partidos no empezados en cada corrida;
+    lo de partidos ya empezados queda fijo. Lo mide utilidades/medir_angulos_vivo.py."""
+    rh = os.path.join(BASE, "salida", "historial_angulos.csv")
+    filas = []
+    if os.path.exists(rh):
+        with io.open(rh, encoding="utf-8-sig", newline="") as f:
+            filas = list(csv.DictReader(f))
+    nuevos = {(r["liga"], r["id"], r["fecha"]) for r in regs}
+    filas = [r for r in filas if (r.get("liga"), r.get("id"), r.get("fecha")) not in nuevos] + regs
+    filas.sort(key=lambda r: (r["fecha"], r["liga"], r["id"], r["codigo"], r["lado"]))
+    with io.open(rh, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=COLS_ANG, extrasaction="ignore")
+        w.writeheader()
+        for r in filas:
+            w.writerow(r)
+    return len(regs)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dias", type=int, default=1)
@@ -407,7 +454,9 @@ def main():
             if lado == "away":
                 t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
         return t, m
-    partidos, cand = [], []
+    partidos, cand, regs_ang = [], [], []
+    ahora_cdmx = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=TZ)
+    reg_ts = dt.datetime.now().isoformat(timespec="seconds")
     for p in sel:
         v2 = None
         if p.get("deporte") != "beisbol" and p.get("modelo"):
@@ -432,6 +481,24 @@ def main():
                 "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None,
                 "nivel": 1, "es_lectura": True, "apostable": apostabilidad(p, v2, dec_bb),
                 "decision_v2": v2}
+        angs = _angulos(p, D["partidos"])
+        fila["angulos"] = [ANG.resumen_json(x) for x in angs] if angs else []
+        fila["angulos_conteo"] = ANG.conteo(angs) if angs else None
+        if ANG is not None and not p.get("pretemporada") and not _empezado(p, ahora_cdmx) and ANG._grupos(p.get("liga")):
+            m_ = p.get("modelo") or {}
+            hk, ak = ANG._equipo(p, "home"), ANG._equipo(p, "away")
+            base_ = dict(registrado=reg_ts, liga=p["liga"], id=str(p["id"]), fecha=p["fecha"], home=p["home"]["nombre"],
+                         away=p["away"]["nombre"], home_key=hk, away_key=ak)
+            for ld in ("home", "away"):
+                if m_.get("p_" + ld) is not None:
+                    regs_ang.append(dict(base_, codigo="_TODOS", angulo="todos los partidos", lado=ld, x=0, p_modelo_lado=m_["p_" + ld]))
+            for x in angs:
+                md = x.get("medicion") or {}
+                if m_.get("p_" + x["lado"]) is None:
+                    continue
+                regs_ang.append(dict(base_, codigo=x["codigo"], angulo=x["nombre"], lado=x["lado"], x=x["x"],
+                                     p_modelo_lado=m_["p_" + x["lado"]], efecto_medido_pp=md.get("efecto_pp"),
+                                     veredicto_medido=md.get("veredicto"), signo_esperado=md.get("signo_esperado")))
         partidos.append(fila)
         for c in candidatos(p, dec_bb, v2):
             tk, mn = lado_publico(q, c["mercado"], c["lado"])
@@ -456,6 +523,13 @@ def main():
             os_txt, os_favor = osciladores_txt(p, c["mercado"], c["lado"])
             if os_txt:
                 (si if os_favor else no).append(os_txt)
+            # capa cualitativa: angulos activos, con lo medido de cada uno; sin peso en p ni en el EV
+            cc["angulos"] = "; ".join("%s:%s" % (x["codigo"], x["lado"]) for x in angs)
+            cc["angulos_favor"] = cc["angulos_contra"] = None
+            if angs and c["lado"] in ("home", "away") and not str(c["mercado"]).startswith(("Total", "Games")):
+                fa, co, s_a, n_a = ANG.para_pick(angs, c["lado"])
+                cc["angulos_favor"], cc["angulos_contra"] = fa, co
+                si += s_a[:3]; no += n_a[:3]
             cc["por_que_si"] = si; cc["por_que_no"] = no
     # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
@@ -478,6 +552,8 @@ def main():
             i, c["liga"], c["fecha"], c["hora"] or "", ("%s @ %s" % (c["away"], c["home"]))[:22], ((c["mercado"] + " " if c["mercado"].startswith("Total") else "") + c["pick"])[:28], c["cuota"], 100 * c["ev"], c["confianza"], 100 * c["stake"], c["senales"], pub, sede))
         print("       por que si: %s" % ("; ".join(c.get("por_que_si") or []) or "-"))
         print("       por que no: %s" % ("; ".join(c.get("por_que_no") or []) or "-"))
+        if c.get("angulos_favor") is not None:
+            print("       angulos: %d a favor / %d en contra (sin peso; activos: %s)" % (c["angulos_favor"], c["angulos_contra"], c.get("angulos") or "-"))
     if descartados:
         print("  candidatos fuera del tope: " + "; ".join("%s %s EV %+.1f%%" % (c["liga"], c["pick"], 100 * c["ev"]) for c in descartados[:6]))
     print("\nNIVEL 1 - LECTURA DE TODOS LOS PARTIDOS (se califica para acumular muestra; NO son picks):")
@@ -489,7 +565,8 @@ def main():
             ("%s %s %.0f%%" % (t["lado"].upper(), t["linea"], 100 * t["p"]) if t else "total: sin linea"))
             + ("" if f.get("mov_ganador") is None else " | linea %+.1f pp" % f["mov_ganador"])
             + ("  [pretemporada]" if f["pretemporada"] else "")
-            + _marca(f.get("apostable")))
+            + _marca(f.get("apostable"))
+            + (("  | angulos " + ", ".join("%s(%s)" % (x["codigo"], x["equipo"]) for x in f["angulos"])) if f.get("angulos") else ""))
     with io.open(os.path.join(BASE, "salida", "picks_del_dia.json"), "w", encoding="utf-8") as f:
         json.dump({"generado": ahora, "fecha": hoy.isoformat(), "max_picks": a.max, "tope_bank": TOPE_BANK,
                    "como_leer": {
@@ -504,13 +581,18 @@ def main():
                        # reventaba AQUI, despues de imprimir el reporte completo en consola, asi que la corrida
                        # se veia bien y salida/picks_del_dia.json se quedaba con la version anterior.
                        # El telefono lee ese JSON. Se serializan como "liga Mercado".
-                       "descalibrados": {("%s %s" % (lg or "?", mk)): v for (lg, mk), v in descalibrados().items()}},
+                       "descalibrados": {("%s %s" % (lg or "?", mk)): v for (lg, mk), v in descalibrados().items()},
+                       "angulos": "'angulos' de cada partido: angulos situacionales activos (nucleo/angulos.py) con su medicion "
+                                  "fuera de muestra (modelos/angulos_medidos.json). efecto_pp = cuanto rindio el equipo al que "
+                                  "apunta el angulo contra el modelo. Ninguno paso la validacion: no cambian p ni EV. "
+                                  "'angulos_conteo' = cuantos favorecen a cada lado (los de menos de 1 pp no cuentan). "
+                                  "Se miden en vivo en salida/angulos_vivo.json."},
                    "picks": picks, "candidatos_fuera": descartados,
                    "partidos": partidos}, f, ensure_ascii=False, indent=1)
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
             "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon",
-            "torneo", "ronda", "cancha", "por_que_si", "por_que_no"]
+            "torneo", "ronda", "cancha", "por_que_si", "por_que_no", "angulos", "angulos_favor", "angulos_contra"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
@@ -538,7 +620,8 @@ def main():
                 continue
             w.writerow(dict(c, registrado=ahora, por_que_si=" | ".join(c.get("por_que_si") or []),
                             por_que_no=" | ".join(c.get("por_que_no") or []))); nuevos += 1
-    print("\nEscrito: salida/picks_del_dia.json | historial_picks_dia.csv: %d picks nuevos" % nuevos)
+    n_ang = registrar_angulos(regs_ang, ahora) if regs_ang else 0
+    print("\nEscrito: salida/picks_del_dia.json | historial_picks_dia.csv: %d picks nuevos | historial_angulos.csv: %d filas de partidos no empezados" % (nuevos, n_ang))
 
 
 if __name__ == "__main__":
