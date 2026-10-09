@@ -1150,6 +1150,129 @@ def totales_para_pick(angs_t, lado, umbral=None):
             con += 1; no.append("angulo total " + a["texto"])
     return fav, con, si, no
 
+
+# ------------------------------------------------------------------ angulos POR EQUIPO (tanda 6): goles/carreras/puntos de cada quien
+# ataque = la situacion del propio equipo; defensa = la situacion del rival (lo que recibe el que esta en la situacion).
+# Efecto de toda la muestra (OLS contra la anotacion esperada as-of y el local), encogido con James-Stein por coeficiente
+# (factor max(0, 1 - 1/t^2), t = efecto / EE): lo que no se distingue de 0 no mueve el marcador.
+NOMBRES_E = {"b2b": "segunda noche", "carga7": "carga de 7 dias (juegos)", "c4en6": "cuarto juego en 6 noches",
+             "c3en4": "tercer juego en 4 noches", "desc3": "descanso largo (3+ dias)", "dlibre": "viene de dia libre",
+             "dseg": "dias seguidos jugando (/10)", "gira": "gira del visitante", "ot": "prorroga o extra innings en el anterior",
+             "pim": "castigos del anterior (/10)", "perdio": "tras perder por mucho", "gano": "tras ganar por mucho",
+             "frio": "frio (racha de derrotas)", "cal": "caliente (racha de victorias)", "seq": "sequia de anotacion",
+             "alt": "visitante en altura", "corto": "descanso corto (3 dias o menos)", "champ": "Champions entre semana",
+             "fifa": "regreso de fecha FIFA (12+ dias)", "corta": "semana corta (5 dias o menos)", "bye": "viene de semana libre",
+             "jueves": "jueves por la noche", "vap": "abridor propio vapuleado en su salida anterior"}
+_EQ = None
+
+
+def catalogo_equipos():
+    global _EQ
+    if _EQ is None:
+        _EQ = {}
+        rr = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda6_resultados.json")
+        if os.path.exists(rr):
+            with _io.open(rr, encoding="utf-8") as f:
+                for r in json.load(f).get("resultados") or []:
+                    ic = r.get("ic95_toda_muestra")
+                    if r.get("efecto_toda_muestra") is None or not ic:
+                        continue
+                    xt = r.get("x_tipico") or 1.0
+                    e = r["efecto_toda_muestra"] / xt; se = (ic[1] - ic[0]) / 3.92 / xt
+                    t = e / se if se > 0 else 0.0
+                    f_js = max(0.0, 1.0 - 1.0 / (t * t)) if t else 0.0
+                    _EQ[(r["liga"], r["codigo"], r["lectura"])] = dict(r, por_u=e, por_u_encogido=e * f_js, ee_u=se)
+    return _EQ
+
+
+def _situacion_equipo(dep, liga, P, fecha, local, rival, probable=None):
+    """mismas definiciones que utilidades/minar_angulos_tanda6.situacion, con el partido de hoy."""
+    s = {}
+    Pl = [g for g in P if g.get("gf") is not None]
+    rest = (fecha - P[-1]["fecha"]).days if P else None
+    e5 = _estado5(P, fecha, dep)
+    if Pl:
+        u = next((g for g in reversed(P) if g.get("gf") is not None), None)
+        k = PARAM5[dep]
+        if u is not None and (fecha - u["fecha"]).days <= k["gap"]:
+            s["perdio"] = _ind(u["ga"] - u["gf"] >= k["m"]); s["gano"] = _ind(u["gf"] - u["ga"] >= k["m"])
+        s["frio"] = _ind(e5["frio"]); s["cal"] = _ind(e5["cal"])
+        if e5["S7"] is not None: s["seq"] = _ind(e5["S7"])
+    win = lambda d: sum(1 for g in P if 0 < (fecha - g["fecha"]).days <= d)
+    pv = Pl[-1] if Pl else None
+    if dep == "NHL":
+        if rest is not None and rest <= 20:
+            s["b2b"] = _ind(rest == 1); s["carga7"] = win(7); s["c4en6"] = _ind(win(5) >= 3); s["desc3"] = _ind(rest >= 3)
+            if pv is not None and pv.get("ot") is not None: s["ot"] = _ind(pv["ot"])
+            if pv is not None and pv.get("pim") is not None: s["pim"] = pv["pim"] / 10.0
+        if not local:
+            s["gira"] = _ind(_visitas_seguidas(P, False) >= 3); s["alt"] = _ind(rival in ALT_NHL)
+    elif dep in ("NBA", "NCAAMB"):
+        if rest is not None and rest <= 30:
+            s["b2b"] = _ind(rest == 1); s["c3en4"] = _ind(win(3) >= 2); s["desc3"] = _ind(rest >= 3)
+            if dep == "NBA" and pv is not None and pv.get("ot") is not None: s["ot"] = _ind(pv["ot"])
+        if not local:
+            s["gira"] = _ind(_visitas_seguidas(P, False) >= 3)
+            if dep == "NBA": s["alt"] = _ind(rival in ALT_NBA)
+    elif dep == "BEISBOL":
+        if rest is not None and rest <= 20:
+            s["dlibre"] = _ind(rest >= 2); s["dseg"] = min(_dias_seguidos(P, fecha), 20) / 10.0
+            if pv is not None and pv.get("ip") is not None: s["ot"] = _ind(pv["ip"] >= 9.95)
+        if not local: s["gira"] = _ind(_visitas_seguidas(P, False) >= 6)
+        if liga == "lmp":
+            v = _vapuleado_lmp(probable, fecha)
+            if v is not None: s["vap"] = v
+    elif dep == "FUTBOL":
+        if rest is not None and rest <= 30:
+            s["corto"] = _ind(rest <= 3)
+            s["champ"] = _ind(any(str(g["gp"]).startswith("ch") and 0 < (fecha - g["fecha"]).days <= 4 for g in P[-3:]))
+        if pv is not None and (fecha - pv["fecha"]).days <= 30:
+            s["fifa"] = _ind((fecha - pv["fecha"]).days >= 12)
+        if not local and liga == "ligamx": s["alt"] = _ind(rival in ALT_MX)
+    elif dep in ("NFL", "NCAAFB"):
+        if rest is not None and rest <= 21:
+            s["corta"] = _ind(rest <= 5); s["bye"] = _ind(13 <= rest <= 20)
+        s["jueves"] = _ind(fecha.weekday() == 3)
+    return s
+
+
+def calcular_equipos(p):
+    """marcador con angulos: por equipo, lo que mueve cada situacion (ataque propio y defensa del rival). None sin calendario."""
+    liga = (p.get("liga") or "").lower()
+    dep = _dep5(liga)
+    fecha = _d(p.get("fecha"))
+    m = p.get("modelo") or {}
+    if not dep or not fecha or p.get("pretemporada") or m.get("x_home") is None or m.get("x_away") is None:
+        return None
+    T = _calendario(liga)
+    eh, ea = _equipo(p, "home"), _equipo(p, "away")
+    if eh not in T or ea not in T:
+        return None
+    Sh = _situacion_equipo(dep, liga, _previos(T[eh], fecha), fecha, True, ea, p["home"].get("probable"))
+    Sa = _situacion_equipo(dep, liga, _previos(T[ea], fecha), fecha, False, eh, p["away"].get("probable"))
+    cat = catalogo_equipos()
+    unidad = {"BEISBOL": "carreras", "FUTBOL": "goles", "NHL": "goles"}.get(dep, "puntos")
+    out = {"unidad": unidad}
+    for lado, S_prop, S_riv, nombre in (("home", Sh, Sa, p["home"]["nombre"]), ("away", Sa, Sh, p["away"]["nombre"])):
+        lst = []; suma = 0.0
+        for c, v in S_prop.items():
+            r = cat.get((dep, c, "ataque"))
+            if v and r:
+                mv = r["por_u_encogido"] * v; suma += mv
+                lst.append({"codigo": c, "nombre": NOMBRES_E.get(c, c), "lectura": "ataque", "x": v, "moveria": round(mv, 3),
+                            "sin_encoger": round(r["por_u"] * v, 3), "z": r.get("z"), "veredicto": r.get("veredicto")})
+        for c, v in S_riv.items():
+            r = cat.get((dep, c, "defensa"))
+            if v and r:
+                mv = r["por_u_encogido"] * v; suma += mv
+                lst.append({"codigo": c, "nombre": "rival: " + NOMBRES_E.get(c, c), "lectura": "defensa del rival", "x": v,
+                            "moveria": round(mv, 3), "sin_encoger": round(r["por_u"] * v, 3), "z": r.get("z"), "veredicto": r.get("veredicto")})
+        base = m["x_" + lado]
+        out[lado] = {"equipo": nombre, "modelo": base, "angulos": lst, "suma": round(suma, 3), "con_angulos": round(max(base + suma, 0.0), 2)}
+    out["total_modelo"] = round(m["x_home"] + m["x_away"], 2)
+    out["total_con_angulos"] = round(out["home"]["con_angulos"] + out["away"]["con_angulos"], 2)
+    return out
+
 if __name__ == "__main__":
     if "--catalogo" in sys.argv:
         c = construir_catalogo()

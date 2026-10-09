@@ -488,6 +488,10 @@ def main():
         except Exception as _e:
             angs_t = []; print("  angulos de totales fallo en %s %s: %s" % (p.get("liga"), p.get("id"), _e))
         fila["angulos_total"] = angs_t
+        try:
+            fila["marcador_angulos"] = ANG.calcular_equipos(p) if ANG is not None else None
+        except Exception as _e:
+            fila["marcador_angulos"] = None; print("  marcador con angulos fallo en %s %s: %s" % (p.get("liga"), p.get("id"), _e))
         fila["angulos_conteo"] = ANG.conteo(angs) if angs else None
         if ANG is not None and not p.get("pretemporada") and not _empezado(p, ahora_cdmx) and ANG._grupos(p.get("liga")):
             m_ = p.get("modelo") or {}

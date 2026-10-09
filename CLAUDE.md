@@ -99,6 +99,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   cada analisis, con lo que moverian. Ganador: `nucleo/angulos.calcular` (tandas 1-5, derbi F18, abridor vapuleado S9 en LMP).
   Totales: `nucleo/angulos.calcular_totales` (TH/TK/TB/TF/TN de la tanda 4 y TS de la tanda 5: moveria +-x goles/carreras/
   puntos con su IC); `picks_del_dia.json` los trae en `angulos_total` y en por_que_si/no de los picks de total.
+  Por equipo (tanda 6, `utilidades/minar_angulos_tanda6.py`, k 127): `nucleo/angulos.calcular_equipos` da el marcador con
+  angulos (ataque propio y defensa del rival, encogido James-Stein) y el total como suma; en `picks_del_dia.json` ->
+  `marcador_angulos`. Pasan NHL segunda noche ataque (-0.15 goles), NBA 3 en 4 defensa (+0.93 pts), NCAAMB gira defensa (+1.46).
 - `salida/publico.json` y `salida/publico_<año>.csv` (`colectores/recolectar_publico.py`): el público medido directo: % de boletos y % de dinero
   por lado (ML, spread, total) del tablero público de Action Network (NFL, NBA, MLB, NHL, NCAA) y número de notas de Google News por equipo
   en 48 h. Los porcentajes son la MEDIANA de las casas que reportan (0 y 100 = sin dato). Cada pick oficial guarda `publico_boletos`,
