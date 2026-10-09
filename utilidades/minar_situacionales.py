@@ -36,6 +36,7 @@ from nucleo import io  # noqa: E402
 BASE = io.BASE
 SALIDA_MD = os.path.join(CODIGO, "trabajo", "minar")
 RESULTADOS = []
+ULTIMO = {}   # deporte -> (filas, calendario): lo reusan otros scripts de minado
 
 
 # ------------------------------------------------------------------ utilidades numericas
@@ -280,7 +281,7 @@ def correr_hockey():
         rh, ra = C.descanso(th, gp), C.descanso(ta, gp)
         if rh is None or ra is None: continue
         bh, ba = rh == 1, ra == 1
-        r = dict(fecha=f, gp=gp, p=p, y=y)
+        r = dict(fecha=f, gp=gp, p=p, y=y, home=th, away=ta)
         ph, pa = C.prev(th, gp), C.prev(ta, gp)
         sa, nh = C.sig(ta, gp), C.actual(th, gp)
         r["H1"] = _ind(ba and not bh)
@@ -322,6 +323,7 @@ def correr_hockey():
             r["H19"] = r["H20"] = None
         filas.append(r)
     print("  partidos con descanso conocido: %d (de %d predicciones as-of)" % (len(filas), len(cal)))
+    ULTIMO["NHL"] = (filas, C)
     defs = [("H1", "visita en segunda noche, local descansado", +1), ("H2", "local en segunda noche, visita descansada", -1),
             ("H4", "un dia de diferencia de descanso", +1), ("H6", "tercer juego en 4 noches", +1),
             ("H7", "carga de 7 dias", +1), ("H8", "regreso de pausa de 7+ dias", -1), ("H13", "gira larga del visitante", +1),
@@ -353,7 +355,7 @@ def correr_basquet(liga):
         th, ta = h.get("team"), a.get("team")
         rh, ra = C.descanso(th, gp), C.descanso(ta, gp)
         if rh is None or ra is None or rh > 30 or ra > 30: continue   # primer juego de temporada fuera
-        r = dict(fecha=f, gp=gp, p=w * pe + (1 - w) * psc, y=y)
+        r = dict(fecha=f, gp=gp, p=w * pe + (1 - w) * psc, y=y, home=th, away=ta)
         ph, pa = C.prev(th, gp), C.prev(ta, gp)
         r["K1"] = _ind(ra == 1) - _ind(rh == 1)
         r["K2"] = _ind((C.en_ventana(ta, gp, 3) or 0) >= 2) - _ind((C.en_ventana(th, gp, 3) or 0) >= 2)
@@ -365,6 +367,7 @@ def correr_basquet(liga):
         r["K11"] = (_ind(pa and pa["ot"]) - _ind(ph and ph["ot"])) if liga == "NBA" else None
         filas.append(r)
     print("  partidos: %d (de %d predicciones as-of)" % (len(filas), len(cal)))
+    ULTIMO[liga] = (filas, C)
     defs = [("K1", "segunda noche", +1), ("K2", "tercer juego en 4 noches", +1), ("K3", "diferencia de descanso", +1),
             ("K4", "descanso de 4+ dias", +1), ("K8a", "gira larga del visitante", +1), ("K8b", "regreso a casa tras gira 3+", -1),
             ("K10", "tras perder por 20 o mas", +1), ("K11", "tras prorroga", +1)]
@@ -407,7 +410,9 @@ def correr_americano(liga):
                     hm, aw = _ALIAS_NFL.get(x["home_team"], x["home_team"]), _ALIAS_NFL.get(x["away_team"], x["away_team"])
                     ph_, pa_ = _ml_prob(x.get("home_moneyline")), _ml_prob(x.get("away_moneyline"))
                     pm = ph_ / (ph_ + pa_) if ph_ and pa_ else None
-                    lin[(x["gameday"][:10], hm, aw)] = (pm, x.get("overtime") == "1")
+                    lin[(x["gameday"][:10], hm, aw)] = (pm, x.get("overtime") == "1", _num(x.get("home_moneyline")),
+                                                         _num(x.get("away_moneyline")), x.get("div_game") == "1",
+                                                         x.get("home_coach"), x.get("away_coach"))
     def _clave(f, h, a):
         return (f[:10], _ALIAS_NFL.get(h, h), _ALIAS_NFL.get(a, a))
     filas = []
@@ -415,10 +420,12 @@ def correr_americano(liga):
         th, ta = h.get("team"), a.get("team")
         rh, ra = C.descanso(th, gp), C.descanso(ta, gp)
         if rh is None or ra is None or rh > 40 or ra > 40: continue
-        r = dict(fecha=f, gp=gp, p=w * pe + (1 - w) * psc, y=y)
+        r = dict(fecha=f, gp=gp, p=w * pe + (1 - w) * psc, y=y, home=th, away=ta)
         ph, pa = C.prev(th, gp), C.prev(ta, gp)
         info = lin.get(_clave(f, th, ta))
         r["pm"] = info[0] if info else None
+        if info:
+            r["ml_h"], r["ml_a"], r["div"], r["coach_h"], r["coach_a"] = info[2], info[3], info[4], info[5], info[6]
         if liga == "NFL":
             r["N4"] = _ind(pa and pa["fecha"].weekday() == 0) - _ind(ph and ph["fecha"].weekday() == 0)
         r["N5"] = (1 if (rh >= 13 and ra <= 5) else (-1 if (ra >= 13 and rh <= 5) else 0))
@@ -433,6 +440,7 @@ def correr_americano(liga):
             r["N13"] = _ind(gano_ot(ta, pa)) - _ind(gano_ot(th, ph)) if lin else None
         filas.append(r)
     con_m = sum(1 for r in filas if r.get("pm") is not None)
+    ULTIMO[liga] = (filas, C)
     print("  partidos: %d (de %d predicciones as-of); con cierre: %d" % (len(filas), len(cal), con_m))
     defs = [("N4", "tras jugar lunes", +1), ("N5", "sale de bye contra semana corta", +1),
             ("N8", "segundo juego seguido de visita", +1), ("N12", "tras perder por 20 o mas", +1),
@@ -523,7 +531,7 @@ def correr_beisbol(ligas):
             rh, ra = C.descanso(eh, gp), C.descanso(ea, gp)
             if rh is None or ra is None or rh > 20 or ra > 20: continue
             f = r["game_date"][:10]
-            fila = dict(fecha=f, gp=gp, p=p, y=r["y_home"], liga=liga, corte=G[i70]["game_date"][:10])
+            fila = dict(fecha=f, gp=gp, p=p, y=r["y_home"], liga=liga, corte=G[i70]["game_date"][:10], home=eh, away=ea)
             ah, aa = C.actual(eh, gp), C.actual(ea, gp)
             ph, pa = C.prev(eh, gp), C.prev(ea, gp)
             def dia_tras_noche(act, pr):
@@ -569,6 +577,7 @@ def correr_beisbol(ligas):
                     fila["B18"] = _ind(ia[0]) - _ind(ih[0]); fila["B19"] = _ind(ia[1]) - _ind(ih[1])
             todas.append(fila)
         print("  %s: %d partidos evaluables (prueba desde %s)" % (liga, len(todas) - n0, G[i70]["game_date"][:10]))
+    ULTIMO["BEISBOL"] = (todas, C)
     defs = [("B1", "dia tras noche", +1), ("B2", "primer juego tras dia libre", +1), ("B5", "dias seguidos jugando", +1),
             ("B10", "primer juego de serie", +1), ("B11", "ultimo juego de serie (getaway)", +1),
             ("B12", "evitar la barrida", +1), ("B13", "gira larga del visitante", +1),
@@ -619,7 +628,7 @@ def correr_futbol(bloque=30):
     C.cerrar()
     print("  juegos de Champions agregados al calendario: %d" % n_ch)
     # cierres de Pinnacle
-    pin = {}
+    pin = {}; CUOTAS_FUT = {}
     ruta_c = os.path.join(BASE, "datos", "mercado", "futbol_cuotas.csv")
     if os.path.exists(ruta_c):
         with _io.open(ruta_c, encoding="utf-8-sig") as fh:
@@ -630,6 +639,9 @@ def correr_futbol(bloque=30):
                 if hh and dd_ and aa:
                     s = 1 / hh + 1 / dd_ + 1 / aa
                     pin[str(x["gamePk"])] = (1 / hh) / s
+                mx = tuple(_num(x.get(k)) for k in ("fd_MaxH", "fd_MaxD", "fd_MaxA"))
+                ps = tuple(_num(x.get(k)) for k in ("fd_PSCH", "fd_PSCD", "fd_PSCA"))
+                CUOTAS_FUT[str(x["gamePk"])] = {"max": mx, "pin": ps, "res": x.get("fd_FTR")}
     filas = []
     orig = io.cargar_juegos
     for liga in LIGAS_FUT:
@@ -656,11 +668,15 @@ def correr_futbol(bloque=30):
                     if rh is None or ra is None or rh > 30 or ra > 30: continue
                     ph, pa = C.prev(th, gp), C.prev(ta, gp)
                     def perdio3(g): return bool(g and g["gf"] is not None and g["ga"] - g["gf"] >= 3)
-                    filas.append(dict(fecha=f, gp=gp, p=rr["p_home"], y=1 if gh > ga else 0, liga=liga, pm=pin.get(str(gp)),
+                    filas.append(dict(fecha=f, gp=gp, p=rr["p_home"], pdraw=rr.get("p_draw"), paway=rr.get("p_away"),
+                                      home=th, away=ta, cuotas=CUOTAS_FUT.get(str(gp)),
+                                      res=("H" if gh > ga else ("D" if gh == ga else "A")),
+                                      y=1 if gh > ga else 0, liga=liga, pm=pin.get(str(gp)),
                                       F1=max(-3, min(3, rh - ra)) / 3.0, F13=_ind(perdio3(ph)) - _ind(perdio3(pa))))
             d0 = d1
         print("  %s: %d partidos" % (liga, len(filas) - n0))
     print("  con cierre de Pinnacle: %d de %d" % (sum(1 for r in filas if r["pm"]), len(filas)))
+    ULTIMO["FUTBOL"] = (filas, C)
     for cod, nom, s in (("F1", "diferencia de descanso", +1), ("F13", "tras perder por 3 o mas", +1)):
         evaluar([dict(r, x=r[cod]) for r in filas], cod, nom, "7 ligas", s)
         evaluar([dict(r, x=r[cod], p=r["pm"]) for r in filas if r["pm"]], cod, nom, "7 ligas", s, base_nombre="cierre")
