@@ -10,7 +10,8 @@ Que hace:
     (el siguiente rival).
   - A cada angulo le pega su medicion fuera de muestra (modelos/angulos_medidos.json): cuanto rindio el lado al que
     apunta el angulo contra el modelo (pp), casos, z y veredicto; en los cualitativos tambien el TMLE con su IC 95 %.
-  - NO cambia probabilidades: ninguno paso el protocolo (n >= 300, z >= 2.0, dos mitades, calibrado). Se muestran,
+  - NO cambia probabilidades, salvo las dos capas que pasaron y aprobo Alejandro (9-oct-2026): K14 ausencias en NBA y
+    T1 minutos del partido anterior en ATP, que plataforma.py suma al logit con aplicar_capa(). El resto se muestra,
     se cuentan a favor / en contra del pick y se registran en salida/historial_angulos.csv para medirlos en vivo
     (utilidades/medir_angulos_vivo.py). Un angulo gana peso solo si pasa el protocolo con datos en vivo y Alejandro
     lo aprueba (regla 2 de CLAUDE.md).
@@ -459,6 +460,62 @@ def _tenis_hist():
     return _TEN
 
 
+# ------------------------------------------------------------------ capas con peso (aprobadas el 9-oct-2026)
+CON_PESO = {("nba", "K14"), ("atp", "T1")}     # ya entran en p (plataforma.py); en la capa cualitativa no se cuentan dos veces
+_CAPAS = None
+
+
+def capas_aprobadas():
+    """modelos/capas_ausencias_minutos.json (utilidades/pesos_ausencias_minutos.py)."""
+    global _CAPAS
+    if _CAPAS is None:
+        try:
+            with _io.open(os.path.join(CODIGO, "modelos", "capas_ausencias_minutos.json"), encoding="utf-8") as f:
+                _CAPAS = json.load(f)
+        except Exception:
+            _CAPAS = {}
+    return _CAPAS
+
+
+def _min_previo(nombre, torneo, hoy):
+    """minutos del ultimo partido del jugador en este torneo (mismo criterio que la tanda 3); None si no jugo o sin dato."""
+    torneo = (torneo or "").lower()
+    L = [m for m in _tenis_hist().get(nombre, []) if m["fecha"] <= hoy and (hoy - m["fecha"]).days <= 14
+         and m["torneo"] and m["torneo"] in torneo]
+    return L[-1]["min"] if L else None
+
+
+def x_minutos_atp(j_home, j_away, torneo, fecha):
+    """T1: (minutos previos del visitante - del local) / 60; None si alguno no ha jugado en el torneo."""
+    hoy = fecha if isinstance(fecha, dt.date) else _d(fecha)
+    if not hoy:
+        return None
+    mh, ma = _min_previo(j_home, torneo, hoy), _min_previo(j_away, torneo, hoy)
+    if not mh or not ma:
+        return None
+    return (ma - mh) / 60.0
+
+
+def x_ausencias_nba(g, fecha):
+    """K14 desde el registro del partido (contexto.lesiones de ESPN, nombres completos de los equipos)."""
+    hoy = fecha if isinstance(fecha, dt.date) else _d(fecha)
+    return _ausencias_nba({"contexto": g.get("contexto") or {}, "home": g["home"], "away": g["away"]}, hoy) if hoy else None
+
+
+def aplicar_capa(p_home, liga, codigo, x):
+    """logit(p) + beta * x con el beta de modelos/capas_ausencias_minutos.json. Devuelve (p, detalle)."""
+    import math as _m
+    clave = {("nba", "K14"): "nba_K14", ("atp", "T1"): "atp_T1"}.get(((liga or "").lower(), codigo))
+    c = (capas_aprobadas() or {}).get(clave) or {}
+    if x is None or c.get("beta") is None:
+        return p_home, {"aplicado": False, "motivo": "sin dato para %s" % codigo if x is None else "sin coeficiente"}
+    p0 = min(max(p_home, 1e-4), 1 - 1e-4)
+    p1 = 1.0 / (1.0 + _m.exp(-(_m.log(p0 / (1 - p0)) + c["beta"] * x)))
+    return p1, {"aplicado": True, "codigo": codigo, "nombre": NOMBRES.get(codigo), "x": round(x, 3), "beta": c["beta"],
+                "ajuste_pp": round(100 * (p1 - p0), 1), "p_sin_capa": round(p0, 4),
+                "fuente": "modelos/capas_ausencias_minutos.json (tanda 3, aprobada 9-oct-2026)"}
+
+
 def _tenis(p, liga):
     """T1-T5 en vivo con las definiciones de minar_angulos_tanda3.tenis. x + apunta al jugador local (home)."""
     H = _tenis_hist()
@@ -498,7 +555,7 @@ def _tenis(p, liga):
         if v:
             lado = "home" if v > 0 else "away"
             out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado]["nombre"], "x": round(v, 3),
-                        "medicion": medicion(liga, c)})
+                        "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
     return out
 
 
@@ -674,7 +731,7 @@ def calcular(p, todos=None):
             continue
         lado = "home" if v > 0 else "away"
         out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado].get("abrev") or p[lado]["nombre"],
-                    "x": v, "medicion": medicion(liga, c)})
+                    "x": v, "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
     return out
 
 
@@ -684,6 +741,8 @@ def efecto(a):
     e = m.get("efecto_pp")
     if e is None:
         return None, 0
+    if a.get("con_peso"):
+        return e, 0                      # ya esta dentro de la probabilidad: contarlo otra vez seria doble
     return e, (0 if abs(e) < NEUTRO_PP else (1 if e > 0 else -1))
 
 
@@ -701,6 +760,8 @@ def texto(a):
         base, a["equipo"], m["efecto_pp"], _miles(m.get("n_activo_prueba")), m.get("z"), m.get("veredicto"))
     if m.get("tmle_pp") is not None and m.get("tmle_ic95"):
         t += "; TMLE %+.1f pp [%+.1f, %+.1f]" % (m["tmle_pp"], m["tmle_ic95"][0], m["tmle_ic95"][1])
+    if a.get("con_peso"):
+        return t + "; con peso: ya esta dentro de la probabilidad del modelo"
     return t + ("; pasa, sin peso hasta que Alejandro lo apruebe" if m.get("veredicto") == "pasa" else "; sin peso")
 
 
@@ -716,7 +777,7 @@ def conteo(angs):
 
 def resumen_json(a):
     m = a.get("medicion") or {}
-    return {"codigo": a["codigo"], "nombre": a["nombre"], "lado": a["lado"], "equipo": a["equipo"], "x": a["x"],
+    return {"codigo": a["codigo"], "nombre": a["nombre"], "lado": a["lado"], "equipo": a["equipo"], "x": a["x"], "con_peso": bool(a.get("con_peso")),
             "efecto_pp": m.get("efecto_pp"), "n_medido": m.get("n_activo_prueba"), "z": m.get("z"), "veredicto": m.get("veredicto"),
             "tmle_pp": m.get("tmle_pp"), "tmle_ic95": m.get("tmle_ic95"), "texto": texto(a)}
 

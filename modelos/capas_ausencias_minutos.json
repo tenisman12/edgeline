@@ -1,0 +1,33 @@
+{
+ "generado": "2026-10-09",
+ "aprobado": "Alejandro, 9-oct-2026",
+ "fuente": "trabajo/minar/2026-10-09_tanda3.md (K14 NBA z 3.97, T1 ATP z 3.87); coeficientes de utilidades/pesos_ausencias_minutos.py",
+ "uso": "logit(p) += beta * x en plataforma.py; WTA no (T1 no paso en WTA)",
+ "nba_K14": {
+  "beta": 0.308,
+  "ee": 0.0415,
+  "n": 5143,
+  "desde": "2022-10-28",
+  "hasta": "2026-06-13",
+  "x": "(minutos por juego de los ausentes de la visita - del local) / 48; ausente = 20+ min de promedio en 3 o mas de sus ultimos 5 juegos del equipo y no juega (en vivo: 'Out' en el reporte de lesiones de ESPN)",
+  "prueba_70_30_sobre_produccion": {
+   "z": 3.89,
+   "mitades": [
+    6.167,
+    13.098
+   ],
+   "mejora_milesimas": 9.635,
+   "n_activo_prueba": 1143,
+   "calibracion_activos": 0.0091,
+   "veredicto": "pasa"
+  }
+ },
+ "atp_T1": {
+  "beta": 0.1637,
+  "ee": 0.0153,
+  "n": 28890,
+  "desde": "2000-01-10",
+  "hasta": "2026-10-06",
+  "x": "(minutos del partido anterior del rival en el torneo - propios) / 60, desde el lado local; solo si los dos ya jugaron en el torneo"
+ }
+}

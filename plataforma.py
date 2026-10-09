@@ -589,16 +589,27 @@ def _pred(g, c, fecha, eventos=None):
         except Exception:
             aj_v, v1_, v2_, _tor = 0.0, 0.0, 0.0, ""
         aj_b = AJUSTE_BREAKS.get((g["liga"], bo), 0.0)
-        return {"p_home": r["p1"], "p_away": r["p2"], "unidad": "games",
+        p1_, capa_min = r["p1"], None
+        if g["liga"] == "atp":
+            # T1 minutos del partido anterior en el torneo (tanda 3, z 3.87; aprobada 9-oct-2026). WTA no paso.
+            try:
+                from nucleo import angulos as _ANG
+                p1_, capa_min = _ANG.aplicar_capa(r["p1"], "atp", "T1", _ANG.x_minutos_atp(j1, j2, g.get("torneo"), fecha))
+            except Exception as _e:
+                capa_min = {"aplicado": False, "motivo": "error: %s" % _e}
+        nota_t = "Superficie estimada: %s. Best of %d." % (g.get("superficie"), bo)
+        if capa_min and capa_min.get("aplicado") and capa_min.get("ajuste_pp"):
+            nota_t += " Minutos del partido anterior (T1): %+.1f pp al local." % capa_min["ajuste_pp"]
+        return {"p_home": round(p1_, 4), "p_away": round(1 - p1_, 4), "unidad": "games", "capa_minutos": capa_min,
                 "total": r["games_esperados"], "linea_total": linea, "linea_es_mercado": linea_mkt not in (None, "no"),
-                "p_over": r["p_over_games"], "confianza": _conf(max(r["p1"], r["p2"])),
+                "p_over": r["p_over_games"], "confianza": _conf(max(p1_, 1 - p1_)),
                 "extra": [("Breaks esperados", round(max(0.1, r["breaks_esperados"] + aj_b + aj_v), 1)),
                           ("Ajuste breaks", round(aj_b + aj_v, 2)),
                           ("Velocidad del torneo (breaks)", round(aj_v, 2)),
                           ("Torneo (historial)", _tor),
                           ("Prob. de al menos un break", r["p_al_menos_un_break"]),
                           ("Hold saque local / visita", "%s / %s" % (r["hold_j1"], r["hold_j2"]))],
-                "nota": "Superficie estimada: %s. Best of %d." % (g.get("superficie"), bo)}, None
+                "nota": nota_t}, None
 
     h, sh = _casar(c, g["home"]); a, sa = _casar(c, g["away"])
     if not h or not a:
@@ -714,6 +725,15 @@ def _pred(g, c, fecha, eventos=None):
             p_h, capas = _ajuste_capas_nfl(r["p_home"], h, a)
         elif g.get("liga") == "nba":
             p_h, capas = _ajuste_capas_nba(r["p_home"], h, a, fecha, g["home"]["nombre"], g["away"]["nombre"])
+        capa_aus = None
+        if g.get("liga") == "nba":
+            # K14 ausencias (tanda 3, z 3.89 sobre la base de produccion; aprobada 9-oct-2026): jugadores 'Out' en el reporte
+            # de ESPN con 20+ min de promedio en 3 o mas de los ultimos 5 juegos. nucleo/angulos.py + modelos/capas_ausencias_minutos.json
+            try:
+                from nucleo import angulos as _ANG
+                p_h, capa_aus = _ANG.aplicar_capa(p_h, "nba", "K14", _ANG.x_ausencias_nba(g, fecha))
+            except Exception as _e:
+                capa_aus = {"aplicado": False, "motivo": "error: %s" % _e}
         m = {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "puntos",
              "x_home": r["pts_home"], "x_away": r["pts_away"], "total": r["total_esperado"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
@@ -725,6 +745,11 @@ def _pred(g, c, fecha, eventos=None):
             elif capas.get("aplicado") and g.get("liga") == "nba":
                 m["nota"] = "Capas medidas (descanso %+d dias, b2b %+d, net rating L10 %+.1f): %+.1f pp al local." % (capas["dif_descanso"], int(capas["dif_b2b"]), capas["dif_net10"], capas["ajuste_pp"])
                 m["descanso"] = {"home_b2b": capas["home"]["b2b"], "away_b2b": capas["away"]["b2b"]}
+        if capa_aus is not None:
+            m["capa_ausencias"] = capa_aus
+            if capa_aus.get("aplicado") and capa_aus.get("ajuste_pp"):
+                m["nota"] = (m.get("nota") or "") + (" " if m.get("nota") else "") + "Ausencias (K14): %+.1f pp al local." % capa_aus["ajuste_pp"]
+                m["confianza"] = _conf(max(p_h, 1 - p_h))
         if r.get("p_cubre_home") is not None:
             m["spread"] = {"linea_home": sp, "p_home": r["p_cubre_home"], "p_away": 1 - r["p_cubre_home"]}
         return m, None
