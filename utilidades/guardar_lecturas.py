@@ -10,8 +10,10 @@ Entrada: un archivo JSON con una lista de lecturas (formato de ia/instrucciones_
 Hace:
   - valida decision, lado, stake y que (liga, id) exista en salida/proximos.json
   - completa partido/fecha/hora desde proximos.json
-  - mezcla en salida/picks_ia.json por (liga, id) (no borra lecturas de otras ligas o dias)
-  - agrega a salida/historial_ia.csv solo lo nuevo (una lectura por partido; la primera queda registrada)
+  - mezcla en salida/picks_ia.json por (liga, id, tipo) (no borra lecturas de otras ligas o dias)
+  - agrega a salida/historial_ia.csv solo lo nuevo (una lectura por partido y tipo; la primera queda registrada)
+  tipo = "Total" si el mercado empieza con Total o Games, "Ganador" en lo demas. Desde el 9-oct-2026 un partido puede
+  llevar dos lecturas: la de ganador y la de total (Alejandro: "quiero tambien picks de totales").
 
 Uso:
     python utilidades/guardar_lecturas.py trabajo/lecturas_2026-10-02.json
@@ -27,6 +29,10 @@ import argparse, csv, datetime as dt, io, json, os
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DECISIONES = {"PREMIUM", "PICK", "LEAN", "REVISAR", "PASAR"}
 LADOS = {"home", "away", "over", "under", "draw", None}
+def tipo(l):
+    return "Total" if str(l.get("mercado") or "").startswith(("Total", "Games")) else "Ganador"
+
+
 COLS = ["registrado", "liga", "id", "fecha", "partido", "decision", "mercado", "lado", "cuota", "stake", "lectura"]
 
 
@@ -44,7 +50,7 @@ def main():
     with io.open(os.path.join(BASE, "salida", "proximos.json"), encoding="utf-8") as f:
         por_id = {(p["liga"], str(p["id"])): p for p in json.load(f)["partidos"]}
 
-    ok, errores = [], []
+    ok, errores, vistos_in = [], [], set()
     for l in lecturas:
         l["id"] = str(l.get("id"))
         p = por_id.get((l.get("liga"), l["id"]))
@@ -66,6 +72,10 @@ def main():
             l["stake"] = 0.0
         if not str(l.get("lectura", "")).strip():
             errores.append("%s %s: lectura vacia" % (l["liga"], l["id"])); continue
+        kk = (l["liga"], l["id"], tipo(l))
+        if kk in vistos_in:
+            errores.append("%s %s: dos lecturas de %s para el mismo partido" % (l["liga"], l["id"], tipo(l))); continue
+        vistos_in.add(kk)
         l["partido"] = "%s @ %s" % (p["away"]["nombre"], p["home"]["nombre"])
         l["fecha"], l["hora"] = p["fecha"], p.get("hora")
         ok.append(l)
@@ -82,8 +92,8 @@ def main():
     if os.path.exists(rj):
         with io.open(rj, encoding="utf-8") as f:
             previas = json.load(f).get("lecturas", [])
-    nuevas_ids = {(l["liga"], l["id"]) for l in ok}
-    mezcla = [l for l in previas if (l.get("liga"), str(l.get("id"))) not in nuevas_ids] + ok
+    nuevas_ids = {(l["liga"], l["id"], tipo(l)) for l in ok}
+    mezcla = [l for l in previas if (l.get("liga"), str(l.get("id")), tipo(l)) not in nuevas_ids] + ok
     with io.open(rj, "w", encoding="utf-8") as f:
         json.dump({"generado": ahora, "modelo_ia": a.origen, "lecturas": mezcla}, f, ensure_ascii=False, indent=1)
 
@@ -91,8 +101,8 @@ def main():
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
-            vistos = {(r["liga"], r["id"]) for r in csv.DictReader(f)}
-    nuevos = [l for l in ok if (l["liga"], l["id"]) not in vistos]
+            vistos = {(r["liga"], r["id"], tipo(r)) for r in csv.DictReader(f)}
+    nuevos = [l for l in ok if (l["liga"], l["id"], tipo(l)) not in vistos]
     escribir_cab = not os.path.exists(rh) or os.path.getsize(rh) == 0
     with io.open(rh, "a", encoding="utf-8-sig" if escribir_cab else "utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLS, extrasaction="ignore")

@@ -63,6 +63,15 @@ jobs:
         continue-on-error: true
         run: python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3
 
+      # LMP (y LVBP/LIDOM si se agregan a EDGELINE_SGO_LIGAS): The Odds API no las cubre. SportsGameOdds, plan gratis
+      # (2,500 objetos al mes): una foto cada 3 h. Sin el secreto SGO_KEY el paso no hace nada.
+      - name: Cuotas de LMP (SportsGameOdds, si la foto tiene 3 h o mas)
+        env:
+          EDGELINE_SGO_KEY: ${{ secrets.SGO_KEY }}
+          EDGELINE_SGO_LIGAS: LMP
+        continue-on-error: true
+        run: python colectores/recolectar_cuotas_sgo.py --min-horas 3
+
       - name: Lectura sharp vs publico (casas sharp contra casas del publico)
         continue-on-error: true
         run: python utilidades/mercado_libros.py --actualizar --ver --horas 48 > /tmp/mercado.txt; head -5 /tmp/mercado.txt
@@ -120,7 +129,7 @@ jobs:
         run: python utilidades/clv.py
 
       - name: Subir a main
-        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/mercado_libros.json salida/mercado_publico.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv salida/decidir.json salida/historial_decidir.csv salida/historial_decidir_calificado.csv salida/picks_del_dia.json salida/historial_picks_dia.csv salida/historial_picks_dia_calificado.csv salida/publico.json salida/publico_*.csv salida/historial_breaks_calificado.csv salida/resumen/*.json salida/resumen/LEEME.md salida/totales_vs_linea.json salida/cobertura_datos.json salida/clv.json salida/clv_detalle.csv salida/historial_angulos.csv salida/angulos_vivo.json"
+        run: bash utilidades/subir_a_main.sh "cuotas" "salida/odds_snapshots_*.csv salida/cuotas_casas.json salida/cuotas_sharp_*.csv salida/odds_creditos.json salida/sgo_creditos.json salida/mercado_libros.json salida/mercado_publico.json salida/proximos.json salida/historial_picks.csv salida/historial_calificado.csv salida/track_record.json salida/historial_predicciones.csv salida/historial_predicciones_calificado.csv salida/decidir.json salida/historial_decidir.csv salida/historial_decidir_calificado.csv salida/picks_del_dia.json salida/historial_picks_dia.csv salida/historial_picks_dia_calificado.csv salida/publico.json salida/publico_*.csv salida/historial_breaks_calificado.csv salida/resumen/*.json salida/resumen/LEEME.md salida/totales_vs_linea.json salida/cobertura_datos.json salida/clv.json salida/clv_detalle.csv salida/historial_angulos.csv salida/angulos_vivo.json"
 
       - name: Publicar datos en la rama datos (una sola version, sin historial)
         run: |

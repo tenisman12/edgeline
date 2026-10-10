@@ -50,6 +50,12 @@ Tu trabajo es el DEBATE entre esas fuentes y una decision clara. Reglas:
 Como se combinan: el precio pone el punto de partida, el modelo propone, los demas confirman, contradicen o descalifican.
 Ninguno cambia la probabilidad en silencio: cuando un indicador contradice, baja el nivel o mata el pick, y la lectura dice cual fue.
 
-Formato de salida (JSON, una entrada por partido):
+12. Totales (9-oct-2026, Alejandro: "quiero tambien picks de totales"): cada partido puede llevar DOS lecturas, una de
+    ganador y una de total, cada una con su decision. El total se decide con las mismas reglas (precio sharp, EV, cuota desde
+    1.70, linea en contra = veto) y con los angulos de totales y el marcador con angulos como debate. Donde el total del
+    modelo no le gana a la tasa historica, p final = mercado y el total no llega a PICK por si solo. La lista oficial
+    (`picks_del_dia.py`) tambien admite hasta un ganador y un total por partido, con el tope de 4 al dia.
+
+Formato de salida (JSON, una entrada por partido y tipo de mercado: ganador y, si se lee, total):
 {"liga": "...", "id": "...", "lectura": "...", "decision": "PREMIUM|PICK|LEAN|REVISAR|PASAR",
  "mercado": "Ganador|Total x|Spread x|null", "lado": "home|away|over|under|null", "cuota": numero|null, "stake": 1.0|0.0}

@@ -85,7 +85,8 @@ def _aplicar_validacion():
         d = dep.get(clave)
         if not d: continue
         poner(liga, "Ganador", pub(d, "Ganador"))
-        poner(liga, "Total", pub(d, "Over/Under (lineas ~promedio)"))
+        # Total: el del modelo o el de la capa de totales (nucleo/capa_totales.py), el que pase la validacion
+        poner(liga, "Total", pub(d, "Over/Under (lineas ~promedio)") or pub(d, "Over/Under (capa)"))
         poner(liga, "Spread", mayoria(d, [k for k in d if k.startswith(("Local cubre margen", "Puck line", "Run line"))]))
     for liga, clave in (("atp", "tenis_ATP"), ("wta", "tenis_WTA")):
         d = dep.get(clave)
@@ -551,7 +552,41 @@ def _spread_mercado(q, p_home, xh, xa, pmf):
     return {"linea_home": float(sp), "p_home": round(pc, 4), "p_away": round(1 - pc, 4), "linea_es_mercado": q.get("spread_home") is not None}
 
 
+CAPA_TOT = {"nhl": ("hockey", "NHL", "hockey"), "nba": ("nba", "NBA", "nba"), "ncaamb": ("nba", "NCAAMB", "ncaamb"),
+            "nfl": ("americano", "NFL", "nfl"), "ncaafb": ("americano", "NCAAFB", "ncaafb"),
+            "mlb": ("beisbol", "MLB", "beisbol_mlb"), "npb": ("beisbol", "NPB", "beisbol_npb"),
+            "kbo": ("beisbol", "KBO", "beisbol_kbo"), "lmp": ("beisbol", "LMP", "beisbol_lmp")}
+
+
 def _pred(g, c, fecha, eventos=None):
+    """_pred_base + capa de totales (nucleo/capa_totales.py; minado 9-oct-2026, 2026-10-09_capa_totales.md): en las ligas
+    donde 'Over/Under (capa)' quedo publicable en la validacion oficial, el total y el p_over salen de la capa
+    (T* = a + b*T_modelo + c*media de liga + d*ritmo de los dos equipos + nivel reciente; over/under con los residuos del
+    ultimo ano). El total del modelo queda en total_modelo y los marcadores se escalan para sumar el total de la capa."""
+    m, motivo = _pred_base(g, c, fecha, eventos)
+    if not m or g.get("liga") not in CAPA_TOT or m.get("total") is None:
+        return m, motivo
+    try:
+        from nucleo import capa_totales as CT
+        dep_f, liga_f, clave = CAPA_TOT[g["liga"]]
+        h, _ = _casar(c, g["home"]); a, _ = _casar(c, g["away"])
+        r = CT.aplicar(BASE, clave, dep_f, liga_f, h, a, fecha, m["total"], m.get("linea_total"))
+        if r:
+            m["capa_totales"] = r
+            t0 = m["total"]
+            m["total_modelo"] = t0
+            m["total"] = r["total"]
+            if r.get("p_over") is not None:
+                m["p_over"] = r["p_over"]
+            if t0 and m.get("x_home") is not None and m.get("x_away") is not None:
+                f = r["total"] / t0
+                m["x_home"], m["x_away"] = round(m["x_home"] * f, 2), round(m["x_away"] * f, 2)
+    except Exception as e:
+        m["capa_totales"] = {"aplicado": False, "motivo": "error: %s" % str(e)[:120]}
+    return m, motivo
+
+
+def _pred_base(g, c, fecha, eventos=None):
     """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes. eventos = cuotas de todas las casas
     (se usa en tenis para tomar la linea de games del mercado)."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}

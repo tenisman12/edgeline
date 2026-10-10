@@ -60,11 +60,21 @@ def _medicion(liga):
         return {}
 
 
+def _ganador_ok(liga):
+    return (_medicion(liga).get("ganador") or {}).get("veredicto") == "APLICAR"
+
+
+def _total_ok(liga):
+    return any((o.get("total_mae") or {}).get("veredicto") == "APLICAR" for o in (_medicion(liga).get("totales") or {}).values())
+
+
 def aplica(liga):
-    """KBO: medido y aplicado (5-oct). Otras ligas: solo si su medicion walk-forward dio APLICAR en el ganador."""
+    """KBO: medido y aplicado (5-oct). Otras ligas: si su medicion walk-forward dio APLICAR en el ganador O en el total
+    (9-oct-2026: en LMP el total paso, z 3.06 con escala 0.25, y el ganador no; antes la capa entera quedaba apagada).
+    coeficientes() pone en 0 la parte que no paso."""
     if liga == "kbo":
         return True
-    return (_medicion(liga).get("ganador") or {}).get("veredicto") == "APLICAR"
+    return _ganador_ok(liga) or _total_ok(liga)
 
 
 def coeficientes(liga):
@@ -72,7 +82,7 @@ def coeficientes(liga):
     if liga == "kbo":
         return K_GANADOR, ESCALA_TOTAL
     m = _medicion(liga)
-    k = (m.get("ganador") or {}).get("k_todo") or 0.0
+    k = ((m.get("ganador") or {}).get("k_todo") or 0.0) if _ganador_ok(liga) else 0.0
     esc = 0.0
     for nombre, o in sorted((m.get("totales") or {}).items()):
         if (o.get("total_mae") or {}).get("veredicto") == "APLICAR":

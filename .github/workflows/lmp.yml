@@ -133,4 +133,4 @@ jobs:
 
       - name: Guardar resultados en main
         continue-on-error: true
-        run: bash utilidades/subir_a_main.sh "lmp - sonda, semillas y abridores" salida/sonda_lmp.json modelos/abridores_lmp.json semillas/lmp_historial.csv semillas/lmp_lanzadores.csv
+        run: bash utilidades/subir_a_main.sh "lmp - sonda, semillas y abridores" salida/sonda_lmp.json modelos/abridores_lmp.json semillas/lmp_historial.csv semillas/lmp_lanzadores.csv salida/validacion_mercados.json modelos/capa_totales.json

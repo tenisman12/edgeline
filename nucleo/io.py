@@ -110,8 +110,15 @@ import sys as _sys
 csv.field_size_limit(min(2 ** 31 - 1, _sys.maxsize))
 
 
+# Mismo equipo con otro nombre en la fuente (se unifica al leer, para que ELO, forma y angulos sigan la franquicia).
+# LMP 2025-26: los Mayos de Navojoa jugaron esa temporada en Tucson ("Tucson Baseball Team") y regresan a Navojoa en
+# 2026-27 (calendario de salida/sonda_lmp.json).
+EQUIPO_ALIAS = {"Tucson Baseball Team": "Mayos de Navojoa"}
+
+
 def _leer_csv(path):
-    """Lee el CSV; una fila rota (escritura simultanea, corte) se descarta y no tumba la lectura."""
+    """Lee el CSV; una fila rota (escritura simultanea, corte) se descarta y no tumba la lectura.
+    Unifica nombres de equipo de EQUIPO_ALIAS en las columnas team / opp / home / away."""
     if not os.path.exists(path):
         return []
     out = []
@@ -125,6 +132,10 @@ def _leer_csv(path):
             except csv.Error:
                 continue
             if r.get(None) is None:
+                for c in ("team", "opp", "home", "away", "home_team", "away_team"):
+                    v = r.get(c)
+                    if v in EQUIPO_ALIAS:
+                        r[c] = EQUIPO_ALIAS[v]
                 out.append(r)
     return out
 

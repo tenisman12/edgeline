@@ -246,6 +246,25 @@
     "tasa_real": 0.339,
     "dos_mitades": true,
     "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 569,
+    "skill": 0.0221,
+    "z": 2.01,
+    "sesgo": -1.04,
+    "dos_mitades": false,
+    "estado": "sin_validar"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 1707,
+    "skill": 0.0257,
+    "z": 3.0,
+    "p_media": 0.476,
+    "tasa_real": 0.497,
+    "dos_mitades": true,
+    "estado": "publicable"
    }
   },
   "hockey": {
@@ -315,6 +334,25 @@
     "tasa_real": 0.672,
     "dos_mitades": true,
     "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 2832,
+    "skill": -0.0023,
+    "z": -0.87,
+    "sesgo": 0.009,
+    "dos_mitades": false,
+    "estado": "sin_validar"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 8496,
+    "skill": 0.0002,
+    "z": 0.17,
+    "p_media": 0.413,
+    "tasa_real": 0.416,
+    "dos_mitades": false,
+    "estado": "sin_validar"
    }
   },
   "nba": {
@@ -405,95 +443,133 @@
     "tasa_real": 0.346,
     "dos_mitades": true,
     "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 2633,
+    "skill": 0.0522,
+    "z": 5.69,
+    "sesgo": -0.676,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 7899,
+    "skill": 0.0645,
+    "z": 9.73,
+    "p_media": 0.489,
+    "tasa_real": 0.506,
+    "dos_mitades": true,
+    "estado": "publicable"
    }
   },
   "ncaafb": {
    "Ganador": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1798,
-    "z": 9.78,
-    "p_media": 0.609,
-    "tasa_real": 0.644,
+    "n": 1878,
+    "skill": 0.1891,
+    "z": 10.25,
+    "p_media": 0.61,
+    "tasa_real": 0.643,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Total esperado": {
     "tipo": "conteo",
-    "n": 1925,
-    "skill": 0.0209,
-    "z": 3.79,
-    "sesgo": 0.351,
+    "n": 1878,
+    "skill": 0.0175,
+    "z": 3.1,
+    "sesgo": 0.254,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Over/Under (lineas ~promedio)": {
     "tipo": "prob",
-    "n": 5775,
-    "skill": 0.0212,
-    "z": 5.16,
-    "p_media": 0.492,
-    "tasa_real": 0.47,
+    "n": 5634,
+    "skill": 0.0183,
+    "z": 4.39,
+    "p_media": 0.489,
+    "tasa_real": 0.471,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Local cubre margen > -10.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1244,
-    "z": 9.17,
-    "p_media": 0.797,
-    "tasa_real": 0.82,
+    "n": 1878,
+    "skill": 0.1265,
+    "z": 9.16,
+    "p_media": 0.798,
+    "tasa_real": 0.822,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Local cubre margen > -6.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1353,
-    "z": 11.23,
+    "n": 1878,
+    "skill": 0.137,
+    "z": 11.26,
     "p_media": 0.732,
-    "tasa_real": 0.755,
+    "tasa_real": 0.757,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Local cubre margen > -2.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1498,
-    "z": 13.99,
-    "p_media": 0.657,
-    "tasa_real": 0.673,
+    "n": 1878,
+    "skill": 0.1521,
+    "z": 14.02,
+    "p_media": 0.658,
+    "tasa_real": 0.675,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Local cubre margen > +2.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1449,
-    "z": 12.14,
-    "p_media": 0.555,
-    "tasa_real": 0.611,
+    "n": 1878,
+    "skill": 0.1468,
+    "z": 12.18,
+    "p_media": 0.556,
+    "tasa_real": 0.612,
     "dos_mitades": true,
     "estado": "sin_validar"
    },
    "Local cubre margen > +6.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1513,
-    "z": 14.6,
-    "p_media": 0.47,
-    "tasa_real": 0.513,
+    "n": 1878,
+    "skill": 0.1539,
+    "z": 14.7,
+    "p_media": 0.471,
+    "tasa_real": 0.514,
     "dos_mitades": true,
     "estado": "sin_validar"
    },
    "Local cubre margen > +10.5": {
     "tipo": "prob",
-    "n": 1925,
-    "skill": 0.1598,
-    "z": 16.55,
-    "p_media": 0.387,
-    "tasa_real": 0.421,
+    "n": 1878,
+    "skill": 0.1565,
+    "z": 15.98,
+    "p_media": 0.388,
+    "tasa_real": 0.425,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 1878,
+    "skill": 0.0269,
+    "z": 3.76,
+    "sesgo": 0.407,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 5634,
+    "skill": 0.0297,
+    "z": 5.46,
+    "p_media": 0.485,
+    "tasa_real": 0.471,
     "dos_mitades": true,
     "estado": "publicable"
    }
@@ -501,70 +577,89 @@
   "beisbol_mlb": {
    "Ganador": {
     "tipo": "prob",
-    "n": 4796,
-    "skill": 0.0132,
-    "z": 2.82,
-    "p_media": 0.528,
+    "n": 4799,
+    "skill": 0.0137,
+    "z": 2.88,
+    "p_media": 0.529,
     "tasa_real": 0.534,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Total esperado": {
     "tipo": "conteo",
-    "n": 4796,
-    "skill": -0.0086,
-    "z": -2.23,
-    "sesgo": -0.115,
+    "n": 4799,
+    "skill": -0.005,
+    "z": -0.92,
+    "sesgo": -0.025,
     "dos_mitades": false,
     "estado": "sin_validar"
    },
    "Over/Under (lineas ~promedio)": {
     "tipo": "prob",
-    "n": 14388,
-    "skill": -0.0068,
-    "z": -2.72,
-    "p_media": 0.453,
-    "tasa_real": 0.483,
+    "n": 14397,
+    "skill": -0.0003,
+    "z": -0.08,
+    "p_media": 0.455,
+    "tasa_real": 0.482,
     "dos_mitades": false,
     "estado": "sin_validar"
    },
    "Run line local -1.5": {
     "tipo": "prob",
-    "n": 4796,
-    "skill": 0.0045,
-    "z": 0.89,
-    "p_media": 0.377,
+    "n": 4799,
+    "skill": 0.005,
+    "z": 1.01,
+    "p_media": 0.376,
     "tasa_real": 0.358,
     "dos_mitades": true,
     "estado": "sin_validar"
    },
    "Run line visita +1.5": {
     "tipo": "prob",
-    "n": 4796,
-    "skill": 0.0045,
-    "z": 0.89,
-    "p_media": 0.623,
+    "n": 4799,
+    "skill": 0.005,
+    "z": 1.01,
+    "p_media": 0.624,
     "tasa_real": 0.642,
     "dos_mitades": true,
     "estado": "sin_validar"
    },
    "Run line favorito -1.5": {
     "tipo": "prob",
-    "n": 4796,
-    "skill": 0.0065,
-    "z": 1.33,
-    "p_media": 0.416,
-    "tasa_real": 0.395,
+    "n": 4799,
+    "skill": 0.0059,
+    "z": 1.22,
+    "p_media": 0.417,
+    "tasa_real": 0.398,
     "dos_mitades": true,
     "estado": "sin_validar"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 4799,
+    "skill": 0.0025,
+    "z": 0.8,
+    "sesgo": -0.066,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 14397,
+    "skill": 0.0097,
+    "z": 4.77,
+    "p_media": 0.487,
+    "tasa_real": 0.482,
+    "dos_mitades": true,
+    "estado": "publicable"
    }
   },
   "beisbol_npb": {
    "Ganador": {
     "tipo": "prob",
     "n": 1698,
-    "skill": 0.0207,
-    "z": 2.65,
+    "skill": 0.0208,
+    "z": 2.64,
     "p_media": 0.527,
     "tasa_real": 0.532,
     "dos_mitades": true,
@@ -573,18 +668,18 @@
    "Total esperado": {
     "tipo": "conteo",
     "n": 1698,
-    "skill": -0.0004,
-    "z": -0.05,
-    "sesgo": -0.265,
-    "dos_mitades": false,
+    "skill": 0.0058,
+    "z": 0.66,
+    "sesgo": -0.369,
+    "dos_mitades": true,
     "estado": "sin_validar"
    },
    "Over/Under (lineas ~promedio)": {
     "tipo": "prob",
     "n": 5094,
-    "skill": -0.0105,
-    "z": -2.01,
-    "p_media": 0.439,
+    "skill": -0.0089,
+    "z": -1.34,
+    "p_media": 0.427,
     "tasa_real": 0.488,
     "dos_mitades": false,
     "estado": "sin_validar"
@@ -592,9 +687,9 @@
    "Run line local -1.5": {
     "tipo": "prob",
     "n": 1698,
-    "skill": 0.0231,
-    "z": 2.84,
-    "p_media": 0.338,
+    "skill": 0.0222,
+    "z": 2.73,
+    "p_media": 0.335,
     "tasa_real": 0.333,
     "dos_mitades": true,
     "estado": "publicable"
@@ -602,9 +697,9 @@
    "Run line visita +1.5": {
     "tipo": "prob",
     "n": 1698,
-    "skill": 0.0231,
-    "z": 2.84,
-    "p_media": 0.662,
+    "skill": 0.0222,
+    "z": 2.73,
+    "p_media": 0.665,
     "tasa_real": 0.667,
     "dos_mitades": true,
     "estado": "publicable"
@@ -612,10 +707,29 @@
    "Run line favorito -1.5": {
     "tipo": "prob",
     "n": 1698,
-    "skill": 0.0242,
-    "z": 3.35,
-    "p_media": 0.38,
-    "tasa_real": 0.397,
+    "skill": 0.0252,
+    "z": 3.48,
+    "p_media": 0.376,
+    "tasa_real": 0.395,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 1698,
+    "skill": 0.0082,
+    "z": 1.36,
+    "sesgo": -0.025,
+    "dos_mitades": false,
+    "estado": "sin_validar"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 5094,
+    "skill": 0.0142,
+    "z": 3.53,
+    "p_media": 0.483,
+    "tasa_real": 0.488,
     "dos_mitades": true,
     "estado": "publicable"
    }
@@ -623,66 +737,265 @@
   "beisbol_kbo": {
    "Ganador": {
     "tipo": "prob",
-    "n": 1398,
-    "skill": 0.0311,
-    "z": 3.42,
-    "p_media": 0.52,
+    "n": 1407,
+    "skill": 0.0167,
+    "z": 1.83,
+    "p_media": 0.517,
     "tasa_real": 0.5,
     "dos_mitades": true,
-    "estado": "publicable"
+    "estado": "sin_validar"
    },
    "Total esperado": {
     "tipo": "conteo",
-    "n": 1398,
-    "skill": 0.0012,
-    "z": 0.16,
-    "sesgo": -0.366,
+    "n": 1407,
+    "skill": -0.0056,
+    "z": -0.65,
+    "sesgo": -0.168,
     "dos_mitades": false,
     "estado": "sin_validar"
    },
    "Over/Under (lineas ~promedio)": {
     "tipo": "prob",
-    "n": 4194,
-    "skill": -0.0112,
-    "z": -2.11,
-    "p_media": 0.434,
+    "n": 4221,
+    "skill": -0.0079,
+    "z": -1.38,
+    "p_media": 0.433,
     "tasa_real": 0.475,
     "dos_mitades": false,
     "estado": "sin_validar"
    },
    "Run line local -1.5": {
     "tipo": "prob",
-    "n": 1398,
-    "skill": 0.0246,
-    "z": 2.61,
-    "p_media": 0.375,
-    "tasa_real": 0.356,
+    "n": 1407,
+    "skill": 0.021,
+    "z": 2.23,
+    "p_media": 0.376,
+    "tasa_real": 0.357,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Run line visita +1.5": {
     "tipo": "prob",
-    "n": 1398,
-    "skill": 0.0246,
-    "z": 2.61,
-    "p_media": 0.625,
-    "tasa_real": 0.644,
+    "n": 1407,
+    "skill": 0.021,
+    "z": 2.23,
+    "p_media": 0.624,
+    "tasa_real": 0.643,
     "dos_mitades": true,
     "estado": "publicable"
    },
    "Run line favorito -1.5": {
     "tipo": "prob",
-    "n": 1398,
-    "skill": 0.0174,
-    "z": 1.98,
-    "p_media": 0.41,
-    "tasa_real": 0.423,
+    "n": 1407,
+    "skill": 0.0184,
+    "z": 2.13,
+    "p_media": 0.424,
+    "tasa_real": 0.408,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 1407,
+    "skill": -0.0008,
+    "z": -0.16,
+    "sesgo": 0.086,
+    "dos_mitades": false,
+    "estado": "sin_validar"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 4221,
+    "skill": -0.0026,
+    "z": -0.73,
+    "p_media": 0.487,
+    "tasa_real": 0.475,
+    "dos_mitades": false,
+    "estado": "sin_validar"
+   }
+  },
+  "ncaamb": {
+   "Ganador": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1479,
+    "z": 20.29,
+    "p_media": 0.651,
+    "tasa_real": 0.663,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado": {
+    "tipo": "conteo",
+    "n": 12321,
+    "skill": 0.0508,
+    "z": 19.32,
+    "sesgo": -1.043,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (lineas ~promedio)": {
+    "tipo": "prob",
+    "n": 36963,
+    "skill": 0.0637,
+    "z": 31.31,
+    "p_media": 0.507,
+    "tasa_real": 0.514,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -8.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1066,
+    "z": 15.97,
+    "p_media": 0.837,
+    "tasa_real": 0.848,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > -4.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1328,
+    "z": 23.08,
+    "p_media": 0.761,
+    "tasa_real": 0.76,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +0.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1447,
+    "z": 25.02,
+    "p_media": 0.644,
+    "tasa_real": 0.663,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +4.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1437,
+    "z": 27.15,
+    "p_media": 0.538,
+    "tasa_real": 0.548,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Local cubre margen > +8.5": {
+    "tipo": "prob",
+    "n": 12321,
+    "skill": 0.1432,
+    "z": 28.0,
+    "p_media": 0.43,
+    "tasa_real": 0.433,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 12321,
+    "skill": 0.0896,
+    "z": 20.98,
+    "sesgo": -1.517,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 36963,
+    "skill": 0.1118,
+    "z": 34.63,
+    "p_media": 0.503,
+    "tasa_real": 0.514,
+    "dos_mitades": true,
+    "estado": "publicable"
+   }
+  },
+  "beisbol_lmp": {
+   "Ganador": {
+    "tipo": "prob",
+    "n": 705,
+    "skill": 0.0308,
+    "z": 2.6,
+    "p_media": 0.534,
+    "tasa_real": 0.528,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado": {
+    "tipo": "conteo",
+    "n": 705,
+    "skill": 0.0198,
+    "z": 0.96,
+    "sesgo": -0.038,
     "dos_mitades": true,
     "estado": "sin_validar"
+   },
+   "Over/Under (lineas ~promedio)": {
+    "tipo": "prob",
+    "n": 2115,
+    "skill": 0.0277,
+    "z": 2.18,
+    "p_media": 0.446,
+    "tasa_real": 0.497,
+    "dos_mitades": true,
+    "estado": "sin_validar"
+   },
+   "Run line local -1.5": {
+    "tipo": "prob",
+    "n": 705,
+    "skill": 0.036,
+    "z": 2.72,
+    "p_media": 0.373,
+    "tasa_real": 0.34,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Run line visita +1.5": {
+    "tipo": "prob",
+    "n": 705,
+    "skill": 0.036,
+    "z": 2.72,
+    "p_media": 0.627,
+    "tasa_real": 0.66,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Run line favorito -1.5": {
+    "tipo": "prob",
+    "n": 705,
+    "skill": 0.029,
+    "z": 2.22,
+    "p_media": 0.403,
+    "tasa_real": 0.41,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Total esperado (capa)": {
+    "tipo": "conteo",
+    "n": 705,
+    "skill": 0.0387,
+    "z": 3.07,
+    "sesgo": -0.308,
+    "dos_mitades": true,
+    "estado": "publicable"
+   },
+   "Over/Under (capa)": {
+    "tipo": "prob",
+    "n": 2115,
+    "skill": 0.0475,
+    "z": 4.96,
+    "p_media": 0.477,
+    "tasa_real": 0.497,
+    "dos_mitades": true,
+    "estado": "publicable"
    }
   }
  },
- "generado": "2026-10-09 15:12",
+ "generado": "2026-10-09 18:25",
  "criterio": "n>=300, mejora a la base, z>=2.0, mejora en las dos mitades, calibrado (prob |p media - tasa|<=0.04) o sesgo<=0.10 desv. (conteos)",
  "ajustes_tenis": {
   "ATP": {

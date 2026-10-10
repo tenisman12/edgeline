@@ -66,7 +66,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   y conteo de señales de la lectura a favor / en contra. Coeficientes en `modelos/decidir_beisbol.json` (`utilidades/pesos_capas.py`).
 - `salida/picks_del_dia.json` y `salida/historial_picks_dia.csv`: LA LISTA OFICIAL (`utilidades/picks_del_dia.py`): decisión de ganador y total
   para todos los partidos, y los mejores picks del día (beisbol: sistema estimado con confianza alta/media; demás deportes: Pick Premium
-  premium/pick con EV ≥ 2%; cuota desde 1.70 sin tope; un pick por partido; máximo 4 al día y 10% del bank). Solo ganador y totales. Cada pick lleva
+  premium/pick con EV ≥ 2%; cuota desde 1.70 sin tope; hasta un ganador y un total por partido; máximo 4 al día y 10% del bank). Solo ganador y totales. Cada pick lleva
   confianza, `por_que_si` y `por_que_no` (en picks_del_dia.json y en historial_picks_dia.csv).
   Se excluye (liga, mercado) cuando el historial en vivo promete ≥10 pp más de lo que acierta (n≥30, z≥2): `picks_del_dia.descalibrados()`.
   Al 6-oct-2026: totales de NCAAF (60% vs 39%, n 57) y games de WTA (58% vs 44%, n 57). Leans, mínima, revisar y lecturas
@@ -118,6 +118,25 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   Corre en cada actualización. R3 (el favorito no cubre) falta: el CSV no guarda precio de spread ni marcador por equipo.
   `utilidades/validar_publico.py` dice si ese dato sirve: cobertura, % de extremos, correlación entre boletos y probabilidad implícita
   (el público apuesta favoritos: r 0.6–0.9 = creíble) y la brecha dinero−boletos por partido.
+
+- Capa de totales (9-oct-2026, Alejandro: "quiero los totales ya validados y listos"; `nucleo/capa_totales.py`, minado en
+  `trabajo/minar/2026-10-09_capa_totales.md`, k 161): T* = a + b*T_modelo + c*media de liga con olvido + d*ritmo de los dos
+  equipos + nivel reciente (ultimos 300 residuos); over/under con la distribucion de residuos del ultimo ano. La validacion
+  oficial la ajusta bloque a bloque con 24 meses de precalentamiento y califica "Total esperado (capa)" y "Over/Under (capa)";
+  al final escribe `modelos/capa_totales.json`. Over/Under (capa) publicable: NCAAMB z 34.6, NBA 9.7, NCAAFB 5.5, LMP 5.0,
+  MLB 4.8, NPB 3.5, NFL 3.0. NHL y KBO no pasan (siguen con el total del modelo). plataforma.py usa la capa solo donde paso
+  (modelo.capa_totales, total_modelo guarda el del modelo y los marcadores se escalan). NBA: la capa espera 15 juegos de
+  temporada por equipo (en oct-nov subestima 6.4 puntos). decidir_v2 usa sus residuos tambien en lineas alternas.
+- Picks de totales (9-oct-2026): la lista oficial admite hasta un ganador y un total por partido (tope 4 al dia); Picks IA
+  puede guardar dos lecturas por partido (ganador y total). En beisbol el total pasa por decidir_v2 y el ganador sigue en
+  decidir.py. "Publicable" = le gana a la tasa historica; contra la linea de la casa se mide en vivo.
+- LMP (9-oct-2026): validacion oficial en `validacion_mercados.json` (beisbol_lmp: ganador z 2.6, run lines, Over/Under
+  (capa) z 5.0). Cuotas: The Odds API no la cubre; `colectores/recolectar_cuotas_sgo.py` las baja de SportsGameOdds
+  (secreto SGO_KEY, plan gratis 2,500 objetos al mes, foto cada 3 h en cuotas.yml) y las mezcla en cuotas_casas.json con
+  sport baseball_lmp. "Tucson Baseball Team" (2025-26) = Mayos de Navojoa (`nucleo/io.EQUIPO_ALIAS`; el factor de parque
+  sigue siendo el de la sede real). Capa de abridores: en LMP y NPB se aplica la parte del total (paso) y no la del ganador
+  (`nucleo/abridores.aplica`). Action Network no cubre LMP: sin publico medido. Reglas nuevas 2026-27 (reloj de pitcheo,
+  ABS, 3 bateadores por relevista): el nivel reciente de la capa se ajusta solo con los primeros juegos; se mide en vivo.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

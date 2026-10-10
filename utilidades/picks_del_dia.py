@@ -7,7 +7,7 @@ con su probabilidad final (precio sharp movido por el modelo cuando hay cuota; m
 Despues elige los picks apostables con una sola regla de entrada:
   - beisbol (MLB, NPB, KBO): sistema estimado (salida/decidir.json) con confianza alta o media (EV >= 4% contra Pinnacle);
   - demas deportes: Pick Premium con nivel premium o pick, EV >= EV_MIN contra la mejor cuota;
-  - cuota desde 1.70 (sin tope), sin pretemporada, un pick por partido, ordenados por EV, maximo MAX_PICKS al dia y tope de bank.
+  - cuota desde 1.70 (sin tope), sin pretemporada, hasta un ganador y un total por partido, ordenados por EV, maximo MAX_PICKS al dia y tope de bank.
 Todo lo demas (leans, minima, revisar, lecturas sin precio) se sigue midiendo en sus historiales, pero NO es pick.
 
 Salida: salida/picks_del_dia.json (decisiones + picks) y salida/historial_picks_dia.csv (los picks oficiales, para calificarlos).
@@ -117,8 +117,11 @@ def decision(rec, dec_bb=None, v2=None):
         t = {"lado": "over" if m["p_over"] >= 0.5 else "under", "linea": m["linea_total"], "p": max(m["p_over"], 1 - m["p_over"]), "cuota": None, "fuente": "modelo"}
     else:
         t = None
-    if t and rec.get("deporte") == "beisbol" and t.get("fuente") not in ("modelo", None):
-        t["nota"] = "total = mercado (el modelo de totales de beisbol no mejora la base)"
+    if rec.get("deporte") == "beisbol" and v2 and v2.get("total"):
+        # 9-oct-2026: el total de beisbol pasa por decidir_v2 (capa de totales validada en MLB, NPB y LMP)
+        dtot = v2["total"]
+        t = {"lado": dtot["lado"], "linea": dtot["mercado"].split()[1] if " " in dtot["mercado"] else m.get("linea_total"), "p": dtot["p_final"], "cuota": dtot["cuota"],
+             "fuente": "decidir_v2 (%s, peso modelo %.2f)" % (dtot["fuente"], dtot["peso_modelo"]), "ev": dtot["ev"], "confianza": dtot["confianza"], "unidades": dtot["unidades"], "conteo": dtot["conteo"]}
     return g, t
 
 
@@ -246,10 +249,9 @@ def apostabilidad(rec, v2, dec_bb):
                 mot = "confianza %s (en beisbol se exige alta o media)" % d.get("confianza")
         out["ganador"] = {"apostable": mot is None, "motivo": mot, "confianza": d.get("confianza"),
                           "ev": k.get("ev"), "cuota": k.get("decimal"), "cuota_min": k.get("cuota_min")}
-        out["total"] = {"apostable": False, "motivo": _descal("total") or
-                        "en ninguna liga el total de beisbol del modelo le gana a la tasa historica (walk-forward)"}
-        return out
-    for nombre, d in (("ganador", (v2 or {}).get("ganador")), ("total", (v2 or {}).get("total"))):
+    nombres = (("total", (v2 or {}).get("total")),) if rec.get("deporte") == "beisbol" else \
+        (("ganador", (v2 or {}).get("ganador")), ("total", (v2 or {}).get("total")))
+    for nombre, d in nombres:
         if not d:
             out[nombre] = {"apostable": False, "motivo": "sin modelo para este partido"}
             continue
@@ -286,8 +288,18 @@ def candidatos(rec, dec_bb, v2=None):
 
 def _candidatos(rec, dec_bb, v2=None):
     out = []
-    if v2 and rec.get("deporte") != "beisbol":
-        for d in (v2.get("ganador"), v2.get("total")):
+    if v2:
+        if rec.get("deporte") == "beisbol":
+            out += _candidatos_v2(rec, (v2.get("total"),))     # el total de beisbol por decidir_v2 (9-oct-2026)
+        else:
+            return _candidatos_v2(rec, (v2.get("ganador"), v2.get("total")))
+    return out + _candidatos_resto(rec, dec_bb)
+
+
+def _candidatos_v2(rec, decs):
+    out = []
+    if True:
+        for d in decs:
             if not d or d["confianza"] not in ("alta", "media", "baja") or d.get("decimal") is None or d["fuente"] == "sin_cuota":
                 continue
             if d["decimal"] < CUOTA_MIN or d["decimal"] > CUOTA_MAX or d.get("ev") is None or d["ev"] < 0.01:
@@ -300,7 +312,11 @@ def _candidatos(rec, dec_bb, v2=None):
                             ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", d["peso_modelo"], d["decimal"],
                             "; ".join(d["por_que_si"][1:]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))[:900],
                         "_si": list(d["por_que_si"][1:]), "_no": list(d["por_que_no"]) + [x["duda"] for x in d["dudas"]]})
-        return out
+    return out
+
+
+def _candidatos_resto(rec, dec_bb):
+    out = []
     if rec.get("deporte") == "beisbol":
         d = dec_bb.get((rec["liga"], str(rec["id"]), rec["fecha"]))
         k = (d or {}).get("pick")
@@ -459,7 +475,7 @@ def main():
     reg_ts = dt.datetime.now().isoformat(timespec="seconds")
     for p in sel:
         v2 = None
-        if p.get("deporte") != "beisbol" and p.get("modelo"):
+        if p.get("modelo"):              # beisbol: decidir_v2 solo decide el TOTAL; el ganador sigue en decidir.py
             movs = {}
             for tipo, lados in (("Ganador", ("home", "away")), ("Total", ("over", "under"))):
                 for ld in lados:
@@ -545,10 +561,11 @@ def main():
                 cc["angulos"] = "; ".join("%s:%+.2f" % (x["codigo"], x["moveria"]) for x in angs_t)
                 si += s_a[:3]; no += n_a[:3]
             cc["por_que_si"] = si; cc["por_que_no"] = no
-    # mejores picks de HOY: un pick por partido, por EV, tope de cantidad y de bank
+    # mejores picks de HOY: hasta un ganador y un total por partido (Alejandro, 9-oct-2026: "quiero tambien picks de
+    # totales"), por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
-        k = (c["liga"], c["id"])
+        k = (c["liga"], c["id"], "Total" if str(c.get("mercado", "")).startswith(("Total", "Games")) else "Ganador")
         if k in usados or len(picks) >= a.max or bank + c["stake"] > TOPE_BANK + 1e-9:
             continue
         usados.add(k); bank += c["stake"]; picks.append(c)

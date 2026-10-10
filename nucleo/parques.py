@@ -28,6 +28,10 @@ import csv, json, os, re
 LASTRE = 60.0           # juegos de lastre del encogimiento (el mismo de la medicion)
 MIN_LIGA = 200          # juegos de la liga antes de empezar a dar factor
 RUTA = ("datos", "beisbol.csv")
+try:
+    from nucleo.io import EQUIPO_ALIAS as _ALIAS
+except Exception:
+    _ALIAS = {}
 _CACHE = {}
 _COEF = None
 
@@ -124,6 +128,8 @@ def _recorrer(base, liga, hasta=None):
             tm = (s_t / n_t) if n_t >= MIN_LIGA else None
             out[(pk, local)] = (fac, (temp - tm) if (temp is not None and tm is not None) else 0.0,
                                 vto if vto is not None else 0.0)
+            if local in _ALIAS:         # el parque es el de la sede real; la llave tambien con el nombre unificado
+                out[(pk, _ALIAS[local])] = out[(pk, local)]
         suma += total; n += 1
         if local:
             a = st.setdefault(local, [0.0, 0]); a[0] += total; a[1] += 1

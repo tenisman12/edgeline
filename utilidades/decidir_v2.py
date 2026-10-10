@@ -190,6 +190,16 @@ def p_over_modelo(rec, linea):
     mu = m.get("total")
     if mu is None:
         return None
+    ct = m.get("capa_totales") or {}
+    if ct.get("aplicado") and ct.get("clave"):
+        # capa de totales (nucleo/capa_totales.py): la distribucion es la de sus residuos, la misma con que se valido
+        try:
+            from nucleo import capa_totales as _CT
+            r = _CT.probs_linea(BASE, ct["clave"], ct["total"], linea)
+            if r:
+                return r
+        except Exception:
+            pass
     dep = rec.get("deporte"); tipo = rec.get("tipo")
     entera = abs(linea - round(linea)) < 1e-9
     if dep == "beisbol" and _bb is not None:
@@ -299,7 +309,8 @@ def decidir_mercado(rec, tipo, movs=None):
         p_mod = k.get("p_modelo"); p_sh = k.get("p_sharp"); dec = k.get("decimal")
         if p_mod is None and p_sh is None:
             continue
-        if tipo == "Total" and p_mod is not None and liga in AJUSTE_OVER:
+        if tipo == "Total" and p_mod is not None and liga in AJUSTE_OVER and not (m.get("capa_totales") or {}).get("aplicado"):
+            # (con la capa de totales el over ya sale calibrado en la validacion: no se corrige dos veces)
             p_mod = min(max(p_mod + (AJUSTE_OVER[liga] if lado == "over" else -AJUSTE_OVER[liga]), 0.01), 0.99)
         if p_sh is None:
             p_fin = p_mod

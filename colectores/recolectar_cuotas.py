@@ -152,8 +152,21 @@ def guardar_compacto(eventos, ahora):
     sys.path.insert(0, BASE)
     from nucleo import sharp
     os.makedirs(os.path.dirname(SALIDA), exist_ok=True)
+    # los eventos de SportsGameOdds (LMP, colectores/recolectar_cuotas_sgo.py) se conservan mientras no hayan empezado
+    try:
+        prev = json.load(io.open(SALIDA, encoding="utf-8")).get("eventos") or []
+    except Exception:
+        prev = []
+    sgo = [e for e in prev if e.get("fuente_api") == "sgo" and (e.get("commence_time") or "") >= ahora[:19]]
     with io.open(SALIDA, "w", encoding="utf-8") as f:
-        json.dump({"generado": ahora, "eventos": eventos}, f, ensure_ascii=False)
+        json.dump({"generado": ahora, "eventos": eventos + sgo}, f, ensure_ascii=False)
+    hist_sharp(eventos, ahora)
+
+
+def hist_sharp(eventos, ahora):
+    """Una fila por lado en salida/cuotas_sharp_<anio>.csv (sharp + mejor cuota): CLV y movimiento de linea."""
+    sys.path.insert(0, BASE)
+    from nucleo import sharp
     ruta = HIST % ahora[:4]
     cols = ["ts_utc", "sport", "event_id", "commence_time", "home", "away", "mercado", "lado", "linea",
             "p_sharp", "fuente", "mejor_cuota", "casa", "n_casas", "ref_cuota"]
@@ -188,7 +201,7 @@ def guardar_compacto(eventos, ahora):
                                 "linea": "" if pt is None else pt, "p_sharp": x["p_sharp"], "fuente": x["fuente"],
                                 "mejor_cuota": x["mejor_cuota"], "casa": x["casa"], "n_casas": x["n_casas"],
                                 "ref_cuota": "" if x["ref_cuota"] is None else x["ref_cuota"]}); n += 1
-    print("Foto compacta: %d eventos en %s; %d filas sharp en %s" % (len(eventos), SALIDA, n, ruta))
+    print("Foto compacta: %d eventos; %d filas sharp en %s" % (len(eventos), n, ruta))
 
 
 def _edad_foto_horas():

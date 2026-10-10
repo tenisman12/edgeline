@@ -32,6 +32,7 @@ RAIZ = os.path.dirname(AQUI)
 sys.path.insert(0, RAIZ)
 from nucleo import io
 from modelos import hockey, americano, nba, futbol, tenis as T
+from nucleo import capa_totales as CT
 
 
 # ------------------------------------------------------------------ metricas
@@ -47,6 +48,8 @@ AJUSTES = {}      # circuito -> {formato: sesgo de games vigente al final de la 
 AJUSTES_BR = {}   # circuito -> {formato: sesgo de breaks vigente al final de la validacion}
 RESB = {}         # (circuito, formato) -> residuos de breaks (real - modelo), en orden
 Z_MIN = 2.0; CAL_MAX = 0.04
+PRECAL = 24       # meses de precalentamiento ANTES de la ventana calificada: solo sirven para que la capa de totales
+                  # (nucleo/capa_totales.py) tenga predicciones previas con que ajustarse; no entran a ningun mercado
 
 
 def brier(P):  return sum((p - y) ** 2 for p, y, *_ in P) / len(P)
@@ -151,6 +154,35 @@ CFG = {
 }
 
 
+def evaluar_capa(rep, filas, clave, unidad_cal=True):
+    """Capa de totales walk-forward: en cada bloque calificado ajusta T* = a + b*T + c*M + d*E + nivel solo con los bloques
+    anteriores (precalentamiento incluido) y agrega 'Total esperado (capa)' y 'Over/Under (capa)' al reporte
+    (nucleo/capa_totales.py; C6 + C7 de trabajo/minar/2026-10-09_capa_totales.md)."""
+    bloques = sorted({x["b"] for x in filas})
+    for b in bloques:
+        cur = [x for x in filas if x["b"] == b]
+        if not cur or not cur[0]["cal"]:
+            continue
+        prev = [x for x in filas if x["b"] < b]
+        if len(prev) < CT.MIN_PREV:
+            continue
+        coef, res = CT.entrenar([(x["pred"], x["real"], x["M"], x["E"], x["f"]) for x in prev])
+        for x in cur:
+            t = CT.total(coef, x["pred"], x["M"], x["E"])
+            rep.add_val("Total esperado (capa)", t, x["real"], x["base"])
+            for L, y, fr in x["ou"]:
+                rep.add_prob("Over/Under (capa)", CT.p_over(res, t, L), y, fr)
+
+
+def guardar_capa(filas, clave):
+    """Coeficientes y residuos de toda la muestra (precalentamiento + ventana) -> modelos/capa_totales.json."""
+    if len(filas) < CT.MIN_PREV:
+        return
+    coef, res = CT.entrenar([(x["pred"], x["real"], x["M"], x["E"], x["f"]) for x in filas])
+    est = ((RESULT.get(clave) or {}).get("Over/Under (capa)") or {}).get("estado", "sin_validar")
+    CT.guardar(io.BASE, clave, coef, res, len(filas), min(x["f"] for x in filas), max(x["f"] for x in filas), est)
+
+
 def marcador(h, campos):
     for a, b in campos:
         x, y = _f(h.get(a)), _f(h.get(b))
@@ -179,11 +211,18 @@ def validar_equipos(clave, meses, bloque, liga=None):
     if not fechas:
         print("\n%s: sin juegos en la ventana." % c["titulo"]); return
     rep = Rep(); orig = io.cargar_juegos
-    d0 = dt.date.fromisoformat(fechas[0]); nbl = 0
+    d_cal = dt.date.fromisoformat(fechas[0])
+    con_capa = clave != "futbol" and PRECAL > 0
+    n_pre = int(math.ceil(PRECAL * 30.4 / bloque)) if con_capa else 0
+    d0 = d_cal - dt.timedelta(days=bloque * n_pre); nbl = 0; nb_tot = 0
+    capa, ritmo = [], (CT.Ritmo([(g[0], g[2].get("team"), g[3].get("team"), g[4] + g[5]) for g in G]) if con_capa else None)
+    rep_cal = rep
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
         blk = [g for g in G if d0.isoformat() <= g[0] < d1.isoformat()]
         prev = [g for g in G if g[0] < d0.isoformat()]
+        cal = d0 >= d_cal
+        rep = rep_cal if cal else Rep()          # precalentamiento: a un reporte que se tira
         if blk and len(prev) >= 300:
             corte = d0.isoformat()
             io.cargar_juegos = lambda x, liga=None, _o=orig, _c=corte: [
@@ -192,7 +231,7 @@ def validar_equipos(clave, meses, bloque, liga=None):
                 est = mod.entrenar(liga)
             finally:
                 io.cargar_juegos = orig
-            nbl += 1
+            nbl += 1 if cal else 0; nb_tot += 1
             tot_prev = [g[4] + g[5] for g in prev]; mar_prev = [g[4] - g[5] for g in prev]
             base_tot = sum(tot_prev) / len(tot_prev); base_mar = sum(mar_prev) / len(mar_prev)
             hw = sum(1 for g in prev if g[4] > g[5]) / len(prev)
@@ -218,6 +257,13 @@ def validar_equipos(clave, meses, bloque, liga=None):
                     rep.add_prob("Ganador", r["p_home"], 1 if gh > ga else 0, hw)
                 tp = r.get("total") if clave == "hockey" else r.get("total_esperado")
                 rep.add_val("Total esperado", tp, tot, base_tot)
+                fila_capa = None
+                if con_capa and tp is not None:
+                    st = ritmo.estado(f, th, ta)
+                    if st:
+                        fila_capa = {"b": nb_tot, "cal": cal, "f": f, "pred": tp, "real": tot, "base": base_tot,
+                                     "M": st[0], "E": st[1], "ou": []}
+                        capa.append(fila_capa)
                 if clave in ("nfl", "nba"):
                     rep.add_val("Margen esperado (local)", r["margen_esperado"], mar, base_mar)
                 if clave == "hockey":
@@ -237,6 +283,8 @@ def validar_equipos(clave, meses, bloque, liga=None):
                         rr = mod.predecir(est, th, ta, linea_total=L) if clave == "hockey" else \
                             mod.predecir(est, th, ta, linea_total=L, linea_spread=None)
                         rep.add_prob("Over/Under (lineas ~promedio)", rr["p_over"], 1 if tot > L else 0, fr_over[L])
+                        if fila_capa is not None:
+                            fila_capa["ou"].append((L, 1 if tot > L else 0, fr_over[L]))
                 if clave == "hockey":
                     rep.add_prob("Puck line local -1.5", r["p_pl_home"], 1 if mar >= 2 else 0,
                                  sum(1 for m_ in mar_prev if m_ >= 2) / len(mar_prev))
@@ -247,8 +295,13 @@ def validar_equipos(clave, meses, bloque, liga=None):
                     fb = sum(1 for m_ in mar_prev if m_ > s) / len(mar_prev)
                     rep.add_prob("Local cubre margen > %+g" % s, rr["p_cubre_home"], 1 if mar > s else 0, fb)
         d0 = d1
-    rep.imprimir("%s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior" % (
-        c["titulo"], meses, nbl, bloque), clave=clave_json)
+    rep = rep_cal
+    if con_capa:
+        evaluar_capa(rep, capa, clave_json)
+    rep.imprimir("%s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior%s" % (
+        c["titulo"], meses, nbl, bloque, (" (capa de totales con %d meses previos de precalentamiento)" % PRECAL) if con_capa else ""), clave=clave_json)
+    if con_capa:
+        guardar_capa(capa, clave_json)
 
 
 # ------------------------------------------------------------------ beisbol (MLB, NPB, KBO, ligas de invierno)
@@ -270,15 +323,23 @@ def validar_beisbol(liga, meses, bloque):
     K_AB, ESC_AB = AB.coeficientes(lg)
     from nucleo import parques as PQ
     VPQ = PQ.historicos(io.BASE, lg) if PQ.aplica(lg) else {}
-    rep = Rep(); d0 = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0
+    rep = Rep(); d_cal = max(ini, dt.date.fromisoformat(G[0]["game_date"][:10])); nbl = 0; nb_tot = 0
+    n_pre = int(math.ceil(PRECAL * 30.4 / bloque)) if PRECAL > 0 else 0
+    d0 = max(d_cal - dt.timedelta(days=bloque * n_pre), dt.date.fromisoformat(G[0]["game_date"][:10]))
+    if d0 < d_cal:          # que los bloques de la ventana calificada empiecen donde empezaban sin precalentamiento
+        d0 = d_cal - dt.timedelta(days=bloque * ((d_cal - d0).days // bloque))
+    capa = []; ritmo = CT.Ritmo([(r["game_date"], r["home"], r["away"], r["total"]) for r in G]) if PRECAL > 0 else None
+    rep_cal = rep
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
         blk = [r for r in G if d0.isoformat() <= r["game_date"][:10] < d1.isoformat()]
         prev = [r for r in G if r["game_date"][:10] < d0.isoformat()]
+        cal = d0 >= d_cal
+        rep = rep_cal if cal else Rep()
         if blk and len(prev) >= 300:
             modelo = B.entrenar_logistica(prev)
             if modelo:
-                nbl += 1
+                nbl += 1 if cal else 0; nb_tot += 1
                 tot_prev = [r["total"] for r in prev]; mar_prev = [r["marg_home"] for r in prev]
                 base_tot = sum(tot_prev) / len(tot_prev); hw = sum(r["y_home"] for r in prev) / len(prev)
                 lineas = [medio(base_tot + k) for k in (-1, 0, 1)]
@@ -306,10 +367,19 @@ def validar_beisbol(liga, meses, bloque):
                     tot, mar = r["total"], r["marg_home"]
                     rep.add_prob("Ganador", p, r["y_home"], hw)
                     rep.add_val("Total esperado", xh + xa, tot, base_tot)
+                    fila_capa = None
+                    if ritmo is not None:
+                        st = ritmo.estado(r["game_date"][:10], r["home"], r["away"])
+                        if st:
+                            fila_capa = {"b": nb_tot, "cal": cal, "f": r["game_date"][:10], "pred": xh + xa, "real": tot,
+                                         "base": base_tot, "M": st[0], "E": st[1], "ou": []}
+                            capa.append(fila_capa)
                     for L in lineas:
                         po, _ = B.prob_over(r, L, xh, xa)
                         if po is not None and tot != L:
                             rep.add_prob("Over/Under (lineas ~promedio)", po, 1 if tot > L else 0, fr_over[L])
+                            if fila_capa is not None:
+                                fila_capa["ou"].append((L, 1 if tot > L else 0, fr_over[L]))
                     rlh, rla = B.prob_run_line(r, 1.5, xh=xh, xa=xa)
                     if rlh is not None:
                         rep.add_prob("Run line local -1.5", rlh, 1 if mar >= 2 else 0, fb_rl)
@@ -322,8 +392,14 @@ def validar_beisbol(liga, meses, bloque):
                             pf = sum(B._nb_pmf(i, xa) * B._nb_pmf(j, xh) for i in range(20) for j in range(20) if i - j >= 2)
                             rep.add_prob("Run line favorito -1.5", pf, 1 if mar <= -2 else 0, fa)
         d0 = d1
-    rep.imprimir("BEISBOL %s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior" % (
-        liga.upper(), meses, nbl, bloque), clave="beisbol_" + lg.lower())
+    rep = rep_cal
+    if ritmo is not None:
+        evaluar_capa(rep, capa, "beisbol_" + lg.lower())
+    rep.imprimir("BEISBOL %s | ultimos %d meses, %d bloques de %d dias, entrenando solo con lo anterior%s" % (
+        liga.upper(), meses, nbl, bloque, (" (capa de totales con %d meses previos de precalentamiento)" % PRECAL) if ritmo is not None else ""),
+        clave="beisbol_" + lg.lower())
+    if ritmo is not None:
+        guardar_capa(capa, "beisbol_" + lg.lower())
 
 
 # ------------------------------------------------------------------ tenis
