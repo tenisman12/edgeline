@@ -7,7 +7,7 @@ ESPN no publica estas ligas. El calendario sale de las mismas fuentes oficiales 
   SHL    stats.swehockey.se   calendario de la temporada (fecha y hora de Suecia)
   Liiga  liiga.fi/api/v2      juegos de la temporada (hora UTC)
   AHL    HockeyTech           calendario de la temporada (hora con zona)
-  DEL    penny-del.org        /spiele/team: ligas a cada partido; de la pagina del partido salen nombres y hora
+  DEL    penny-del.org        /spiele y /spiele/monat/<mes>: tabla del calendario (fecha, hora, local, visita)
 
 Devuelve los juegos con el MISMO esquema que colectores/recolectar_proximos.py y proximos_beisbol.py (id, liga, tipo,
 fecha_utc, estado, home/away, cuotas, contexto), para que plataforma.py los trate igual que los de ESPN. Las cuotas
@@ -124,37 +124,45 @@ def shl(desde, hasta):
     return out
 
 
-def del_(desde, hasta):
-    links = set()
-    for url in ("/spiele/team", "/spiele"):
-        try:
-            links |= set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", RH.get_txt(RH.DEL_WEB + url)))
-        except Exception:
-            pass
-        if links:
-            break
+MESES_DE = {1: "januar", 2: "februar", 3: "maerz", 4: "april", 5: "mai", 6: "juni", 7: "juli", 8: "august",
+            9: "september", 10: "oktober", 11: "november", 12: "dezember"}
+
+
+def del_filas(h):
+    """filas del calendario de penny-del.org (/spiele, /spiele/monat/<mes>): (fecha, hora, local, visita, tiene_marcador)."""
     out = []
-    for l in sorted(links):
-        m = re.search(r"/(\d{2})(\d{2})(\d{4})_[\w\-]+_(\d+)$", l)
-        if not m:
+    for fila in re.findall(r"<tr>(.*?)</tr>", h, re.S):
+        mf = re.search(r'team-schedule__date">[^<]*?(\d{2})\.(\d{2})\.(\d{4})', fila)
+        if not mf:
             continue
-        fecha = "%s-%s-%s" % (m.group(3), m.group(2), m.group(1))
-        if not (desde.isoformat() <= fecha <= hasta.isoformat()):
+        mh = re.search(r'team-schedule__time">\s*(\d{1,2}:\d{2})', fila)
+        eq = [RH.limpio(x) for x in re.findall(r'team-meta__name[^>]*>(.*?)</h6>', fila, re.S)]
+        if len(eq) < 2:
             continue
+        marcador = bool(re.search(r"\b\d+\s*:\s*\d+\b", RH.limpio("".join(re.findall(r'team-schedule__status">(.*?)</td>', fila, re.S)))))
+        out.append(("%s-%s-%s" % (mf.group(3), mf.group(2), mf.group(1)), mh.group(1) if mh else None, eq[0], eq[1], marcador))
+    return out
+
+
+def del_(desde, hasta):
+    """partidos por jugar de la DEL: la tabla del calendario del mes (los partidos futuros no tienen pagina de detalle)."""
+    paginas = {"/spiele"}
+    m = dt.date(desde.year, desde.month, 1)
+    while m <= hasta:
+        paginas.add("/spiele/monat/%s" % MESES_DE[m.month])
+        m = dt.date(m.year + (m.month == 12), m.month % 12 + 1, 1)
+    vistos, out = set(), []
+    for url in sorted(paginas):
         try:
-            pag = RH.get_txt(RH.DEL_WEB + l)
+            h = RH.get_txt(RH.DEL_WEB + url)
         except Exception:
             continue
-        if RH.del_leer_juego(pag, int(m.group(4))):
-            continue                                         # ya tiene marcador final
-        t = re.search(r"<title>(.*?)</title>", pag, re.S)
-        t = RH.limpio(t.group(1)) if t else ""
-        mt = re.search(r"- ([^-]+?) gg\. (.+?) am \d{2}\.\d{2}\.\d{4}", t)
-        if not mt:
-            continue
-        hora = re.search(r"\b(\d{1,2}:\d{2})\s*Uhr", RH.limpio(pag))
-        fu = europa_a_utc(fecha, hora.group(1) if hora else "19:30", 1).strftime("%Y-%m-%dT%H:%MZ")
-        out.append(_juego("del", m.group(4), fu, mt.group(1).strip(), mt.group(2).strip()))
+        for fecha, hora, eh, ea, marcador in del_filas(h):
+            if marcador or not (desde.isoformat() <= fecha <= hasta.isoformat()) or (fecha, eh, ea) in vistos:
+                continue
+            vistos.add((fecha, eh, ea))
+            fu = europa_a_utc(fecha, hora or "19:30", 1).strftime("%Y-%m-%dT%H:%MZ")
+            out.append(_juego("del", "%s-%s-%s" % (fecha, eh, ea), fu, eh, ea))
     return out
 
 
