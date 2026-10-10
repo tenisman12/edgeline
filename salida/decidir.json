@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-09T23:49:14",
+ "generado": "2026-10-10T01:18:08",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -11,12 +11,12 @@
    "home": "Lotte Giants",
    "away": "LG Twins",
    "p_modelo": 0.5075,
-   "p_sharp": 0.3723,
-   "p_final": 0.4051,
+   "p_sharp": 0.3709,
+   "p_final": 0.404,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -1.03,
+   "margen_esperado": -1.05,
    "linea_home": "+1.5",
-   "p_runline_home": 0.4688,
+   "p_runline_home": 0.4675,
    "detalle_modelo": {
     "elo_h": 1470.8,
     "elo_a": 1508.1,
@@ -55,12 +55,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Lotte Giants",
-     "p": 0.4051,
+     "p": 0.404,
      "cuota": 165.0,
      "decimal": 2.65,
      "casa": "betonlineag",
-     "ev": 0.0735,
-     "cuota_min": 2.47,
+     "ev": 0.0706,
+     "cuota_min": 2.48,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 4,
@@ -78,19 +78,19 @@
        "abridor"
       ]
      },
-     "premium_nivel": "lean",
-     "premium_pts": 52.7,
+     "premium_nivel": "pasar",
+     "premium_pts": 36.8,
      "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "LG Twins",
-     "p": 0.5949,
+     "p": 0.596,
      "cuota": -178.0,
      "decimal": 1.562,
      "casa": "onexbet",
-     "ev": -0.0709,
+     "ev": -0.0692,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 4,
@@ -110,18 +110,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.3
+     "premium_pts": 43.7
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Lotte Giants +1.5",
-     "p": 0.4688,
+     "p": 0.4675,
      "cuota": 107.0,
      "decimal": 2.07,
      "casa": "onexbet",
-     "ev": -0.0295,
-     "cuota_min": 2.13,
+     "ev": -0.0322,
+     "cuota_min": 2.14,
      "en_rango": true,
      "senales_favor": 3,
      "senales_contra": 3,
@@ -144,11 +144,11 @@
      "mercado": "Run line",
      "lado": "away",
      "texto": "LG Twins -1.5",
-     "p": 0.5312,
+     "p": 0.5325,
      "cuota": -118.0,
      "decimal": 1.847,
-     "casa": "fanduel",
-     "ev": -0.0187,
+     "casa": "mybookieag",
+     "ev": -0.0163,
      "cuota_min": 1.88,
      "en_rango": true,
      "senales_favor": 3,
@@ -173,12 +173,12 @@
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Lotte Giants",
-    "p": 0.4051,
+    "p": 0.404,
     "cuota": 165.0,
     "decimal": 2.65,
     "casa": "betonlineag",
-    "ev": 0.0735,
-    "cuota_min": 2.47,
+    "ev": 0.0706,
+    "cuota_min": 2.48,
     "en_rango": true,
     "senales_favor": 4,
     "senales_contra": 4,
@@ -196,9 +196,379 @@
       "abridor"
      ]
     },
-    "premium_nivel": "lean",
-    "premium_pts": 52.7,
+    "premium_nivel": "pasar",
+    "premium_pts": 36.8,
     "nota_lectura": "modelo 14 pp arriba del mercado en el lado del pick: revisar, no pick"
+   },
+   "confianza": "minima",
+   "stake": 0.0,
+   "pretemporada": false
+  },
+  {
+   "liga": "npb",
+   "id": "npb-20261010-巨人-DeNA",
+   "fecha": "2026-10-09",
+   "hora": "23:00",
+   "home": "Giants",
+   "away": "Bay Stars",
+   "p_modelo": 0.5661,
+   "p_sharp": 0.4718,
+   "p_final": 0.4954,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": -0.05,
+   "linea_home": "+1.5",
+   "p_runline_home": 0.6314,
+   "detalle_modelo": {
+    "elo_h": 1515.3,
+    "elo_a": 1528.8,
+    "dif_h": 0.294,
+    "dif_a": 0.315,
+    "p_base": 0.5207,
+    "abridor_h": {
+     "nombre": "井上",
+     "fip_ventana": 2.17,
+     "fip_ultimas5": 1.48,
+     "k_pct": 0.264,
+     "bb_pct": 0.051,
+     "ip_ventana": "46.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 2.33,
+     "ga_equipo": 3.105
+    },
+    "abridor_a": {
+     "nombre": "東",
+     "fip_ventana": 2.78,
+     "fip_ultimas5": 4.2,
+     "k_pct": 0.188,
+     "bb_pct": 0.071,
+     "ip_ventana": "76.0",
+     "bullpen_game": true,
+     "innings": 3.0,
+     "era_ajustada": 3.52,
+     "ga_equipo": 3.58
+    },
+    "carreras_abridor": 0.45,
+    "frio_caliente": 0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Giants",
+     "p": 0.4954,
+     "cuota": 106.0,
+     "decimal": 2.06,
+     "casa": "pinnacle",
+     "ev": 0.0206,
+     "cuota_min": 2.02,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 3,
+     "senales": {
+      "a_favor": [
+       "osciladores",
+       "abridor"
+      ],
+      "en_contra": [
+       "h2h",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 51.6
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Bay Stars",
+     "p": 0.5046,
+     "cuota": -119.0,
+     "decimal": 1.84,
+     "casa": "pinnacle",
+     "ev": -0.0714,
+     "cuota_min": 1.98,
+     "en_rango": true,
+     "senales_favor": 3,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "h2h",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": [
+       "osciladores",
+       "abridor"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 33.2
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Giants +1.5",
+     "p": 0.6314,
+     "cuota": -194.0,
+     "decimal": 1.515,
+     "casa": "onexbet",
+     "ev": -0.0431,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 2,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "osciladores",
+       "abridor"
+      ],
+      "en_contra": [
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 55.4
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Bay Stars -1.5",
+     "p": 0.3686,
+     "cuota": 180.0,
+     "decimal": 2.8,
+     "casa": "nordicbet",
+     "ev": 0.0319,
+     "cuota_min": 2.71,
+     "en_rango": true,
+     "senales_favor": 2,
+     "senales_contra": 2,
+     "senales": {
+      "a_favor": [
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": [
+       "osciladores",
+       "abridor"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 35.5
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "Giants",
+    "p": 0.4954,
+    "cuota": 106.0,
+    "decimal": 2.06,
+    "casa": "pinnacle",
+    "ev": 0.0206,
+    "cuota_min": 2.02,
+    "en_rango": true,
+    "senales_favor": 2,
+    "senales_contra": 3,
+    "senales": {
+     "a_favor": [
+      "osciladores",
+      "abridor"
+     ],
+     "en_contra": [
+      "h2h",
+      "bullpen",
+      "racha"
+     ]
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 51.6
+   },
+   "confianza": "baja",
+   "stake": 0.01,
+   "pretemporada": false
+  },
+  {
+   "liga": "npb",
+   "id": "npb-20261010-西武-日本ハム",
+   "fecha": "2026-10-09",
+   "hora": "23:00",
+   "home": "Lions",
+   "away": "Fighters",
+   "p_modelo": 0.5802,
+   "p_sharp": 0.5909,
+   "p_final": 0.5882,
+   "fuente": "pinnacle 75% + modelo 25%",
+   "margen_esperado": 0.96,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.3872,
+   "detalle_modelo": {
+    "elo_h": 1528.9,
+    "elo_a": 1555.0,
+    "dif_h": 0.273,
+    "dif_a": 0.434,
+    "p_base": 0.5075,
+    "abridor_h": {
+     "nombre": "平良",
+     "fip_ventana": 1.92,
+     "fip_ultimas5": 2.23,
+     "k_pct": 0.267,
+     "bb_pct": 0.05,
+     "ip_ventana": "82.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 2.39,
+     "ga_equipo": 3.245
+    },
+    "abridor_a": {
+     "nombre": "有原",
+     "fip_ventana": 4.36,
+     "fip_ultimas5": 4.2,
+     "k_pct": 0.101,
+     "bb_pct": 0.047,
+     "ip_ventana": "39.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.03,
+     "ga_equipo": 3.699
+    },
+    "carreras_abridor": 0.72,
+    "frio_caliente": 0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Lions",
+     "p": 0.5882,
+     "cuota": -145.0,
+     "decimal": 1.69,
+     "casa": "williamhill_us",
+     "ev": -0.0061,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 4,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "h2h"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 50.0
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Fighters",
+     "p": 0.4118,
+     "cuota": 137.0,
+     "decimal": 2.37,
+     "casa": "pinnacle",
+     "ev": -0.0241,
+     "cuota_min": 2.43,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "h2h"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 42.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Lions -1.5",
+     "p": 0.3872,
+     "cuota": 161.0,
+     "decimal": 2.61,
+     "casa": "onexbet",
+     "ev": 0.0107,
+     "cuota_min": 2.58,
+     "en_rango": true,
+     "senales_favor": 4,
+     "senales_contra": 0,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": []
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 58.4
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Fighters +1.5",
+     "p": 0.6128,
+     "cuota": -170.0,
+     "decimal": 1.588,
+     "casa": "pinnacle",
+     "ev": -0.0268,
+     "cuota_min": 1.7,
+     "en_rango": false,
+     "senales_favor": 0,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 38.6
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "away",
+    "texto": "Fighters",
+    "p": 0.4118,
+    "cuota": 137.0,
+    "decimal": 2.37,
+    "casa": "pinnacle",
+    "ev": -0.0241,
+    "cuota_min": 2.43,
+    "en_rango": true,
+    "senales_favor": 1,
+    "senales_contra": 4,
+    "senales": {
+     "a_favor": [
+      "h2h"
+     ],
+     "en_contra": [
+      "forma",
+      "osciladores",
+      "abridor",
+      "racha"
+     ]
+    },
+    "premium_nivel": "pasar",
+    "premium_pts": 42.6
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -212,12 +582,12 @@
    "home": "Kia Tigers",
    "away": "SSG Landers",
    "p_modelo": 0.6081,
-   "p_sharp": 0.7619,
-   "p_final": 0.7275,
+   "p_sharp": 0.7595,
+   "p_final": 0.7256,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 2.61,
+   "margen_esperado": 2.58,
    "linea_home": "-2.5",
-   "p_runline_home": 0.51,
+   "p_runline_home": 0.5077,
    "detalle_modelo": {
     "elo_h": 1550.1,
     "elo_a": 1496.2,
@@ -256,11 +626,11 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Kia Tigers",
-     "p": 0.7275,
+     "p": 0.7256,
      "cuota": -375.0,
      "decimal": 1.267,
      "casa": "fanatics",
-     "ev": -0.0785,
+     "ev": -0.0809,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 4,
@@ -277,18 +647,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.5
+     "premium_pts": 43.0
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "SSG Landers",
-     "p": 0.2725,
-     "cuota": 310.0,
-     "decimal": 4.1,
-     "casa": "fanduel",
-     "ev": 0.1171,
-     "cuota_min": 3.67,
+     "p": 0.2744,
+     "cuota": 339.0,
+     "decimal": 4.39,
+     "casa": "onexbet",
+     "ev": 0.2048,
+     "cuota_min": 3.64,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 4,
@@ -303,20 +673,20 @@
        "fuerza"
       ]
      },
-     "premium_nivel": "revisar",
-     "premium_pts": 47.0,
+     "premium_nivel": "lean",
+     "premium_pts": 48.6,
      "nota_lectura": "modelo 15 pp arriba del mercado en el lado del pick: revisar, no pick"
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Kia Tigers -2.5",
-     "p": 0.51,
+     "p": 0.5077,
      "cuota": -111.0,
      "decimal": 1.901,
      "casa": "nordicbet",
-     "ev": -0.0305,
-     "cuota_min": 1.96,
+     "ev": -0.035,
+     "cuota_min": 1.97,
      "en_rango": true,
      "senales_favor": 2,
      "senales_contra": 1,
@@ -330,18 +700,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 38.9
+     "premium_pts": 37.4
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "SSG Landers +2.5",
-     "p": 0.49,
-     "cuota": 111.0,
-     "decimal": 2.11,
+     "p": 0.4923,
+     "cuota": 102.0,
+     "decimal": 2.02,
      "casa": "onexbet",
-     "ev": 0.0339,
-     "cuota_min": 2.04,
+     "ev": -0.0055,
+     "cuota_min": 2.03,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 2,
@@ -354,20 +724,20 @@
        "fuerza"
       ]
      },
-     "premium_nivel": "pick",
-     "premium_pts": 61.3
+     "premium_nivel": "lean",
+     "premium_pts": 51.2
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "away",
     "texto": "SSG Landers",
-    "p": 0.2725,
-    "cuota": 310.0,
-    "decimal": 4.1,
-    "casa": "fanduel",
-    "ev": 0.1171,
-    "cuota_min": 3.67,
+    "p": 0.2744,
+    "cuota": 339.0,
+    "decimal": 4.39,
+    "casa": "onexbet",
+    "ev": 0.2048,
+    "cuota_min": 3.64,
     "en_rango": true,
     "senales_favor": 1,
     "senales_contra": 4,
@@ -382,8 +752,8 @@
       "fuerza"
      ]
     },
-    "premium_nivel": "revisar",
-    "premium_pts": 47.0,
+    "premium_nivel": "lean",
+    "premium_pts": 48.6,
     "nota_lectura": "modelo 15 pp arriba del mercado en el lado del pick: revisar, no pick"
    },
    "confianza": "minima",
@@ -398,12 +768,12 @@
    "home": "Hanwha Eagles",
    "away": "NC Dinos",
    "p_modelo": 0.5404,
-   "p_sharp": 0.513,
-   "p_final": 0.5199,
+   "p_sharp": 0.5108,
+   "p_final": 0.5182,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.21,
+   "margen_esperado": 0.2,
    "linea_home": "+1.5",
-   "p_runline_home": 0.5999,
+   "p_runline_home": 0.5981,
    "detalle_modelo": {
     "elo_h": 1446.7,
     "elo_a": 1450.4,
@@ -442,12 +812,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Hanwha Eagles",
-     "p": 0.5199,
+     "p": 0.5182,
      "cuota": -111.0,
      "decimal": 1.901,
      "casa": "onexbet",
-     "ev": -0.0118,
-     "cuota_min": 1.92,
+     "ev": -0.0149,
+     "cuota_min": 1.93,
      "en_rango": true,
      "senales_favor": 5,
      "senales_contra": 2,
@@ -465,17 +835,17 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 54.8
+     "premium_pts": 49.4
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "NC Dinos",
-     "p": 0.4801,
+     "p": 0.4818,
      "cuota": 100.0,
      "decimal": 2.0,
      "casa": "fanatics",
-     "ev": -0.0397,
+     "ev": -0.0364,
      "cuota_min": 2.08,
      "en_rango": true,
      "senales_favor": 2,
@@ -494,17 +864,17 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 29.9
+     "premium_pts": 27.4
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Hanwha Eagles +1.5",
-     "p": 0.5999,
+     "p": 0.5981,
      "cuota": -161.0,
      "decimal": 1.621,
      "casa": "onexbet",
-     "ev": -0.0275,
+     "ev": -0.0305,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 4,
@@ -521,18 +891,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 65.3
+     "premium_pts": 63.4
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "NC Dinos -1.5",
-     "p": 0.4001,
-     "cuota": 156.0,
-     "decimal": 2.56,
-     "casa": "fanduel",
-     "ev": 0.0243,
-     "cuota_min": 2.5,
+     "p": 0.4019,
+     "cuota": 152.0,
+     "decimal": 2.52,
+     "casa": "coolbet",
+     "ev": 0.0129,
+     "cuota_min": 2.49,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 4,
@@ -548,19 +918,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 23.9
+     "premium_pts": 23.2
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Hanwha Eagles",
-    "p": 0.5199,
+    "p": 0.5182,
     "cuota": -111.0,
     "decimal": 1.901,
     "casa": "onexbet",
-    "ev": -0.0118,
-    "cuota_min": 1.92,
+    "ev": -0.0149,
+    "cuota_min": 1.93,
     "en_rango": true,
     "senales_favor": 5,
     "senales_contra": 2,
@@ -578,7 +948,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 54.8
+    "premium_pts": 49.4
    },
    "confianza": "minima",
    "stake": 0.0,
