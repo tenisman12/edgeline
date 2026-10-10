@@ -1,0 +1,725 @@
+{
+ "generado": "2026-10-10T12:53:31",
+ "ligas": [
+  {
+   "liga": "LIIGA",
+   "parametros": {
+    "q": 0.0001,
+    "rho": 0.3,
+    "p0": 0.003,
+    "wx": 0.0,
+    "portero": 0,
+    "b2b_of": 0.0,
+    "b2b_df": 0.0
+   },
+   "r_nb": 10,
+   "corte": "2025-02-26",
+   "n_prueba": 625,
+   "mercados": [
+    {
+     "mercado": "Ganador (motor vs produccion)",
+     "n": 625,
+     "mejora_milesimas": -7.754,
+     "z": -1.7,
+     "mitades": [
+      -6.485,
+      -9.019
+     ],
+     "brier_prod": 0.23471,
+     "brier_motor": 0.23844,
+     "brier_mejora_pct": -1.59,
+     "cal_motor": -0.0047,
+     "cal_prod": 0.0027,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Ganador (apilado vs produccion)",
+     "n": 419,
+     "mejora_milesimas": 1.331,
+     "z": 0.29,
+     "mitades": [
+      -0.433,
+      3.086
+     ],
+     "brier_prod": 0.2294,
+     "brier_motor": 0.22866,
+     "brier_mejora_pct": 0.32,
+     "cal_motor": -0.0125,
+     "cal_prod": -0.0027,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under linea ~promedio (vs produccion)",
+     "n": 625,
+     "mejora_milesimas": 5.031,
+     "z": 1.32,
+     "mitades": [
+      6.42,
+      3.645
+     ],
+     "brier_prod": 0.24492,
+     "brier_motor": 0.24246,
+     "brier_mejora_pct": 1.01,
+     "cal_motor": 0.0023,
+     "cal_prod": 0.0324,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (apilado vs produccion)",
+     "n": 419,
+     "mejora_milesimas": 11.186,
+     "z": 1.75,
+     "mitades": [
+      11.672,
+      10.702
+     ],
+     "brier_prod": 0.24291,
+     "brier_motor": 0.23739,
+     "brier_mejora_pct": 2.27,
+     "cal_motor": 0.0311,
+     "cal_prod": 0.053,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (vs capa de totales)",
+     "n": 411,
+     "mejora_milesimas": 19.87,
+     "z": 1.99,
+     "mitades": [
+      10.053,
+      29.64
+     ],
+     "brier_prod": 0.24902,
+     "brier_motor": 0.23938,
+     "brier_mejora_pct": 3.87,
+     "cal_motor": 0.0224,
+     "cal_prod": 0.105,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Puck line local -1.5",
+     "n": 625,
+     "mejora_milesimas": -4.045,
+     "z": -0.86,
+     "mitades": [
+      -7.232,
+      -0.868
+     ],
+     "brier_prod": 0.216,
+     "brier_motor": 0.21745,
+     "brier_mejora_pct": -0.67,
+     "cal_motor": -0.0194,
+     "cal_prod": -0.0491,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Empate a 60 min",
+     "n": 625,
+     "mejora_milesimas": -5.481,
+     "z": -3.05,
+     "mitades": [
+      -4.448,
+      -6.51
+     ],
+     "brier_prod": 0.16779,
+     "brier_motor": 0.1693,
+     "brier_mejora_pct": -0.9,
+     "cal_motor": -0.0535,
+     "cal_prod": -0.0402,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local O/U",
+     "n": 625,
+     "mejora_milesimas": -1.204,
+     "z": -0.24,
+     "mitades": [
+      2.369,
+      -4.767
+     ],
+     "brier_prod": 0.22007,
+     "brier_motor": 0.22041,
+     "brier_mejora_pct": -0.15,
+     "cal_motor": 0.0079,
+     "cal_prod": -0.0241,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita O/U",
+     "n": 625,
+     "mejora_milesimas": 5.0,
+     "z": 1.27,
+     "mitades": [
+      10.646,
+      -0.627
+     ],
+     "brier_prod": 0.24515,
+     "brier_motor": 0.24268,
+     "brier_mejora_pct": 1.01,
+     "cal_motor": -0.0111,
+     "cal_prod": -0.0055,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs produccion)",
+     "n": 625,
+     "mae_prod": 1.748,
+     "mae_motor": 1.735,
+     "mejora_milesimas": 12.52,
+     "z": 1.27,
+     "mitades": [
+      33.74,
+      -8.63
+     ],
+     "sesgo_motor": 0.104,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs capa de totales)",
+     "n": 411,
+     "mae_prod": 1.712,
+     "mae_motor": 1.704,
+     "mejora_milesimas": 8.3,
+     "z": 0.77,
+     "mitades": [
+      17.05,
+      -0.41
+     ],
+     "sesgo_motor": 0.129,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local esperados",
+     "n": 625,
+     "mae_prod": 1.333,
+     "mae_motor": 1.338,
+     "mejora_milesimas": -5.17,
+     "z": -0.56,
+     "mitades": [
+      -0.61,
+      -9.72
+     ],
+     "sesgo_motor": -0.031,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita esperados",
+     "n": 625,
+     "mae_prod": 1.363,
+     "mae_motor": 1.353,
+     "mejora_milesimas": 9.74,
+     "z": 1.19,
+     "mitades": [
+      21.79,
+      -2.26
+     ],
+     "sesgo_motor": -0.023,
+     "veredicto": "no pasa"
+    }
+   ],
+   "aplicar": {
+    "ganador_apilado": false,
+    "ganador_motor": false,
+    "ou_apilado": false,
+    "ou_motor": false,
+    "puck_line": false,
+    "empate60": false,
+    "equipo_local": false,
+    "equipo_visita": false,
+    "total_motor": false
+   },
+   "apilado": {
+    "ganador": [
+     -0.16785,
+     1.00195,
+     0.73887
+    ],
+    "ou": [
+     0.04392,
+     1.16258,
+     1.3085
+    ]
+   }
+  },
+  {
+   "liga": "NHL",
+   "parametros": {
+    "q": 0.0001,
+    "rho": 0.9,
+    "p0": 0.003,
+    "wx": 0.0,
+    "portero": 0,
+    "b2b_of": -0.04,
+    "b2b_df": 0.04
+   },
+   "r_nb": 1000,
+   "corte": "2022-02-07",
+   "n_prueba": 6340,
+   "mercados": [
+    {
+     "mercado": "Ganador (motor vs produccion)",
+     "n": 6340,
+     "mejora_milesimas": 0.014,
+     "z": 0.01,
+     "mitades": [
+      1.061,
+      -1.033
+     ],
+     "brier_prod": 0.23767,
+     "brier_motor": 0.23773,
+     "brier_mejora_pct": -0.02,
+     "cal_motor": 0.005,
+     "cal_prod": 0.0001,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Ganador (apilado vs produccion)",
+     "n": 6340,
+     "mejora_milesimas": 0.843,
+     "z": 0.9,
+     "mitades": [
+      1.399,
+      0.286
+     ],
+     "brier_prod": 0.23767,
+     "brier_motor": 0.23729,
+     "brier_mejora_pct": 0.16,
+     "cal_motor": -0.0051,
+     "cal_prod": 0.0001,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under linea ~promedio (vs produccion)",
+     "n": 6340,
+     "mejora_milesimas": -0.161,
+     "z": -0.1,
+     "mitades": [
+      2.262,
+      -2.583
+     ],
+     "brier_prod": 0.24773,
+     "brier_motor": 0.24776,
+     "brier_mejora_pct": -0.01,
+     "cal_motor": 0.0013,
+     "cal_prod": -0.0334,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (apilado vs produccion)",
+     "n": 6340,
+     "mejora_milesimas": 1.675,
+     "z": 1.72,
+     "mitades": [
+      3.058,
+      0.293
+     ],
+     "brier_prod": 0.24773,
+     "brier_motor": 0.24689,
+     "brier_mejora_pct": 0.34,
+     "cal_motor": -0.0119,
+     "cal_prod": -0.0334,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (vs capa de totales)",
+     "n": 6340,
+     "mejora_milesimas": -1.292,
+     "z": -1.09,
+     "mitades": [
+      -0.281,
+      -2.302
+     ],
+     "brier_prod": 0.24716,
+     "brier_motor": 0.24776,
+     "brier_mejora_pct": -0.24,
+     "cal_motor": 0.0013,
+     "cal_prod": -0.0054,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Puck line local -1.5",
+     "n": 6340,
+     "mejora_milesimas": -1.416,
+     "z": -1.1,
+     "mitades": [
+      0.108,
+      -2.94
+     ],
+     "brier_prod": 0.21306,
+     "brier_motor": 0.21349,
+     "brier_mejora_pct": -0.2,
+     "cal_motor": -0.0212,
+     "cal_prod": -0.0186,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Empate a 60 min",
+     "n": 4250,
+     "mejora_milesimas": -0.368,
+     "z": -0.96,
+     "mitades": [
+      -0.841,
+      0.106
+     ],
+     "brier_prod": 0.17538,
+     "brier_motor": 0.17545,
+     "brier_mejora_pct": -0.04,
+     "cal_motor": -0.0609,
+     "cal_prod": -0.0606,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local O/U",
+     "n": 6340,
+     "mejora_milesimas": -2.264,
+     "z": -1.84,
+     "mitades": [
+      -1.282,
+      -3.246
+     ],
+     "brier_prod": 0.23748,
+     "brier_motor": 0.23853,
+     "brier_mejora_pct": -0.44,
+     "cal_motor": 0.0021,
+     "cal_prod": -0.0007,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita O/U",
+     "n": 6340,
+     "mejora_milesimas": 1.624,
+     "z": 1.39,
+     "mitades": [
+      3.028,
+      0.22
+     ],
+     "brier_prod": 0.23593,
+     "brier_motor": 0.23517,
+     "brier_mejora_pct": 0.32,
+     "cal_motor": -0.008,
+     "cal_prod": -0.0113,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs produccion)",
+     "n": 6340,
+     "mae_prod": 1.852,
+     "mae_motor": 1.859,
+     "mejora_milesimas": -6.72,
+     "z": -1.61,
+     "mitades": [
+      -4.05,
+      -9.4
+     ],
+     "sesgo_motor": 0.053,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs capa de totales)",
+     "n": 6340,
+     "mae_prod": 1.851,
+     "mae_motor": 1.859,
+     "mejora_milesimas": -8.2,
+     "z": -2.32,
+     "mitades": [
+      -10.83,
+      -5.57
+     ],
+     "sesgo_motor": 0.053,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local esperados",
+     "n": 6340,
+     "mae_prod": 1.413,
+     "mae_motor": 1.411,
+     "mejora_milesimas": 1.17,
+     "z": 0.4,
+     "mitades": [
+      1.88,
+      0.46
+     ],
+     "sesgo_motor": -0.037,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita esperados",
+     "n": 6340,
+     "mae_prod": 1.377,
+     "mae_motor": 1.374,
+     "mejora_milesimas": 2.69,
+     "z": 1.0,
+     "mitades": [
+      5.88,
+      -0.49
+     ],
+     "sesgo_motor": -0.067,
+     "veredicto": "no pasa"
+    }
+   ],
+   "aplicar": {
+    "ganador_apilado": false,
+    "ganador_motor": false,
+    "ou_apilado": false,
+    "ou_motor": false,
+    "puck_line": false,
+    "empate60": false,
+    "equipo_local": false,
+    "equipo_visita": false,
+    "total_motor": false
+   },
+   "apilado": {
+    "ganador": [
+     -0.04115,
+     0.63416,
+     0.50279
+    ],
+    "ou": [
+     0.01663,
+     0.48178,
+     0.44202
+    ]
+   }
+  },
+  {
+   "liga": "AHL",
+   "parametros": {
+    "q": 0.0001,
+    "rho": 0.3,
+    "p0": 0.003,
+    "wx": 0.0,
+    "portero": 0,
+    "b2b_of": 0.0,
+    "b2b_df": 0.0
+   },
+   "r_nb": 10,
+   "corte": "2025-03-19",
+   "n_prueba": 1402,
+   "mercados": [
+    {
+     "mercado": "Ganador (motor vs produccion)",
+     "n": 1402,
+     "mejora_milesimas": -1.202,
+     "z": -0.58,
+     "mitades": [
+      -3.266,
+      0.863
+     ],
+     "brier_prod": 0.24387,
+     "brier_motor": 0.24445,
+     "brier_mejora_pct": -0.23,
+     "cal_motor": 0.0126,
+     "cal_prod": 0.006,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Ganador (apilado vs produccion)",
+     "n": 1402,
+     "mejora_milesimas": -1.771,
+     "z": -1.0,
+     "mitades": [
+      -1.2,
+      -2.342
+     ],
+     "brier_prod": 0.24387,
+     "brier_motor": 0.24469,
+     "brier_mejora_pct": -0.34,
+     "cal_motor": 0.0071,
+     "cal_prod": 0.006,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under linea ~promedio (vs produccion)",
+     "n": 1402,
+     "mejora_milesimas": -1.128,
+     "z": -0.85,
+     "mitades": [
+      0.554,
+      -2.81
+     ],
+     "brier_prod": 0.24572,
+     "brier_motor": 0.24624,
+     "brier_mejora_pct": -0.21,
+     "cal_motor": -0.0206,
+     "cal_prod": -0.0234,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (apilado vs produccion)",
+     "n": 1402,
+     "mejora_milesimas": -0.074,
+     "z": -0.05,
+     "mitades": [
+      -1.449,
+      1.301
+     ],
+     "brier_prod": 0.24572,
+     "brier_motor": 0.24578,
+     "brier_mejora_pct": -0.02,
+     "cal_motor": -0.0133,
+     "cal_prod": -0.0234,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (vs capa de totales)",
+     "n": 1402,
+     "mejora_milesimas": -0.976,
+     "z": -0.45,
+     "mitades": [
+      3.104,
+      -5.055
+     ],
+     "brier_prod": 0.24582,
+     "brier_motor": 0.24624,
+     "brier_mejora_pct": -0.17,
+     "cal_motor": -0.0206,
+     "cal_prod": -0.01,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Puck line local -1.5",
+     "n": 1402,
+     "mejora_milesimas": 3.128,
+     "z": 1.18,
+     "mitades": [
+      2.847,
+      3.409
+     ],
+     "brier_prod": 0.21077,
+     "brier_motor": 0.20947,
+     "brier_mejora_pct": 0.61,
+     "cal_motor": -0.0069,
+     "cal_prod": -0.0066,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Empate a 60 min",
+     "n": 1402,
+     "mejora_milesimas": -4.125,
+     "z": -4.93,
+     "mitades": [
+      -3.255,
+      -4.996
+     ],
+     "brier_prod": 0.17616,
+     "brier_motor": 0.17727,
+     "brier_mejora_pct": -0.62,
+     "cal_motor": -0.0693,
+     "cal_prod": -0.0612,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local O/U",
+     "n": 1402,
+     "mejora_milesimas": -1.598,
+     "z": -0.57,
+     "mitades": [
+      2.731,
+      -5.927
+     ],
+     "brier_prod": 0.23456,
+     "brier_motor": 0.23525,
+     "brier_mejora_pct": -0.29,
+     "cal_motor": -0.0243,
+     "cal_prod": -0.0051,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita O/U",
+     "n": 1402,
+     "mejora_milesimas": -1.246,
+     "z": -0.47,
+     "mitades": [
+      -2.114,
+      -0.378
+     ],
+     "brier_prod": 0.24151,
+     "brier_motor": 0.24213,
+     "brier_mejora_pct": -0.26,
+     "cal_motor": -0.0396,
+     "cal_prod": -0.0225,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs produccion)",
+     "n": 1402,
+     "mae_prod": 1.859,
+     "mae_motor": 1.859,
+     "mejora_milesimas": -0.02,
+     "z": -0.0,
+     "mitades": [
+      12.14,
+      -12.17
+     ],
+     "sesgo_motor": -0.054,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs capa de totales)",
+     "n": 1402,
+     "mae_prod": 1.87,
+     "mae_motor": 1.859,
+     "mejora_milesimas": 11.53,
+     "z": 1.82,
+     "mitades": [
+      32.4,
+      -9.34
+     ],
+     "sesgo_motor": -0.054,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles local esperados",
+     "n": 1402,
+     "mae_prod": 1.413,
+     "mae_motor": 1.399,
+     "mejora_milesimas": 13.93,
+     "z": 2.08,
+     "mitades": [
+      31.9,
+      -4.03
+     ],
+     "sesgo_motor": -0.08,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Goles visita esperados",
+     "n": 1402,
+     "mae_prod": 1.384,
+     "mae_motor": 1.378,
+     "mejora_milesimas": 5.28,
+     "z": 0.98,
+     "mitades": [
+      6.13,
+      4.44
+     ],
+     "sesgo_motor": -0.127,
+     "veredicto": "no pasa"
+    }
+   ],
+   "aplicar": {
+    "ganador_apilado": false,
+    "ganador_motor": false,
+    "ou_apilado": false,
+    "ou_motor": false,
+    "puck_line": false,
+    "empate60": false,
+    "equipo_local": false,
+    "equipo_visita": false,
+    "total_motor": false
+   },
+   "apilado": {
+    "ganador": [
+     -0.01213,
+     0.48723,
+     0.67937
+    ],
+    "ou": [
+     -0.13958,
+     0.08697,
+     0.30126
+    ]
+   }
+  }
+ ]
+}

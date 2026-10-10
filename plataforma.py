@@ -846,6 +846,22 @@ def _pred_base(g, c, fecha, eventos=None):
             p_h, capas = _ajuste_capas_nhl(r["p_home"], h, a)
         if capas.get("aplicado"):
             nota += " Capas medidas (tiros L10 %+.1f, PDO %+.3f): %+.1f pp al local." % (capas["dif_tiros"], capas["dif_pdo"], capas["ajuste_pp"])
+        # 1X2 a 60 minutos: el empate sale de la TASA de la liga (juegos que van a prorroga/shootout en los ultimos 1,500).
+        # El Poisson del modelo lo subestima (~16 % contra ~22 % real) y ni el modelo ni el motor de goles le ganan a la tasa
+        # (trabajo/minar/2026-10-10_motor_goles.md). Local y visita conservan la proporcion del modelo.
+        p60 = dict(r["p_60"]); nota60 = None
+        try:
+            from nucleo import motor_goles as _MG
+            e60, n60 = _MG.tasa_empate60(g["liga"])
+            if e60 is not None and (p60["home"] + p60["away"]) > 0:
+                s_ = p60["home"] + p60["away"]
+                p60 = {"home": round(p60["home"] * (1 - e60) / s_, 4), "empate": round(e60, 4), "away": round(p60["away"] * (1 - e60) / s_, 4)}
+                nota60 = "empate a 60 min = tasa de la liga (%.1f %%, %d juegos); modelo %.1f %%" % (100 * e60, n60, 100 * r["p_60"]["empate"])
+        except Exception:
+            pass
+        r["p_60"] = p60
+        if nota60:
+            nota += " 1X2 60 min: %s." % nota60
         return {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "goles", "capas_medidas": capas,
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],

@@ -181,6 +181,12 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   CANDIDATO, falta ensamble de semillas y medirlo en vivo; no se aplica. RF pierde en los tres deportes. TMLE dentro de
   muestra marca H2 hockey y K1/K8b/K10 NBA, pero fuera de muestra no predicen.
 
+- Motor de goles (10-oct-2026, `nucleo/motor_goles.py`, `utilidades/motor_goles.py`, `trabajo/minar/2026-10-10_motor_goles.md`):
+  Kalman de ataque/defensa/portero + xG + segunda noche contra produccion reproducida (xG, GSAx, b2b, capa). Nada pasa en NHL,
+  AHL ni Liiga (DEL y SHL sin muestra): no se aplica. Empate a 60 min: ni modelo ni motor le ganan a la tasa de la liga ->
+  APLICADO en plataforma: p_60 empate = tasa de la liga (`motor_goles.tasa_empate60`, ultimos 1,500 juegos), local y visita
+  con la proporcion del modelo (la AHL solo se cotiza a 3 vias).
+
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.
