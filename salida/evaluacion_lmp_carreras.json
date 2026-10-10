@@ -1,0 +1,557 @@
+{
+ "generado": "2026-10-10 13:59",
+ "parametros_motor": {
+  "q": 0.0001,
+  "rho": 0.15,
+  "p0": 0.001,
+  "kappa": 0.5,
+  "parque": 1
+ },
+ "temporadas": {
+  "2022": {
+   "n": 358,
+   "carreras_por_juego": 7.32,
+   "total_motor": {
+    "esperado_medio": 7.79,
+    "mae": 3.32,
+    "sesgo": 0.47,
+    "mejora_mae_vs_promedio": 0.21,
+    "z": 3.17,
+    "mitades": [
+     0.21,
+     0.211
+    ],
+    "mejora_mae_vs_capa": 0.022,
+    "z_vs_capa": 0.66
+   },
+   "total_capa_produccion": {
+    "esperado_medio": 7.82,
+    "mae": 3.342,
+    "sesgo": 0.5
+   },
+   "total_modelo_sin_capa": {
+    "esperado_medio": 7.6,
+    "mae": 3.418,
+    "sesgo": 0.28
+   },
+   "total_promedio_previo": {
+    "esperado_medio": 8.11,
+    "mae": 3.53,
+    "sesgo": 0.8
+   },
+   "carreras_local": {
+    "real_media": 3.89,
+    "esperado_motor": 3.97,
+    "mae_motor": 2.317,
+    "mae_promedio": 2.419,
+    "z": 2.85
+   },
+   "carreras_visita": {
+    "real_media": 3.42,
+    "esperado_motor": 3.82,
+    "mae_motor": 2.175,
+    "mae_promedio": 2.29,
+    "z": 2.9
+   },
+   "over_under": {
+    "n": 358,
+    "lineas_usadas": {
+     "8.5": 358
+    },
+    "over_real_pct": 33.5,
+    "capa_produccion": {
+     "acierto_pct": 69.8,
+     "brier": 0.2142,
+     "acierto_con_5pp_o_mas_pct": 69.7,
+     "n_con_5pp_o_mas": 317,
+     "calibracion": {
+      "50-55": {
+       "n": 41,
+       "p_media": 52.8,
+       "real": 70.7
+      },
+      "55-60": {
+       "n": 83,
+       "p_media": 58.3,
+       "real": 60.2
+      },
+      "60-65": {
+       "n": 93,
+       "p_media": 62.7,
+       "real": 71.0
+      },
+      "65+": {
+       "n": 141,
+       "p_media": 69.8,
+       "real": 74.5
+      }
+     }
+    },
+    "motor": {
+     "acierto_pct": 69.8,
+     "brier": 0.2073,
+     "acierto_con_5pp_o_mas_pct": 71.8,
+     "n_con_5pp_o_mas": 312,
+     "calibracion": {
+      "50-55": {
+       "n": 46,
+       "p_media": 52.6,
+       "real": 56.5
+      },
+      "55-60": {
+       "n": 49,
+       "p_media": 58.0,
+       "real": 69.4
+      },
+      "60-65": {
+       "n": 77,
+       "p_media": 62.2,
+       "real": 67.5
+      },
+      "65+": {
+       "n": 186,
+       "p_media": 72.2,
+       "real": 74.2
+      }
+     }
+    }
+   }
+  },
+  "2023": {
+   "n": 351,
+   "carreras_por_juego": 7.81,
+   "total_motor": {
+    "esperado_medio": 7.75,
+    "mae": 3.256,
+    "sesgo": -0.06,
+    "mejora_mae_vs_promedio": 0.103,
+    "z": 1.46,
+    "mitades": [
+     -0.06,
+     0.264
+    ],
+    "mejora_mae_vs_capa": -0.018,
+    "z_vs_capa": -0.47
+   },
+   "total_capa_produccion": {
+    "esperado_medio": 7.41,
+    "mae": 3.238,
+    "sesgo": -0.4
+   },
+   "total_modelo_sin_capa": {
+    "esperado_medio": 7.63,
+    "mae": 3.282,
+    "sesgo": -0.17
+   },
+   "total_promedio_previo": {
+    "esperado_medio": 8.04,
+    "mae": 3.358,
+    "sesgo": 0.23
+   },
+   "carreras_local": {
+    "real_media": 3.99,
+    "esperado_motor": 4.03,
+    "mae_motor": 2.122,
+    "mae_promedio": 2.224,
+    "z": 2.81
+   },
+   "carreras_visita": {
+    "real_media": 3.81,
+    "esperado_motor": 3.72,
+    "mae_motor": 2.293,
+    "mae_promedio": 2.325,
+    "z": 0.84
+   },
+   "over_under": {
+    "n": 351,
+    "lineas_usadas": {
+     "8.5": 351
+    },
+    "over_real_pct": 39.9,
+    "capa_produccion": {
+     "acierto_pct": 62.7,
+     "brier": 0.2346,
+     "acierto_con_5pp_o_mas_pct": 63.6,
+     "n_con_5pp_o_mas": 332,
+     "calibracion": {
+      "50-55": {
+       "n": 19,
+       "p_media": 52.2,
+       "real": 47.4
+      },
+      "55-60": {
+       "n": 30,
+       "p_media": 57.5,
+       "real": 56.7
+      },
+      "60-65": {
+       "n": 84,
+       "p_media": 63.2,
+       "real": 65.5
+      },
+      "65+": {
+       "n": 218,
+       "p_media": 69.7,
+       "real": 63.8
+      }
+     }
+    },
+    "motor": {
+     "acierto_pct": 63.2,
+     "brier": 0.2327,
+     "acierto_con_5pp_o_mas_pct": 62.8,
+     "n_con_5pp_o_mas": 331,
+     "calibracion": {
+      "50-55": {
+       "n": 20,
+       "p_media": 52.9,
+       "real": 70.0
+      },
+      "55-60": {
+       "n": 37,
+       "p_media": 57.8,
+       "real": 59.5
+      },
+      "60-65": {
+       "n": 92,
+       "p_media": 62.6,
+       "real": 56.5
+      },
+      "65+": {
+       "n": 202,
+       "p_media": 70.9,
+       "real": 66.3
+      }
+     }
+    }
+   }
+  },
+  "2024": {
+   "n": 355,
+   "carreras_por_juego": 8.03,
+   "total_motor": {
+    "esperado_medio": 7.93,
+    "mae": 3.414,
+    "sesgo": -0.11,
+    "mejora_mae_vs_promedio": 0.245,
+    "z": 3.2,
+    "mitades": [
+     0.191,
+     0.299
+    ],
+    "mejora_mae_vs_capa": 0.085,
+    "z_vs_capa": 2.46
+   },
+   "total_capa_produccion": {
+    "esperado_medio": 8.03,
+    "mae": 3.498,
+    "sesgo": -0.0
+   },
+   "total_modelo_sin_capa": {
+    "esperado_medio": 7.88,
+    "mae": 3.549,
+    "sesgo": -0.15
+   },
+   "total_promedio_previo": {
+    "esperado_medio": 8.03,
+    "mae": 3.659,
+    "sesgo": -0.0
+   },
+   "carreras_local": {
+    "real_media": 4.1,
+    "esperado_motor": 4.1,
+    "mae_motor": 2.345,
+    "mae_promedio": 2.444,
+    "z": 2.12
+   },
+   "carreras_visita": {
+    "real_media": 3.94,
+    "esperado_motor": 3.83,
+    "mae_motor": 2.371,
+    "mae_promedio": 2.421,
+    "z": 1.31
+   },
+   "over_under": {
+    "n": 355,
+    "lineas_usadas": {
+     "8.5": 355
+    },
+    "over_real_pct": 42.0,
+    "capa_produccion": {
+     "acierto_pct": 64.2,
+     "brier": 0.232,
+     "acierto_con_5pp_o_mas_pct": 64.6,
+     "n_con_5pp_o_mas": 316,
+     "calibracion": {
+      "50-55": {
+       "n": 39,
+       "p_media": 52.7,
+       "real": 61.5
+      },
+      "55-60": {
+       "n": 113,
+       "p_media": 57.2,
+       "real": 61.9
+      },
+      "60-65": {
+       "n": 102,
+       "p_media": 62.5,
+       "real": 66.7
+      },
+      "65+": {
+       "n": 101,
+       "p_media": 68.1,
+       "real": 65.3
+      }
+     }
+    },
+    "motor": {
+     "acierto_pct": 64.8,
+     "brier": 0.2284,
+     "acierto_con_5pp_o_mas_pct": 65.0,
+     "n_con_5pp_o_mas": 317,
+     "calibracion": {
+      "50-55": {
+       "n": 38,
+       "p_media": 52.6,
+       "real": 63.2
+      },
+      "55-60": {
+       "n": 55,
+       "p_media": 57.6,
+       "real": 50.9
+      },
+      "60-65": {
+       "n": 68,
+       "p_media": 62.5,
+       "real": 69.1
+      },
+      "65+": {
+       "n": 194,
+       "p_media": 72.2,
+       "real": 67.5
+      }
+     }
+    }
+   }
+  },
+  "2025": {
+   "n": 350,
+   "carreras_por_juego": 9.05,
+   "total_motor": {
+    "esperado_medio": 8.42,
+    "mae": 3.615,
+    "sesgo": -0.63,
+    "mejora_mae_vs_promedio": 0.096,
+    "z": 1.13,
+    "mitades": [
+     0.048,
+     0.144
+    ],
+    "mejora_mae_vs_capa": -0.03,
+    "z_vs_capa": -0.75
+   },
+   "total_capa_produccion": {
+    "esperado_medio": 8.68,
+    "mae": 3.585,
+    "sesgo": -0.38
+   },
+   "total_modelo_sin_capa": {
+    "esperado_medio": 9.13,
+    "mae": 3.673,
+    "sesgo": 0.07
+   },
+   "total_promedio_previo": {
+    "esperado_medio": 8.08,
+    "mae": 3.711,
+    "sesgo": -0.97
+   },
+   "carreras_local": {
+    "real_media": 4.58,
+    "esperado_motor": 4.32,
+    "mae_motor": 2.38,
+    "mae_promedio": 2.454,
+    "z": 1.55
+   },
+   "carreras_visita": {
+    "real_media": 4.47,
+    "esperado_motor": 4.1,
+    "mae_motor": 2.525,
+    "mae_promedio": 2.477,
+    "z": -1.08
+   },
+   "over_under": {
+    "n": 350,
+    "lineas_usadas": {
+     "8.5": 350
+    },
+    "over_real_pct": 52.9,
+    "capa_produccion": {
+     "acierto_pct": 53.1,
+     "brier": 0.2471,
+     "acierto_con_5pp_o_mas_pct": 54.7,
+     "n_con_5pp_o_mas": 212,
+     "calibracion": {
+      "50-55": {
+       "n": 138,
+       "p_media": 52.3,
+       "real": 50.7
+      },
+      "55-60": {
+       "n": 103,
+       "p_media": 56.9,
+       "real": 46.6
+      },
+      "60-65": {
+       "n": 69,
+       "p_media": 62.4,
+       "real": 60.9
+      },
+      "65+": {
+       "n": 40,
+       "p_media": 71.3,
+       "real": 65.0
+      }
+     }
+    },
+    "motor": {
+     "acierto_pct": 51.1,
+     "brier": 0.2558,
+     "acierto_con_5pp_o_mas_pct": 52.9,
+     "n_con_5pp_o_mas": 274,
+     "calibracion": {
+      "50-55": {
+       "n": 76,
+       "p_media": 52.7,
+       "real": 44.7
+      },
+      "55-60": {
+       "n": 72,
+       "p_media": 57.4,
+       "real": 44.4
+      },
+      "60-65": {
+       "n": 60,
+       "p_media": 62.1,
+       "real": 41.7
+      },
+      "65+": {
+       "n": 142,
+       "p_media": 71.7,
+       "real": 62.0
+      }
+     }
+    }
+   }
+  },
+  "todas": {
+   "n": 1414,
+   "carreras_por_juego": 8.05,
+   "total_motor": {
+    "esperado_medio": 7.97,
+    "mae": 3.401,
+    "sesgo": -0.08,
+    "mejora_mae_vs_promedio": 0.164,
+    "z": 4.38,
+    "mitades": [
+     0.155,
+     0.173
+    ],
+    "mejora_mae_vs_capa": 0.015,
+    "z_vs_capa": 0.81
+   },
+   "total_capa_produccion": {
+    "esperado_medio": 7.98,
+    "mae": 3.416,
+    "sesgo": -0.07
+   },
+   "total_modelo_sin_capa": {
+    "esperado_medio": 8.06,
+    "mae": 3.48,
+    "sesgo": 0.01
+   },
+   "total_promedio_previo": {
+    "esperado_medio": 8.06,
+    "mae": 3.565,
+    "sesgo": 0.02
+   },
+   "carreras_local": {
+    "real_media": 4.14,
+    "esperado_motor": 4.1,
+    "mae_motor": 2.291,
+    "mae_promedio": 2.386,
+    "z": 4.5
+   },
+   "carreras_visita": {
+    "real_media": 3.91,
+    "esperado_motor": 3.87,
+    "mae_motor": 2.34,
+    "mae_promedio": 2.378,
+    "z": 1.88
+   },
+   "over_under": {
+    "n": 1414,
+    "lineas_usadas": {
+     "8.5": 1414
+    },
+    "over_real_pct": 42.0,
+    "capa_produccion": {
+     "acierto_pct": 62.5,
+     "brier": 0.2319,
+     "acierto_con_5pp_o_mas_pct": 63.9,
+     "n_con_5pp_o_mas": 1177,
+     "calibracion": {
+      "50-55": {
+       "n": 237,
+       "p_media": 52.5,
+       "real": 55.7
+      },
+      "55-60": {
+       "n": 329,
+       "p_media": 57.4,
+       "real": 56.2
+      },
+      "60-65": {
+       "n": 348,
+       "p_media": 62.7,
+       "real": 66.4
+      },
+      "65+": {
+       "n": 500,
+       "p_media": 69.5,
+       "real": 67.2
+      }
+     }
+    },
+    "motor": {
+     "acierto_pct": 62.3,
+     "brier": 0.2309,
+     "acierto_con_5pp_o_mas_pct": 63.5,
+     "n_con_5pp_o_mas": 1234,
+     "calibracion": {
+      "50-55": {
+       "n": 180,
+       "p_media": 52.7,
+       "real": 54.4
+      },
+      "55-60": {
+       "n": 213,
+       "p_media": 57.6,
+       "real": 54.5
+      },
+      "60-65": {
+       "n": 297,
+       "p_media": 62.4,
+       "real": 59.3
+      },
+      "65+": {
+       "n": 724,
+       "p_media": 71.7,
+       "real": 67.8
+      }
+     }
+    }
+   }
+  }
+ }
+}
