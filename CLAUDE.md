@@ -127,6 +127,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   MLB 4.8, NPB 3.5, NFL 3.0. NHL y KBO no pasan (siguen con el total del modelo). plataforma.py usa la capa solo donde paso
   (modelo.capa_totales, total_modelo guarda el del modelo y los marcadores se escalan). NBA: la capa espera 15 juegos de
   temporada por equipo (en oct-nov subestima 6.4 puntos). decidir_v2 usa sus residuos tambien en lineas alternas.
+- Motor de carreras (10-oct-2026, `utilidades/motor_carreras.py`, `trabajo/minar/2026-10-10_motor_carreras.md`): ataque y
+  defensa por equipo con Kalman + abridor + parque, binomial negativa; contra produccion reproducida (media3 + abridores +
+  parque + capa de totales). Ganador: no mejora. Pasa: total esperado LMP vs capa (MAE z 2.49), O/U apilado capa+motor MLB
+  (z 2.11), totales por equipo O/U vs produccion escalada a la capa: LMP local z 3.19, MLB local 2.84 y visita 2.78, NPB
+  local 3.42. NO aplicado: falta aprobacion de Alejandro y medirlo en vivo.
 - Picks de totales (9-oct-2026): la lista oficial admite hasta un ganador y un total por partido (tope 4 al dia); Picks IA
   puede guardar dos lecturas por partido (ganador y total). En beisbol el total pasa por decidir_v2 y el ganador sigue en
   decidir.py. "Publicable" = le gana a la tasa historica; contra la linea de la casa se mide en vivo.
