@@ -156,6 +156,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   `trabajo/minar/2026-10-10_hockey_ligas_resultados.json`, k 154, ninguno pasa). `nucleo/angulos.py` los pone en cada
   partido (ganador H/Q/S, totales TH/TS, por equipo) con lo que moverian. Sin altitud (H24, TH5) ni porteros (H19, H20, TH7):
   estas fuentes no traen el titular. PESO_MODELO 0.5 como NHL en decidir_v2.
+- Angulos juntos (10-oct, `utilidades/minar_angulos_bayes_hockey.py`, `trabajo/minar/2026-10-10_bayes_hockey.md`): logistica
+  bayesiana jerarquica con los 29 angulos de ganador y efectos compartidos entre las 5 ligas, walk-forward mensual (9,024
+  partidos): z -0.95, no pasa (DEL empeora, z -3.33). Boosting z -0.54; red neuronal z -9.13 (sobreajusta). El tau elegido es
+  el minimo: los angulos no agregan nada al modelo de hockey. Siguen como contexto. Los Q de las ligas nuevas ahora se
+  encogen (`nucleo/angulos.encoger_crudo`).
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

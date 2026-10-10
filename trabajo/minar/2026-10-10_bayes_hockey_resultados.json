@@ -1,0 +1,971 @@
+{
+ "generado": "2026-10-10T10:36:59",
+ "angulos": [
+  "H1",
+  "H2",
+  "H4",
+  "H6",
+  "H7",
+  "H8",
+  "H13",
+  "H14",
+  "H15",
+  "H16",
+  "H17",
+  "H18",
+  "H21",
+  "H22",
+  "H23",
+  "Q1",
+  "Q2",
+  "Q3",
+  "Q4",
+  "Q5",
+  "Q6a",
+  "Q6b",
+  "Q7",
+  "S1",
+  "S2",
+  "S3",
+  "S4",
+  "S7",
+  "S8"
+ ],
+ "hipotesis": "todos los angulos de ganador juntos, jerarquico entre ligas, mejoran al modelo de hockey fuera de muestra",
+ "total": {
+  "grupo": "HOCKEY",
+  "n": 9024,
+  "mejora_milesimas": -0.347,
+  "z": -0.95,
+  "mitades": [
+   -0.691,
+   -0.003
+  ],
+  "brier_base": 0.23858,
+  "brier_angulos": 0.23877,
+  "brier_mejora_pct": -0.08,
+  "calibracion": -0.0053,
+  "deciles": [
+   [
+    0.369,
+    0.365
+   ],
+   [
+    0.44,
+    0.447
+   ],
+   [
+    0.472,
+    0.47
+   ],
+   [
+    0.497,
+    0.507
+   ],
+   [
+    0.52,
+    0.514
+   ],
+   [
+    0.542,
+    0.543
+   ],
+   [
+    0.565,
+    0.568
+   ],
+   [
+    0.592,
+    0.609
+   ],
+   [
+    0.627,
+    0.62
+   ],
+   [
+    0.702,
+    0.736
+   ]
+  ],
+  "cal_peor_decil": 0.034,
+  "mueve_pp_medio": 1.05,
+  "veredicto": "no pasa",
+  "desde": "2023-03-01",
+  "hasta": "2026-10-09"
+ },
+ "por_liga": [
+  {
+   "grupo": "NHL",
+   "n": 4691,
+   "mejora_milesimas": -0.176,
+   "z": -0.27,
+   "mitades": [
+    -0.219,
+    -0.134
+   ],
+   "brier_base": 0.23714,
+   "brier_angulos": 0.23725,
+   "brier_mejora_pct": -0.04,
+   "calibracion": -0.003,
+   "deciles": [
+    [
+     0.371,
+     0.349
+    ],
+    [
+     0.443,
+     0.454
+    ],
+    [
+     0.475,
+     0.48
+    ],
+    [
+     0.501,
+     0.484
+    ],
+    [
+     0.524,
+     0.518
+    ],
+    [
+     0.547,
+     0.544
+    ],
+    [
+     0.571,
+     0.525
+    ],
+    [
+     0.596,
+     0.638
+    ],
+    [
+     0.629,
+     0.64
+    ],
+    [
+     0.694,
+     0.751
+    ]
+   ],
+   "cal_peor_decil": 0.057,
+   "mueve_pp_medio": 1.43,
+   "veredicto": "no pasa",
+   "desde": "2023-03-01",
+   "hasta": "2026-10-09"
+  },
+  {
+   "grupo": "SHL",
+   "n": 372,
+   "mejora_milesimas": 0.064,
+   "z": 0.1,
+   "mitades": [
+    -0.821,
+    0.948
+   ],
+   "brier_base": 0.23759,
+   "brier_angulos": 0.23763,
+   "brier_mejora_pct": -0.02,
+   "calibracion": -0.0248,
+   "deciles": [
+    [
+     0.359,
+     0.395
+    ],
+    [
+     0.424,
+     0.5
+    ],
+    [
+     0.471,
+     0.541
+    ],
+    [
+     0.509,
+     0.459
+    ],
+    [
+     0.54,
+     0.595
+    ],
+    [
+     0.571,
+     0.703
+    ],
+    [
+     0.607,
+     0.541
+    ],
+    [
+     0.639,
+     0.676
+    ],
+    [
+     0.674,
+     0.649
+    ],
+    [
+     0.746,
+     0.73
+    ]
+   ],
+   "cal_peor_decil": 0.132,
+   "mueve_pp_medio": 0.45,
+   "veredicto": "no pasa",
+   "desde": "2025-09-27",
+   "hasta": "2026-10-08"
+  },
+  {
+   "grupo": "LIIGA",
+   "n": 1006,
+   "mejora_milesimas": -0.506,
+   "z": -0.75,
+   "mitades": [
+    -1.052,
+    0.04
+   ],
+   "brier_base": 0.23636,
+   "brier_angulos": 0.23663,
+   "brier_mejora_pct": -0.11,
+   "calibracion": -0.003,
+   "deciles": [
+    [
+     0.401,
+     0.386
+    ],
+    [
+     0.469,
+     0.376
+    ],
+    [
+     0.499,
+     0.525
+    ],
+    [
+     0.523,
+     0.564
+    ],
+    [
+     0.543,
+     0.515
+    ],
+    [
+     0.564,
+     0.554
+    ],
+    [
+     0.584,
+     0.64
+    ],
+    [
+     0.606,
+     0.6
+    ],
+    [
+     0.64,
+     0.61
+    ],
+    [
+     0.702,
+     0.79
+    ]
+   ],
+   "cal_peor_decil": 0.093,
+   "mueve_pp_medio": 0.71,
+   "veredicto": "no pasa",
+   "desde": "2024-09-21",
+   "hasta": "2026-10-09"
+  },
+  {
+   "grupo": "AHL",
+   "n": 2250,
+   "mejora_milesimas": -0.145,
+   "z": -0.34,
+   "mitades": [
+    -0.888,
+    0.598
+   ],
+   "brier_base": 0.24658,
+   "brier_angulos": 0.24667,
+   "brier_mejora_pct": -0.03,
+   "calibracion": -0.0043,
+   "deciles": [
+    [
+     0.374,
+     0.404
+    ],
+    [
+     0.436,
+     0.44
+    ],
+    [
+     0.462,
+     0.484
+    ],
+    [
+     0.482,
+     0.458
+    ],
+    [
+     0.5,
+     0.507
+    ],
+    [
+     0.518,
+     0.507
+    ],
+    [
+     0.535,
+     0.591
+    ],
+    [
+     0.558,
+     0.551
+    ],
+    [
+     0.584,
+     0.596
+    ],
+    [
+     0.637,
+     0.591
+    ]
+   ],
+   "cal_peor_decil": 0.056,
+   "mueve_pp_medio": 0.69,
+   "veredicto": "no pasa",
+   "desde": "2024-10-25",
+   "hasta": "2026-10-09"
+  },
+  {
+   "grupo": "DEL",
+   "n": 705,
+   "mejora_milesimas": -2.121,
+   "z": -3.33,
+   "mitades": [
+    -3.762,
+    -0.485
+   ],
+   "brier_base": 0.22635,
+   "brier_angulos": 0.22735,
+   "brier_mejora_pct": -0.44,
+   "calibracion": -0.0167,
+   "deciles": [
+    [
+     0.32,
+     0.324
+    ],
+    [
+     0.409,
+     0.394
+    ],
+    [
+     0.46,
+     0.507
+    ],
+    [
+     0.501,
+     0.549
+    ],
+    [
+     0.533,
+     0.549
+    ],
+    [
+     0.562,
+     0.629
+    ],
+    [
+     0.609,
+     0.557
+    ],
+    [
+     0.659,
+     0.657
+    ],
+    [
+     0.701,
+     0.771
+    ],
+    [
+     0.789,
+     0.771
+    ]
+   ],
+   "cal_peor_decil": 0.07,
+   "mueve_pp_medio": 0.54,
+   "veredicto": "no pasa",
+   "desde": "2024-10-03",
+   "hasta": "2026-10-09"
+  }
+ ],
+ "solo_activos": {
+  "grupo": "HOCKEY con algun angulo activo",
+  "n": 8958,
+  "mejora_milesimas": -0.347,
+  "z": -0.94,
+  "mitades": [
+   -0.736,
+   0.043
+  ],
+  "brier_base": 0.23847,
+  "brier_angulos": 0.23865,
+  "brier_mejora_pct": -0.08,
+  "calibracion": -0.0053,
+  "deciles": [
+   [
+    0.369,
+    0.364
+   ],
+   [
+    0.44,
+    0.448
+   ],
+   [
+    0.472,
+    0.47
+   ],
+   [
+    0.497,
+    0.504
+   ],
+   [
+    0.52,
+    0.516
+   ],
+   [
+    0.542,
+    0.545
+   ],
+   [
+    0.565,
+    0.566
+   ],
+   [
+    0.592,
+    0.61
+   ],
+   [
+    0.627,
+    0.618
+   ],
+   [
+    0.701,
+    0.739
+   ]
+  ],
+  "cal_peor_decil": 0.038,
+  "mueve_pp_medio": 1.06,
+  "veredicto": "no pasa",
+  "desde": "2023-03-01",
+  "hasta": "2026-10-09"
+ },
+ "efectos": {
+  "tau": 0.01,
+  "sig": 0.005,
+  "angulos": [
+   {
+    "codigo": "Q7",
+    "activos": 310,
+    "x_tipico": 1.0,
+    "comun_pp": -1.03,
+    "por_liga_pp": {
+     "NHL": -1.24,
+     "SHL": -1.01,
+     "LIIGA": -1.06,
+     "AHL": -1.06,
+     "DEL": -1.04
+    }
+   },
+   {
+    "codigo": "H2",
+    "activos": 631,
+    "x_tipico": 1.0,
+    "comun_pp": -0.99,
+    "por_liga_pp": {
+     "NHL": -1.17,
+     "SHL": -0.99,
+     "LIIGA": -0.97,
+     "AHL": -1.07,
+     "DEL": -0.99
+    }
+   },
+   {
+    "codigo": "S8",
+    "activos": 161,
+    "x_tipico": 1.0,
+    "comun_pp": 0.88,
+    "por_liga_pp": {
+     "NHL": 1.13,
+     "SHL": 0.87,
+     "LIIGA": 0.86,
+     "AHL": 1.06,
+     "DEL": 0.7
+    }
+   },
+   {
+    "codigo": "Q5",
+    "activos": 387,
+    "x_tipico": 1.0,
+    "comun_pp": 0.83,
+    "por_liga_pp": {
+     "NHL": 1.13,
+     "SHL": 0.87,
+     "LIIGA": 0.84,
+     "AHL": 0.73,
+     "DEL": 0.8
+    }
+   },
+   {
+    "codigo": "S4",
+    "activos": 631,
+    "x_tipico": 1.0,
+    "comun_pp": 0.8,
+    "por_liga_pp": {
+     "NHL": 0.86,
+     "SHL": 0.83,
+     "LIIGA": 0.81,
+     "AHL": 0.86,
+     "DEL": 0.84
+    }
+   },
+   {
+    "codigo": "S2",
+    "activos": 487,
+    "x_tipico": 1.0,
+    "comun_pp": -0.75,
+    "por_liga_pp": {
+     "NHL": -0.85,
+     "SHL": -0.73,
+     "LIIGA": -0.78,
+     "AHL": -0.85,
+     "DEL": -0.72
+    }
+   },
+   {
+    "codigo": "Q2",
+    "activos": 499,
+    "x_tipico": 1.0,
+    "comun_pp": 0.73,
+    "por_liga_pp": {
+     "NHL": 0.83,
+     "SHL": 0.73,
+     "LIIGA": 0.78,
+     "AHL": 0.81,
+     "DEL": 0.71
+    }
+   },
+   {
+    "codigo": "S7",
+    "activos": 236,
+    "x_tipico": 1.0,
+    "comun_pp": 0.68,
+    "por_liga_pp": {
+     "NHL": 0.62,
+     "SHL": 0.77,
+     "LIIGA": 0.71,
+     "AHL": 0.74,
+     "DEL": 0.7
+    }
+   },
+   {
+    "codigo": "H1",
+    "activos": 1757,
+    "x_tipico": 1.0,
+    "comun_pp": 0.66,
+    "por_liga_pp": {
+     "NHL": 0.83,
+     "SHL": 0.66,
+     "LIIGA": 0.63,
+     "AHL": 0.69,
+     "DEL": 0.66
+    }
+   },
+   {
+    "codigo": "Q4",
+    "activos": 257,
+    "x_tipico": 1.0,
+    "comun_pp": -0.65,
+    "por_liga_pp": {
+     "NHL": -0.83,
+     "SHL": -0.59,
+     "LIIGA": -0.7,
+     "AHL": -0.61,
+     "DEL": -0.69
+    }
+   },
+   {
+    "codigo": "H21",
+    "activos": 2236,
+    "x_tipico": 1.0,
+    "comun_pp": 0.43,
+    "por_liga_pp": {
+     "NHL": 0.53,
+     "SHL": 0.44,
+     "LIIGA": 0.4,
+     "AHL": 0.5,
+     "DEL": 0.41
+    }
+   },
+   {
+    "codigo": "S1",
+    "activos": 2216,
+    "x_tipico": 1.0,
+    "comun_pp": -0.42,
+    "por_liga_pp": {
+     "NHL": -0.53,
+     "SHL": -0.43,
+     "LIIGA": -0.43,
+     "AHL": -0.41,
+     "DEL": -0.41
+    }
+   },
+   {
+    "codigo": "H6",
+    "activos": 2968,
+    "x_tipico": 1.0,
+    "comun_pp": 0.41,
+    "por_liga_pp": {
+     "NHL": 0.49,
+     "SHL": 0.41,
+     "LIIGA": 0.39,
+     "AHL": 0.44,
+     "DEL": 0.41
+    }
+   },
+   {
+    "codigo": "H14",
+    "activos": 2167,
+    "x_tipico": 1.0,
+    "comun_pp": 0.41,
+    "por_liga_pp": {
+     "NHL": 0.53,
+     "SHL": 0.4,
+     "LIIGA": 0.43,
+     "AHL": 0.36,
+     "DEL": 0.41
+    }
+   },
+   {
+    "codigo": "H22",
+    "activos": 1673,
+    "x_tipico": 1.0,
+    "comun_pp": -0.36,
+    "por_liga_pp": {
+     "NHL": -0.42,
+     "SHL": -0.38,
+     "LIIGA": -0.41,
+     "AHL": -0.34,
+     "DEL": -0.35
+    }
+   },
+   {
+    "codigo": "H16",
+    "activos": 1848,
+    "x_tipico": 1.0,
+    "comun_pp": 0.3,
+    "por_liga_pp": {
+     "NHL": 0.39,
+     "SHL": 0.3,
+     "LIIGA": 0.27,
+     "AHL": 0.31,
+     "DEL": 0.3
+    }
+   },
+   {
+    "codigo": "H4",
+    "activos": 3973,
+    "x_tipico": 1.0,
+    "comun_pp": 0.27,
+    "por_liga_pp": {
+     "NHL": 0.34,
+     "SHL": 0.27,
+     "LIIGA": 0.27,
+     "AHL": 0.26,
+     "DEL": 0.26
+    }
+   },
+   {
+    "codigo": "S3",
+    "activos": 436,
+    "x_tipico": 1.0,
+    "comun_pp": 0.27,
+    "por_liga_pp": {
+     "NHL": 0.28,
+     "SHL": 0.31,
+     "LIIGA": 0.29,
+     "AHL": 0.31,
+     "DEL": 0.25
+    }
+   },
+   {
+    "codigo": "H23",
+    "activos": 2837,
+    "x_tipico": 1.0,
+    "comun_pp": 0.26,
+    "por_liga_pp": {
+     "NHL": 0.33,
+     "SHL": 0.26,
+     "LIIGA": 0.26,
+     "AHL": 0.26,
+     "DEL": 0.26
+    }
+   },
+   {
+    "codigo": "Q3",
+    "activos": 1155,
+    "x_tipico": 1.0,
+    "comun_pp": -0.25,
+    "por_liga_pp": {
+     "NHL": -0.34,
+     "SHL": -0.23,
+     "LIIGA": -0.25,
+     "AHL": -0.22,
+     "DEL": -0.25
+    }
+   },
+   {
+    "codigo": "H7",
+    "activos": 6991,
+    "x_tipico": 1.0,
+    "comun_pp": 0.22,
+    "por_liga_pp": {
+     "NHL": 0.27,
+     "SHL": 0.22,
+     "LIIGA": 0.23,
+     "AHL": 0.23,
+     "DEL": 0.22
+    }
+   },
+   {
+    "codigo": "H8",
+    "activos": 409,
+    "x_tipico": 1.0,
+    "comun_pp": 0.19,
+    "por_liga_pp": {
+     "NHL": 0.15,
+     "SHL": 0.26,
+     "LIIGA": 0.21,
+     "AHL": 0.19,
+     "DEL": 0.17
+    }
+   },
+   {
+    "codigo": "H15",
+    "activos": 2157,
+    "x_tipico": 1.0,
+    "comun_pp": -0.14,
+    "por_liga_pp": {
+     "NHL": -0.14,
+     "SHL": -0.15,
+     "LIIGA": -0.16,
+     "AHL": -0.15,
+     "DEL": -0.12
+    }
+   },
+   {
+    "codigo": "Q6a",
+    "activos": 1063,
+    "x_tipico": 1.0,
+    "comun_pp": -0.14,
+    "por_liga_pp": {
+     "NHL": -0.2,
+     "SHL": -0.14,
+     "LIIGA": -0.15,
+     "AHL": -0.16,
+     "DEL": -0.11
+    }
+   },
+   {
+    "codigo": "H17",
+    "activos": 2595,
+    "x_tipico": 1.0,
+    "comun_pp": 0.06,
+    "por_liga_pp": {
+     "NHL": 0.03,
+     "SHL": 0.08,
+     "LIIGA": 0.06,
+     "AHL": 0.05,
+     "DEL": 0.09
+    }
+   },
+   {
+    "codigo": "Q6b",
+    "activos": 1151,
+    "x_tipico": 1.0,
+    "comun_pp": -0.06,
+    "por_liga_pp": {
+     "NHL": -0.11,
+     "SHL": -0.07,
+     "LIIGA": -0.02,
+     "AHL": -0.09,
+     "DEL": -0.03
+    }
+   },
+   {
+    "codigo": "H18",
+    "activos": 3722,
+    "x_tipico": 0.4,
+    "comun_pp": -0.05,
+    "por_liga_pp": {
+     "NHL": -0.06,
+     "SHL": -0.05,
+     "LIIGA": -0.05,
+     "AHL": -0.05,
+     "DEL": -0.05
+    }
+   },
+   {
+    "codigo": "H13",
+    "activos": 8057,
+    "x_tipico": 2.0,
+    "comun_pp": 0.01,
+    "por_liga_pp": {
+     "NHL": 0.05,
+     "SHL": 0.0,
+     "LIIGA": 0.01,
+     "AHL": -0.02,
+     "DEL": 0.01
+    }
+   },
+   {
+    "codigo": "Q1",
+    "activos": 10400,
+    "x_tipico": 1.0,
+    "comun_pp": 0.01,
+    "por_liga_pp": {
+     "NHL": 0.04,
+     "SHL": 0.01,
+     "LIIGA": -0.01,
+     "AHL": 0.02,
+     "DEL": -0.01
+    }
+   }
+  ]
+ },
+ "comparacion_ml": {
+  "boosting (HistGradientBoosting)": {
+   "grupo": "boosting (HistGradientBoosting)",
+   "n": 9024,
+   "mejora_milesimas": -0.517,
+   "z": -0.54,
+   "mitades": [
+    0.413,
+    -1.447
+   ],
+   "brier_base": 0.23906,
+   "brier_angulos": 0.23935,
+   "brier_mejora_pct": -0.12,
+   "calibracion": -0.0092,
+   "deciles": [
+    [
+     0.357,
+     0.363
+    ],
+    [
+     0.438,
+     0.443
+    ],
+    [
+     0.468,
+     0.472
+    ],
+    [
+     0.498,
+     0.532
+    ],
+    [
+     0.519,
+     0.525
+    ],
+    [
+     0.534,
+     0.53
+    ],
+    [
+     0.56,
+     0.563
+    ],
+    [
+     0.59,
+     0.58
+    ],
+    [
+     0.623,
+     0.652
+    ],
+    [
+     0.701,
+     0.72
+    ]
+   ],
+   "cal_peor_decil": 0.034,
+   "mueve_pp_medio": 3.28,
+   "veredicto": "no pasa",
+   "desde": "2023-03-01",
+   "hasta": "2026-10-09"
+  },
+  "red neuronal (MLP 16)": {
+   "grupo": "red neuronal (MLP 16)",
+   "n": 9024,
+   "mejora_milesimas": -21.786,
+   "z": -9.13,
+   "mitades": [
+    -28.584,
+    -14.988
+   ],
+   "brier_base": 0.23906,
+   "brier_angulos": 0.24867,
+   "brier_mejora_pct": -4.02,
+   "calibracion": -0.0051,
+   "deciles": [
+    [
+     0.301,
+     0.425
+    ],
+    [
+     0.415,
+     0.502
+    ],
+    [
+     0.461,
+     0.504
+    ],
+    [
+     0.493,
+     0.501
+    ],
+    [
+     0.52,
+     0.531
+    ],
+    [
+     0.548,
+     0.522
+    ],
+    [
+     0.577,
+     0.547
+    ],
+    [
+     0.61,
+     0.561
+    ],
+    [
+     0.653,
+     0.627
+    ],
+    [
+     0.75,
+     0.66
+    ]
+   ],
+   "cal_peor_decil": 0.124,
+   "mueve_pp_medio": 7.38,
+   "veredicto": "no pasa",
+   "desde": "2023-03-01",
+   "hasta": "2026-10-09"
+  }
+ }
+}
