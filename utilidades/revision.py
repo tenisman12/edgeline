@@ -85,6 +85,13 @@ CONOCIDOS = [
      "del 2 al 8-oct y ninguna fila desde el 9-oct, cuando empezo la Climax Series) y ESPN no publica cuotas de NPB. "
      "No es defecto del codigo: en postemporada de NPB no hay precio; hace falta otra fuente.",
      "2026-11-10"),
+    ("cuotas", "AHL",
+     "The Odds API cubre poco la AHL: la foto del 10-oct-2026 04:33Z trajo 3 eventos AHL (de 13 partidos del dia) y solo de "
+     "casas europeas sin Pinnacle. No es defecto del codigo; hace falta otra fuente de precio para la AHL.",
+     "2026-11-15"),
+    ("cuotas", "DEL",
+     "La DEL no esta en The Odds API (lista de deportes verificada el 9-oct-2026). Hace falta otra fuente de precio.",
+     "2026-11-15"),
     ("calibracion", "NCAAFB Total",
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
