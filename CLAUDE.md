@@ -187,6 +187,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   APLICADO en plataforma: p_60 empate = tasa de la liga (`motor_goles.tasa_empate60`, ultimos 1,500 juegos), local y visita
   con la proporcion del modelo (la AHL solo se cotiza a 3 vias).
 
+## NFL: motor de puntos y peso del modelo (10-oct-2026)
+- `nucleo/motor_puntos.py` (ataque, defensa y QB titular con Kalman, viento, divisional; `utilidades/motor_puntos.py`,
+  `trabajo/minar/2026-10-10_motor_puntos.md`): le gana a modelos/americano.py sin llegar a z 2 (ganador 1.65, total 1.41) y
+  pierde contra el cierre (moneyline z -4.13, spread -3.33, total -2.79); apilado con el cierre no suma. Solo contexto en
+  plataforma (modelo.motor_puntos y extra), sin peso.
+- `decidir_v2.PESO_MODELO["nfl"]` 0.5 -> 0.0 (aprobado): con 0.5 la mezcla empeora al cierre (moneyline z -2.59, spread
+  -2.57, total -2.13, 2023-2026). En NFL p final = Pinnacle; el pick sale del precio.
+
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.

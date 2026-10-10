@@ -35,7 +35,10 @@ except Exception:
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PESO_MODELO = {"nhl": 0.5, "shl": 0.5, "liiga": 0.5, "ahl": 0.5, "del": 0.5, "nfl": 0.5, "ncaafb": 0.35, "nba": 0.35, "ncaamb": 0.35, "atp": 0.35, "wta": 0.35}
+# NFL 0.5 -> 0.0 (10-oct-2026, aprobado por Alejandro; trabajo/minar/2026-10-10_motor_puntos.md): contra el cierre de 2023-2026
+# (n ~900) cualquier peso del modelo empeora la probabilidad del mercado: con 0.5, moneyline z -2.59, spread -2.57, total
+# -2.13; con 0.1 ya resta (z -1.1). El motor de puntos tampoco suma (apilado con el cierre: z -0.24 / -1.50 / -1.04).
+PESO_MODELO = {"nhl": 0.5, "shl": 0.5, "liiga": 0.5, "ahl": 0.5, "del": 0.5, "nfl": 0.0, "ncaafb": 0.35, "nba": 0.35, "ncaamb": 0.35, "atp": 0.35, "wta": 0.35}
 PESO_DEFAULT = 0.25                     # futbol y lo demas
 # REGLA 4-oct (tarde): solo se apuesta lo VALIDADO. Si utilidades/validar_mercados.py no certifico ese mercado en esa
 # liga (walk-forward, n>=300, z>=2, mejora en las dos mitades, calibrado), no hay pick: ni con peso reducido ni con

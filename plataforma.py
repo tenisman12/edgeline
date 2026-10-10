@@ -909,6 +909,20 @@ def _pred_base(g, c, fecha, eventos=None):
                 m["confianza"] = _conf(max(p_h, 1 - p_h))
         if r.get("p_cubre_home") is not None:
             m["spread"] = {"linea_home": sp, "p_home": r["p_cubre_home"], "p_away": 1 - r["p_cubre_home"]}
+        if g.get("liga") == "nfl":
+            # motor de puntos (nucleo/motor_puntos.py, 10-oct-2026): ataque, defensa y QB titular con Kalman. Solo CONTEXTO:
+            # le gana a este modelo sin llegar a z 2 (ganador z 1.65, total 1.41) y no le gana al cierre del mercado.
+            try:
+                from nucleo import motor_puntos as _MP
+                rp = _MP.predecir(h, a, fecha, spread=(-sp if sp is not None else None), total=tot_m)
+                if rp:
+                    m["motor_puntos"] = rp
+                    m["extra"] += [("Motor: puntos local / visita", "%.1f / %.1f" % (rp["pts_home"], rp["pts_away"])),
+                                   ("Motor: margen / total", "%+.1f / %.1f" % (rp["margen"], rp["total"])),
+                                   ("Motor: QB titular (valor en puntos)", "%s %+.1f / %s %+.1f" % (
+                                       rp.get("qb_home") or "sin dato", rp["qb_valor"]["home"], rp.get("qb_away") or "sin dato", rp["qb_valor"]["away"]))]
+            except Exception as _e:
+                m["motor_puntos"] = {"aplicado": False, "motivo": "error: %s" % str(_e)[:120]}
         return m, None
 
     if dep == "futbol":

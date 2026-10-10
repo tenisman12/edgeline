@@ -1,0 +1,229 @@
+{
+ "liga": "NFL",
+ "parametros": {
+  "q": 0.25,
+  "rho": 0.45,
+  "p0": 2.0,
+  "we": 0.0,
+  "sd": 10.0,
+  "qb0": 0.0,
+  "pq0": 4.0,
+  "bye": 0.0,
+  "corta": 0.0,
+  "div": 1.0,
+  "viento": 0.6
+ },
+ "sd_m": 12.999,
+ "sd_t": 13.787,
+ "corte": "2023-08-01",
+ "mercados": [
+  {
+   "mercado": "Ganador (motor vs produccion)",
+   "n": 919,
+   "mejora_milesimas": 9.991,
+   "z": 1.65,
+   "mitades": [
+    5.939,
+    14.033
+   ],
+   "brier_prod": 0.22672,
+   "brier_motor": 0.22285,
+   "brier_mejora_pct": 1.71,
+   "cal_motor": 0.0037,
+   "cal_prod": 0.0002,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Margen esperado (motor vs produccion)",
+   "n": 897,
+   "mae_prod": 10.606,
+   "mae_motor": 10.457,
+   "mejora_milesimas": 149.31,
+   "z": 1.48,
+   "mitades": [
+    124.87,
+    173.7
+   ],
+   "sesgo_motor": -0.433,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Total esperado (motor vs produccion)",
+   "n": 913,
+   "mae_prod": 10.757,
+   "mae_motor": 10.563,
+   "mejora_milesimas": 194.02,
+   "z": 1.41,
+   "mitades": [
+    63.58,
+    324.18
+   ],
+   "sesgo_motor": 0.345,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Over/Under (motor vs produccion)",
+   "n": 913,
+   "mejora_milesimas": 15.864,
+   "z": 1.73,
+   "mitades": [
+    8.128,
+    23.583
+   ],
+   "brier_prod": 0.26486,
+   "brier_motor": 0.25801,
+   "brier_mejora_pct": 2.59,
+   "cal_motor": 0.0351,
+   "cal_prod": 0.023,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Moneyline (motor vs cierre)",
+   "n": 919,
+   "mejora_milesimas": -23.674,
+   "z": -4.13,
+   "mitades": [
+    -21.608,
+    -25.735
+   ],
+   "brier_prod": 0.21204,
+   "brier_motor": 0.22285,
+   "brier_mejora_pct": -5.1,
+   "cal_motor": 0.0037,
+   "cal_prod": 0.0005,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Moneyline (apilado vs cierre)",
+   "n": 919,
+   "mejora_milesimas": -0.339,
+   "z": -0.24,
+   "mitades": [
+    -0.474,
+    -0.203
+   ],
+   "brier_prod": 0.21204,
+   "brier_motor": 0.21222,
+   "brier_mejora_pct": -0.09,
+   "cal_motor": -0.0138,
+   "cal_prod": 0.0005,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Spread (motor vs cierre)",
+   "n": 897,
+   "mejora_milesimas": -20.355,
+   "z": -3.33,
+   "mitades": [
+    -19.43,
+    -21.279
+   ],
+   "brier_prod": 0.25016,
+   "brier_motor": 0.25985,
+   "brier_mejora_pct": -3.87,
+   "cal_motor": -0.0019,
+   "cal_prod": -0.0081,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Spread (apilado vs cierre)",
+   "n": 897,
+   "mejora_milesimas": -1.827,
+   "z": -1.5,
+   "mitades": [
+    -1.082,
+    -2.571
+   ],
+   "brier_prod": 0.25016,
+   "brier_motor": 0.25107,
+   "brier_mejora_pct": -0.36,
+   "cal_motor": -0.0241,
+   "cal_prod": -0.0081,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Total (motor vs cierre)",
+   "n": 913,
+   "mejora_milesimas": -17.118,
+   "z": -2.79,
+   "mitades": [
+    -19.626,
+    -14.615
+   ],
+   "brier_prod": 0.25004,
+   "brier_motor": 0.25801,
+   "brier_mejora_pct": -3.19,
+   "cal_motor": 0.0351,
+   "cal_prod": -0.0055,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Total (apilado vs cierre)",
+   "n": 913,
+   "mejora_milesimas": -1.991,
+   "z": -1.04,
+   "mitades": [
+    -0.789,
+    -3.19
+   ],
+   "brier_prod": 0.25004,
+   "brier_motor": 0.25103,
+   "brier_mejora_pct": -0.4,
+   "cal_motor": -0.0307,
+   "cal_prod": -0.0055,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Margen (motor vs linea de cierre)",
+   "n": 897,
+   "mae_prod": 10.037,
+   "mae_motor": 10.457,
+   "mejora_milesimas": -420.14,
+   "z": -4.71,
+   "mitades": [
+    -400.58,
+    -439.66
+   ],
+   "sesgo_motor": -0.433,
+   "veredicto": "no pasa"
+  },
+  {
+   "mercado": "Total (motor vs linea de cierre)",
+   "n": 913,
+   "mae_prod": 10.239,
+   "mae_motor": 10.563,
+   "mejora_milesimas": -324.38,
+   "z": -3.35,
+   "mitades": [
+    -321.72,
+    -327.02
+   ],
+   "sesgo_motor": 0.345,
+   "veredicto": "no pasa"
+  }
+ ],
+ "aplicar": {
+  "ganador_motor": false,
+  "total_motor": false,
+  "ml_apilado": false,
+  "spread_apilado": false,
+  "total_apilado": false
+ },
+ "apilado": {
+  "ml": [
+   -0.04731,
+   1.18892,
+   -0.32776
+  ],
+  "spread": [
+   -0.04088,
+   0.76413,
+   0.04867
+  ],
+  "total": [
+   -0.03685,
+   0.35059,
+   -0.20253
+  ]
+ }
+}
