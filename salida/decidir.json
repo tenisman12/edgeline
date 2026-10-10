@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-10T14:06:11",
+ "generado": "2026-10-10T18:11:20",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -11,12 +11,12 @@
    "home": "Cleveland Guardians",
    "away": "Chicago White Sox",
    "p_modelo": 0.5897,
-   "p_sharp": 0.5612,
-   "p_final": 0.5684,
+   "p_sharp": 0.562,
+   "p_final": 0.569,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.74,
+   "margen_esperado": 0.75,
    "linea_home": "-1.5",
-   "p_runline_home": 0.388,
+   "p_runline_home": 0.3886,
    "detalle_modelo": {
     "elo_h": 1522.6,
     "elo_a": 1516.7,
@@ -55,13 +55,13 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Cleveland Guardians",
-     "p": 0.5684,
-     "cuota": -142.0,
-     "decimal": 1.704,
+     "p": 0.569,
+     "cuota": -143.0,
+     "decimal": 1.699,
      "casa": "DraftKings",
-     "ev": -0.0314,
+     "ev": -0.0332,
      "cuota_min": 1.76,
-     "en_rango": true,
+     "en_rango": false,
      "senales_favor": 6,
      "senales_contra": 2,
      "senales": {
@@ -85,11 +85,11 @@
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Chicago White Sox",
-     "p": 0.4316,
+     "p": 0.431,
      "cuota": 118.0,
      "decimal": 2.18,
      "casa": "DraftKings",
-     "ev": -0.059,
+     "ev": -0.0603,
      "cuota_min": 2.32,
      "en_rango": true,
      "senales_favor": 2,
@@ -109,18 +109,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 41.4
+     "premium_pts": 41.6
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Cleveland Guardians -1.5",
-     "p": 0.388,
+     "p": 0.3886,
      "cuota": 158.0,
      "decimal": 2.58,
      "casa": "DraftKings",
-     "ev": 0.0011,
-     "cuota_min": 2.58,
+     "ev": 0.0025,
+     "cuota_min": 2.57,
      "en_rango": true,
      "senales_favor": 3,
      "senales_contra": 1,
@@ -141,11 +141,11 @@
      "mercado": "Run line",
      "lado": "away",
      "texto": "Chicago White Sox +1.5",
-     "p": 0.612,
+     "p": 0.6114,
      "cuota": -192.0,
      "decimal": 1.521,
      "casa": "DraftKings",
-     "ev": -0.0693,
+     "ev": -0.0701,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
@@ -166,33 +166,33 @@
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Cleveland Guardians",
-    "p": 0.5684,
-    "cuota": -142.0,
-    "decimal": 1.704,
+    "lado": "away",
+    "texto": "Chicago White Sox",
+    "p": 0.431,
+    "cuota": 118.0,
+    "decimal": 2.18,
     "casa": "DraftKings",
-    "ev": -0.0314,
-    "cuota_min": 1.76,
+    "ev": -0.0603,
+    "cuota_min": 2.32,
     "en_rango": true,
-    "senales_favor": 6,
-    "senales_contra": 2,
+    "senales_favor": 2,
+    "senales_contra": 6,
     "senales": {
      "a_favor": [
+      "forma",
+      "movimiento"
+     ],
+     "en_contra": [
       "consenso",
       "h2h",
       "contexto",
       "abridor",
       "bullpen",
       "racha"
-     ],
-     "en_contra": [
-      "forma",
-      "movimiento"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 39.0
+    "premium_pts": 41.6
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -205,22 +205,44 @@
    "hora": "23:00",
    "home": "Giants",
    "away": "Bay Stars",
-   "p_modelo": 0.5207,
+   "p_modelo": 0.5107,
    "p_sharp": 0.4839,
-   "p_final": 0.4931,
+   "p_final": 0.4906,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -0.07,
+   "margen_esperado": -0.1,
    "linea_home": "+1.5",
-   "p_runline_home": 0.6292,
+   "p_runline_home": 0.6268,
    "detalle_modelo": {
     "elo_h": 1515.3,
     "elo_a": 1528.8,
     "dif_h": 0.294,
     "dif_a": 0.315,
     "p_base": 0.5207,
-    "abridor_h": null,
-    "abridor_a": null,
-    "carreras_abridor": 0.0,
+    "abridor_h": {
+     "nombre": "竹丸",
+     "fip_ventana": 2.68,
+     "fip_ultimas5": 2.68,
+     "k_pct": 0.31,
+     "bb_pct": 0.08,
+     "ip_ventana": "26.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 2.91,
+     "ga_equipo": 3.105
+    },
+    "abridor_a": {
+     "nombre": "石田裕",
+     "fip_ventana": 2.85,
+     "fip_ultimas5": 2.85,
+     "k_pct": 0.242,
+     "bb_pct": 0.083,
+     "ip_ventana": "29.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.22,
+     "ga_equipo": 3.58
+    },
+    "carreras_abridor": -0.1,
     "frio_caliente": 0
    },
    "lados": [
@@ -228,12 +250,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Giants",
-     "p": 0.4931,
+     "p": 0.4906,
      "cuota": 101.0,
      "decimal": 2.01,
      "casa": "pinnacle",
-     "ev": -0.0089,
-     "cuota_min": 2.03,
+     "ev": -0.0139,
+     "cuota_min": 2.04,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 4,
@@ -243,81 +265,83 @@
       ],
       "en_contra": [
        "h2h",
-       "contexto",
+       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 45.2
+     "premium_pts": 45.4
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Bay Stars",
-     "p": 0.5069,
+     "p": 0.5094,
      "cuota": -113.0,
      "decimal": 1.885,
      "casa": "pinnacle",
-     "ev": -0.0445,
-     "cuota_min": 1.97,
+     "ev": -0.0398,
+     "cuota_min": 1.96,
      "en_rango": true,
-     "senales_favor": 3,
-     "senales_contra": 2,
+     "senales_favor": 4,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "h2h",
+       "abridor",
        "bullpen",
        "racha"
       ],
       "en_contra": [
-       "contexto",
        "osciladores"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 35.2
+     "premium_pts": 38.4
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Giants +1.5",
-     "p": 0.6292,
-     "cuota": -188.0,
-     "decimal": 1.532,
-     "casa": "onexbet",
-     "ev": -0.0361,
+     "p": 0.6268,
+     "cuota": -190.0,
+     "decimal": 1.526,
+     "casa": "betonlineag",
+     "ev": -0.0434,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
-     "senales_contra": 2,
+     "senales_contra": 3,
      "senales": {
       "a_favor": [
        "osciladores"
       ],
       "en_contra": [
+       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 52.4
+     "premium_pts": 49.3
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Bay Stars -1.5",
-     "p": 0.3708,
+     "p": 0.3732,
      "cuota": 170.0,
      "decimal": 2.7,
      "casa": "betsson",
-     "ev": 0.0012,
-     "cuota_min": 2.7,
+     "ev": 0.0077,
+     "cuota_min": 2.68,
      "en_rango": true,
-     "senales_favor": 2,
+     "senales_favor": 3,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
+       "abridor",
        "bullpen",
        "racha"
       ],
@@ -326,19 +350,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 33.6
+     "premium_pts": 34.2
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Giants",
-    "p": 0.4931,
+    "p": 0.4906,
     "cuota": 101.0,
     "decimal": 2.01,
     "casa": "pinnacle",
-    "ev": -0.0089,
-    "cuota_min": 2.03,
+    "ev": -0.0139,
+    "cuota_min": 2.04,
     "en_rango": true,
     "senales_favor": 1,
     "senales_contra": 4,
@@ -348,13 +372,13 @@
      ],
      "en_contra": [
       "h2h",
-      "contexto",
+      "abridor",
       "bullpen",
       "racha"
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 45.2
+    "premium_pts": 45.4
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -367,13 +391,13 @@
    "hora": "23:00",
    "home": "Lions",
    "away": "Fighters",
-   "p_modelo": 0.5075,
-   "p_sharp": 0.4503,
-   "p_final": 0.4645,
+   "p_modelo": 0.4734,
+   "p_sharp": 0.4666,
+   "p_final": 0.4683,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": -0.38,
+   "margen_esperado": -0.34,
    "linea_home": "+1.5",
-   "p_runline_home": 0.6012,
+   "p_runline_home": 0.6049,
    "detalle_modelo": {
     "elo_h": 1528.9,
     "elo_a": 1555.0,
@@ -381,8 +405,19 @@
     "dif_a": 0.434,
     "p_base": 0.5075,
     "abridor_h": null,
-    "abridor_a": null,
-    "carreras_abridor": 0.0,
+    "abridor_a": {
+     "nombre": "達",
+     "fip_ventana": 2.72,
+     "fip_ultimas5": 2.8,
+     "k_pct": 0.275,
+     "bb_pct": 0.048,
+     "ip_ventana": "43.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.15,
+     "ga_equipo": 3.699
+    },
+    "carreras_abridor": -0.34,
     "frio_caliente": 0
    },
    "lados": [
@@ -390,12 +425,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Lions",
-     "p": 0.4645,
-     "cuota": 116.0,
-     "decimal": 2.16,
-     "casa": "pinnacle",
-     "ev": 0.0034,
-     "cuota_min": 2.15,
+     "p": 0.4683,
+     "cuota": 110.0,
+     "decimal": 2.1,
+     "casa": "fanatics",
+     "ev": -0.0166,
+     "cuota_min": 2.14,
      "en_rango": true,
      "senales_favor": 3,
      "senales_contra": 3,
@@ -408,79 +443,83 @@
       "en_contra": [
        "consenso",
        "h2h",
-       "contexto"
+       "abridor"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 44.9
+     "premium_pts": 42.7
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Fighters",
-     "p": 0.5355,
-     "cuota": -130.0,
-     "decimal": 1.769,
+     "p": 0.5317,
+     "cuota": -122.0,
+     "decimal": 1.82,
      "casa": "pinnacle",
-     "ev": -0.0527,
-     "cuota_min": 1.87,
+     "ev": -0.0325,
+     "cuota_min": 1.88,
      "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 4,
+     "senales_favor": 3,
+     "senales_contra": 3,
      "senales": {
       "a_favor": [
        "consenso",
-       "h2h"
+       "h2h",
+       "abridor"
       ],
       "en_contra": [
        "forma",
-       "contexto",
        "osciladores",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 35.5
+     "premium_pts": 42.3
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Lions +1.5",
-     "p": 0.6012,
-     "cuota": -166.0,
-     "decimal": 1.602,
-     "casa": "onexbet",
-     "ev": -0.0367,
+     "p": 0.6049,
+     "cuota": -179.0,
+     "decimal": 1.559,
+     "casa": "coolbet",
+     "ev": -0.0572,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 3,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
        "osciladores",
        "racha"
       ],
-      "en_contra": []
+      "en_contra": [
+       "abridor"
+      ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 55.6
+     "premium_pts": 48.1
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Fighters -1.5",
-     "p": 0.3988,
-     "cuota": 150.0,
-     "decimal": 2.5,
+     "p": 0.3951,
+     "cuota": 160.0,
+     "decimal": 2.6,
      "casa": "betsson",
-     "ev": -0.0029,
-     "cuota_min": 2.51,
+     "ev": 0.0273,
+     "cuota_min": 2.53,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 3,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "abridor"
+      ],
       "en_contra": [
        "forma",
        "osciladores",
@@ -488,19 +527,19 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 24.8
+     "premium_pts": 33.1
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Lions",
-    "p": 0.4645,
-    "cuota": 116.0,
-    "decimal": 2.16,
-    "casa": "pinnacle",
-    "ev": 0.0034,
-    "cuota_min": 2.15,
+    "p": 0.4683,
+    "cuota": 110.0,
+    "decimal": 2.1,
+    "casa": "fanatics",
+    "ev": -0.0166,
+    "cuota_min": 2.14,
     "en_rango": true,
     "senales_favor": 3,
     "senales_contra": 3,
@@ -513,11 +552,11 @@
      "en_contra": [
       "consenso",
       "h2h",
-      "contexto"
+      "abridor"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 44.9
+    "premium_pts": 42.7
    },
    "confianza": "minima",
    "stake": 0.0,
@@ -626,10 +665,10 @@
      "lado": "home",
      "texto": "Milwaukee Brewers +1.5",
      "p": 0.6201,
-     "cuota": -210.0,
-     "decimal": 1.476,
+     "cuota": -209.0,
+     "decimal": 1.478,
      "casa": "DraftKings",
-     "ev": -0.0846,
+     "ev": -0.0831,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
@@ -654,10 +693,10 @@
      "lado": "away",
      "texto": "Los Angeles Dodgers -1.5",
      "p": 0.3799,
-     "cuota": 172.0,
-     "decimal": 2.72,
+     "cuota": 171.0,
+     "decimal": 2.71,
      "casa": "DraftKings",
-     "ev": 0.0332,
+     "ev": 0.0294,
      "cuota_min": 2.63,
      "en_rango": true,
      "senales_favor": 5,
