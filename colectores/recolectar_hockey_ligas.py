@@ -33,6 +33,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
       "Accept-Language": "en,de;q=0.8"}
 HT = "https://lscluster.hockeytech.com/feed/?key=50c2cd9b5e18e390&client_code=ahl&"
 SHL_ACTUAL = "20961"                       # SHL 2026-27 en swehockey
+SIN_FASE_REGULAR = set()   # (liga, temporada) cuyo calendario no es la fase regular: sus filas se quitan
 VISTOS = set()          # juegos vistos en los calendarios de esta corrida (incluye los ya guardados que no se piden)
 FIJAS = ["gamePk", "league", "season", "game_date", "team", "opp", "is_home", "goals", "goals_opp",
          "goals_reg", "goals_reg_opp", "final_tipo"]
@@ -216,16 +217,12 @@ def ahl(n_atras, conocidos):
 
 
 # ------------------------------------------------------------------ SHL
-def shl_temporadas(n_atras):
-    """ids de swehockey de la SHL: el actual y los anteriores del selector de temporadas.
-    El selector cambia de formato; se buscan varias formas y, si no sale nada, se guarda la pagina
-    en salida/shl_overview.html para ajustar el lector."""
-    ids = [("2026-27", SHL_ACTUAL)]
-    h = ""
+def shl_candidatos(sid):
+    """{temporada: [ids]} del selector de temporadas en la pagina de una temporada de swehockey."""
     try:
-        h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Overview/%s" % SHL_ACTUAL)
+        h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Overview/%s" % sid)
     except Exception as e:
-        print("  SHL: no abre la pagina de temporadas (%s)" % e)
+        print("  SHL: no abre la pagina de temporadas %s (%s)" % (sid, e)); return {}, ""
     patrones = [
         r'<option[^>]*value="[^"]*?(\d{4,6})"[^>]*>\s*(\d{4}-\d{2})\s*<',
         r'(?:Overview|Schedule|Standings)/(\d{4,6})[^>]*>\s*(?:<[^>]+>\s*)*(\d{4}-\d{2})\s*<',
@@ -234,21 +231,40 @@ def shl_temporadas(n_atras):
     cand = {}
     for pat in patrones:
         for val, txt in re.findall(pat, h):
-            if val != SHL_ACTUAL and txt != "2026-27":
+            if val != str(sid):
                 cand.setdefault(txt, [])
                 if val not in cand[txt]:
                     cand[txt].append(val)
-    if not cand and n_atras and h:
-        os.makedirs(os.path.dirname(COB), exist_ok=True)
-        io.open(os.path.join(os.path.dirname(COB), "shl_overview.html"), "w", encoding="utf-8").write(h)
-        print("  SHL: no encontre los ids de temporadas anteriores; pagina guardada en salida\\shl_overview.html")
-    salida = [("2026-27", [SHL_ACTUAL])] + sorted(cand.items(), reverse=True)
-    return salida[:n_atras + 1]
+    return cand, h
 
 
-def shl_calendario(vals):
+def shl_temporadas(n_atras):
+    """ids de swehockey de la SHL. Se camina hacia atras: la pagina de cada temporada trae bien el id de la
+    anterior, asi que se lee el selector desde la temporada ya encontrada."""
+    salida = [("2026-27", [SHL_ACTUAL])]
+    actual, anio = SHL_ACTUAL, 2026
+    for _ in range(n_atras):
+        anio -= 1
+        txt = "%d-%02d" % (anio, (anio + 1) % 100)
+        cand, h = shl_candidatos(actual)
+        vals = cand.get(txt, [])
+        if not vals:
+            if h:
+                os.makedirs(os.path.dirname(COB), exist_ok=True)
+                io.open(os.path.join(os.path.dirname(COB), "shl_overview.html"), "w", encoding="utf-8").write(h)
+            print("  SHL: sin id para %s (pagina guardada en salida\\shl_overview.html)" % txt)
+            break
+        salida.append((txt, vals))
+        _, n, mejor = shl_calendario(vals, devolver_id=True)
+        if not mejor:
+            break
+        actual = mejor
+    return salida
+
+
+def shl_calendario(vals, devolver_id=False):
     """de varios ids con la misma temporada, el calendario con mas juegos (la fase regular; no la kvalserie)."""
-    mejor, n_mejor = None, -1
+    mejor, n_mejor, id_mejor = None, -1, None
     for v in vals[:6]:
         try:
             h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Schedule/%s" % v)
@@ -256,7 +272,9 @@ def shl_calendario(vals):
             continue
         n = len(set(re.findall(r"/Game/Events/(\d+)", h)))
         if n > n_mejor:
-            mejor, n_mejor = h, n
+            mejor, n_mejor, id_mejor = h, n, v
+    if devolver_id:
+        return mejor, n_mejor, id_mejor
     return mejor, n_mejor
 
 
@@ -265,7 +283,8 @@ def shl(n_atras, conocidos):
     for temp, vals in shl_temporadas(n_atras):
         h, n_cal = shl_calendario(vals)
         if not h or (temp != "2026-27" and n_cal < 200):
-            print("  SHL %s: sin calendario de fase regular (mejor candidato %d juegos)" % (temp, max(n_cal, 0))); continue
+            print("  SHL %s: sin calendario de fase regular (mejor candidato %d juegos)" % (temp, max(n_cal, 0)))
+            SIN_FASE_REGULAR.add(("SHL", "%s%d" % (temp[:4], int(temp[:4]) + 1))); continue
         anio = int(temp[:4])
         fecha = ""
         n0 = len(juegos)
@@ -475,7 +494,8 @@ def main():
     vistos = VISTOS | {j["id"] for j in juegos}
     # solo se limpian las temporadas que se leyeron en esta corrida (con --solo-actual no se toca la historia)
     leidas = {(j["liga"], str(j["season"])) for j in juegos} | {(r["league"], str(r["season"])) for r in previos if r["gamePk"] in VISTOS}
-    quitadas = [k for k, r in por_llave.items() if (r["league"], str(r["season"])) in leidas and r["gamePk"] not in vistos]
+    quitadas = [k for k, r in por_llave.items() if ((r["league"], str(r["season"])) in leidas and r["gamePk"] not in vistos)
+                or (r["league"], str(r["season"])) in SIN_FASE_REGULAR]
     for k in quitadas:
         del por_llave[k]
     if quitadas:
