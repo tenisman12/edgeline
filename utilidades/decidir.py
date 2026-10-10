@@ -187,7 +187,13 @@ def decidir(rec, C, PESOS):
     elif pm is None:
         pf, fuente = ps, "solo mercado (sin ficha)"
     else:
-        pf = _sig((1 - PESO_MODELO) * _logit(ps) + PESO_MODELO * _logit(pm)); fuente = "pinnacle %.0f%% + modelo %.0f%%" % (100 * (1 - PESO_MODELO), 100 * PESO_MODELO)
+        w_ = PESO_MODELO
+        try:
+            from nucleo import pesos_dinamicos as _PD        # peso dinamico por liga (10-oct-2026)
+            w_ = _PD.peso(rec.get("liga"), "Ganador", PESO_MODELO)
+        except Exception:
+            pass
+        pf = _sig((1 - w_) * _logit(ps) + w_ * _logit(pm)); fuente = "pinnacle %.0f%% + modelo %.0f%%" % (100 * (1 - w_), 100 * w_)
     sd = C["margen"]["sd"]
     margen = sd * _phi_inv(pf)                       # solo informativo
     rl = (C.get("run_line") or {}); mapa = rl.get(lg) or rl.get("TODAS") or DEFECTO["run_line"]["TODAS"]

@@ -195,6 +195,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `decidir_v2.PESO_MODELO["nfl"]` 0.5 -> 0.0 (aprobado): con 0.5 la mezcla empeora al cierre (moneyline z -2.59, spread
   -2.57, total -2.13, 2023-2026). En NFL p final = Pinnacle; el pick sale del precio.
 
+## Peso del modelo frente a Pinnacle, dinamico (10-oct-2026, Alejandro: "armalo")
+- `utilidades/pesos_dinamicos.py` (cada hora en cuotas.yml, despues de clv.py) junta cada prediccion del modelo con la foto de
+  Pinnacle al registrarla (clv_detalle.csv) y su resultado, y busca por (liga, Ganador|Total) el w que mejor predice:
+  p = sig((1-w) logit Pinnacle + w logit modelo). Escribe `salida/pesos_dinamicos.json` (w_vivo, n, z, mitades, Brier).
+- `nucleo/pesos_dinamicos.peso(liga, tipo, previo)` = (n * w_vivo + 300 * previo) / (n + 300); lo usan decidir_v2 (previo
+  PESO_MODELO de la liga) y decidir.py (previo 0.25). Con poca muestra manda el previo; con mucha, lo que se mide en vivo.
+  Al 10-oct: 544 predicciones; nada con z >= 2 todavia (la mayor: NHL spread z 1.71).
+
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.

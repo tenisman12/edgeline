@@ -310,6 +310,13 @@ def decidir_mercado(rec, tipo, movs=None):
     m = rec.get("modelo") or {}
     liga = rec["liga"]
     w0 = PESO_MODELO.get(liga, PESO_DEFAULT)
+    try:
+        # peso dinamico (10-oct-2026): el previo de la liga se mezcla con el peso que mejor predice EN VIVO frente a la foto
+        # de Pinnacle al registrar (utilidades/pesos_dinamicos.py -> salida/pesos_dinamicos.json), segun la muestra.
+        from nucleo import pesos_dinamicos as _PD
+        w0 = _PD.peso(liga, tipo, w0)
+    except Exception:
+        pass
     val = (rec.get("validacion") or {}).get(tipo)
     validado = (val == "publicable")
     w = w0 if validado else 0.0        # sin validacion el modelo no vota: la probabilidad es la del mercado
