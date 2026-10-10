@@ -952,7 +952,24 @@ def mueve(a):
         if m.get("x_tipico"):
             xa = min(xa, 2 * m["x_tipico"])      # sin extrapolar: tope de 2 veces el x tipico de los casos medidos
         return round(100 * (1 / (1 + math.exp(-b * xa)) - 0.5), 2)
-    return m.get("efecto_pp")
+    return encoger_crudo(m)
+
+
+TAU_LOGIT = 0.0924      # dispersion real entre angulos (tanda 4, Bayes empirico)
+
+
+def encoger_crudo(m):
+    """sin estimacion de toda la muestra (cualitativos Q y angulos con pocos casos): el efecto fuera de muestra encogido con
+    el mismo tau. Error estandar binomial de un partido de 50 %: 2/raiz(n) en logit. Con n 16, +18.6 pp queda en +0.6 pp."""
+    e, n = m.get("efecto_pp"), m.get("n_activo_prueba")
+    if e is None:
+        return None
+    if not n:
+        return 0.0
+    q = min(max(0.5 + e / 100.0, 0.01), 0.99)
+    b, se2 = math.log(q / (1 - q)), 4.0 / n
+    be = b * TAU_LOGIT ** 2 / (TAU_LOGIT ** 2 + se2)
+    return round(100 * (1 / (1 + math.exp(-be)) - 0.5), 2)
 
 
 def efecto(a):
