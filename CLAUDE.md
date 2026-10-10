@@ -161,6 +161,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   partidos): z -0.95, no pasa (DEL empeora, z -3.33). Boosting z -0.54; red neuronal z -9.13 (sobreajusta). El tau elegido es
   el minimo: los angulos no agregan nada al modelo de hockey. Siguen como contexto. Los Q de las ligas nuevas ahora se
   encogen (`nucleo/angulos.encoger_crudo`).
+  Basquet y beisbol (mismo dia, `utilidades/minar_angulos_bayes.py`, `trabajo/minar/2026-10-10_bayes_nba_beisbol.md`; base con
+  K14 y S4 ya aplicados): basquet z 1.75 (NCAAMB 1.86, las dos mitades a favor, no llega a 2.0; NBA 0.13), beisbol z -1.20
+  (NPB empeora, z -2.44). Boosting y red neuronal no pasan. Ningun angulo nuevo gana peso.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

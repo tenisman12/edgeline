@@ -1,0 +1,578 @@
+{
+ "generado": "2026-10-10T11:17:42",
+ "deporte": "nba",
+ "angulos": [
+  "K1",
+  "K2",
+  "K3",
+  "K4",
+  "K8a",
+  "K8b",
+  "K10",
+  "K11",
+  "K12",
+  "K13",
+  "Q1",
+  "Q2",
+  "Q3",
+  "Q4",
+  "Q5",
+  "Q6a",
+  "Q6b",
+  "Q7",
+  "S1",
+  "S2",
+  "S3",
+  "S7",
+  "S8"
+ ],
+ "capa_en_base": [
+  "K14",
+  0.308
+ ],
+ "total": {
+  "grupo": "BASQUET",
+  "n": 13897,
+  "mejora_milesimas": 1.222,
+  "z": 1.75,
+  "mitades": [
+   0.492,
+   1.952
+  ],
+  "brier_base": 0.1951,
+  "brier_angulos": 0.19461,
+  "brier_mejora_pct": 0.25,
+  "calibracion": 0.005,
+  "deciles": [
+   [
+    0.236,
+    0.243
+   ],
+   [
+    0.386,
+    0.388
+   ],
+   [
+    0.48,
+    0.476
+   ],
+   [
+    0.553,
+    0.586
+   ],
+   [
+    0.62,
+    0.599
+   ],
+   [
+    0.679,
+    0.666
+   ],
+   [
+    0.737,
+    0.728
+   ],
+   [
+    0.796,
+    0.771
+   ],
+   [
+    0.856,
+    0.841
+   ],
+   [
+    0.933,
+    0.927
+   ]
+  ],
+  "cal_peor_decil": 0.033,
+  "mueve_pp_medio": 2.43,
+  "veredicto": "no pasa",
+  "desde": "2024-11-01",
+  "hasta": "2026-06-13"
+ },
+ "por_liga": [
+  {
+   "grupo": "NBA",
+   "n": 2544,
+   "mejora_milesimas": 0.199,
+   "z": 0.13,
+   "mitades": [
+    0.148,
+    0.25
+   ],
+   "brier_base": 0.20712,
+   "brier_angulos": 0.20714,
+   "brier_mejora_pct": -0.01,
+   "calibracion": 0.0075,
+   "deciles": [
+    [
+     0.223,
+     0.173
+    ],
+    [
+     0.348,
+     0.325
+    ],
+    [
+     0.42,
+     0.396
+    ],
+    [
+     0.483,
+     0.482
+    ],
+    [
+     0.54,
+     0.543
+    ],
+    [
+     0.598,
+     0.598
+    ],
+    [
+     0.65,
+     0.669
+    ],
+    [
+     0.702,
+     0.717
+    ],
+    [
+     0.768,
+     0.756
+    ],
+    [
+     0.86,
+     0.858
+    ]
+   ],
+   "cal_peor_decil": 0.05,
+   "mueve_pp_medio": 2.69,
+   "veredicto": "no pasa",
+   "desde": "2024-11-01",
+   "hasta": "2026-06-13"
+  },
+  {
+   "grupo": "NCAAMB",
+   "n": 11353,
+   "mejora_milesimas": 1.452,
+   "z": 1.86,
+   "mitades": [
+    0.547,
+    2.356
+   ],
+   "brier_base": 0.1924,
+   "brier_angulos": 0.1918,
+   "brier_mejora_pct": 0.32,
+   "calibracion": 0.0044,
+   "deciles": [
+    [
+     0.24,
+     0.257
+    ],
+    [
+     0.4,
+     0.417
+    ],
+    [
+     0.498,
+     0.498
+    ],
+    [
+     0.573,
+     0.595
+    ],
+    [
+     0.64,
+     0.618
+    ],
+    [
+     0.7,
+     0.685
+    ],
+    [
+     0.757,
+     0.735
+    ],
+    [
+     0.812,
+     0.794
+    ],
+    [
+     0.869,
+     0.845
+    ],
+    [
+     0.94,
+     0.94
+    ]
+   ],
+   "cal_peor_decil": 0.024,
+   "mueve_pp_medio": 2.37,
+   "veredicto": "no pasa",
+   "desde": "2024-11-06",
+   "hasta": "2026-04-06"
+  }
+ ],
+ "efectos": {
+  "tau": 0.01,
+  "sig": 0.03,
+  "angulos": [
+   {
+    "codigo": "Q5",
+    "activos": 186,
+    "x_tipico": 1.0,
+    "comun_pp": 0.72,
+    "por_liga_pp": {
+     "NBA": 5.49,
+     "NCAAMB": 2.46
+    }
+   },
+   {
+    "codigo": "S7",
+    "activos": 668,
+    "x_tipico": 1.0,
+    "comun_pp": 0.59,
+    "por_liga_pp": {
+     "NBA": 0.42,
+     "NCAAMB": 6.02
+    }
+   },
+   {
+    "codigo": "Q3",
+    "activos": 2418,
+    "x_tipico": 1.0,
+    "comun_pp": 0.54,
+    "por_liga_pp": {
+     "NBA": 2.14,
+     "NCAAMB": 3.79
+    }
+   },
+   {
+    "codigo": "K10",
+    "activos": 3451,
+    "x_tipico": 1.0,
+    "comun_pp": -0.51,
+    "por_liga_pp": {
+     "NBA": 0.09,
+     "NCAAMB": -5.64
+    }
+   },
+   {
+    "codigo": "K8b",
+    "activos": 1886,
+    "x_tipico": 1.0,
+    "comun_pp": -0.47,
+    "por_liga_pp": {
+     "NBA": -3.06,
+     "NCAAMB": -2.09
+    }
+   },
+   {
+    "codigo": "Q2",
+    "activos": 952,
+    "x_tipico": 1.0,
+    "comun_pp": 0.39,
+    "por_liga_pp": {
+     "NBA": 3.8,
+     "NCAAMB": 0.5
+    }
+   },
+   {
+    "codigo": "Q7",
+    "activos": 684,
+    "x_tipico": 1.0,
+    "comun_pp": -0.34,
+    "por_liga_pp": {
+     "NBA": -4.67,
+     "NCAAMB": 0.98
+    }
+   },
+   {
+    "codigo": "K1",
+    "activos": 1626,
+    "x_tipico": 1.0,
+    "comun_pp": 0.31,
+    "por_liga_pp": {
+     "NBA": 3.84,
+     "NCAAMB": -0.41
+    }
+   },
+   {
+    "codigo": "Q4",
+    "activos": 880,
+    "x_tipico": 1.0,
+    "comun_pp": 0.31,
+    "por_liga_pp": {
+     "NBA": 0.96,
+     "NCAAMB": 2.48
+    }
+   },
+   {
+    "codigo": "K13",
+    "activos": 332,
+    "x_tipico": 1.0,
+    "comun_pp": 0.3,
+    "por_liga_pp": {
+     "NBA": 2.97,
+     "NCAAMB": 0.3
+    }
+   },
+   {
+    "codigo": "S1",
+    "activos": 4258,
+    "x_tipico": 1.0,
+    "comun_pp": 0.3,
+    "por_liga_pp": {
+     "NBA": 1.32,
+     "NCAAMB": 2.0
+    }
+   },
+   {
+    "codigo": "Q6a",
+    "activos": 2212,
+    "x_tipico": 1.0,
+    "comun_pp": -0.25,
+    "por_liga_pp": {
+     "NBA": -0.54,
+     "NCAAMB": -2.18
+    }
+   },
+   {
+    "codigo": "S2",
+    "activos": 907,
+    "x_tipico": 1.0,
+    "comun_pp": 0.23,
+    "por_liga_pp": {
+     "NBA": 0.37,
+     "NCAAMB": 2.14
+    }
+   },
+   {
+    "codigo": "K11",
+    "activos": 462,
+    "x_tipico": 1.0,
+    "comun_pp": 0.22,
+    "por_liga_pp": {
+     "NBA": 2.15,
+     "NCAAMB": 0.22
+    }
+   },
+   {
+    "codigo": "K4",
+    "activos": 4230,
+    "x_tipico": 1.0,
+    "comun_pp": 0.19,
+    "por_liga_pp": {
+     "NBA": 0.43,
+     "NCAAMB": 1.62
+    }
+   },
+   {
+    "codigo": "S3",
+    "activos": 684,
+    "x_tipico": 1.0,
+    "comun_pp": -0.1,
+    "por_liga_pp": {
+     "NBA": 1.35,
+     "NCAAMB": -2.45
+    }
+   },
+   {
+    "codigo": "K2",
+    "activos": 1770,
+    "x_tipico": 1.0,
+    "comun_pp": 0.09,
+    "por_liga_pp": {
+     "NBA": 0.97,
+     "NCAAMB": 0.07
+    }
+   },
+   {
+    "codigo": "K8a",
+    "activos": 9883,
+    "x_tipico": 1.0,
+    "comun_pp": 0.09,
+    "por_liga_pp": {
+     "NBA": -0.1,
+     "NCAAMB": 1.11
+    }
+   },
+   {
+    "codigo": "Q1",
+    "activos": 8416,
+    "x_tipico": 1.0,
+    "comun_pp": 0.09,
+    "por_liga_pp": {
+     "NBA": -0.26,
+     "NCAAMB": 1.28
+    }
+   },
+   {
+    "codigo": "Q6b",
+    "activos": 2736,
+    "x_tipico": 1.0,
+    "comun_pp": 0.08,
+    "por_liga_pp": {
+     "NBA": -0.27,
+     "NCAAMB": 1.11
+    }
+   },
+   {
+    "codigo": "S8",
+    "activos": 1549,
+    "x_tipico": 1.0,
+    "comun_pp": 0.08,
+    "por_liga_pp": {
+     "NBA": -1.89,
+     "NCAAMB": 2.81
+    }
+   },
+   {
+    "codigo": "K12",
+    "activos": 1882,
+    "x_tipico": 1.0,
+    "comun_pp": 0.03,
+    "por_liga_pp": {
+     "NBA": 1.08,
+     "NCAAMB": -0.7
+    }
+   },
+   {
+    "codigo": "K3",
+    "activos": 9507,
+    "x_tipico": 1.0,
+    "comun_pp": -0.01,
+    "por_liga_pp": {
+     "NBA": 0.56,
+     "NCAAMB": -0.63
+    }
+   }
+  ]
+ },
+ "comparacion_ml": {
+  "boosting (HistGradientBoosting)": {
+   "grupo": "boosting (HistGradientBoosting)",
+   "n": 13897,
+   "mejora_milesimas": 1.124,
+   "z": 1.4,
+   "mitades": [
+    0.854,
+    1.394
+   ],
+   "brier_base": 0.19506,
+   "brier_angulos": 0.19459,
+   "brier_mejora_pct": 0.24,
+   "calibracion": 0.0026,
+   "deciles": [
+    [
+     0.246,
+     0.235
+    ],
+    [
+     0.398,
+     0.396
+    ],
+    [
+     0.474,
+     0.494
+    ],
+    [
+     0.556,
+     0.58
+    ],
+    [
+     0.608,
+     0.581
+    ],
+    [
+     0.678,
+     0.67
+    ],
+    [
+     0.73,
+     0.712
+    ],
+    [
+     0.783,
+     0.793
+    ],
+    [
+     0.852,
+     0.838
+    ],
+    [
+     0.925,
+     0.927
+    ]
+   ],
+   "cal_peor_decil": 0.027,
+   "mueve_pp_medio": 3.11,
+   "veredicto": "no pasa",
+   "desde": "2024-11-01",
+   "hasta": "2026-06-13"
+  },
+  "red neuronal (MLP 16)": {
+   "grupo": "red neuronal (MLP 16)",
+   "n": 13897,
+   "mejora_milesimas": -3.177,
+   "z": -2.06,
+   "mitades": [
+    -3.267,
+    -3.087
+   ],
+   "brier_base": 0.19506,
+   "brier_angulos": 0.19624,
+   "brier_mejora_pct": -0.61,
+   "calibracion": 0.0085,
+   "deciles": [
+    [
+     0.256,
+     0.258
+    ],
+    [
+     0.415,
+     0.389
+    ],
+    [
+     0.503,
+     0.495
+    ],
+    [
+     0.57,
+     0.551
+    ],
+    [
+     0.627,
+     0.604
+    ],
+    [
+     0.68,
+     0.66
+    ],
+    [
+     0.731,
+     0.719
+    ],
+    [
+     0.782,
+     0.788
+    ],
+    [
+     0.836,
+     0.84
+    ],
+    [
+     0.912,
+     0.92
+    ]
+   ],
+   "cal_peor_decil": 0.026,
+   "mueve_pp_medio": 5.97,
+   "veredicto": "no pasa",
+   "desde": "2024-11-01",
+   "hasta": "2026-06-13"
+  }
+ }
+}
