@@ -181,6 +181,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   CANDIDATO, falta ensamble de semillas y medirlo en vivo; no se aplica. RF pierde en los tres deportes. TMLE dentro de
   muestra marca H2 hockey y K1/K8b/K10 NBA, pero fuera de muestra no predicen.
 
+- Tanda 7 suerte contra rendimiento (10-oct-2026, `utilidades/minar_angulos_tanda7.py`, `trabajo/minar/2026-10-10_tanda7.md`,
+  k 38): Pitagoras, juegos cerrados, dominio de tiros/yardas, PDO, BABIP, triples, perdidas, posesiones. Contra el modelo
+  pasan L1 Pitagoras NCAAMB (z 2.56), L3 dominio NFL (3.54) y futbol (2.01), TL7 posesiones NCAAMB (3.80), TL4 goles por
+  tiro a puerta futbol (3.24). Contra el mercado: L3 NFL z -2.97, L3 futbol -0.23, TL4 contra el cierre O2.5 z 1.92
+  (en el limite). Candidatos, nada se aplica; falta TL7 sobre la capa de totales y NCAAMB contra cuotas.
 - Motor de goles (10-oct-2026, `nucleo/motor_goles.py`, `utilidades/motor_goles.py`, `trabajo/minar/2026-10-10_motor_goles.md`):
   Kalman de ataque/defensa/portero + xG + segunda noche contra produccion reproducida (xG, GSAx, b2b, capa). Nada pasa en NHL,
   AHL ni Liiga (DEL y SHL sin muestra): no se aplica. Empate a 60 min: ni modelo ni motor le ganan a la tasa de la liga ->
