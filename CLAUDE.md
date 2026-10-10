@@ -5,7 +5,7 @@ Dueño: Alejandro (tenisman12). Responder en español, horas de CDMX (UTC-6).
 
 ## Qué es
 Plataforma de predicción deportiva multi-deporte y multi-mercado: béisbol (MLB, LMP, KBO, NPB, LVBP, LIDOM, ABL),
-NFL y NCAAFB, NHL, NBA y NCAAMB, fútbol (Premier, LaLiga, Serie A, Bundesliga, Ligue 1, Liga MX, MLS), tenis ATP/WTA.
+NFL y NCAAFB, NHL, SHL, Liiga, AHL y DEL, NBA y NCAAMB, fútbol (Premier, LaLiga, Serie A, Bundesliga, Ligue 1, Liga MX, MLS), tenis ATP/WTA.
 Los picks se venden en su página The Bet Model (TBM). Este repo es público.
 
 ```
@@ -137,6 +137,25 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   sigue siendo el de la sede real). Capa de abridores: en LMP y NPB se aplica la parte del total (paso) y no la del ganador
   (`nucleo/abridores.aplica`). Action Network no cubre LMP: sin publico medido. Reglas nuevas 2026-27 (reloj de pitcheo,
   ABS, 3 bateadores por relevista): el nivel reciente de la capa se ajusta solo con los primeros juegos; se mide en vivo.
+
+## Hockey: SHL, Liiga, AHL y DEL (10-oct-2026, Alejandro: "igualito al de NHL")
+- Datos: `colectores/recolectar_hockey_ligas.py` (fuentes oficiales: stats.swehockey.se, liiga.fi/api/v2, HockeyTech de la
+  AHL, penny-del.org). Mismas columnas que NHL en `datos/hockey.csv` (columna `league`: SHL, LIIGA, AHL, DEL) mas `goals_reg`
+  (goles al minuto 60), `xg` (solo Liiga) y `pp_pct`. AHL con nombre completo (sus codigos chocan con NHL: CHI, SJ).
+  Diario en `actualizar_todo.py` (paso hockey_ligas, `--solo-actual`); la historia 2024-25+ entra por `semillas/hockey_ligas.csv`
+  (`python utilidades/semillas.py exportar hockey_ligas` en la PC). SHL 2024-25 falta (swehockey no muestra su id).
+- Calendario: `colectores/proximos_hockey.py` (como proximos_beisbol). Cuotas: The Odds API `icehockey_sweden_hockey_league`,
+  `icehockey_liiga`, `icehockey_ahl` (solo eu, h2h y totals: 2 creditos por foto). La DEL no esta en The Odds API.
+- Modelo: `modelos/hockey.py` entrenado por liga (`entrenar("shl")`); sin liga = NHL (los llamados viejos no mezclan).
+  Liiga mezcla su xG por partido igual que NHL con MoneyPuck. Nuevo en todas las ligas de hockey: 1X2 a 60 minutos (`p_60`,
+  Poisson sin calibrar; "Empate a 60 min" en la validacion: subestima el empate, 16% vs 22%, sin validar).
+- Validacion (`validar_mercados.py --deporte hockey` = NHL + las cuatro, claves hockey_shl...): al 10-oct, Ganador publicable en
+  Liiga (Brier +5.0%), AHL (+2.1%) y DEL (+12.1%); SHL con 412 juegos no llega a los 500 del validador. Totales sin validar
+  salvo el total esperado de Liiga. Publicable = le gana a la tasa historica, no a las casas.
+- Angulos: los mismos de NHL medidos en cada liga por separado (`utilidades/minar_angulos_hockey_ligas.py` ->
+  `trabajo/minar/2026-10-10_hockey_ligas_resultados.json`, k 154, ninguno pasa). `nucleo/angulos.py` los pone en cada
+  partido (ganador H/Q/S, totales TH/TS, por equipo) con lo que moverian. Sin altitud (H24, TH5) ni porteros (H19, H20, TH7):
+  estas fuentes no traen el titular. PESO_MODELO 0.5 como NHL en decidir_v2.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

@@ -35,7 +35,7 @@ except Exception:
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PESO_MODELO = {"nhl": 0.5, "nfl": 0.5, "ncaafb": 0.35, "nba": 0.35, "ncaamb": 0.35, "atp": 0.35, "wta": 0.35}
+PESO_MODELO = {"nhl": 0.5, "shl": 0.5, "liiga": 0.5, "ahl": 0.5, "del": 0.5, "nfl": 0.5, "ncaafb": 0.35, "nba": 0.35, "ncaamb": 0.35, "atp": 0.35, "wta": 0.35}
 PESO_DEFAULT = 0.25                     # futbol y lo demas
 # REGLA 4-oct (tarde): solo se apuesta lo VALIDADO. Si utilidades/validar_mercados.py no certifico ese mercado en esa
 # liga (walk-forward, n>=300, z>=2, mejora en las dos mitades, calibrado), no hay pick: ni con peso reducido ni con

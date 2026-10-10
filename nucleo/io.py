@@ -51,6 +51,10 @@ LIGAS = {
     "ncaafb": {"deporte": "americano", "nombre": "NCAAFB"},
     # --- hockey (datos/hockey.csv) ---
     "nhl":    {"deporte": "hockey",    "nombre": "NHL"},
+    "shl":    {"deporte": "hockey",    "nombre": "SHL"},       # Suecia (stats.swehockey.se)
+    "liiga":  {"deporte": "hockey",    "nombre": "Liiga"},     # Finlandia (liiga.fi)
+    "ahl":    {"deporte": "hockey",    "nombre": "AHL"},       # (HockeyTech)
+    "del":    {"deporte": "hockey",    "nombre": "DEL"},       # Alemania (penny-del.org)
     # --- futbol (datos/futbol.csv) ---
     "ligamx":    {"deporte": "futbol", "nombre": "Liga MX"},
     "champions": {"deporte": "futbol", "nombre": "Champions League"},

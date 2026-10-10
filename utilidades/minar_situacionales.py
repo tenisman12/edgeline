@@ -261,10 +261,11 @@ def _num(x):
 
 
 # ------------------------------------------------------------------ HOCKEY
-def correr_hockey():
+def correr_hockey(liga="NHL"):
+    """liga: NHL (por defecto) o SHL, LIIGA, AHL, DEL (mismo modelo entrenado por liga, 10-oct-2026)."""
     from modelos import hockey as H
-    print("\nHOCKEY (NHL): prediccion as-of del modelo (con su factor de segunda noche)")
-    todos, est, cal, recs = asof_cal(H, None, "_aplicar_b2b")
+    print("\nHOCKEY (%s): prediccion as-of del modelo (con su factor de segunda noche)" % liga)
+    todos, est, cal, recs = asof_cal(H, liga, "_aplicar_b2b")
     C = Calendario()
     for f, gp, h, a in todos:
         gh, ga = _num(h.get("goals")), _num(h.get("goals_opp"))
@@ -323,7 +324,7 @@ def correr_hockey():
             r["H19"] = r["H20"] = None
         filas.append(r)
     print("  partidos con descanso conocido: %d (de %d predicciones as-of)" % (len(filas), len(cal)))
-    ULTIMO["NHL"] = (filas, C)
+    ULTIMO[liga] = (filas, C)
     defs = [("H1", "visita en segunda noche, local descansado", +1), ("H2", "local en segunda noche, visita descansada", -1),
             ("H4", "un dia de diferencia de descanso", +1), ("H6", "tercer juego en 4 noches", +1),
             ("H7", "carga de 7 dias", +1), ("H8", "regreso de pausa de 7+ dias", -1), ("H13", "gira larga del visitante", +1),
@@ -332,7 +333,7 @@ def correr_hockey():
             ("H18", "partido anterior fisico (castigos)", +1), ("H19", "portero suplente en segunda noche", +1),
             ("H20", "carga del portero", +1), ("H21", "tras perder por 4 o mas", +1), ("H22", "tras perder en prorroga/SO", +1)]
     for cod, nom, s in defs:
-        evaluar([dict(r, x=r[cod]) for r in filas], cod, nom, "NHL", s)
+        evaluar([dict(r, x=r[cod]) for r in filas], cod, nom, liga, s)
 
 
 # ------------------------------------------------------------------ BASQUET

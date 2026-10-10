@@ -102,6 +102,10 @@ def pasos(completo):
                          "copia": ("futbol_extra.csv", "futbol.csv"), "filtro": None},
         "hockey": {"cmds": [["recolectar_hockey.py"] + nhl],
                    "copia": ("hockey_games.csv", "hockey.csv"), "filtro": _sin_pretemporada_nhl},
+        # SHL, Liiga, AHL y DEL (fuentes oficiales de cada liga; mismas columnas que NHL). Diario: solo la temporada en curso;
+        # la historia 2024-25 en adelante entra por semillas/hockey_ligas.csv. Se mezcla en datos/hockey.csv con su columna league.
+        "hockey_ligas": {"cmds": [["recolectar_hockey_ligas.py"] + ([] if completo else ["--solo-actual"])],
+                         "copia": ("hockey_ligas.csv", "hockey.csv"), "filtro": None},
         "nba": {"cmds": [["recolectar_nba.py", "--desde", nba, "--hasta", str(y_nba)]],
                 "copia": ("nba_games.csv", "nba.csv"), "filtro": None},
         "americano": {"cmds": [["recolectar_americano.py", "--desde", nfl]],

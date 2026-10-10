@@ -18,6 +18,10 @@ datos/equipos/nhl_xg_partidos.csv) y olvidan 3 % por juego. Walk-forward 24 mese
 (publicable, z ~4); mejora en ventanas de 12, 18, 24 y 30 meses. Totales: el total se encoge a la mitad hacia
 el promedio de la liga (MAE 1.867 -> 1.862); sigue sin superar al promedio con datos de equipo.
 
+Ligas nuevas (10-oct-2026): SHL, Liiga, AHL y DEL viven en el mismo datos/hockey.csv (columna league) y usan este mismo
+modelo, entrenado por liga (entrenar("shl")...). Liiga mezcla su xG por partido (expectedGoals de liiga.fi) con el mismo peso
+XG_W que NHL. Sin liga = NHL.
+
 Solo stdlib.
 """
 import math, sys, os, datetime as _dt
@@ -62,7 +66,9 @@ def _pois(mu, k): return math.exp(-mu) * mu**k / math.factorial(k)
 
 # ---------------- armado as-of ----------------
 def _juegos(liga=None):
-    filas = io.cargar_juegos("hockey", liga)
+    # datos/hockey.csv trae NHL, SHL, Liiga, AHL y DEL (columna league). Sin liga = NHL, como antes de las ligas nuevas:
+    # asi los llamados viejos (validacion, minados, mediciones) no mezclan ligas.
+    filas = io.cargar_juegos("hockey", liga or "NHL")
     porjuego = {}
     for r in filas:
         gp = str(r.get("gamePk") or r.get("game_id") or "")
@@ -112,6 +118,12 @@ def _xg_partidos():
                         if a is not None and b is not None:
                             _XG[(str(r.get("game_id")), r.get("team"))] = (a, b)
     return _XG
+
+def _xg_fila(r):
+    """xG del partido que trae la propia fila (Liiga: expectedGoals de liiga.fi). En NHL el xG sale de MoneyPuck."""
+    a, b = _f(r.get("xg")), _f(r.get("xg_opp"))
+    return (a, b) if a is not None and b is not None else None
+
 
 _GSAX = None
 def _gsax_hist():
@@ -200,7 +212,7 @@ def entrenar(liga=None, min_j=8):
         res=1.0 if gh>ga_ else 0.0
         mov=math.log(abs(gh-ga_)+1)
         d=K*mov*(res-esp); th.elo+=d; ta.elo-=d
-        X=_xg_partidos(); xh_=X.get((str(gp), h.get("team"))); xa_=X.get((str(gp), a.get("team")))
+        X=_xg_partidos(); xh_=X.get((str(gp), h.get("team"))) or _xg_fila(h); xa_=X.get((str(gp), a.get("team"))) or _xg_fila(a)
         th.sumar(gh, ga_, *(xh_ or (None, None))); ta.sumar(ga_, gh, *(xa_ or (None, None)))
         th.fecha_ult=f; ta.fecha_ult=f
         tot=tot*LG_DECAY+gh+ga_; ng=ng*LG_DECAY+2; lg=tot/ng
@@ -268,11 +280,14 @@ def predecir(estado, home, away, linea_total=6.5, sv_home=None, sv_away=None, fe
     # puck line -1.5: P(home - away >= 2) en regulacion (aprox)
     kmax=12; ph=[_pois(xh,k) for k in range(kmax)]; pa=[_pois(xa,k) for k in range(kmax)]
     p_pl_home=sum(ph[i]*pa[j] for i in range(kmax) for j in range(kmax) if i-j>=2)
+    # 1X2 a 60 minutos (tiempo regular, el mercado europeo): sin calibrar, con los mismos goles esperados
+    p_r_home=sum(ph[i]*pa[j] for i in range(kmax) for j in range(i)); p_emp=sum(ph[i]*pa[i] for i in range(kmax))
     conf="alta" if abs(p-.5)>.15 else "media" if abs(p-.5)>.07 else "baja"
     return {"p_home":round(p,4),"p_away":round(1-p,4),
             "xg_home":round(xh,2),"xg_away":round(xa,2),"total":round(mu,2),
             "p_over":round(p_over,4),"linea_total":linea_total,
             "p_pl_home":round(p_pl_home,4),"p_pl_away":round(1-p_pl_home,4),
+            "p_60":{"home":round(p_r_home,4),"empate":round(p_emp,4),"away":round(max(0.0,1-p_r_home-p_emp),4)},
             "confianza":conf,
             "descanso":{"home_b2b":b2b_h,"away_b2b":b2b_a,
                         "factor_of":(estado.get("b2b") or {}).get("factor_of",1.0),

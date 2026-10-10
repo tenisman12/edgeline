@@ -28,9 +28,9 @@ from nucleo import io as nio
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAL = os.path.join(REPO, "salida") if os.path.exists(os.path.join(REPO, "salida", "proximos.json")) else nio.ruta("salida")
-LIGA_DE = {"baseball_mlb": "mlb", "baseball_npb": "npb", "baseball_kbo": "kbo", "icehockey_nhl": "nhl", "americanfootball_nfl": "nfl",
+LIGA_DE = {"baseball_mlb": "mlb", "baseball_npb": "npb", "baseball_kbo": "kbo", "icehockey_nhl": "nhl", "icehockey_sweden_hockey_league": "shl", "icehockey_liiga": "liiga", "icehockey_ahl": "ahl", "americanfootball_nfl": "nfl",
            "americanfootball_ncaaf": "ncaafb", "basketball_nba": "nba", "basketball_ncaab": "ncaamb"}
-UNIDAD = {"nhl": 0.5, "mlb": 0.5, "npb": 0.5, "kbo": 0.5, "nfl": 1.0, "ncaafb": 1.0, "nba": 1.0, "ncaamb": 1.0, "atp": 1.0, "wta": 1.0}
+UNIDAD = {"nhl": 0.5, "shl": 0.5, "liiga": 0.5, "ahl": 0.5, "del": 0.5, "mlb": 0.5, "npb": 0.5, "kbo": 0.5, "nfl": 1.0, "ncaafb": 1.0, "nba": 1.0, "ncaamb": 1.0, "atp": 1.0, "wta": 1.0}
 
 
 def _liga(sport):

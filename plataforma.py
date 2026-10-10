@@ -27,6 +27,7 @@ from modelos import beisbol, hockey, americano, nba, futbol
 import recolectar_proximos as RP
 import clima as CLIMA
 import proximos_beisbol as PB
+import proximos_hockey as PH
 import pagina_plataforma as PAG
 
 BASE = io.BASE
@@ -45,6 +46,10 @@ for _l in _BEIS:
 for _l in ("kbo", "lmp", "lvbp", "lidom", "abl"):      # ganador de beisbol: solo MLB y NPB superan al baseline
     NO_PUBLICABLE.add((_l, "Ganador"))
 NO_PUBLICABLE.add(("nhl", "Total")); NO_PUBLICABLE.add(("nhl", "Spread"))
+_HOCKEY_LIGAS = ("shl", "liiga", "ahl", "del")      # SHL, Liiga, AHL y DEL (10-oct-2026): mismo modelo que NHL, entrenado por liga
+for _l in _HOCKEY_LIGAS:                            # hasta que validar_mercados.py certifique cada mercado en cada liga
+    for _t in ("Ganador", "Total", "Spread"):
+        NO_PUBLICABLE.add((_l, _t))
 # Futbol: Over/Under 2.5 sin ventaja sobre el baseline en walk-forward (Liga MX -0.1, MLS +0.2, Serie A -0.1);
 # tenis: games totales sin ventaja (sesgo de games por set).
 for _l in ("ligamx", "mls", "seriea", "atp", "wta"):
@@ -80,7 +85,8 @@ def _aplicar_validacion():
         for bo, v in d.items():
             AJUSTE_BREAKS[(tour.lower(), int(bo))] = float(v)
     dep = vm.get("deportes", {})
-    for liga, clave in (("nhl", "hockey"), ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb"),
+    for liga, clave in (("nhl", "hockey"), ("shl", "hockey_shl"), ("liiga", "hockey_liiga"), ("ahl", "hockey_ahl"), ("del", "hockey_del"),
+                        ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb"),
                         ("mlb", "beisbol_mlb"), ("npb", "beisbol_npb"), ("kbo", "beisbol_kbo"), ("lmp", "beisbol_lmp")):
         d = dep.get(clave)
         if not d: continue
@@ -118,11 +124,13 @@ TZ = RP.TZ_MX
 
 DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol", "lvbp": "beisbol",
            "lidom": "beisbol", "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba", "ncaamb": "nba",
+           "shl": "hockey", "liiga": "hockey", "ahl": "hockey", "del": "hockey",
            "premier": "futbol", "laliga": "futbol", "seriea": "futbol", "bundesliga": "futbol",
            "ligue1": "futbol", "ligamx": "futbol", "champions": "futbol", "mls": "futbol",
            "atp": "tenis", "wta": "tenis"}
 NOMBRE = {"mlb": "MLB", "npb": "NPB", "kbo": "KBO", "lmp": "LMP", "lvbp": "LVBP", "lidom": "LIDOM", "abl": "ABL",
           "nfl": "NFL", "ncaafb": "NCAA Fútbol Americano", "nhl": "NHL", "nba": "NBA",
+          "shl": "SHL", "liiga": "Liiga", "ahl": "AHL", "del": "DEL",
           "ncaamb": "NCAA Basketball", "premier": "Premier League", "laliga": "La Liga",
           "seriea": "Serie A", "bundesliga": "Bundesliga", "ligue1": "Ligue 1", "ligamx": "Liga MX",
           "champions": "Champions League", "mls": "MLS", "atp": "ATP", "wta": "WTA"}
@@ -552,7 +560,9 @@ def _spread_mercado(q, p_home, xh, xa, pmf):
     return {"linea_home": float(sp), "p_home": round(pc, 4), "p_away": round(1 - pc, 4), "linea_es_mercado": q.get("spread_home") is not None}
 
 
-CAPA_TOT = {"nhl": ("hockey", "NHL", "hockey"), "nba": ("nba", "NBA", "nba"), "ncaamb": ("nba", "NCAAMB", "ncaamb"),
+CAPA_TOT = {"nhl": ("hockey", "NHL", "hockey"),
+            "shl": ("hockey", "SHL", "hockey_shl"), "liiga": ("hockey", "LIIGA", "hockey_liiga"),
+            "ahl": ("hockey", "AHL", "hockey_ahl"), "del": ("hockey", "DEL", "hockey_del"), "nba": ("nba", "NBA", "nba"), "ncaamb": ("nba", "NCAAMB", "ncaamb"),
             "nfl": ("americano", "NFL", "nfl"), "ncaafb": ("americano", "NCAAFB", "ncaafb"),
             "mlb": ("beisbol", "MLB", "beisbol_mlb"), "npb": ("beisbol", "NPB", "beisbol_npb"),
             "kbo": ("beisbol", "KBO", "beisbol_kbo"), "lmp": ("beisbol", "LMP", "beisbol_lmp")}
@@ -754,7 +764,9 @@ def _pred_base(g, c, fecha, eventos=None):
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
                 "confianza": _conf(max(p_h, 1 - p_h)),
-                "extra": [("Puck line local -1.5", r["p_pl_home"]), ("Puck line visita +1.5", r["p_pl_away"])],
+                "extra": [("Puck line local -1.5", r["p_pl_home"]), ("Puck line visita +1.5", r["p_pl_away"]),
+                          ("1X2 60 min: local", r["p_60"]["home"]), ("1X2 60 min: empate", r["p_60"]["empate"]),
+                          ("1X2 60 min: visita", r["p_60"]["away"])],
                 "spread": _spread_mercado(q, r["p_home"], r["xg_home"], r["xg_away"], lambda k, mu: hockey._pois(mu, k)),
                 "descanso": d, "porteros": {"home": por_h, "away": por_a, "sv_home": sv_h, "sv_away": sv_a}, "nota": nota}, None
 
@@ -1781,13 +1793,17 @@ def main():
         cargar_calendario(crudo.get("calendario"))
         print("Usando %d partidos de %s (generado %s)" % (len(juegos), a.entrada, crudo.get("generado")))
     else:
-        ligas = [x.strip() for x in a.ligas.split(",")] if a.ligas else RP.DEFAULT + PB.DEFAULT
+        ligas = [x.strip() for x in a.ligas.split(",")] if a.ligas else RP.DEFAULT + PB.DEFAULT + PH.DEFAULT
         print("1/3  Partidos por jugar (ESPN), proximos %d dia(s):" % a.dias)
-        juegos = RP.recolectar([x for x in ligas if x not in PB.DEFAULT], a.dias, not a.sin_contexto)
+        juegos = RP.recolectar([x for x in ligas if x not in PB.DEFAULT and x not in PH.DEFAULT], a.dias, not a.sin_contexto)
         extra = [x for x in ligas if x in PB.DEFAULT]
         if extra:
             print("     NPB, KBO y ligas de invierno (MLB Stats API / koreabaseball.com, sin cuotas):")
             juegos += PB.recolectar(extra, a.dias)
+        extra_h = [x for x in ligas if x in PH.DEFAULT]
+        if extra_h:
+            print("     SHL, Liiga, AHL y DEL (calendarios oficiales de cada liga):")
+            juegos += PH.recolectar(extra_h, a.dias)
         cargar_calendario(RP.CALENDARIO)
         print("     calendario (ayer en adelante, para descanso): %d partidos" % len(RP.CALENDARIO))
         try:

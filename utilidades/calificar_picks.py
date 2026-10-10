@@ -33,6 +33,7 @@ TENIS = ("atp", "wta")
 RET_ANULA = True      # tenis: retiro = apuesta anulada
 DEPORTE = {"mlb": "beisbol", "npb": "beisbol", "kbo": "beisbol", "lmp": "beisbol", "lvbp": "beisbol", "lidom": "beisbol",
            "abl": "beisbol", "nfl": "americano", "ncaafb": "americano", "nhl": "hockey", "nba": "nba", "ncaamb": "nba",
+           "shl": "hockey", "liiga": "hockey", "ahl": "hockey", "del": "hockey",
            "premier": "futbol", "laliga": "futbol", "seriea": "futbol", "bundesliga": "futbol", "ligue1": "futbol",
            "ligamx": "futbol", "champions": "futbol", "mls": "futbol"}
 COLS = ["registrado", "liga", "id", "fecha", "home", "away", "pick", "prob", "confianza", "estado", "marcador",

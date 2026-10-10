@@ -28,7 +28,7 @@ N_MIN, Z_MIN = 300, 2.0
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _IGN = {"the", "fc", "sc", "club", "de", "los", "las", "la", "el", "st", "state", "university"}
 # cuotas_sharp usa los nombres de deporte de The Odds API; aqui solo hace falta la familia para el reporte
-LIGA_DE = (("baseball_mlb", "mlb"), ("baseball_npb", "npb"), ("baseball_kbo", "kbo"), ("icehockey_nhl", "nhl"),
+LIGA_DE = (("baseball_mlb", "mlb"), ("baseball_npb", "npb"), ("baseball_kbo", "kbo"), ("icehockey_nhl", "nhl"), ("icehockey_sweden_hockey_league", "shl"), ("icehockey_liiga", "liiga"), ("icehockey_ahl", "ahl"),
            ("americanfootball_nfl", "nfl"), ("americanfootball_ncaaf", "ncaafb"), ("basketball_nba", "nba"),
            ("basketball_ncaab", "ncaamb"), ("tennis_atp", "atp"), ("tennis_wta", "wta"))
 

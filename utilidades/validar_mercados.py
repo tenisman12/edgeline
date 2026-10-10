@@ -8,7 +8,7 @@ y predice los juegos del bloque. Compara contra una linea base sin modelo (frecu
 previa / promedio previo) y reporta la mejora.
 
 Mercados que evalua
-  hockey    ganador, total goles (esperado y over/under), puck line +-1.5
+  hockey    ganador, total goles (esperado y over/under), puck line +-1.5 (NHL, SHL, Liiga, AHL y DEL, cada una con su modelo)
   nfl       ganador, margen y spread, total puntos (esperado y over/under)
   nba       ganador, margen y spread, total puntos (esperado y over/under)
   futbol    1X2, total goles (esperado y over 1.5/2.5/3.5), handicap +-0.5/+-1.5
@@ -141,7 +141,12 @@ class Rep:
 
 # ------------------------------------------------------------------ deportes de equipos
 CFG = {
-    "hockey":  {"mod": hockey,   "dep": "hockey",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "HOCKEY (NHL)"},
+    "hockey":  {"mod": hockey,   "dep": "hockey",    "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (),            "titulo": "HOCKEY (NHL)", "liga": "NHL"},
+    # SHL, Liiga, AHL y DEL (10-oct-2026): el mismo modelo de hockey entrenado por liga, con la misma validacion que NHL.
+    "hockey_shl":   {"mod": hockey, "dep": "hockey", "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (), "titulo": "HOCKEY (SHL)", "liga": "SHL"},
+    "hockey_liiga": {"mod": hockey, "dep": "hockey", "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (), "titulo": "HOCKEY (LIIGA)", "liga": "LIIGA"},
+    "hockey_ahl":   {"mod": hockey, "dep": "hockey", "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (), "titulo": "HOCKEY (AHL)", "liga": "AHL"},
+    "hockey_del":   {"mod": hockey, "dep": "hockey", "ms": (("goals", "goals_opp"),), "total_step": 1.0, "spread": (), "titulo": "HOCKEY (DEL)", "liga": "DEL"},
     # OJO (6-oct-2026): nfl y nba NO tenian clave "liga", asi que _juegos(None) cargaba las DOS ligas del archivo
     # juntas (NFL+NCAAF y NBA+NCAA basquet). Eso mezclaba el promedio de anotacion de la liga (NBA ~225 de total,
     # NCAA ~147) e inflaba la linea base: el MAE base del total de "NBA" salia en 29.3 y de ahi el +50% de skill,
@@ -196,6 +201,7 @@ def medio(x): return math.floor(x) + 0.5
 
 def validar_equipos(clave, meses, bloque, liga=None):
     c = dict(CFG[clave]); mod = c["mod"]
+    es_hockey = c["dep"] == "hockey"
     clave_json = clave if clave != "futbol" else "futbol_" + str(liga).lower()
     liga = liga or c.get("liga")
     if liga and clave == "futbol": c["titulo"] = "FUTBOL %s" % liga.upper()
@@ -237,11 +243,13 @@ def validar_equipos(clave, meses, bloque, liga=None):
             hw = sum(1 for g in prev if g[4] > g[5]) / len(prev)
             d_prev = sum(1 for g in prev if g[4] == g[5]) / len(prev)
             a_prev = 1 - hw - d_prev
+            emp_prev = [1 if g[2].get("ended_in") in ("OT", "SO") else 0 for g in prev if g[2].get("ended_in") in ("REG", "OT", "SO")] if es_hockey else []
+            emp_base = (sum(emp_prev) / len(emp_prev)) if len(emp_prev) >= 100 else None
             lineas = [medio(base_tot + k * c["total_step"]) for k in (-1, 0, 1)]
             fr_over = {L: sum(1 for t in tot_prev if t > L) / len(tot_prev) for L in lineas}
             for f, gp, h, a, gh, ga in blk:
                 th, ta = h.get("team"), a.get("team")
-                if clave == "hockey":
+                if es_hockey:
                     r = mod.predecir(est, th, ta, linea_total=lineas[1])
                 elif clave == "futbol":
                     r = mod.predecir(est, th, ta, linea_total=2.5, handicap=0.0)
@@ -255,7 +263,7 @@ def validar_equipos(clave, meses, bloque, liga=None):
                     rep.add_prob("Local gana (sin empate)", r["p_home"], 1 if gh > ga else 0, hw)
                 else:
                     rep.add_prob("Ganador", r["p_home"], 1 if gh > ga else 0, hw)
-                tp = r.get("total") if clave == "hockey" else r.get("total_esperado")
+                tp = r.get("total") if es_hockey else r.get("total_esperado")
                 rep.add_val("Total esperado", tp, tot, base_tot)
                 fila_capa = None
                 if con_capa and tp is not None:
@@ -266,7 +274,7 @@ def validar_equipos(clave, meses, bloque, liga=None):
                         capa.append(fila_capa)
                 if clave in ("nfl", "nba"):
                     rep.add_val("Margen esperado (local)", r["margen_esperado"], mar, base_mar)
-                if clave == "hockey":
+                if es_hockey:
                     rep.add_val("Goles local esperados", r["xg_home"], gh, sum(g[4] for g in prev) / len(prev))
                     rep.add_val("Goles visita esperados", r["xg_away"], ga, sum(g[5] for g in prev) / len(prev))
                 if clave == "futbol":
@@ -280,12 +288,16 @@ def validar_equipos(clave, meses, bloque, liga=None):
                         rep.add_prob("Handicap local %+.1f" % hd, rr["p_handicap_home"], 1 if mar + hd > 0 else 0, fb)
                 else:
                     for L in lineas:
-                        rr = mod.predecir(est, th, ta, linea_total=L) if clave == "hockey" else \
+                        rr = mod.predecir(est, th, ta, linea_total=L) if es_hockey else \
                             mod.predecir(est, th, ta, linea_total=L, linea_spread=None)
                         rep.add_prob("Over/Under (lineas ~promedio)", rr["p_over"], 1 if tot > L else 0, fr_over[L])
                         if fila_capa is not None:
                             fila_capa["ou"].append((L, 1 if tot > L else 0, fr_over[L]))
-                if clave == "hockey":
+                if es_hockey and h.get("ended_in") in ("REG", "OT", "SO"):
+                    # empate a los 60 minutos = termino en prorroga o shootout (las filas sin 'ended_in' no cuentan)
+                    if emp_base is not None:
+                        rep.add_prob("Empate a 60 min", r["p_60"]["empate"], 1 if h["ended_in"] in ("OT", "SO") else 0, emp_base)
+                if es_hockey:
                     rep.add_prob("Puck line local -1.5", r["p_pl_home"], 1 if mar >= 2 else 0,
                                  sum(1 for m_ in mar_prev if m_ >= 2) / len(mar_prev))
                     rep.add_prob("Puck line visita +1.5", r["p_pl_away"], 1 if mar < 2 else 0,
@@ -556,6 +568,8 @@ def main():
         elif d == "beisbol":
             for lg in ("MLB", "NPB", "KBO", "LMP"):
                 validar_beisbol(lg, a.meses, a.bloque)
+        elif d == "hockey":
+            for x in ("hockey", "hockey_shl", "hockey_liiga", "hockey_ahl", "hockey_del"): validar_equipos(x, a.meses, a.bloque)
         elif d == "ncaa":
             for x in ("ncaafb", "ncaamb"): validar_equipos(x, a.meses, a.bloque)
         elif d in CFG: validar_equipos(d, a.meses, a.bloque)

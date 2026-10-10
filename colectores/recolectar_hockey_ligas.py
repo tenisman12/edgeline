@@ -11,10 +11,14 @@ Fuentes (solo stdlib):
   AHL   lscluster.hockeytech.com (oficial de la liga): calendario, OT/SO, boxscore con tiros
   DEL   penny-del.org (oficial): pagina de cada juego con marcador por periodo, tiros y power play
 
-Columnas extra frente a NHL:
-  final_tipo     REG / OT / SO  (como termino el partido)
+Columnas con los mismos nombres que datos/hockey.csv de NHL (shots, goalie_sv, ended_in, tipo) y ademas:
   goals_reg      goles al minuto 60 (para el 1X2 de tiempo regular)
-  h_xg           expected goals (solo Liiga)
+  xg             expected goals (solo Liiga)
+  pp_pct         % de power play del partido
+Los equipos van con nombre completo (los codigos de la AHL chocan con los de la NHL).
+
+Sin data_maestra\\hockey_ligas.csv (GitHub Actions) toma los juegos ya guardados de datos\\hockey.csv para no
+volver a pedir su pagina. actualizar_todo.py lo corre con --solo-actual y mezcla el resultado en datos\\hockey.csv.
 
 Uso:
   python colectores\\recolectar_hockey_ligas.py                 (temporada actual + 2 anteriores)
@@ -39,6 +43,26 @@ FIJAS = ["gamePk", "league", "season", "game_date", "team", "opp", "is_home", "g
          "goals_reg", "goals_reg_opp", "final_tipo"]
 EXTRAS = ["h_sog", "h_sog_opp", "h_xg", "h_xg_opp", "h_powerPlayPctg", "h_powerPlayPctg_opp",
           "goalie_sv", "goalie_sv_opp"]
+# nombre interno -> columna del archivo (la misma que usa datos/hockey.csv de NHL)
+SALIDA_COL = {"final_tipo": "ended_in", "h_sog": "shots", "h_sog_opp": "shots_opp", "h_xg": "xg", "h_xg_opp": "xg_opp",
+              "h_powerPlayPctg": "pp_pct", "h_powerPlayPctg_opp": "pp_pct_opp"}
+COLS_ARCHIVO = [SALIDA_COL.get(c, c) for c in FIJAS] + ["tipo"] + [SALIDA_COL.get(c, c) for c in EXTRAS]
+LIGAS_AQUI = ("SHL", "LIIGA", "AHL", "DEL")
+
+
+def a_interno(r):
+    """fila del archivo (nombres nuevos o los de la primera version) -> nombres internos."""
+    r = dict(r)
+    for interno, col in SALIDA_COL.items():
+        if r.get(interno) in (None, "") and r.get(col) not in (None, ""):
+            r[interno] = r[col]
+    return r
+
+
+def a_archivo(r):
+    out = {SALIDA_COL.get(k, k): v for k, v in r.items() if k in FIJAS or k in EXTRAS}
+    out["tipo"] = "REG"
+    return out
 
 
 def get_txt(url, intentos=3):
@@ -173,6 +197,14 @@ def lado_val(v, lado):
     return None
 
 
+def nombre_ahl(g, lado):
+    """nombre completo del equipo (Cleveland Monsters): los codigos de la AHL chocan con los de la NHL (CHI, SJ...)."""
+    n = g.get("%s_team_name" % lado)
+    if not n and g.get("%s_team_city" % lado):
+        n = ("%s %s" % (g.get("%s_team_city" % lado), g.get("%s_team_nickname" % lado) or "")).strip()
+    return n or g.get("%s_team_code" % lado) or g.get("%s_team" % lado)
+
+
 def ahl(n_atras, conocidos):
     juegos = []
     for anio, sid, nombre in ahl_temporadas(n_atras):
@@ -195,8 +227,7 @@ def ahl(n_atras, conocidos):
             tipo, rh, ra = tipo_y_regulacion(hs, as_, tipo)
             j = {"id": "AHL-%s" % gid, "liga": "AHL", "season": "%d%d" % (anio, anio + 1),
                  "fecha": str(g.get("date_played") or g.get("GameDateISO8601") or "")[:10],
-                 "eq_h": g.get("home_team_code") or g.get("home_team_name") or g.get("home_team"),
-                 "eq_a": g.get("visiting_team_code") or g.get("visiting_team_name") or g.get("visiting_team"),
+                 "eq_h": nombre_ahl(g, "home"), "eq_a": nombre_ahl(g, "visiting"),
                  "g_h": hs, "g_a": as_, "r_h": rh, "r_a": ra, "tipo": tipo}
             if j["id"] not in conocidos:
                 try:
@@ -478,10 +509,12 @@ def main():
 
     # juegos ya bajados con detalle: no se vuelve a pedir su pagina
     previos, conocidos = [], set()
-    if os.path.exists(OUT):
-        with io.open(OUT, encoding="utf-8-sig", newline="") as fh:
-            previos = list(csv.DictReader(fh))
+    origen = OUT if os.path.exists(OUT) else os.path.join(BASE, "datos", "hockey.csv")
+    if os.path.exists(origen):
+        with io.open(origen, encoding="utf-8-sig", newline="") as fh:
+            previos = [a_interno(r) for r in csv.DictReader(fh) if (r.get("league") or "") in LIGAS_AQUI]
         conocidos = {r["gamePk"] for r in previos if r.get("h_sog") or r.get("league") == "LIIGA"}
+        print("Juegos ya guardados (%s): %d" % (os.path.relpath(origen, BASE), len(previos) // 2))
 
     juegos = []
     if "LIIGA" in ligas:
@@ -495,14 +528,15 @@ def main():
 
     nuevas = [f for j in juegos for f in filas_de(j)]
     # se conservan los detalles ya bajados de juegos conocidos
-    por_llave = {(r["gamePk"], r["team"]): r for r in previos}
+    llave = lambda r: (r["gamePk"], str(r["is_home"]).replace(".0", ""))
+    por_llave = {llave(r): r for r in previos}
     for f in nuevas:
-        viejo = por_llave.get((f["gamePk"], f["team"]))
+        viejo = por_llave.get(llave(f))
         if viejo:
             for k in EXTRAS:
                 if f.get(k) in ("", None) and viejo.get(k) not in ("", None):
                     f[k] = viejo[k]
-        por_llave[(f["gamePk"], f["team"])] = f
+        por_llave[llave(f)] = f
     vistos = VISTOS | {j["id"] for j in juegos}
     # solo se limpian las temporadas que se leyeron en esta corrida (con --solo-actual no se toca la historia)
     leidas = {(j["liga"], str(j["season"])) for j in juegos} | {(r["league"], str(r["season"])) for r in previos if r["gamePk"] in VISTOS}
@@ -532,8 +566,8 @@ def main():
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with io.open(OUT, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIJAS + EXTRAS, extrasaction="ignore")
-        w.writeheader(); w.writerows(filas)
+        w = csv.DictWriter(f, fieldnames=COLS_ARCHIVO, extrasaction="ignore")
+        w.writeheader(); w.writerows([a_archivo(r) for r in filas])
 
     # cobertura: que tanto trae cada liga en cada columna
     lineas = ["Cobertura hockey ligas (%% de filas con dato)  -  %s" % OUT]

@@ -68,11 +68,17 @@ NOMBRES = {
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
 _BEIS = ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl")
 _FUT = ("premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls")
+# SHL, Liiga, AHL y DEL (10-oct-2026): los mismos angulos de NHL, medidos en cada liga por separado
+# (utilidades/minar_angulos_hockey_ligas.py -> trabajo/minar/2026-10-10_hockey_ligas_resultados.json)
+_HOCKEY_NUEVAS = {"shl": "SHL", "liiga": "LIIGA", "ahl": "AHL", "del": "DEL"}
+HOCKEY5 = {"NHL", "SHL", "LIIGA", "AHL", "DEL"}
+RUTA_HOCKEY_LIGAS = os.path.join("trabajo", "minar", "2026-10-10_hockey_ligas_resultados.json")
 
 
 def _grupos(liga):
     lg = (liga or "").lower()
     if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"], "S": ["NHL"]}
+    if lg in _HOCKEY_NUEVAS: return {"H": [_HOCKEY_NUEVAS[lg]], "Q": [_HOCKEY_NUEVAS[lg]], "S": [_HOCKEY_NUEVAS[lg]]}
     if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"], "S": ["NBA"]}
     if lg == "atp": return {"T": ["ATP"]}
     if lg == "wta": return {"T": ["WTA"]}
@@ -104,6 +110,21 @@ def construir_catalogo():
                           # +1: la hipotesis registrada dice que el lado al que apunta el angulo rinde MAS que el modelo
                           "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
                           "fuente": md}
+    # SHL, Liiga, AHL y DEL: mismas definiciones de NHL, cada liga sola (minar_angulos_hockey_ligas.py)
+    hl = None
+    ruta_hl = os.path.join(CODIGO, RUTA_HOCKEY_LIGAS)
+    if os.path.exists(ruta_hl):
+        with _io.open(ruta_hl, encoding="utf-8") as f:
+            hl = json.load(f)
+        for r in hl.get("ganador") or []:
+            if r.get("base") != "modelo":
+                continue
+            cat["%s|%s" % (r["liga"], r["codigo"])] = {
+                "grupo": r["liga"], "codigo": r["codigo"], "angulo": r["angulo"], "veredicto": r["veredicto"],
+                "n_activo_prueba": r.get("n_activo_prueba"), "z": r.get("z"), "efecto_pp": r.get("residuo_firmado_pp"),
+                "tmle_pp": r.get("tmle_pp"), "tmle_ic95": r.get("tmle_ic95"), "desde_prueba": r.get("desde_prueba"),
+                "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
+                "fuente": "trabajo/minar/2026-10-10_hockey_ligas_resultados.json"}
     # tanda 5 (resultados por deporte, base modelo) y nuevos de la tanda 4 (F18 derbi, T6 jugador local)
     ruta5 = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda5_resultados.json")
     t5 = None
@@ -145,7 +166,7 @@ def construir_catalogo():
     # tanda 5 y nuevos: efecto de toda la muestra (x de -1/0/+1) encogido con el mismo tau
     tau2_ = ((t4.get("tau_logit") if os.path.exists(ruta4) else 0.0924) or 0.0924) ** 2 if os.path.exists(ruta4) else 0.0924 ** 2
     lg_ = lambda q: math.log(q / (1 - q))
-    for e in ((t5 or {}).get("estimacion") or []):
+    for e in ((t5 or {}).get("estimacion") or []) + ((hl or {}).get("estimacion") or []):
         k = "%s|%s" % (e["liga"], e["codigo"])
         if k in cat and e.get("pp_50") is not None:
             b = lg_(0.5 + e["pp_50"] / 100); lo, hi = e["ic95_50"]
@@ -324,12 +345,15 @@ def _ind(v):
 PARAM5 = {"NHL": dict(m=4, larga=5, fc=3, gap=20), "NBA": dict(m=20, larga=5, fc=3, gap=20), "NCAAMB": dict(m=20, larga=5, fc=3, gap=20),
           "NFL": dict(m=20, larga=3, fc=2, gap=21), "NCAAFB": dict(m=20, larga=3, fc=2, gap=21),
           "BEISBOL": dict(m=7, larga=5, fc=3, gap=20), "FUTBOL": dict(m=3, larga=3, fc=2, gap=30)}
+for _k in ("SHL", "LIIGA", "AHL", "DEL"):           # mismos parametros que NHL (asi se midieron)
+    PARAM5[_k] = dict(PARAM5["NHL"])
 
 
 def _dep5(liga):
     lg = (liga or "").lower()
     if lg in _BEIS: return "BEISBOL"
     if lg in _FUT: return "FUTBOL"
+    if lg in _HOCKEY_NUEVAS: return _HOCKEY_NUEVAS[lg]
     return {"nhl": "NHL", "nba": "NBA", "ncaamb": "NCAAMB", "nfl": "NFL", "ncaafb": "NCAAFB"}.get(lg)
 
 
@@ -355,7 +379,7 @@ def _estado5(P, fecha, dep):
     d["cal"] = len(Q) >= k["fc"] and all(res(g) == "W" for g in Q[:k["fc"]])
     if dep == "BEISBOL":
         d["S7"] = len(Q) >= 3 and all(g["gf"] <= 2 for g in Q[:3])
-    elif dep == "NHL":
+    elif dep in HOCKEY5:
         d["S7"] = len(Q) >= 3 and all(g["gf"] <= 1 for g in Q[:3])
     elif dep in ("NBA", "NCAAMB"):
         d["S7"] = None if len(Q) < 8 else all(g["gf"] < 0.9 * sum(x["gf"] for x in Q) / len(Q) for g in Q[:3])
@@ -1020,7 +1044,8 @@ def catalogo_totales():
     global _TOT
     if _TOT is None:
         _TOT = {}
-        for ruta, clave in (("2026-10-09_tanda4_resultados.json", "C_totales"), ("2026-10-09_tanda5_resultados.json", "totales")):
+        for ruta, clave in (("2026-10-09_tanda4_resultados.json", "C_totales"), ("2026-10-09_tanda5_resultados.json", "totales"),
+                            (os.path.basename(RUTA_HOCKEY_LIGAS), "totales")):
             rr = os.path.join(CODIGO, "trabajo", "minar", ruta)
             if not os.path.exists(rr):
                 continue
@@ -1036,6 +1061,7 @@ def _grupo_total(liga):
     lg = (liga or "").lower()
     if lg in _BEIS: return ["BEISBOL"]
     if lg in _FUT: return ["7 ligas", "FUTBOL"]
+    if lg in _HOCKEY_NUEVAS: return [_HOCKEY_NUEVAS[lg]]
     return [{"nhl": "NHL", "nba": "NBA", "ncaamb": "NCAAMB", "nfl": "NFL", "ncaafb": "NCAAFB"}.get(lg, "?")]
 
 
@@ -1059,14 +1085,15 @@ def calcular_totales(p, todos=None):
     ph, pa = Lh[-1], La[-1]
     rh, ra = (fecha - Ph[-1]["fecha"]).days, (fecha - Pa[-1]["fecha"]).days
     x = {}
-    if liga == "nhl":
+    if liga == "nhl" or liga in _HOCKEY_NUEVAS:
         x["TH1"] = _ind(rh == 1) + _ind(ra == 1)
         x["TH2"] = _en_ventana(Ph, fecha, 7) + _en_ventana(Pa, fecha, 7) if rh <= 20 and ra <= 20 else None
         if ph.get("ot") is not None and pa.get("ot") is not None:
             x["TH3"] = _ind(ph["ot"]) + _ind(pa["ot"])
         if ph.get("pim") is not None and pa.get("pim") is not None:
             x["TH4"] = (ph["pim"] + pa["pim"]) / 10.0
-        x["TH5"] = 1 if (eh in ALT_NHL and ea not in ALT_NHL) else 0
+        if liga == "nhl":
+            x["TH5"] = 1 if (eh in ALT_NHL and ea not in ALT_NHL) else 0
         x["TH6"] = _ind(_visitas_seguidas(Pa, False) >= 3)
         x["TH8"] = _ind(rh >= 3 and ra >= 3)
     elif liga in ("nba", "ncaamb"):
@@ -1116,7 +1143,7 @@ def calcular_totales(p, todos=None):
     if h5["S7"] is not None and a5["S7"] is not None:
         x["TS7"] = _ind(h5["S7"]) + _ind(a5["S7"])
     cat = catalogo_totales()
-    unidad = {"BEISBOL": "carreras", "FUTBOL": "goles", "NHL": "goles"}.get(dep5, "puntos")
+    unidad = ("goles" if dep5 in HOCKEY5 else {"BEISBOL": "carreras", "FUTBOL": "goles"}.get(dep5, "puntos"))
     out = []
     for c, v in x.items():
         if not v:
@@ -1170,18 +1197,21 @@ def catalogo_equipos():
     global _EQ
     if _EQ is None:
         _EQ = {}
-        rr = os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda6_resultados.json")
-        if os.path.exists(rr):
-            with _io.open(rr, encoding="utf-8") as f:
-                for r in json.load(f).get("resultados") or []:
-                    ic = r.get("ic95_toda_muestra")
-                    if r.get("efecto_toda_muestra") is None or not ic:
-                        continue
-                    xt = r.get("x_tipico") or 1.0
-                    e = r["efecto_toda_muestra"] / xt; se = (ic[1] - ic[0]) / 3.92 / xt
-                    t = e / se if se > 0 else 0.0
-                    f_js = max(0.0, 1.0 - 1.0 / (t * t)) if t else 0.0
-                    _EQ[(r["liga"], r["codigo"], r["lectura"])] = dict(r, por_u=e, por_u_encogido=e * f_js, ee_u=se)
+        filas_eq = []
+        for rr, clave in ((os.path.join(CODIGO, "trabajo", "minar", "2026-10-09_tanda6_resultados.json"), "resultados"),
+                          (os.path.join(CODIGO, RUTA_HOCKEY_LIGAS), "equipos")):
+            if os.path.exists(rr):
+                with _io.open(rr, encoding="utf-8") as f:
+                    filas_eq += json.load(f).get(clave) or []
+        for r in filas_eq:
+            ic = r.get("ic95_toda_muestra")
+            if r.get("efecto_toda_muestra") is None or not ic:
+                continue
+            xt = r.get("x_tipico") or 1.0
+            e = r["efecto_toda_muestra"] / xt; se = (ic[1] - ic[0]) / 3.92 / xt
+            t = e / se if se > 0 else 0.0
+            f_js = max(0.0, 1.0 - 1.0 / (t * t)) if t else 0.0
+            _EQ[(r["liga"], r["codigo"], r["lectura"])] = dict(r, por_u=e, por_u_encogido=e * f_js, ee_u=se)
     return _EQ
 
 
@@ -1200,13 +1230,14 @@ def _situacion_equipo(dep, liga, P, fecha, local, rival, probable=None):
         if e5["S7"] is not None: s["seq"] = _ind(e5["S7"])
     win = lambda d: sum(1 for g in P if 0 < (fecha - g["fecha"]).days <= d)
     pv = Pl[-1] if Pl else None
-    if dep == "NHL":
+    if dep in HOCKEY5:
         if rest is not None and rest <= 20:
             s["b2b"] = _ind(rest == 1); s["carga7"] = win(7); s["c4en6"] = _ind(win(5) >= 3); s["desc3"] = _ind(rest >= 3)
             if pv is not None and pv.get("ot") is not None: s["ot"] = _ind(pv["ot"])
             if pv is not None and pv.get("pim") is not None: s["pim"] = pv["pim"] / 10.0
         if not local:
-            s["gira"] = _ind(_visitas_seguidas(P, False) >= 3); s["alt"] = _ind(rival in ALT_NHL)
+            s["gira"] = _ind(_visitas_seguidas(P, False) >= 3)
+            if dep == "NHL": s["alt"] = _ind(rival in ALT_NHL)
     elif dep in ("NBA", "NCAAMB"):
         if rest is not None and rest <= 30:
             s["b2b"] = _ind(rest == 1); s["c3en4"] = _ind(win(3) >= 2); s["desc3"] = _ind(rest >= 3)
@@ -1251,7 +1282,7 @@ def calcular_equipos(p):
     Sh = _situacion_equipo(dep, liga, _previos(T[eh], fecha), fecha, True, ea, p["home"].get("probable"))
     Sa = _situacion_equipo(dep, liga, _previos(T[ea], fecha), fecha, False, eh, p["away"].get("probable"))
     cat = catalogo_equipos()
-    unidad = {"BEISBOL": "carreras", "FUTBOL": "goles", "NHL": "goles"}.get(dep, "puntos")
+    unidad = ("goles" if dep in HOCKEY5 else {"BEISBOL": "carreras", "FUTBOL": "goles"}.get(dep, "puntos"))
     out = {"unidad": unidad}
     for lado, S_prop, S_riv, nombre in (("home", Sh, Sa, p["home"]["nombre"]), ("away", Sa, Sh, p["away"]["nombre"])):
         lst = []; suma = 0.0

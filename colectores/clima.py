@@ -23,7 +23,7 @@ FC = ("https://api.open-meteo.com/v1/forecast?latitude=%.3f&longitude=%.3f&timez
 UA = "Mozilla/5.0 (Edgeline clima)"
 
 # deportes que se juegan bajo techo siempre
-TECHADOS = {"nba", "ncaamb", "nhl", "wnba"}
+TECHADOS = {"nba", "ncaamb", "nhl", "wnba", "shl", "liiga", "ahl", "del"}
 
 # NPB / KBO: nombre del estadio (como lo publica cada liga) -> (lat, lon, techado)
 ESTADIOS = {

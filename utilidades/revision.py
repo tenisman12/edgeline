@@ -34,6 +34,7 @@ TEMPORADA = {
     "mlb": (3, 11), "npb": (3, 11), "kbo": (3, 11),
     "lmp": (10, 2), "lvbp": (10, 2), "lidom": (10, 2), "abl": (11, 2),
     "nhl": (10, 6), "nba": (10, 6), "ncaamb": (11, 4),
+    "shl": (9, 4), "liiga": (9, 4), "ahl": (10, 6), "del": (9, 4),
     "nfl": (9, 2), "ncaafb": (8, 1),
     "premier": (8, 5), "laliga": (8, 5), "seriea": (8, 5), "bundesliga": (8, 5),
     "ligue1": (8, 5), "ligamx": (7, 5), "mls": (2, 12), "champions": (9, 5),
@@ -41,6 +42,7 @@ TEMPORADA = {
 # Dias de atraso tolerados dentro de temporada. Las ligas que juegan a diario toleran menos.
 ATRASO = defaultdict(lambda: 10, {
     "mlb": 3, "npb": 3, "kbo": 3, "nhl": 3, "nba": 3, "ncaamb": 5,
+    "shl": 7, "liiga": 7, "ahl": 5, "del": 7,       # pausas por selecciones en Europa; la AHL juega sobre todo en fin de semana
     "nfl": 9, "ncaafb": 9,            # juegan una vez por semana
     # Ligas europeas: 25 dias. El paron internacional de septiembre de 2026 duro TRES SEMANAS (21-sep a 9-oct:
     # ultima jornada 19-20 de septiembre, vuelven el 10-11 de octubre) porque la final del Mundial fue el 19 de
@@ -53,13 +55,14 @@ ATRASO = defaultdict(lambda: 10, {
 })
 ARCHIVOS = {"beisbol.csv": ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl"),
             "nba.csv": ("nba", "ncaamb"), "americano.csv": ("nfl", "ncaafb"),
-            "hockey.csv": ("nhl",),
+            "hockey.csv": ("nhl", "shl", "liiga", "ahl", "del"),
             "futbol.csv": ("premier", "laliga", "seriea", "bundesliga", "ligue1", "ligamx", "mls", "champions")}
 # Rango plausible del MAE de la linea base del total, por liga. Fuera de esto la base esta mezclada o rota.
 # (el defecto 1 se delataba con un MAE base de 29.3 en NBA, imposible para una liga sola)
 MAE_BASE = {"beisbol_mlb": (3.0, 5.0), "beisbol_npb": (2.5, 4.5), "beisbol_kbo": (3.0, 5.5),
             "beisbol_lmp": (2.5, 4.5), "nba": (14.0, 22.0), "ncaamb": (12.0, 20.0),
-            "nfl": (9.0, 15.0), "ncaafb": (11.0, 18.0), "hockey": (1.5, 3.0)}
+            "nfl": (9.0, 15.0), "ncaafb": (11.0, 18.0), "hockey": (1.5, 3.0),
+            "hockey_shl": (1.5, 3.0), "hockey_liiga": (1.5, 3.0), "hockey_ahl": (1.5, 3.0), "hockey_del": (1.5, 3.0)}
 # Juegos que debe tener cada liga como piso (defecto 2: la copia local tenia 689 de KBO de 4,377).
 PISO_JUEGOS = {"mlb": 9000, "npb": 4000, "kbo": 4000, "nhl": 4000, "nba": 5000, "ncaamb": 18000,
                "nfl": 1400, "ncaafb": 4000, "lmp": 1700, "lvbp": 1200, "lidom": 800, "abl": 600,
@@ -271,7 +274,7 @@ def revisar_validacion():
         except Exception:
             inv = {}
     liga_de = {"beisbol_mlb": "mlb", "beisbol_npb": "npb", "beisbol_kbo": "kbo", "beisbol_lmp": "lmp",
-               "hockey": "nhl", "nba": "nba", "ncaamb": "ncaamb", "nfl": "nfl", "ncaafb": "ncaafb"}
+               "hockey": "nhl", "hockey_shl": "shl", "hockey_liiga": "liiga", "hockey_ahl": "ahl", "hockey_del": "del", "nba": "nba", "ncaamb": "ncaamb", "nfl": "nfl", "ncaafb": "ncaafb"}
     for dep, mk in (vm.get("deportes") or {}).items():
         lg = liga_de.get(dep)
         tot = (inv.get(lg) or {}).get("juegos") if lg else None

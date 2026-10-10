@@ -38,7 +38,12 @@ PREFIJOS = ("tennis_atp", "tennis_wta")                                  # tenis
 DEPORTES = ["baseball_mlb", "baseball_npb", "baseball_kbo", "icehockey_nhl",
             "americanfootball_nfl", "americanfootball_ncaaf", "basketball_nba", "basketball_ncaab",
             "soccer_mexico_ligamx", "soccer_epl", "soccer_spain_la_liga", "soccer_italy_serie_a",
-            "soccer_germany_bundesliga", "soccer_france_ligue_one", "soccer_uefa_champs_league", "soccer_usa_mls"]
+            "soccer_germany_bundesliga", "soccer_france_ligue_one", "soccer_uefa_champs_league", "soccer_usa_mls",
+            "icehockey_sweden_hockey_league", "icehockey_liiga", "icehockey_ahl"]       # SHL, Liiga, AHL (la DEL no esta en The Odds API)
+# Por deporte: regiones y mercados distintos a los de todos (ahorra creditos). SHL, Liiga y AHL: solo Europa (ahi esta
+# Pinnacle) y solo ganador y total (no se apuestan spreads): 2 creditos por foto en vez de 6.
+POR_DEPORTE = {"icehockey_sweden_hockey_league": ("eu", "h2h,totals"), "icehockey_liiga": ("eu", "h2h,totals"),
+               "icehockey_ahl": ("eu", "h2h,totals")}
 SALIDA = os.path.join(BASE, "salida", "cuotas_casas.json")           # foto COMPLETA mas reciente (todas las casas): la lee plataforma.py
 HIST = os.path.join(BASE, "salida", "cuotas_sharp_%s.csv")           # historia compacta por lado (sharp + mejor cuota) para CLV
 HORAS = 60                                                            # solo partidos que empiezan en <= 60 h (ahorra creditos y espacio)
@@ -59,9 +64,15 @@ def get(url):
         return json.load(r)
 
 
+def costo(sportkey):
+    reg, mer = POR_DEPORTE.get(sportkey, (REGIONES, MERCADOS))
+    return len(mer.split(",")) * len(reg.split(","))
+
+
 def snapshot(sportkey, ahora, eventos=None):
+    reg, mer = POR_DEPORTE.get(sportkey, (REGIONES, MERCADOS))
     url = API % sportkey + "?" + urllib.parse.urlencode(
-        {"apiKey": KEY, "regions": REGIONES, "markets": MERCADOS,
+        {"apiKey": KEY, "regions": reg, "markets": mer,
          "oddsFormat": "american", "dateFormat": "iso"})
     try:
         data = get(url)
@@ -141,6 +152,14 @@ def priorizar(deportes):
             n[g["liga"]] = n.get(g["liga"], 0) + 1
     except Exception:
         for lg in ("npb", "kbo"):
+            n.setdefault(lg, 1)
+    # SHL, Liiga y AHL tampoco: su calendario sale de proximos_hockey (fuentes oficiales de cada liga)
+    try:
+        import proximos_hockey as PH
+        for g in PH.recolectar(["shl", "liiga", "ahl"], 2, verbose=False):
+            n[g["liga"]] = n.get(g["liga"], 0) + 1
+    except Exception:
+        for lg in ("shl", "liiga", "ahl"):
             n.setdefault(lg, 1)
     con = [(n.get(sharp.liga_de(d) or "", 0), d) for d in deportes]
     con = [x for x in con if x[0] > 0] or [(0, d) for d in deportes]
@@ -244,18 +263,20 @@ def main():
     except Exception as e:
         print("No se pudo leer la lista de deportes (%s); se usan los configurados." % str(e)[:60])
     deportes = priorizar(deportes)
-    costo = len(MERCADOS.split(",")) * len(REGIONES.split(","))
     usados = _creditos_mes()
     disponibles = max(0, TOPE_MES - usados)
-    if disponibles < costo:
+    if disponibles < min([costo(d) for d in deportes] or [2]):
         print("Tope mensual alcanzado (%d de %d creditos usados este mes): no se piden cuotas hasta el mes que entra." % (usados, TOPE_MES)); return
     presupuesto = min(PRESUPUESTO, disponibles)
-    maximo = max(1, presupuesto // costo)
     print("Creditos usados este mes: %d de %d; esta foto puede gastar hasta %d." % (usados, TOPE_MES, presupuesto))
-    if len(deportes) > maximo:
-        print("Presupuesto %d creditos (%d por deporte): se piden %d de %d deportes: %s" % (presupuesto, costo, maximo, len(deportes), ", ".join(deportes[:maximo])))
-        deportes = deportes[:maximo]
-    _sumar_creditos(len(deportes) * costo)
+    elegidos, gasto = [], 0
+    for d in deportes:                      # en orden de prioridad, mientras alcance (cada deporte con su costo)
+        if gasto + costo(d) <= presupuesto:
+            elegidos.append(d); gasto += costo(d)
+    if len(elegidos) < len(deportes):
+        print("Presupuesto %d creditos: se piden %d de %d deportes (%d creditos): %s" % (presupuesto, len(elegidos), len(deportes), gasto, ", ".join(elegidos)))
+    deportes = elegidos
+    _sumar_creditos(gasto)
     ahora = dt.datetime.now(dt.timezone.utc).replace(microsecond=0, tzinfo=None).isoformat() + "Z"
 
     print("Snapshot de cuotas %s" % ahora)

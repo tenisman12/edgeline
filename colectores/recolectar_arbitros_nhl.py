@@ -89,8 +89,8 @@ def partidos():
     out = {}
     with open(os.path.join(BASE, "datos", "hockey.csv"), encoding="utf-8-sig", newline="") as f:
         for r in csv.DictReader(f):
-            if str(r.get("is_home")).replace(".0", "") != "1":
-                continue
+            if str(r.get("is_home")).replace(".0", "") != "1" or (r.get("league") or "NHL") != "NHL":
+                continue                      # datos/hockey.csv tambien trae SHL, Liiga, AHL y DEL
             out[str(r.get("gamePk")).split(".")[0]] = r
     return out
 

@@ -10,6 +10,7 @@ Actions, en cada actualizacion, "mezcla" semillas/ con datos/: solo AGREGA filas
     python utilidades\\semillas.py exportar kbo      (data_maestra\\baseball_boxscores.csv y datos\\beisbol.csv -> semillas\\kbo_historial.csv)
     python utilidades\\semillas.py exportar kbo_box  (data_maestra\\kbo_box.csv y kbo_lanzadores -> semillas\\)
     python utilidades\\semillas.py exportar xg       (datos\\equipos\\nhl_xg_partidos.csv -> semillas\\nhl_xg_partidos.csv)
+    python utilidades\\semillas.py exportar hockey_ligas  (data_maestra\\hockey_ligas.csv -> semillas\\hockey_ligas.csv: SHL, Liiga, AHL, DEL)
     python utilidades\\semillas.py mezclar           (semillas\\ -> datos\\ ; lo corre actualizar_todo.py solo)
     python utilidades\\semillas.py estado
 """
@@ -29,6 +30,8 @@ DESTINOS = {
     # LMP (workflow "lmp"): temporadas rellenadas desde la MLB Stats API y lanzadores por juego para la capa de abridores
     "lmp_historial.csv": (os.path.join("datos", "beisbol.csv"), lambda r: (str(r.get("gamePk")).replace(".0", ""), str(r.get("is_home")).replace(".0", ""))),
     "lmp_lanzadores.csv": (os.path.join("datos", "abridores", "lmp_lanzadores.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("jugador"))),
+    # SHL, Liiga, AHL y DEL (colectores/recolectar_hockey_ligas.py): historia de 2024-25 en adelante bajada en la PC
+    "hockey_ligas.csv": (os.path.join("datos", "hockey.csv"), lambda r: (str(r.get("gamePk")).replace(".0", ""), str(r.get("is_home")).replace(".0", ""))),
     # NPB: lanzadores por juego 2022-2026 del Nippon Baseball Data Repository (capa de abridores medida el 6-oct)
     "npb_lanzadores.csv": (os.path.join("datos", "abridores", "npb_lanzadores.csv"), lambda r: (str(r.get("game_id")), r.get("team"), r.get("player_id"))),
 }
@@ -80,8 +83,25 @@ def exportar(que):
             print("No existe datos\\equipos\\nhl_xg_partidos.csv: corre antes colectores\\recolectar_xg_partidos.py"); return 1
         ruta = os.path.join(SEM, "nhl_xg_partidos.csv"); escribir(ruta, c, rs)
         print("xG NHL: %d filas, %s -> %s, en %s" % (len(rs), min(r["game_date"] for r in rs), max(r["game_date"] for r in rs), ruta))
+    elif que == "hockey_ligas":
+        sys.path.insert(0, os.path.join(BASE, "colectores"))
+        import recolectar_hockey_ligas as RH
+        c, rs = leer(os.path.join(BASE, "data_maestra", "hockey_ligas.csv"))
+        if not rs:
+            print("No existe data_maestra\\hockey_ligas.csv: corre antes colectores\\recolectar_hockey_ligas.py"); return 1
+        filas = [RH.a_archivo(RH.a_interno(r)) for r in rs]
+        cortos = sorted({r["team"] for r in filas if r.get("league") == "AHL" and len(r.get("team") or "") <= 4})
+        if cortos:
+            print("La AHL todavia tiene codigos en vez de nombres (%s): corre colectores\\recolectar_hockey_ligas.py --ligas AHL" % ", ".join(cortos[:8]))
+            return 1
+        ruta = os.path.join(SEM, "hockey_ligas.csv"); escribir(ruta, RH.COLS_ARCHIVO, filas)
+        import collections
+        cnt = collections.Counter((r["league"], r["season"]) for r in filas if str(r.get("is_home")) in ("1", "1.0"))
+        print("hockey_ligas: %d filas -> %s" % (len(filas), ruta))
+        for k, v in sorted(cnt.items()):
+            print("  %-6s %s %5d juegos" % (k[0], k[1], v))
     else:
-        print("exportar kbo | exportar kbo_box | exportar xg"); return 1
+        print("exportar kbo | exportar kbo_box | exportar xg | exportar hockey_ligas"); return 1
     print("Sube con: git add semillas && git commit -m \"semillas %s\" && git push origin main" % que)
     return 0
 

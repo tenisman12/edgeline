@@ -174,7 +174,7 @@ def _relleno_nhl(hoy):
     fechas = {}
     for r in hockey:
         f = (r.get("game_date") or "")[:10]
-        if f >= lim and r.get("team"):
+        if f >= lim and r.get("team") and (r.get("league") or "NHL") == "NHL":      # solo NHL (el archivo trae otras ligas)
             fechas.setdefault(r["team"], set()).add(f)
     tienen = {r.get("team") for r in porteros}
     faltan = [t for t in fechas if t not in tienen]
