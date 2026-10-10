@@ -272,6 +272,16 @@ def tasa_empate60(liga, n=1500):
     return _CACHE[k]
 
 
+def lineas_equipo(liga, n=1500):
+    """linea ~promedio de goles de local y de visita en la liga (ultimos n juegos), como en la validacion."""
+    lg = (liga or "nhl").lower()
+    k = ("lineas_eq", io.BASE, lg)
+    if k not in _CACHE:
+        G = juegos(lg.upper())[-n:]
+        _CACHE[k] = (medio(sum(g["gh"] for g in G) / len(G)), medio(sum(g["ga"] for g in G) / len(G))) if len(G) >= 100 else None
+    return _CACHE[k]
+
+
 def apilar(liga, clave, p_prod, p_motor, base=None):
     c = cfg_liga(liga, base)
     w = ((c or {}).get("apilado") or {}).get(clave)

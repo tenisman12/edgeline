@@ -199,7 +199,7 @@ def calificar_valor(r, res, liga=""):
     elif base == "Spread":
         L = num(mk.split()[1]); m = (res["gh"] - res["ga"]) if lado == "home" else (res["ga"] - res["gh"])
         out = "push" if m + L == 0 else ("gano" if m + L > 0 else "perdio")
-    elif base == "Carreras":                     # total por equipo (motor de carreras, 10-oct-2026): "Carreras local 4.5"
+    elif base in ("Carreras", "Goles"):          # total por equipo (10-oct-2026): "Carreras local 4.5" / "Goles visita 2.5"
         L = num(mk.split()[2]); t = res["gh"] if mk.split()[1] == "local" else res["ga"]
         out = "push" if t == L else ("gano" if (t > L) == (lado == "over") else "perdio")
     if not out: return "", ""
@@ -435,7 +435,7 @@ def calificar_predicciones(hoy=None):
             o["real"] = t
             if t == L: o["estado"] = "push"; out.append(o); continue
             y = 1 if (t > L) == (r["lado"] == "over") else 0
-        elif base == "Carreras":                 # total por equipo del motor de carreras: "Carreras local 4.5" / "Carreras visita 3.5"
+        elif base in ("Carreras", "Goles"):      # total por equipo: "Carreras local 4.5" / "Goles visita 2.5"
             if res.get("gh") is None or L is None: o["estado"] = "sin_dato"; out.append(o); continue
             t = res["gh"] if (r["mercado"] or "").split()[1] == "local" else res["ga"]; o["real"] = t
             if t == L: o["estado"] = "push"; out.append(o); continue

@@ -54,6 +54,12 @@ for _l in _HOCKEY_LIGAS:                            # hasta que validar_mercados
 # tenis: games totales sin ventaja (sesgo de games por set).
 for _l in ("ligamx", "mls", "seriea", "atp", "wta"):
     NO_PUBLICABLE.add((_l, "Total"))
+# Totales por equipo (10-oct-2026): "Carreras local/visita X.5" (beisbol, motor de carreras) y "Goles local/visita X.5"
+# (hockey, modelo). Publicables solo donde validar_mercados.py los certifica ("Carreras local O/U", "Goles visita O/U"...).
+for _l in _BEIS:
+    NO_PUBLICABLE.add((_l, "Carreras local")); NO_PUBLICABLE.add((_l, "Carreras visita"))
+for _l in ("nhl",) + _HOCKEY_LIGAS:
+    NO_PUBLICABLE.add((_l, "Goles local")); NO_PUBLICABLE.add((_l, "Goles visita"))
 
 
 AJUSTE_GAMES = {}  # (liga, best_of) -> sesgo de games a corregir (lo calcula validar_mercados.py)
@@ -94,6 +100,10 @@ def _aplicar_validacion():
         # Total: el del modelo o el de la capa de totales (nucleo/capa_totales.py), el que pase la validacion
         poner(liga, "Total", pub(d, "Over/Under (lineas ~promedio)") or pub(d, "Over/Under (capa)"))
         poner(liga, "Spread", mayoria(d, [k for k in d if k.startswith(("Local cubre margen", "Puck line", "Run line"))]))
+        for pref in ("Carreras", "Goles"):
+            for lado_ in ("local", "visita"):
+                if ("%s %s O/U" % (pref, lado_)) in d:
+                    poner(liga, "%s %s" % (pref, lado_), pub(d, "%s %s O/U" % (pref, lado_)))
     for liga, clave in (("atp", "tenis_ATP"), ("wta", "tenis_WTA")):
         d = dep.get(clave)
         if not d: continue
@@ -674,6 +684,9 @@ def _motor_beisbol(g, c, fecha, m, eventos=None):
             r["p_over_capa"] = m["p_over"]
             m["p_over"] = round(pa, 4)
     m["motor_carreras"] = r
+    m["totales_equipo"] = {"prefijo": "Carreras", "fuente": "motor de carreras", "x_home": r["x_home"], "x_away": r["x_away"],
+                           "linea_home": r["linea_home"], "linea_away": r["linea_away"], "p_over_home": r["p_over_home"],
+                           "p_over_away": r["p_over_away"], "cuotas": te}
     m.setdefault("extra", [])
     m["extra"] += [("Motor: carreras local / visita", "%.2f / %.2f" % (r["x_home"], r["x_away"])),
                    ("Motor: total esperado", r["total"]),
@@ -862,7 +875,23 @@ def _pred_base(g, c, fecha, eventos=None):
         r["p_60"] = p60
         if nota60:
             nota += " 1X2 60 min: %s." % nota60
-        return {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "goles", "capas_medidas": capas,
+        # totales por equipo (10-oct-2026): goles de cada equipo con los esperados del modelo (Poisson + prorroga);
+        # linea del mercado si hay cuota de team_totals, si no la ~promedio de la liga. Publicable solo si la validacion lo dice.
+        te_h = None
+        try:
+            from nucleo import motor_goles as _MG
+            ev_ = sharp._ev_de_partido(eventos, g["liga"], g.get("fecha_utc") or g.get("fecha"), g["home"]["nombre"], g["away"]["nombre"]) if eventos else None
+            cq = _MG.cuotas_equipo(ev_, g["home"]["nombre"]) if ev_ else {}
+            lq = _MG.lineas_equipo(g["liga"])
+            if lq:
+                lq = ((cq.get("home") or {}).get("linea") or lq[0], (cq.get("away") or {}).get("linea") or lq[1])
+                mq = _MG.mercados(max(r["xg_home"], 0.2), max(r["xg_away"], 0.2), 1000, hockey.OT_LOCAL, [], lq)
+                te_h = {"prefijo": "Goles", "fuente": "modelo", "x_home": r["xg_home"], "x_away": r["xg_away"],
+                        "linea_home": lq[0], "linea_away": lq[1], "p_over_home": round(mq["eq_h"], 4),
+                        "p_over_away": round(mq["eq_a"], 4), "cuotas": cq}
+        except Exception:
+            te_h = None
+        return {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "goles", "capas_medidas": capas, "totales_equipo": te_h,
                 "x_home": r["xg_home"], "x_away": r["xg_away"], "total": r["total"],
                 "linea_total": r["linea_total"], "linea_es_mercado": tot_m is not None, "p_over": r["p_over"],
                 "confianza": _conf(max(p_h, 1 - p_h)),
@@ -974,22 +1003,19 @@ def _mercados(g, m, umbral):
         fair = mercado.sin_vig([mercado.prob_implicita(q["over_odds"]), mercado.prob_implicita(q["under_odds"])])
         out.append(_fila("Total %.1f" % m["linea_total"], "over", q["over_odds"], m["p_over"], fair[0], umbral, liga))
         out.append(_fila("Total %.1f" % m["linea_total"], "under", q["under_odds"], 1 - m["p_over"], fair[1], umbral, liga))
-    mc = m.get("motor_carreras") or {}
-    for lado_e, clave in (("home", "equipo_local"), ("away", "equipo_visita")):
-        c_ = (mc.get("cuotas_equipo") or {}).get(lado_e)
-        if not c_ or c_.get("over") is None or c_.get("under") is None:
+    te_ = m.get("totales_equipo") or {}
+    for lado_e in ("home", "away"):
+        c_ = (te_.get("cuotas") or {}).get(lado_e)
+        if not c_ or c_.get("over") is None or c_.get("under") is None or te_.get("linea_" + lado_e) is None:
             continue
         L = c_["linea"]
-        if abs(L - mc["linea_" + lado_e]) > 1e-9:
+        if abs(L - te_["linea_" + lado_e]) > 1e-9:
             continue
-        po = mc["p_over_" + lado_e]
+        po = te_["p_over_" + lado_e]
         fair = mercado.sin_vig([mercado.prob_implicita(c_["over"]), mercado.prob_implicita(c_["under"])])
-        nom = "Carreras %s %.1f" % ("local" if lado_e == "home" else "visita", L)
+        nom = "%s %s %.1f" % (te_["prefijo"], "local" if lado_e == "home" else "visita", L)
         for ld, cu, pp, pf in (("over", c_["over"], po, fair[0]), ("under", c_["under"], 1 - po, fair[1])):
-            f_ = _fila(nom, ld, cu, pp, pf, umbral, liga)
-            if not (mc.get("aplicado") or {}).get(clave) and f_["estado"] in ("valor", "revisar"):
-                f_["estado"] = "sin_validar"; f_["kelly"] = 0.0
-            out.append(f_)
+            out.append(_fila(nom, ld, cu, pp, pf, umbral, liga))
     if m.get("spread") and q.get("spread_home_odds") is not None and q.get("spread_away_odds") is not None \
             and q.get("spread_home") is not None and abs(float(q["spread_home"]) - float(m["spread"]["linea_home"])) < 1e-6:
         fair = mercado.sin_vig([mercado.prob_implicita(q["spread_home_odds"]), mercado.prob_implicita(q["spread_away_odds"])])
@@ -1002,7 +1028,7 @@ def _mercados(g, m, umbral):
 def _fila(mkt, lado, cuota, p, pf, umbral, liga=None):
     e = p - pf
     est = "revisar" if e >= EDGE_SOSPECHOSO else ("valor" if e >= umbral else "")
-    tipo = mkt.split()[0]
+    tipo = " ".join(mkt.split()[:2]) if mkt.startswith(("Carreras ", "Goles ")) else mkt.split()[0]
     if est in ("valor", "revisar") and (liga, tipo) in NO_PUBLICABLE:
         est = "sin_validar"      # hay diferencia con el mercado, pero este mercado no vence al baseline
     if est in ("valor", "revisar") and mercado.american_a_decimal(cuota) < CUOTA_MIN:
@@ -1887,7 +1913,7 @@ def registrar_predicciones(partidos, ruta):
         mk_nombre = {x["mercado"] + "|" + x["lado"]: x for x in p.get("mercados") or []}
         def fila(mercado, lado, pm, vm=None, linea=None):
             base = mercado.split()[0]
-            x = (mk_nombre.get(mercado + "|" + lado) or {}) if base == "Carreras" else (mk.get(base + "|" + lado) or {})
+            x = (mk_nombre.get(mercado + "|" + lado) or {}) if base in ("Carreras", "Goles") else (mk.get(base + "|" + lado) or {})
             nuevos.append({"registrado": ahora, "liga": p["liga"], "id": p["id"], "fecha": p["fecha"], "home": p["home"]["nombre"],
                            "away": p["away"]["nombre"], "mercado": mercado, "lado": lado, "p_modelo": "" if pm is None else round(pm, 4),
                            "valor_modelo": "" if vm is None else round(vm, 3), "linea": "" if linea is None else linea,
@@ -1904,16 +1930,14 @@ def registrar_predicciones(partidos, ruta):
         if sp and sp.get("linea_home") is not None and (p["liga"], p["id"], "Spread") not in existentes:
             fila("Spread %+g" % sp["linea_home"], "home" if sp["p_home"] >= 0.5 else "away",
                  sp["p_home"] if sp["p_home"] >= 0.5 else sp["p_away"], linea=sp["linea_home"] if sp["p_home"] >= 0.5 else -sp["linea_home"])
-        mc = m.get("motor_carreras") or {}
-        if mc.get("linea_home") is not None:
+        te_ = m.get("totales_equipo") or {}
+        if te_.get("linea_home") is not None and (p["liga"], p["id"], te_["prefijo"]) not in existentes:
             for ld_e, nom_e in (("home", "local"), ("away", "visita")):
-                if (p["liga"], p["id"], "Carreras") in existentes:
-                    break
-                po = mc.get("p_over_" + ld_e); L = mc.get("linea_" + ld_e)
+                po = te_.get("p_over_" + ld_e); L = te_.get("linea_" + ld_e)
                 if po is None or L is None:
                     continue
-                fila("Carreras %s %s" % (nom_e, L), "over" if po >= 0.5 else "under", po if po >= 0.5 else 1 - po,
-                     vm=mc.get("x_" + ld_e), linea=L)
+                fila("%s %s %s" % (te_["prefijo"], nom_e, L), "over" if po >= 0.5 else "under", po if po >= 0.5 else 1 - po,
+                     vm=te_.get("x_" + ld_e), linea=L)
         if p["tipo"] == "tenis" and (p["liga"], p["id"], "Breaks") not in existentes:
             for nom, v in m.get("extra") or []:
                 if nom == "Breaks esperados" and isinstance(v, (int, float)):

@@ -37,6 +37,9 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
       "Accept-Language": "en,de;q=0.8"}
 HT = "https://lscluster.hockeytech.com/feed/?key=50c2cd9b5e18e390&client_code=ahl&"
 SHL_ACTUAL = "20961"                       # SHL 2026-27 en swehockey
+# ids conocidos de la fase regular de la SHL en swehockey (el selector de temporadas de la pagina no trae ids para todas;
+# 2024-25 = 15977, confirmado el 10-oct-2026 desde la pagina del SM-slutspel 2024-25, id 17557)
+SHL_IDS = {"2024-25": "15977"}
 SIN_FASE_REGULAR = set()   # (liga, temporada) cuyo calendario no es la fase regular: sus filas se quitan
 VISTOS = set()          # juegos vistos en los calendarios de esta corrida (incluye los ya guardados que no se piden)
 FIJAS = ["gamePk", "league", "season", "game_date", "team", "opp", "is_home", "goals", "goals_opp",
@@ -278,7 +281,7 @@ def shl_temporadas(n_atras):
         anio -= 1
         txt = "%d-%02d" % (anio, (anio + 1) % 100)
         cand, h = shl_candidatos(actual)
-        vals = cand.get(txt, [])
+        vals = cand.get(txt, []) or ([SHL_IDS[txt]] if txt in SHL_IDS else [])
         if not vals:
             if h:
                 os.makedirs(os.path.dirname(COB), exist_ok=True)
@@ -522,7 +525,12 @@ def main():
     if "AHL" in ligas:
         print("AHL ..."); juegos += ahl(n_atras, conocidos)
     if "SHL" in ligas:
-        print("SHL ..."); juegos += shl(n_atras, conocidos)
+        # la historia de la SHL 2024-25 faltaba (swehockey no daba su id): si no esta en los datos, se baja una vez
+        n_shl = n_atras
+        if n_atras == 0 and not any(r.get("league") == "SHL" and str(r.get("season") or "").startswith("2024") for r in previos):
+            n_shl = 2
+            print("SHL: falta la temporada 2024-25 en los datos; se baja la historia esta vez")
+        print("SHL ..."); juegos += shl(n_shl, conocidos)
     if "DEL" in ligas:
         print("DEL ..."); juegos += del_juegos(n_atras, conocidos)
 

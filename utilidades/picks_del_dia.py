@@ -190,8 +190,8 @@ def descalibrados():
             if r.get("estado") != "calificado" or r.get("acierto") in ("", None):
                 continue
             tipo = (r.get("mercado") or "").split()[0]
-            tipo = {"Games": "Total"}.get(tipo, tipo)
-            if tipo not in ("Ganador", "Total"):
+            tipo = {"Games": "Total", "Carreras": "Equipo", "Goles": "Equipo"}.get(tipo, tipo)
+            if tipo not in ("Ganador", "Total", "Equipo"):
                 continue
             try:
                 p, y = float(r["p_modelo"]), int(float(r["acierto"]))
@@ -281,9 +281,44 @@ def candidatos(rec, dec_bb, v2=None):
     out = []
     if rec.get("pretemporada"):
         return out
-    out_ = _candidatos(rec, dec_bb, v2)
+    out_ = _candidatos(rec, dec_bb, v2) + _candidatos_equipo(rec)
     malos = descalibrados()
-    return [k for k in out_ if (rec.get("liga"), "Total" if str(k.get("mercado", "")).startswith(("Total", "Games")) else "Ganador") not in malos]
+    return [k for k in out_ if (rec.get("liga"), tipo_mercado(k.get("mercado"))) not in malos]
+
+
+def tipo_mercado(mk):
+    mk = str(mk or "")
+    if mk.startswith(("Carreras ", "Goles ")):
+        return "Equipo"
+    return "Total" if mk.startswith(("Total", "Games")) else "Ganador"
+
+
+def _candidatos_equipo(rec):
+    """totales por equipo (10-oct-2026, Alejandro: "quiero que los totales entren en validacion y prediccion"): las filas
+    'Carreras/Goles local/visita X.5' de plataforma en estado VALOR (mercado certificado por validar_mercados.py, edge sobre
+    el precio sin vig de esa casa, cuota >= 1.70) con EV >= 2 %. Stake 1 u (mercado nuevo); hasta uno por partido."""
+    out = []
+    te = (rec.get("modelo") or {}).get("totales_equipo") or {}
+    for x in rec.get("mercados") or []:
+        if not str(x.get("mercado", "")).startswith(("Carreras ", "Goles ")) or x.get("estado") != "valor":
+            continue
+        dec = _dec(x["cuota"])
+        ev = x["p_modelo"] * dec - 1
+        if ev < EV_MIN or not (CUOTA_MIN <= dec <= CUOTA_MAX):
+            continue
+        partes = x["mercado"].split()
+        lado_e = "home" if partes[1] == "local" else "away"
+        equipo = rec[lado_e]["nombre"]
+        unidad = "carreras" if partes[0] == "Carreras" else "goles"
+        out.append({"origen": "total por equipo", "mercado": x["mercado"], "lado": x["lado"],
+                    "pick": "%s %s %s %s" % (equipo, x["lado"], partes[2], unidad), "cuota": x["cuota"], "decimal": round(dec, 3),
+                    "casa": None, "p": x["p_modelo"], "ev": round(ev, 4), "confianza": "baja", "stake": STAKE["baja"],
+                    "senales": "-", "razon": "p %.1f%% (%s) contra %.2f; precio sin vig %.1f%%" % (
+                        100 * x["p_modelo"], te.get("fuente") or "modelo", dec, 100 * x["p_mercado"]),
+                    "_si": ["%s esperadas de %s: %s contra la linea %s" % (unidad, equipo, te.get("x_" + lado_e), partes[2]),
+                            "p %.1f%% contra %.1f%% del precio sin vig" % (100 * x["p_modelo"], 100 * x["p_mercado"])],
+                    "_no": ["mercado nuevo: stake de 1 u hasta tener track record"]})
+    return out
 
 
 def _candidatos(rec, dec_bb, v2=None):
@@ -561,11 +596,11 @@ def main():
                 cc["angulos"] = "; ".join("%s:%+.2f" % (x["codigo"], x["moveria"]) for x in angs_t)
                 si += s_a[:3]; no += n_a[:3]
             cc["por_que_si"] = si; cc["por_que_no"] = no
-    # mejores picks de HOY: hasta un ganador y un total por partido (Alejandro, 9-oct-2026: "quiero tambien picks de
-    # totales"), por EV, tope de cantidad y de bank
+    # mejores picks de HOY: hasta un ganador, un total y un total por equipo por partido (Alejandro, 9-oct-2026: "quiero
+    # tambien picks de totales"; 10-oct: totales por equipo), por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
-        k = (c["liga"], c["id"], "Total" if str(c.get("mercado", "")).startswith(("Total", "Games")) else "Ganador")
+        k = (c["liga"], c["id"], tipo_mercado(c.get("mercado")))
         if k in usados or len(picks) >= a.max or bank + c["stake"] > TOPE_BANK + 1e-9:
             continue
         usados.add(k); bank += c["stake"]; picks.append(c)

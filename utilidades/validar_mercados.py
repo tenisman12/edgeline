@@ -277,6 +277,13 @@ def validar_equipos(clave, meses, bloque, liga=None):
                 if es_hockey:
                     rep.add_val("Goles local esperados", r["xg_home"], gh, sum(g[4] for g in prev) / len(prev))
                     rep.add_val("Goles visita esperados", r["xg_away"], ga, sum(g[5] for g in prev) / len(prev))
+                    # totales por equipo (10-oct-2026): O/U de los goles de cada equipo a la linea ~promedio de su lado,
+                    # con los goles esperados del modelo (Poisson + prorroga, nucleo/motor_goles.mercados)
+                    from nucleo import motor_goles as _MG
+                    lq = (medio(sum(g[4] for g in prev) / len(prev)), medio(sum(g[5] for g in prev) / len(prev)))
+                    mq = _MG.mercados(max(r["xg_home"], 0.2), max(r["xg_away"], 0.2), 1000, hockey.OT_LOCAL, [], lq)
+                    rep.add_prob("Goles local O/U", mq["eq_h"], 1 if gh > lq[0] else 0, sum(1 for g in prev if g[4] > lq[0]) / len(prev))
+                    rep.add_prob("Goles visita O/U", mq["eq_a"], 1 if ga > lq[1] else 0, sum(1 for g in prev if g[5] > lq[1]) / len(prev))
                 if clave == "futbol":
                     for L in (1.5, 2.5, 3.5):
                         rr = mod.predecir(est, th, ta, linea_total=L, handicap=0.0)
@@ -341,6 +348,18 @@ def validar_beisbol(liga, meses, bloque):
     if d0 < d_cal:          # que los bloques de la ventana calificada empiecen donde empezaban sin precalentamiento
         d0 = d_cal - dt.timedelta(days=bloque * ((d_cal - d0).days // bloque))
     capa = []; ritmo = CT.Ritmo([(r["game_date"], r["home"], r["away"], r["total"]) for r in G]) if PRECAL > 0 else None
+    # totales por equipo (10-oct-2026): motor de carreras as-of (nucleo/motor_carreras.py, parametros de
+    # modelos/motor_carreras.json afinados antes de esta ventana) -> "Carreras local O/U" y "Carreras visita O/U"
+    PMC, CMC = {}, None
+    try:
+        from nucleo import motor_carreras as MC
+        CMC = MC.cfg_liga(lg)
+        if CMC:
+            _GM = MC.juegos(lg)
+            _ABR, _ = MC.abridores_rel(lg, _GM)
+            PMC = MC.correr(_GM, CMC["parametros"], _ABR, MC.parques_delta(lg, _GM), CMC["r_nb"])
+    except Exception as e:
+        print("  motor de carreras no disponible para %s: %s" % (lg, e))
     rep_cal = rep
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
@@ -392,6 +411,14 @@ def validar_beisbol(liga, meses, bloque):
                             rep.add_prob("Over/Under (lineas ~promedio)", po, 1 if tot > L else 0, fr_over[L])
                             if fila_capa is not None:
                                 fila_capa["ou"].append((L, 1 if tot > L else 0, fr_over[L]))
+                    mc_ = PMC.get(str(r["gamePk"]))
+                    if mc_ and CMC:
+                        rh_ = (tot + mar) / 2.0; ra_ = tot - rh_
+                        hp = [(x["total"] + x["marg_home"]) / 2.0 for x in prev]; ap_ = [x["total"] - y for x, y in zip(prev, hp)]
+                        lq = (medio(sum(hp) / len(hp)), medio(sum(ap_) / len(ap_)))
+                        mq = MC.mercados(mc_[0], mc_[1], CMC["r_nb"], [], lq)
+                        rep.add_prob("Carreras local O/U", mq["eq_h"], 1 if rh_ > lq[0] else 0, sum(1 for v in hp if v > lq[0]) / len(hp))
+                        rep.add_prob("Carreras visita O/U", mq["eq_a"], 1 if ra_ > lq[1] else 0, sum(1 for v in ap_ if v > lq[1]) / len(ap_))
                     rlh, rla = B.prob_run_line(r, 1.5, xh=xh, xa=xa)
                     if rlh is not None:
                         rep.add_prob("Run line local -1.5", rlh, 1 if mar >= 2 else 0, fb_rl)

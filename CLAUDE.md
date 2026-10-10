@@ -195,6 +195,19 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `decidir_v2.PESO_MODELO["nfl"]` 0.5 -> 0.0 (aprobado): con 0.5 la mezcla empeora al cierre (moneyline z -2.59, spread
   -2.57, total -2.13, 2023-2026). En NFL p final = Pinnacle; el pick sale del precio.
 
+## Totales por equipo: validacion y lista oficial (10-oct-2026, Alejandro: "quiero que los totales entren en validacion y prediccion")
+- `validar_mercados.py` califica "Carreras local/visita O/U" (beisbol, con el motor de carreras as-of) y "Goles local/visita O/U"
+  (hockey, goles esperados del modelo + prorroga) a la linea ~promedio de cada lado contra la tasa historica. Al 10-oct publicables:
+  MLB local (Brier +0.8 %) y visita (+2.4 %), NPB los dos (+2.6 / +2.1 %), KBO local (+1.6 %), LMP local (+4.8 %); NHL los dos
+  (+1.4 / +1.6 %), Liiga los dos (+3.9 / +2.4 %), AHL local (+2.0 %), DEL visita (+5.6 %). SHL sin muestra.
+- plataforma: `modelo.totales_equipo` (prefijo Carreras/Goles, lineas, p_over por lado, cuotas team_totals); filas "Carreras
+  local 4.5" con estado VALOR solo donde la validacion lo certifica (NO_PUBLICABLE por (liga, "Carreras local")...). Se
+  registran en historial_predicciones y se califican.
+- `picks_del_dia.py`: tercer mercado de la lista oficial (uno por partido, EV >= 2 %, cuota >= 1.70, estado valor, 1 u).
+  Cuotas: solo LMP (SportsGameOdds). MLB/NHL/AHL piden el endpoint por evento de The Odds API (team_totals): pendiente.
+- SHL 2024-25: id 15977 en swehockey (`SHL_IDS`); si la temporada falta en los datos, el colector la baja una vez.
+  Liiga SaiPa @ Lukko del 10-oct: la liga lo movio al 25-feb-2027 (liiga.fi); The Odds API tenia la fecha vieja.
+
 ## Peso del modelo frente a Pinnacle, dinamico (10-oct-2026, Alejandro: "armalo")
 - `utilidades/pesos_dinamicos.py` (cada hora en cuotas.yml, despues de clv.py) junta cada prediccion del modelo con la foto de
   Pinnacle al registrarla (clv_detalle.csv) y su resultado, y busca por (liga, Ganador|Total) el w que mejor predice:
