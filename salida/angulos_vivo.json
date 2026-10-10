@@ -1,8 +1,42 @@
 {
- "generado": "2026-10-10T01:22:51",
- "partidos_base": 1,
+ "generado": "2026-10-10T03:21:53",
+ "partidos_base": 6,
  "protocolo": "n >= 300, z >= 2.0 en la direccion registrada, las dos mitades del mismo lado",
  "angulos": {
+  "NHL|H18": {
+   "grupo": "NHL",
+   "codigo": "H18",
+   "angulo": "partido anterior fisico (castigos)",
+   "n": 3,
+   "efecto_pp": -17.14,
+   "z": -0.52,
+   "mitades_pp": [
+    -54.39,
+    1.48
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.13,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
+  "NHL|H7": {
+   "grupo": "NHL",
+   "codigo": "H7",
+   "angulo": "carga de 7 dias",
+   "n": 2,
+   "efecto_pp": 48.78,
+   "z": 18.39,
+   "mitades_pp": [
+    51.43,
+    46.13
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 3.34,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
   "TODAS|B10": {
    "grupo": "TODAS",
    "codigo": "B10",
@@ -51,6 +85,74 @@
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": 0.61,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
+  "NHL|H21": {
+   "grupo": "NHL",
+   "codigo": "H21",
+   "angulo": "tras perder por 4 o mas",
+   "n": 1,
+   "efecto_pp": 54.39,
+   "z": 0.0,
+   "mitades_pp": [
+    null,
+    54.39
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.07,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
+  "NHL|H4": {
+   "grupo": "NHL",
+   "codigo": "H4",
+   "angulo": "un dia de diferencia de descanso",
+   "n": 1,
+   "efecto_pp": -49.08,
+   "z": 0.0,
+   "mitades_pp": [
+    null,
+    -49.08
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 2.85,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
+  "NHL|H13": {
+   "grupo": "NHL",
+   "codigo": "H13",
+   "angulo": "gira del visitante (2+ seguidos de visita)",
+   "n": 1,
+   "efecto_pp": 51.43,
+   "z": 0.0,
+   "mitades_pp": [
+    null,
+    51.43
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 1.19,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-09"
+  },
+  "NHL|H23": {
+   "grupo": "NHL",
+   "codigo": "H23",
+   "angulo": "cuarto juego en 6 noches",
+   "n": 1,
+   "efecto_pp": 46.13,
+   "z": 0.0,
+   "mitades_pp": [
+    null,
+    46.13
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 2.95,
    "desde": "2026-10-09",
    "hasta": "2026-10-09"
   }
