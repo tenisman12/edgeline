@@ -1,0 +1,672 @@
+{
+ "generado": "2026-10-10T14:33:30",
+ "hipotesis": "trabajo/minar/2026-10-10_tanda8.md",
+ "k": 16,
+ "falsos_esperados": 0.4,
+ "ganador": [
+  {
+   "n_prueba": 9333,
+   "n_activo_prueba": 9333,
+   "n_explorar": 10823,
+   "beta": 0.971,
+   "efecto_pp_por_unidad": 24.28,
+   "direccion_ok": true,
+   "mejora_milesimas": 0.313,
+   "z": 1.23,
+   "mitades": [
+    0.588,
+    0.038
+   ],
+   "residuo_firmado_pp": 1.04,
+   "calibracion_activos": 0.0002,
+   "veredicto": "no pasa",
+   "desde_prueba": "2022-12-11",
+   "codigo": "R1",
+   "angulo": "ventaja de ponches (pitcheo - bateo)",
+   "liga": "BEISBOL",
+   "base": "modelo",
+   "n_total": 20156,
+   "n_activo_total": 20156
+  },
+  {
+   "n_prueba": 2384,
+   "n_activo_prueba": 2252,
+   "n_explorar": 2852,
+   "beta": 0.0089,
+   "efecto_pp_por_unidad": 0.22,
+   "direccion_ok": false,
+   "mejora_milesimas": -0.253,
+   "z": -0.8,
+   "mitades": [
+    -0.227,
+    -0.278
+   ],
+   "residuo_firmado_pp": -0.9,
+   "calibracion_activos": -0.0213,
+   "veredicto": "no pasa",
+   "desde_prueba": "2022-12-11",
+   "codigo": "R2",
+   "angulo": "bullpen cargado, outs de relevo 3 dias (entradas)",
+   "liga": "LMP+NPB",
+   "base": "modelo",
+   "n_total": 5236,
+   "n_activo_total": 4921
+  },
+  {
+   "n_prueba": 1832,
+   "n_activo_prueba": 437,
+   "n_explorar": 2102,
+   "beta": 0.1767,
+   "efecto_pp_por_unidad": 4.42,
+   "direccion_ok": false,
+   "mejora_milesimas": 0.099,
+   "z": 0.1,
+   "mitades": [
+    0.445,
+    -0.246
+   ],
+   "residuo_firmado_pp": 2.43,
+   "calibracion_activos": -0.0055,
+   "veredicto": "no pasa",
+   "desde_prueba": "2022-12-11",
+   "codigo": "R3",
+   "angulo": "abridor con 105+ pitcheos en su salida anterior",
+   "liga": "LMP+NPB",
+   "base": "modelo",
+   "n_total": 3934,
+   "n_activo_total": 936
+  }
+ ],
+ "totales": [
+  {
+   "codigo": "TR1",
+   "angulo": "ponches esperados del juego",
+   "liga": "BEISBOL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 6047,
+   "n_activo_prueba": 6047,
+   "n_total": 20156,
+   "n_activo_total": 20156,
+   "coef_por_unidad": 0.212,
+   "direccion_ok": false,
+   "mejora_mse": -0.0008,
+   "z": -0.93,
+   "mitades": [
+    0.0001,
+    -0.0017
+   ],
+   "sesgo_activos_desv": 0.023,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.01,
+   "ic95_toda_muestra": [
+    -0.052,
+    0.032
+   ],
+   "x_tipico": 0.021214776614495445,
+   "desde_prueba": "2025-07-25"
+  },
+  {
+   "codigo": "TR1",
+   "angulo": "ponches esperados del juego",
+   "liga": "LMP",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 698,
+   "n_activo_prueba": 698,
+   "n_total": 2326,
+   "n_activo_total": 2326,
+   "coef_por_unidad": 2.935,
+   "direccion_ok": false,
+   "mejora_mse": 0.0039,
+   "z": 0.13,
+   "mitades": [
+    0.0509,
+    -0.0431
+   ],
+   "sesgo_activos_desv": 0.076,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.067,
+   "ic95_toda_muestra": [
+    -0.065,
+    0.198
+   ],
+   "x_tipico": 0.023127814529644575,
+   "desde_prueba": "2023-12-20",
+   "descriptivo": true
+  },
+  {
+   "codigo": "TR2",
+   "angulo": "bullpen de los dos (entradas, 3 dias)",
+   "liga": "LMP+NPB",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1571,
+   "n_activo_prueba": 1550,
+   "n_total": 5236,
+   "n_activo_total": 5152,
+   "coef_por_unidad": 0.084,
+   "direccion_ok": true,
+   "mejora_mse": -0.2302,
+   "z": -2.45,
+   "mitades": [
+    -0.3184,
+    -0.1421
+   ],
+   "sesgo_activos_desv": 0.08,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.988,
+   "ic95_toda_muestra": [
+    0.704,
+    1.272
+   ],
+   "x_tipico": 16.0,
+   "desde_prueba": "2025-06-29"
+  },
+  {
+   "codigo": "TR2",
+   "angulo": "bullpen de los dos (entradas, 3 dias)",
+   "liga": "LMP",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 748,
+   "n_activo_prueba": 746,
+   "n_total": 2491,
+   "n_activo_total": 2447,
+   "coef_por_unidad": 0.123,
+   "direccion_ok": true,
+   "mejora_mse": -0.2841,
+   "z": -1.23,
+   "mitades": [
+    0.0986,
+    -0.6668
+   ],
+   "sesgo_activos_desv": 0.059,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 1.871,
+   "ic95_toda_muestra": [
+    1.355,
+    2.387
+   ],
+   "x_tipico": 19.0,
+   "desde_prueba": "2023-12-16",
+   "descriptivo": true
+  },
+  {
+   "codigo": "TR3",
+   "angulo": "tasa de triples de los dos",
+   "liga": "NBA",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1486,
+   "n_activo_prueba": 1486,
+   "n_total": 4951,
+   "n_activo_total": 4951,
+   "coef_por_unidad": 10.232,
+   "direccion_ok": true,
+   "mejora_mse": -0.3292,
+   "z": -0.77,
+   "mitades": [
+    -0.2176,
+    -0.4409
+   ],
+   "sesgo_activos_desv": -0.074,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.215,
+   "ic95_toda_muestra": [
+    -0.193,
+    0.622
+   ],
+   "x_tipico": 0.03249633213044645,
+   "desde_prueba": "2025-03-24"
+  },
+  {
+   "codigo": "TR4",
+   "angulo": "choque de ritmos",
+   "liga": "NBA",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1501,
+   "n_activo_prueba": 1483,
+   "n_total": 5001,
+   "n_activo_total": 4968,
+   "coef_por_unidad": 17.643,
+   "direccion_ok": false,
+   "mejora_mse": -0.2555,
+   "z": -0.56,
+   "mitades": [
+    -0.439,
+    -0.0723
+   ],
+   "sesgo_activos_desv": -0.062,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.308,
+   "ic95_toda_muestra": [
+    -0.268,
+    0.883
+   ],
+   "x_tipico": 0.02726715266714441,
+   "desde_prueba": "2025-03-24"
+  },
+  {
+   "codigo": "TR3",
+   "angulo": "tasa de triples de los dos",
+   "liga": "NCAAMB",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 4409,
+   "n_activo_prueba": 4409,
+   "n_total": 14696,
+   "n_activo_total": 14696,
+   "coef_por_unidad": 7.279,
+   "direccion_ok": true,
+   "mejora_mse": -0.0291,
+   "z": -0.12,
+   "mitades": [
+    -0.0174,
+    -0.0407
+   ],
+   "sesgo_activos_desv": -0.048,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.252,
+   "ic95_toda_muestra": [
+    0.069,
+    0.435
+   ],
+   "x_tipico": 0.03960860143325495,
+   "desde_prueba": "2025-12-03"
+  },
+  {
+   "codigo": "TR4",
+   "angulo": "choque de ritmos",
+   "liga": "NCAAMB",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 4520,
+   "n_activo_prueba": 4520,
+   "n_total": 15066,
+   "n_activo_total": 15066,
+   "coef_por_unidad": 0.632,
+   "direccion_ok": false,
+   "mejora_mse": 0.0382,
+   "z": 3.04,
+   "mitades": [
+    0.0539,
+    0.0225
+   ],
+   "sesgo_activos_desv": -0.047,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.252,
+   "ic95_toda_muestra": [
+    -0.04,
+    0.545
+   ],
+   "x_tipico": 0.04347132391784576,
+   "desde_prueba": "2025-11-30"
+  },
+  {
+   "codigo": "TR5",
+   "angulo": "arbitro: goles",
+   "liga": "FUTBOL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 467,
+   "n_activo_prueba": 461,
+   "n_total": 1555,
+   "n_activo_total": 1515,
+   "coef_por_unidad": -0.006,
+   "direccion_ok": false,
+   "mejora_mse": -0.0002,
+   "z": -1.41,
+   "mitades": [
+    -0.0002,
+    -0.0002
+   ],
+   "sesgo_activos_desv": -0.087,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.025,
+   "ic95_toda_muestra": [
+    -0.039,
+    0.089
+   ],
+   "x_tipico": 0.13437555386917105,
+   "desde_prueba": "2025-04-12"
+  },
+  {
+   "codigo": "TR6",
+   "angulo": "arbitro: tarjetas",
+   "liga": "FUTBOL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 467,
+   "n_activo_prueba": 461,
+   "n_total": 1555,
+   "n_activo_total": 1515,
+   "coef_por_unidad": -0.375,
+   "direccion_ok": false,
+   "mejora_mse": -0.0122,
+   "z": -1.04,
+   "mitades": [
+    0.0001,
+    -0.0244
+   ],
+   "sesgo_activos_desv": -0.036,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.022,
+   "ic95_toda_muestra": [
+    -0.1,
+    0.056
+   ],
+   "x_tipico": 0.12996884013127896,
+   "desde_prueba": "2025-04-12"
+  }
+ ],
+ "mercado": [
+  {
+   "n_prueba": 1883,
+   "n_activo_prueba": 1874,
+   "n_explorar": 4393,
+   "beta": -0.2262,
+   "efecto_pp_por_unidad": -5.66,
+   "direccion_ok": false,
+   "mejora_milesimas": -0.067,
+   "z": -0.22,
+   "mitades": [
+    -0.645,
+    0.51
+   ],
+   "residuo_firmado_pp": 0.15,
+   "calibracion_activos": 0.0213,
+   "veredicto": "no pasa",
+   "desde_prueba": "2024-12-14",
+   "codigo": "ML1",
+   "angulo": "movimiento de Pinnacle (1X2 local)",
+   "liga": "FUTBOL",
+   "base": "cierre",
+   "n_total": 6276,
+   "n_activo_total": 6267
+  },
+  {
+   "n_prueba": 1883,
+   "n_activo_prueba": 1883,
+   "n_explorar": 4393,
+   "beta": 0.0067,
+   "efecto_pp_por_unidad": 0.17,
+   "direccion_ok": true,
+   "mejora_milesimas": -0.004,
+   "z": -1.33,
+   "mitades": [
+    -0.003,
+    -0.004
+   ],
+   "residuo_firmado_pp": -1.68,
+   "calibracion_activos": 0.0194,
+   "veredicto": "no pasa",
+   "desde_prueba": "2024-12-14",
+   "codigo": "ML2",
+   "angulo": "Pinnacle contra el promedio de casas",
+   "liga": "FUTBOL",
+   "base": "cierre",
+   "n_total": 6276,
+   "n_activo_total": 6276
+  },
+  {
+   "n_prueba": 1836,
+   "n_activo_prueba": 1801,
+   "n_explorar": 4284,
+   "beta": -0.1062,
+   "efecto_pp_por_unidad": -2.66,
+   "direccion_ok": false,
+   "mejora_milesimas": -0.251,
+   "z": -1.82,
+   "mitades": [
+    -0.29,
+    -0.212
+   ],
+   "residuo_firmado_pp": 1.36,
+   "calibracion_activos": 0.0211,
+   "veredicto": "no pasa",
+   "desde_prueba": "2024-12-15",
+   "codigo": "MLT",
+   "angulo": "movimiento de Pinnacle (over 2.5)",
+   "liga": "FUTBOL",
+   "base": "cierre",
+   "n_total": 6120,
+   "n_activo_total": 6009
+  },
+  {
+   "n_prueba": 666,
+   "n_activo_prueba": 122,
+   "n_explorar": 1554,
+   "beta": 0.2239,
+   "efecto_pp_por_unidad": 5.6,
+   "direccion_ok": true,
+   "mejora_milesimas": -2.639,
+   "z": -1.4,
+   "mitades": [
+    -4.151,
+    -1.126
+   ],
+   "residuo_firmado_pp": -4.08,
+   "calibracion_activos": -0.0144,
+   "veredicto": "muestra insuficiente",
+   "desde_prueba": "2023-12-24",
+   "codigo": "KN1",
+   "angulo": "numero clave 3/7 con el perro",
+   "liga": "NFL",
+   "base": "spread",
+   "n_total": 2220,
+   "n_activo_total": 405
+  },
+  {
+   "n_prueba": 676,
+   "n_activo_prueba": 675,
+   "n_explorar": 1576,
+   "beta": -0.0196,
+   "efecto_pp_por_unidad": -0.49,
+   "direccion_ok": false,
+   "mejora_milesimas": 0.389,
+   "z": 1.05,
+   "mitades": [
+    0.375,
+    0.403
+   ],
+   "residuo_firmado_pp": -0.72,
+   "calibracion_activos": -0.0579,
+   "veredicto": "no pasa",
+   "desde_prueba": "2023-12-17",
+   "codigo": "RN1",
+   "angulo": "arbitro en totales",
+   "liga": "NFL",
+   "base": "total",
+   "n_total": 2252,
+   "n_activo_total": 2223
+  }
+ ],
+ "estimacion": [
+  {
+   "liga": "BEISBOL",
+   "n": 20156,
+   "n_activos": 20156,
+   "pp_50": 0.15,
+   "ic95_50": [
+    -0.31,
+    0.61
+   ],
+   "pp_50_encogido": 0.15,
+   "x_tipico": 0.03738798147909392,
+   "beta": 0.16042,
+   "ee": 0.25064,
+   "codigo": "R1",
+   "angulo": "ventaja de ponches (pitcheo - bateo)",
+   "base": "modelo"
+  },
+  {
+   "liga": "LMP",
+   "n": 2326,
+   "n_activos": 2326,
+   "pp_50": 0.26,
+   "ic95_50": [
+    -1.14,
+    1.66
+   ],
+   "pp_50_encogido": 0.24,
+   "x_tipico": 0.03233325031236611,
+   "beta": 0.32304,
+   "ee": 0.88533,
+   "codigo": "R1",
+   "angulo": "ventaja de ponches (pitcheo - bateo)"
+  },
+  {
+   "liga": "LMP+NPB",
+   "n": 5236,
+   "n_activos": 4921,
+   "pp_50": 0.24,
+   "ic95_50": [
+    -0.66,
+    1.14
+   ],
+   "pp_50_encogido": 0.23,
+   "x_tipico": 2.3333333333333335,
+   "beta": 0.00408,
+   "ee": 0.00786,
+   "codigo": "R2",
+   "angulo": "bullpen cargado, outs de relevo 3 dias (entradas)",
+   "base": "modelo"
+  },
+  {
+   "liga": "LMP",
+   "n": 2491,
+   "n_activos": 2353,
+   "pp_50": 0.05,
+   "ic95_50": [
+    -1.28,
+    1.39
+   ],
+   "pp_50_encogido": 0.05,
+   "x_tipico": 2.3333333333333335,
+   "beta": 0.00093,
+   "ee": 0.01166,
+   "codigo": "R2",
+   "angulo": "bullpen cargado, outs de relevo 3 dias (entradas)"
+  },
+  {
+   "liga": "LMP+NPB",
+   "n": 3934,
+   "n_activos": 936,
+   "pp_50": 3.5,
+   "ic95_50": [
+    0.25,
+    6.72
+   ],
+   "pp_50_encogido": 2.31,
+   "x_tipico": 1,
+   "beta": 0.14011,
+   "ee": 0.06639,
+   "codigo": "R3",
+   "angulo": "abridor con 105+ pitcheos en su salida anterior",
+   "base": "modelo"
+  },
+  {
+   "liga": "LMP",
+   "n": 1960,
+   "n_activos": 129,
+   "pp_50": 3.7,
+   "ic95_50": [
+    -5.05,
+    12.23
+   ],
+   "pp_50_encogido": 0.78,
+   "x_tipico": 1,
+   "beta": 0.1483,
+   "ee": 0.17908,
+   "codigo": "R3",
+   "angulo": "abridor con 105+ pitcheos en su salida anterior"
+  },
+  {
+   "liga": "FUTBOL",
+   "n": 6276,
+   "n_activos": 6267,
+   "pp_50": -0.13,
+   "ic95_50": [
+    -0.97,
+    0.72
+   ],
+   "pp_50_encogido": -0.12,
+   "x_tipico": 0.08340013455615525,
+   "beta": -0.06132,
+   "ee": 0.20685,
+   "codigo": "ML1",
+   "angulo": "movimiento de Pinnacle (1X2 local)",
+   "base": "cierre"
+  },
+  {
+   "liga": "FUTBOL",
+   "n": 6276,
+   "n_activos": 6276,
+   "pp_50": -0.23,
+   "ic95_50": [
+    -1.03,
+    0.57
+   ],
+   "pp_50_encogido": -0.22,
+   "x_tipico": 0.022588907015579696,
+   "beta": -0.40471,
+   "ee": 0.72051,
+   "codigo": "ML2",
+   "angulo": "Pinnacle contra el promedio de casas",
+   "base": "cierre"
+  },
+  {
+   "liga": "FUTBOL",
+   "n": 6120,
+   "n_activos": 6009,
+   "pp_50": 0.46,
+   "ic95_50": [
+    -0.37,
+    1.28
+   ],
+   "pp_50_encogido": 0.44,
+   "x_tipico": 0.07688587126742676,
+   "beta": 0.23789,
+   "ee": 0.21828,
+   "codigo": "MLT",
+   "angulo": "movimiento de Pinnacle (over 2.5)",
+   "base": "cierre"
+  },
+  {
+   "liga": "NFL",
+   "n": 2220,
+   "n_activos": 405,
+   "pp_50": 2.87,
+   "ic95_50": [
+    -2.01,
+    7.69
+   ],
+   "pp_50_encogido": 1.33,
+   "x_tipico": 1,
+   "beta": 0.11474,
+   "ee": 0.0996,
+   "codigo": "KN1",
+   "angulo": "numero clave 3/7 con el perro",
+   "base": "spread"
+  },
+  {
+   "liga": "NFL",
+   "n": 2252,
+   "n_activos": 2223,
+   "pp_50": -0.91,
+   "ic95_50": [
+    -2.34,
+    0.53
+   ],
+   "pp_50_encogido": -0.83,
+   "x_tipico": 0.8734939759036144,
+   "beta": -0.04163,
+   "ee": 0.03355,
+   "codigo": "RN1",
+   "angulo": "arbitro en totales",
+   "base": "total"
+  }
+ ]
+}

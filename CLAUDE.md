@@ -185,7 +185,17 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   k 38): Pitagoras, juegos cerrados, dominio de tiros/yardas, PDO, BABIP, triples, perdidas, posesiones. Contra el modelo
   pasan L1 Pitagoras NCAAMB (z 2.56), L3 dominio NFL (3.54) y futbol (2.01), TL7 posesiones NCAAMB (3.80), TL4 goles por
   tiro a puerta futbol (3.24). Contra el mercado: L3 NFL z -2.97, L3 futbol -0.23, TL4 contra el cierre O2.5 z 1.92
-  (en el limite). Candidatos, nada se aplica; falta TL7 sobre la capa de totales y NCAAMB contra cuotas.
+  (en el limite). Candidatos, nada se aplica.
+- Tanda 8 (10-oct-2026, `trabajo/minar/2026-10-10_tanda8.md`): A) TL7 posesiones SOBRE LA CAPA de totales pasa en NCAAMB
+  (total z 4.47, O/U z 4.11) y NBA (2.97 / 2.63) (`utilidades/minar_tanda8_produccion.py`): candidato para la capa de
+  basquet, falta aprobacion. L1 Pitagoras sobre el modelo reentrenado no pasa (NCAAMB z 1.47). B) k 16, nada pasa
+  (`utilidades/minar_angulos_tanda8.py`): ponches (R1, TR1), bullpen y pitcheos del abridor LMP/NPB (R2, R3, TR2),
+  triples y choque de ritmos (TR3, TR4; NCAAMB z 3.04 pero al reves: mas distintos, mas puntos), arbitro futbol
+  (TR5, TR6), movimiento de Pinnacle (ML1, ML2, MLT), numero clave 3/7 y arbitro NFL (KN1, RN1).
+  En produccion como contexto: `nucleo/angulos` calcula L1-L4, R1-R3, TL1-TL7 y TR1-TR4 en cada partido (box score de
+  datos/<deporte>.csv; `_calendario(lg, lg)` ya no mezcla NCAAMB en NBA). Totales en vivo: `salida/historial_angulos_total.csv`
+  (picks_del_dia) y `medir_angulos_vivo.py` -> angulos_vivo.json "totales". El efecto de totales tambien topa en 2 veces
+  el x tipico (como el ganador).
 - Motor de goles (10-oct-2026, `nucleo/motor_goles.py`, `utilidades/motor_goles.py`, `trabajo/minar/2026-10-10_motor_goles.md`):
   Kalman de ataque/defensa/portero + xG + segunda noche contra produccion reproducida (xG, GSAx, b2b, capa). Nada pasa en NHL,
   AHL ni Liiga (DEL y SHL sin muestra): no se aplica. Empate a 60 min: ni modelo ni motor le ganan a la tasa de la liga ->

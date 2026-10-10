@@ -153,7 +153,7 @@ def describir(rows, etiqueta):
     sg = T4._sig
     return {"liga": etiqueta, "n": len(R), "n_activos": na, "pp_50": round(100 * (sg(e) - .5), 2),
             "ic95_50": [round(100 * (sg(e - 1.96 * s) - .5), 2), round(100 * (sg(e + 1.96 * s) - .5), 2)],
-            "pp_50_encogido": round(100 * (sg(enc) - .5), 2)}
+            "pp_50_encogido": round(100 * (sg(enc) - .5), 2), "x_tipico": xt, "beta": round(b, 5), "ee": round(se, 5)}
 
 
 NOMBRES = {"S1": ("tras ganar por mucho", -1), "S2": ("racha de victorias cortada", +1), "S3": ("racha de derrotas cortada", -1),

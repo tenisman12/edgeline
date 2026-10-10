@@ -403,20 +403,25 @@ COLS_ANG = ["registrado", "liga", "id", "fecha", "home", "away", "home_key", "aw
             "p_modelo_lado", "efecto_medido_pp", "veredicto_medido", "signo_esperado"]
 
 
-def registrar_angulos(regs, ahora):
+COLS_ANG_T = ["registrado", "liga", "id", "fecha", "home", "away", "home_key", "away_key", "codigo", "angulo", "x", "moveria",
+              "total_modelo", "linea"]
+
+
+def registrar_angulos(regs, ahora, nombre="historial_angulos.csv", cols=None):
     """salida/historial_angulos.csv: para cada partido no empezado, los angulos activos (y una fila _TODOS por lado, que
     sirve para restar la calibracion del modelo en la liga). Se reescribe lo de partidos no empezados en cada corrida;
     lo de partidos ya empezados queda fijo. Lo mide utilidades/medir_angulos_vivo.py."""
-    rh = os.path.join(BASE, "salida", "historial_angulos.csv")
+    rh = os.path.join(BASE, "salida", nombre)
+    cols = cols or COLS_ANG
     filas = []
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:
             filas = list(csv.DictReader(f))
     nuevos = {(r["liga"], r["id"], r["fecha"]) for r in regs}
     filas = [r for r in filas if (r.get("liga"), r.get("id"), r.get("fecha")) not in nuevos] + regs
-    filas.sort(key=lambda r: (r["fecha"], r["liga"], r["id"], r["codigo"], r["lado"]))
+    filas.sort(key=lambda r: (r["fecha"], r["liga"], r["id"], r["codigo"], r.get("lado") or ""))
     with io.open(rh, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=COLS_ANG, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
         for r in filas:
             w.writerow(r)
@@ -505,7 +510,7 @@ def main():
             if lado == "away":
                 t, m = (None if t is None else 100 - t), (None if m is None else 100 - m)
         return t, m
-    partidos, cand, regs_ang = [], [], []
+    partidos, cand, regs_ang, regs_t = [], [], [], []
     ahora_cdmx = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=TZ)
     reg_ts = dt.datetime.now().isoformat(timespec="seconds")
     for p in sel:
@@ -552,6 +557,12 @@ def main():
             for ld in ("home", "away"):
                 if m_.get("p_" + ld) is not None:
                     regs_ang.append(dict(base_, codigo="_TODOS", angulo="todos los partidos", lado=ld, x=0, p_modelo_lado=m_["p_" + ld]))
+            if m_.get("total") is not None:
+                regs_t.append(dict(base_, codigo="_TODOS", angulo="todos los partidos", x=0, total_modelo=m_["total"],
+                                   linea=m_.get("linea_total")))
+                for t_ in angs_t:
+                    regs_t.append(dict(base_, codigo=t_["codigo"], angulo=t_["nombre"], x=t_["x"], moveria=t_.get("moveria"),
+                                       total_modelo=m_["total"], linea=m_.get("linea_total")))
             for x in angs:
                 md = x.get("medicion") or {}
                 if m_.get("p_" + x["lado"]) is None:
@@ -687,6 +698,8 @@ def main():
             w.writerow(dict(c, registrado=ahora, por_que_si=" | ".join(c.get("por_que_si") or []),
                             por_que_no=" | ".join(c.get("por_que_no") or []))); nuevos += 1
     n_ang = registrar_angulos(regs_ang, ahora) if regs_ang else 0
+    if regs_t:
+        registrar_angulos(regs_t, ahora, nombre="historial_angulos_total.csv", cols=COLS_ANG_T)
     print("\nEscrito: salida/picks_del_dia.json | historial_picks_dia.csv: %d picks nuevos | historial_angulos.csv: %d filas de partidos no empezados" % (nuevos, n_ang))
 
 

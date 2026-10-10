@@ -80,6 +80,80 @@ def grupo(liga, codigo):
     return g[0] if g else (liga or "").upper()
 
 
+def total_real(r):
+    """goles/carreras/puntos del partido; None si todavia no esta en los datos."""
+    R = resultados(r["liga"])
+    f0 = dt.date.fromisoformat(r["fecha"][:10])
+    for d in (0, -1, 1):
+        k = ((f0 + dt.timedelta(days=d)).isoformat(), r["home_key"], r["away_key"])
+        if k in R:
+            return R[k][0] + R[k][1]
+    return None
+
+
+def totales():
+    """angulos de TOTALES en vivo (salida/historial_angulos_total.csv, desde el 10-oct-2026): residuo = total real - total
+    del modelo, menos el residuo medio de la liga (filas _TODOS). Pendiente por unidad de x (minimos cuadrados por el
+    origen) con su z y las dos mitades; mismo protocolo (n >= 300, z >= 2.0 en la direccion registrada en el minado)."""
+    ruta = io.ruta("salida", "historial_angulos_total.csv")
+    if not os.path.exists(ruta):
+        return {}
+    with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
+        filas = list(csv.DictReader(f))
+    hoy = dt.date.today().isoformat()
+    base = {}; L = []
+    for r in filas:
+        if r["fecha"] >= hoy:
+            continue
+        tm, x = _f(r.get("total_modelo")), _f(r.get("x"))
+        if tm is None or x is None:
+            continue
+        t = total_real(r)
+        if t is None:
+            continue
+        if r["codigo"] == "_TODOS":
+            b = base.setdefault(r["liga"], [0.0, 0]); b[0] += t - tm; b[1] += 1
+        else:
+            L.append((r, x, t - tm))
+    off = {k: v[0] / v[1] for k, v in base.items() if v[1]}
+    cat = ANG.catalogo_totales(); G = {}
+    for r, x, res in L:
+        gr = next((g for g in ANG._grupo_total(r["liga"]) if "%s|%s" % (g, r["codigo"]) in cat), (r["liga"] or "").upper())
+        G.setdefault((gr, r["codigo"]), []).append((r["fecha"], x, res - off.get(r["liga"], 0.0)))
+    out = {}
+    print("\nTOTALES EN VIVO (total real - total del modelo, menos el de la liga) | %d partidos" % sum(v[1] for v in base.values()))
+    for (gr, cod), V in sorted(G.items(), key=lambda kv: -len(kv[1])):
+        V.sort(key=lambda t: t[0]); n = len(V)
+
+        def pend(W):
+            sxx = sum(x * x for _, x, _ in W)
+            return (sum(x * e for _, x, e in W) / sxx, sxx) if sxx > 0 else (None, 0)
+        b, sxx = pend(V)
+        if b is None:
+            continue
+        s2 = sum((e - b * x) ** 2 for _, x, e in V) / max(n - 1, 1)
+        z = b / math.sqrt(s2 / sxx) if s2 > 0 else 0.0
+        b1, _ = pend(V[:n // 2]); b2, _ = pend(V[n // 2:])
+        m = cat.get("%s|%s" % (gr, cod)) or {}
+        signo = None
+        if m.get("coef_por_unidad") is not None and m.get("direccion_ok") is not None:
+            signo = (1 if m["coef_por_unidad"] > 0 else -1) * (1 if m["direccion_ok"] else -1)
+        if n < N_MIN:
+            ver = "muestra insuficiente"
+        elif signo and z * signo >= Z_MIN and b1 is not None and b2 is not None and b1 * signo > 0 and b2 * signo > 0:
+            ver = "pasa"
+        else:
+            ver = "no pasa"
+        out["%s|%s" % (gr, cod)] = {"grupo": gr, "codigo": cod, "angulo": ANG.NOMBRES_T.get(cod, cod), "n": n,
+                                    "por_unidad": round(b, 4), "z": round(z, 2),
+                                    "mitades": [None if b1 is None else round(b1, 4), None if b2 is None else round(b2, 4)],
+                                    "signo_esperado": signo, "historico_por_unidad": m.get("coef_por_unidad"), "veredicto": ver,
+                                    "desde": V[0][0], "hasta": V[-1][0]}
+        print("  %-8s %-4s %-42s n %4d  por unidad %+8.3f  z %+5.2f  (historico %s) -> %s" % (
+            gr, cod, ANG.NOMBRES_T.get(cod, cod)[:42], n, b, z, m.get("coef_por_unidad"), ver.upper()))
+    return out
+
+
 def main():
     ruta = io.ruta("salida", "historial_angulos.csv")
     if not os.path.exists(ruta):
@@ -132,6 +206,7 @@ def main():
         print("  %-8s %-4s %-42s n %4d  efecto %+6.1f pp  z %+5.2f  (historico %s pp) -> %s" % (
             gr, cod, ANG.NOMBRES.get(cod, cod)[:42], n, 100 * m, z,
             "%+.1f" % med["efecto_pp"] if med.get("efecto_pp") is not None else "-", ver.upper()))
+    out["totales"] = totales()
     with _io.open(io.ruta("salida", "angulos_vivo.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print("Escrito: salida/angulos_vivo.json")

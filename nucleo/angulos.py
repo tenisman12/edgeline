@@ -63,6 +63,10 @@ NOMBRES = {
     "F16": "Champions entre semana", "F17": "pelea por no descender",
     "T1": "minutos del partido anterior", "T2": "partido anterior a la distancia", "T3": "carga de 14 dias",
     "T4": "cambio de superficie", "T5": "primer torneo tras un Grand Slam",
+    # tanda 7 (10-oct-2026): suerte contra rendimiento; tanda 8: ponches, bullpen y pitcheos del abridor
+    "L1": "Pitagoras (record arriba de su diferencial)", "L2": "record en juegos cerrados", "L3": "dominio de tiros o yardas",
+    "L4": "conversion neta (PDO, BABIP, triples, perdidas)", "R1": "ventaja de ponches (pitcheo - bateo)",
+    "R2": "bullpen cargado (entradas de relevo en 3 dias)", "R3": "abridor con 105+ pitcheos en su salida anterior",
 }
 
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
@@ -77,17 +81,17 @@ RUTA_HOCKEY_LIGAS = os.path.join("trabajo", "minar", "2026-10-10_hockey_ligas_re
 
 def _grupos(liga):
     lg = (liga or "").lower()
-    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"], "S": ["NHL"]}
+    if lg == "nhl": return {"H": ["NHL"], "Q": ["NHL"], "P": ["NHL"], "S": ["NHL"], "L": ["NHL"]}
     if lg in _HOCKEY_NUEVAS: return {"H": [_HOCKEY_NUEVAS[lg]], "Q": [_HOCKEY_NUEVAS[lg]], "S": [_HOCKEY_NUEVAS[lg]]}
-    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"], "S": ["NBA"]}
+    if lg == "nba": return {"K": ["NBA"], "Q": ["NBA"], "P": ["NBA"], "S": ["NBA"], "L": ["NBA"]}
     if lg == "atp": return {"T": ["ATP"]}
     if lg == "wta": return {"T": ["WTA"]}
-    if lg == "ncaamb": return {"K": ["NCAAMB"], "S": ["NCAAMB"]}
-    if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"], "S": ["NFL"]}
-    if lg == "ncaafb": return {"N": ["NCAAFB"], "S": ["NCAAFB"]}
-    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"]}
-    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"]}
-    if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"], "S": ["FUTBOL"]}
+    if lg == "ncaamb": return {"K": ["NCAAMB"], "S": ["NCAAMB"], "L": ["NCAAMB"]}
+    if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"], "S": ["NFL"], "L": ["NFL"]}
+    if lg == "ncaafb": return {"N": ["NCAAFB"], "S": ["NCAAFB"], "L": ["NCAAFB"]}
+    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB"]}
+    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB"]}
+    if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"], "S": ["FUTBOL"], "L": ["FUTBOL"]}
     return {}
 
 
@@ -174,6 +178,31 @@ def construir_catalogo():
             cat[k].update({"beta_toda": round(b, 4), "ee_toda": round(se, 4), "x_tipico": 1, "n_toda": e["n"], "n_activos_toda": e["n_activos"],
                            "beta_encogido": round(b * tau2_ / (tau2_ + se * se), 5), "mueve_pp": e.get("pp_50_encogido"),
                            "mueve_ic95_sin_encoger": e["ic95_50"]})
+    # tandas 7 y 8 (10-oct-2026): x continuo; beta por unidad de x en toda la muestra, encogido con el mismo tau
+    for ruta78, md78 in (("2026-10-10_tanda7_resultados.json", "trabajo/minar/2026-10-10_tanda7.md"),
+                         ("2026-10-10_tanda8_resultados.json", "trabajo/minar/2026-10-10_tanda8.md")):
+        rr = os.path.join(CODIGO, "trabajo", "minar", ruta78)
+        if not os.path.exists(rr):
+            continue
+        with _io.open(rr, encoding="utf-8") as f:
+            t78 = json.load(f)
+        for r in t78.get("ganador") or []:
+            if r.get("base") != "modelo" or r.get("liga") == "todos":
+                continue
+            cat["%s|%s" % (r["liga"], r["codigo"])] = {
+                "grupo": r["liga"], "codigo": r["codigo"], "angulo": r["angulo"], "veredicto": r["veredicto"],
+                "n_activo_prueba": r.get("n_activo_prueba"), "z": r.get("z"), "efecto_pp": r.get("residuo_firmado_pp"),
+                "tmle_pp": None, "tmle_ic95": None, "desde_prueba": r.get("desde_prueba"),
+                "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
+                "fuente": md78}
+        for e in t78.get("estimacion") or []:
+            k = "%s|%s" % (e.get("liga"), e.get("codigo"))
+            if k not in cat or e.get("beta") is None or not e.get("x_tipico"):
+                continue
+            s_ = (e.get("ee") or 0.0) * e["x_tipico"]
+            cat[k].update({"beta_toda": e["beta"], "ee_toda": e.get("ee"), "x_tipico": e["x_tipico"], "n_toda": e["n"],
+                           "n_activos_toda": e["n_activos"], "beta_encogido": round(e["beta"] * tau2_ / (tau2_ + s_ * s_), 6),
+                           "mueve_pp": e.get("pp_50_encogido"), "mueve_ic95_sin_encoger": e.get("ic95_50")})
     for k, v in cat.items():
         if v.get("_pp_toda") is not None and v.get("_ic_toda"):
             b = lg_(0.5 + v["_pp_toda"] / 100); lo, hi = v["_ic_toda"]
@@ -244,7 +273,7 @@ def _calendario(liga):
     dep = io.deporte_de(lg)
     T = {}
     try:
-        filas = io.cargar_juegos(lg)
+        filas = io.cargar_juegos(lg, lg)          # (lg, lg): "nba" sola tambien es el nombre del deporte (traeria NCAAMB)
     except Exception:
         filas = []
     for r in filas:
@@ -269,7 +298,8 @@ def _calendario(liga):
         post = (r.get("tipo") == "POST") or (dep == "hockey" and len(gpk) == 10 and gpk[4:6] == "03")
         T.setdefault(r.get("team"), []).append(dict(fecha=f, gp=gpk, local=str(r.get("is_home")) in ("1", "1.0", "True"), gf=gf, ga=ga,
                                                     rival=r.get("opp"), ot=ot, ip=_f(r.get("pit_inningsPitched")),
-                                                    pim=_f(r.get("pim")), post=post))
+                                                    pim=_f(r.get("pim")), post=post,
+                                                    bx={k: v for k in BOX if (v := _f(r.get(k))) is not None}))
     if dep == "futbol":                                   # Champions solo para el descanso (como en el minado)
         ruta = io.ruta("datos", "equipos", "espn_champions_equipos.csv")
         if os.path.exists(ruta) and T:
@@ -444,6 +474,197 @@ def _derbi(p, eh, ea):
     C = _CIUDADES.get(lgn) or {}
     a, b = C.get(eh), C.get(ea)
     return None if a is None or b is None else a == b
+
+
+# ------------------------------------------------------------------ tandas 7 y 8 (10-oct-2026): suerte contra rendimiento,
+# ponches, bullpen. MISMAS definiciones de utilidades/minar_angulos_tanda7.py y minar_angulos_tanda8.py.
+BOX = ("shots", "shots_opp", "shots_target", "shots_target_opp", "yards_total", "yards_total_opp", "turnovers", "turnovers_opp",
+       "nba_fg3m", "nba_fg3a", "nba_fg3m_opp", "nba_fg3a_opp", "nba_fga", "nba_fga_opp", "nba_fta", "nba_fta_opp", "nba_tov",
+       "nba_tov_opp", "nba_oreb", "nba_oreb_opp", "bat_hits", "bat_homeRuns", "bat_atBats", "bat_strikeOuts", "bat_sacFlies",
+       "bat_plateAppearances", "pit_hits", "pit_homeRuns", "pit_atBats", "pit_strikeOuts", "pit_sacFlies", "pit_battersFaced")
+REND = {"NHL", "NBA", "NCAAMB", "NFL", "NCAAFB", "BEISBOL", "FUTBOL"}
+EXP7 = {"BEISBOL": 1.83, "NHL": 2.0, "NBA": 14.0, "NCAAMB": 11.5, "NFL": 2.37, "NCAAFB": 2.37, "FUTBOL": 1.3}
+MIN7 = {"BEISBOL": 15, "NHL": 10, "NBA": 10, "NCAAMB": 10, "NFL": 4, "NCAAFB": 4, "FUTBOL": 8}
+CORTO7 = {"BEISBOL": 1, "NHL": 1, "NBA": 3, "NCAAMB": 3, "NFL": 7, "NCAAFB": 7, "FUTBOL": 1}
+_TASAS = {}
+
+
+def _bx(g, *ks):
+    b = g.get("bx") or {}
+    v = [b.get(k) for k in ks]
+    return None if any(x is None for x in v) else v
+
+
+def _pos(b):
+    return b[4] + 0.44 * b[6] + b[8] - b[10] + b[5] + 0.44 * b[7] + b[9] - b[11]
+
+
+_NBK = ("nba_fg3m", "nba_fg3a", "nba_fg3m_opp", "nba_fg3a_opp", "nba_fga", "nba_fga_opp", "nba_fta", "nba_fta_opp", "nba_tov",
+        "nba_tov_opp", "nba_oreb", "nba_oreb_opp")
+_BBK = ("bat_hits", "bat_homeRuns", "bat_atBats", "bat_strikeOuts", "bat_sacFlies", "pit_hits", "pit_homeRuns", "pit_atBats",
+        "pit_strikeOuts", "pit_sacFlies")
+
+
+def _babip(g):
+    b = _bx(g, *_BBK)
+    if not b: return None
+    bn, bd = b[0] - b[1], b[2] - b[3] - b[1] + b[4]; pn, pd = b[5] - b[6], b[7] - b[8] - b[6] + b[9]
+    return None if bd <= 0 or pd <= 0 else (bn, bd, pn, pd)
+
+
+def _tasa(liga, clave, fecha):
+    """tasa de la liga hasta el dia anterior (juegos contados una vez, fila del local), como Tasa del minado. None con <50."""
+    lg = (liga or "").lower()
+    if lg not in _TASAS:
+        L = {}; dep = io.deporte_de(lg)
+        for e, J in _calendario(lg).items():
+            for g in J:
+                if not g.get("local") or g.get("gf") is None:
+                    continue
+                f = g["fecha"]
+                b = _bx(g, "shots", "shots_opp")
+                if dep != "futbol" and b and b[0] > 0 and b[1] > 0:
+                    L.setdefault("conv", []).append((f, g["gf"] + g["ga"], b[0] + b[1])); L.setdefault("vol", []).append((f, b[0] + b[1], 1.0))
+                b = _bx(g, "shots_target", "shots_target_opp")
+                if dep == "futbol" and b:
+                    L.setdefault("conv", []).append((f, g["gf"] + g["ga"], b[0] + b[1])); L.setdefault("vol", []).append((f, b[0] + b[1], 1.0))
+                b = _bx(g, *_NBK)
+                if b and b[1] and b[3]:
+                    L.setdefault("pos", []).append((f, _pos(b), 1.0)); L.setdefault("3r", []).append((f, b[1] + b[3], b[4] + b[5]))
+                bb = _babip(g)
+                if bb:
+                    L.setdefault("babip", []).append((f, bb[0] + bb[2], bb[1] + bb[3]))
+                b = _bx(g, "bat_strikeOuts", "bat_plateAppearances")
+                if b and b[1] > 0:
+                    L.setdefault("k", []).append((f, b[0], b[1]))
+        A = {}
+        for c, V in L.items():
+            V.sort(key=lambda t: t[0]); fs = [t[0] for t in V]; cn, cd = [], []; sn = sd = 0.0
+            for _, a, b in V: sn += a; sd += b; cn.append(sn); cd.append(sd)
+            A[c] = (fs, cn, cd)
+        _TASAS[lg] = A
+    fs, cn, cd = _TASAS[lg].get(clave, ([], [], []))
+    k = bisect.bisect_left(fs, fecha)
+    if k < 50 or cd[k - 1] <= 0:
+        return None
+    return cn[k - 1] / cd[k - 1]
+
+
+def _rend(dep, liga, P, fecha):
+    """valores de un equipo (tandas 7 y 8): L1-L4, R1 y las piezas de los totales. P: juegos anteriores (viejo -> nuevo)."""
+    gap = PARAM5[dep]["gap"]; Q = []; f = fecha
+    for g in reversed(P):
+        if g.get("gf") is None:
+            continue
+        if (f - g["fecha"]).days > gap:
+            break
+        Q.append(g); f = g["fecha"]
+    v = {}; n = len(Q)
+    if n >= MIN7[dep]:
+        gf = sum(g["gf"] for g in Q); ga = sum(g["ga"] for g in Q)
+        w = sum(1.0 if g["gf"] > g["ga"] else (0.5 if g["gf"] == g["ga"] else 0.0) for g in Q) / n
+        k = EXP7[dep]
+        if gf + ga > 0:
+            v["L1"] = w - gf ** k / (gf ** k + ga ** k)
+        c = CORTO7[dep]
+        v["L2"] = (sum(1 for g in Q if 0 < g["gf"] - g["ga"] <= c) - sum(1 for g in Q if 0 < g["ga"] - g["gf"] <= c)) / n
+    if dep == "NHL":
+        U = [(g, b) for g in Q[:10] for b in [_bx(g, "shots", "shots_opp")] if b and b[0] > 0 and b[1] > 0]
+        if len(U) >= 5:
+            s_ = sum(b[0] for g, b in U); so = sum(b[1] for g, b in U); g_ = sum(g["gf"] for g, b in U); go = sum(g["ga"] for g, b in U)
+            v["L3"] = s_ / (s_ + so) - 0.5; v["L4"] = g_ / s_ - go / so
+            lc, lv = _tasa(liga, "conv", fecha), _tasa(liga, "vol", fecha)
+            if lc: v["TL1"] = (g_ + go) / (s_ + so) - lc
+            if lv: v["TL5"] = (s_ + so) / len(U) / lv - 1
+    elif dep in ("NBA", "NCAAMB"):
+        ok = lambda L: [b for b in (_bx(g, *_NBK) for g in L) if b and b[1] and b[3]]
+        U5, UA, U10 = ok(Q[:5]), ok(Q), ok(Q[:10])
+        net = lambda U: sum(b[0] for b in U) / sum(b[1] for b in U) - sum(b[2] for b in U) / sum(b[3] for b in U)
+        t3 = lambda U: sum(b[0] + b[2] for b in U) / sum(b[1] + b[3] for b in U)
+        lp, l3 = _tasa(liga, "pos", fecha), _tasa(liga, "3r", fecha)
+        if len(U5) >= 4 and len(UA) >= 10:
+            v["L4"] = net(U5) - net(UA); v["TL2"] = t3(U5) - t3(UA)
+            if lp: v["TL7"] = sum(_pos(b) for b in U5) / len(U5) / lp - 1
+        if len(U5) >= 4 and lp:
+            v["_pos5"] = sum(_pos(b) for b in U5) / len(U5); v["_lp"] = lp
+        if len(U10) >= 5 and l3:
+            v["_3r"] = sum(b[1] + b[3] for b in U10) / sum(b[4] + b[5] for b in U10); v["_l3"] = l3
+    elif dep in ("NFL", "NCAAFB"):
+        U4 = [b for b in (_bx(g, "yards_total", "yards_total_opp") for g in Q[:4]) if b and b[0] + b[1] > 0]
+        if len(U4) >= 2:
+            y = sum(b[0] for b in U4); yo = sum(b[1] for b in U4); v["L3"] = y / (y + yo) - 0.5
+        UA = [b for b in (_bx(g, "turnovers", "turnovers_opp") for g in Q) if b]
+        if len(UA) >= 3:
+            v["L4"] = sum(b[1] - b[0] for b in UA) / len(UA)
+    elif dep == "FUTBOL":
+        U = [(g, b) for g in Q[:5] for b in [_bx(g, "shots_target", "shots_target_opp")] if b]
+        if len(U) >= 3:
+            s_ = sum(b[0] for g, b in U); so = sum(b[1] for g, b in U); g_ = sum(g["gf"] for g, b in U); go = sum(g["ga"] for g, b in U)
+            if s_ + so > 0: v["L3"] = s_ / (s_ + so) - 0.5
+            if s_ > 0 and so > 0: v["L4"] = g_ / s_ - go / so
+            lc, lv = _tasa(liga, "conv", fecha), _tasa(liga, "vol", fecha)
+            if lc and s_ + so > 0: v["TL4"] = (g_ + go) / (s_ + so) - lc
+            if lv: v["TL6"] = (s_ + so) / len(U) / lv - 1
+    elif dep == "BEISBOL":
+        U = [b for b in (_babip(g) for g in Q[:10]) if b]
+        if len(U) >= 6:
+            bn, bd, pn, pd = (sum(b[i] for b in U) for i in range(4))
+            v["L4"] = bn / bd - pn / pd
+            lb = _tasa(liga, "babip", fecha)
+            if lb: v["TL3"] = (bn + pn) / (bd + pd) - lb
+        UK = [b for b in (_bx(g, "bat_strikeOuts", "bat_plateAppearances", "pit_strikeOuts", "pit_battersFaced") for g in Q[:15])
+              if b and b[1] > 0 and b[3] > 0]
+        if len(UK) >= 8:
+            v["_kb"] = sum(b[0] for b in UK) / sum(b[1] for b in UK); v["_kp"] = sum(b[2] for b in UK) / sum(b[3] for b in UK)
+            v["R1"] = v["_kp"] - v["_kb"]
+    return v
+
+
+_LANZ = None
+
+
+def _lanzadores():
+    """LMP/NPB: outs de relevo por (liga, equipo, fecha) y salidas de cada abridor [(fecha, pitcheos)] por nombre."""
+    global _LANZ
+    if _LANZ is None:
+        rel, abr = {}, {}
+        for lg in ("lmp", "npb"):
+            ruta = io.ruta("datos", "abridores", "%s_lanzadores.csv" % lg)
+            if not os.path.exists(ruta):
+                continue
+            with _io.open(ruta, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    o, f = _f(r.get("orden_salida")), _d(r.get("game_date"))
+                    if o is None or not f:
+                        continue
+                    if o == 1:
+                        pit = _f(r.get("pitches")) or _f(r.get("pit_numberOfPitches"))
+                        abr.setdefault((r.get("jugador") or "").strip().lower(), []).append((f, pit))
+                    elif _f(r.get("outs")) is not None:
+                        k = (lg, r.get("team"), f); rel[k] = rel.get(k, 0.0) + _f(r["outs"])
+        for L in abr.values():
+            L.sort(key=lambda t: t[0])
+        _LANZ = (rel, abr)
+    return _LANZ
+
+
+def _bullpen(liga, equipo, fecha):
+    """R2: entradas de relevo en los 3 dias anteriores; None si el equipo no tiene bitacora en los ultimos 29 dias."""
+    rel, _ = _lanzadores(); lg = (liga or "").lower()
+    if not any((lg, equipo, fecha - dt.timedelta(days=k)) in rel for k in range(1, 30)):
+        return None
+    return sum(rel.get((lg, equipo, fecha - dt.timedelta(days=k)), 0.0) for k in (1, 2, 3)) / 3.0
+
+
+def _pitcheos_previos(nombre, fecha):
+    """R3: 1 si el abridor anunciado tiro 105+ pitcheos en su salida anterior (20 dias o menos); None sin dato."""
+    if not nombre:
+        return None
+    _, abr = _lanzadores()
+    L = [t for t in abr.get(nombre.strip().lower(), []) if t[0] < fecha]
+    if not L or (fecha - L[-1][0]).days > 20 or L[-1][1] is None:
+        return None
+    return _ind(L[-1][1] >= 105)
 
 
 # ------------------------------------------------------------------ angulos de un partido
@@ -925,6 +1146,19 @@ def calcular(p, todos=None):
             vh, va = _vapuleado_lmp(p["home"].get("probable"), fecha), _vapuleado_lmp(p["away"].get("probable"), fecha)
             if vh is not None and va is not None:
                 x["S9"] = vh - va
+    # ---------------- tandas 7 y 8 (10-oct-2026): suerte contra rendimiento, ponches, bullpen
+    if dep5 in REND and "L" in G:
+        rh7, ra7 = _rend(dep5, liga, Ph, fecha), _rend(dep5, liga, Pa, fecha)
+        for c in ("L1", "L2", "L3", "L4", "R1"):
+            if c in rh7 and c in ra7:
+                x[c] = round(rh7[c] - ra7[c], 5)
+        if liga in ("lmp", "npb"):
+            bh, ba = _bullpen(liga, eh, fecha), _bullpen(liga, ea, fecha)
+            if bh is not None and ba is not None:
+                x["R2"] = round(bh - ba, 3)
+            qh, qa = _pitcheos_previos(p["home"].get("probable"), fecha), _pitcheos_previos(p["away"].get("probable"), fecha)
+            if qh is not None and qa is not None:
+                x["R3"] = qh - qa
     if "F" in G:
         dz = _derbi(p, eh, ea)
         m_ = p.get("modelo") or {}
@@ -1053,7 +1287,12 @@ NOMBRES_T = {"TH1": "segunda noche (cuenta)", "TH2": "carga de 7 dias (suma)", "
              "TF1": "Champions entre semana (cuenta)", "TF2": "descanso corto, 3 dias o menos (cuenta)", "TF3": "regreso de fecha FIFA",
              "TF4": "altitud en Liga MX", "TF6": "pelea por no descender", "TF7": "derbi (misma ciudad)", "TN1": "jueves por la noche",
              "TN2": "viene de semana libre (cuenta)", "TN3": "semana corta (cuenta)", "TN5": "partido divisional",
-             "TS1": "tras paliza (cuenta)", "TS5": "los dos frios", "TS6": "los dos calientes", "TS7": "sequia de anotacion (cuenta)"}
+             "TS1": "tras paliza (cuenta)", "TS5": "los dos frios", "TS6": "los dos calientes", "TS7": "sequia de anotacion (cuenta)",
+             # tandas 7 y 8 (10-oct-2026)
+             "TL1": "conversion de tiros en sus juegos", "TL2": "triples en sus juegos contra su temporada",
+             "TL3": "BABIP en sus juegos", "TL4": "goles por tiro a puerta en sus juegos", "TL5": "volumen de tiros en sus juegos",
+             "TL6": "volumen de tiros a puerta en sus juegos", "TL7": "posesiones en sus juegos", "TR1": "ponches esperados del juego",
+             "TR2": "bullpen de los dos (entradas de relevo en 3 dias)", "TR3": "tasa de triples de los dos", "TR4": "choque de ritmos"}
 _TOT = None
 
 
@@ -1062,13 +1301,14 @@ def catalogo_totales():
     if _TOT is None:
         _TOT = {}
         for ruta, clave in (("2026-10-09_tanda4_resultados.json", "C_totales"), ("2026-10-09_tanda5_resultados.json", "totales"),
-                            (os.path.basename(RUTA_HOCKEY_LIGAS), "totales")):
+                            (os.path.basename(RUTA_HOCKEY_LIGAS), "totales"), ("2026-10-10_tanda7_resultados.json", "totales"),
+                            ("2026-10-10_tanda8_resultados.json", "totales")):
             rr = os.path.join(CODIGO, "trabajo", "minar", ruta)
             if not os.path.exists(rr):
                 continue
             with _io.open(rr, encoding="utf-8") as f:
                 for r in json.load(f).get(clave) or []:
-                    if r.get("base") != "total esperado" or r.get("efecto_toda_muestra") is None:
+                    if r.get("base") != "total esperado" or r.get("efecto_toda_muestra") is None or r.get("descriptivo"):
                         continue
                     _TOT["%s|%s" % (r["liga"], r["codigo"])] = r
     return _TOT
@@ -1076,6 +1316,7 @@ def catalogo_totales():
 
 def _grupo_total(liga):
     lg = (liga or "").lower()
+    if lg in ("lmp", "npb"): return ["BEISBOL", "LMP+NPB"]
     if lg in _BEIS: return ["BEISBOL"]
     if lg in _FUT: return ["7 ligas", "FUTBOL"]
     if lg in _HOCKEY_NUEVAS: return [_HOCKEY_NUEVAS[lg]]
@@ -1159,6 +1400,24 @@ def calcular_totales(p, todos=None):
     x["TS5"] = _ind(h5["frio"] and a5["frio"]); x["TS6"] = _ind(h5["cal"] and a5["cal"])
     if h5["S7"] is not None and a5["S7"] is not None:
         x["TS7"] = _ind(h5["S7"]) + _ind(a5["S7"])
+    # tandas 7 y 8 (10-oct-2026): suma de los dos equipos (TR4 = choque de ritmos, TR1 = ponches esperados)
+    if dep5 in REND:
+        rh7, ra7 = _rend(dep5, liga, Ph, fecha), _rend(dep5, liga, Pa, fecha)
+        for c in ("TL1", "TL2", "TL3", "TL4", "TL5", "TL6", "TL7"):
+            if c in rh7 and c in ra7:
+                x[c] = round(rh7[c] + ra7[c], 5)
+        if "_3r" in rh7 and "_3r" in ra7:
+            x["TR3"] = round(rh7["_3r"] + ra7["_3r"] - 2 * rh7["_l3"], 5)
+        if "_pos5" in rh7 and "_pos5" in ra7:
+            x["TR4"] = round(abs(rh7["_pos5"] - ra7["_pos5"]) / rh7["_lp"], 5)
+        if "_kb" in rh7 and "_kb" in ra7:
+            lk = _tasa(liga, "k", fecha)
+            if lk:
+                x["TR1"] = round((rh7["_kb"] + ra7["_kp"]) / 2 + (ra7["_kb"] + rh7["_kp"]) / 2 - 2 * lk, 5)
+        if liga in ("lmp", "npb"):
+            bh, ba = _bullpen(liga, eh, fecha), _bullpen(liga, ea, fecha)
+            if bh is not None and ba is not None:
+                x["TR2"] = round(bh + ba, 3)
     cat = catalogo_totales()
     unidad = ("goles" if dep5 in HOCKEY5 else {"BEISBOL": "carreras", "FUTBOL": "goles"}.get(dep5, "puntos"))
     out = []
@@ -1171,12 +1430,15 @@ def calcular_totales(p, todos=None):
         xt = m.get("x_tipico") or 1.0
         por_u = m["efecto_toda_muestra"] / xt
         ic = m.get("ic95_toda_muestra")
-        out.append({"codigo": c, "nombre": NOMBRES_T.get(c, m.get("angulo") or c), "x": round(v, 3), "unidad": unidad,
-                    "moveria": round(por_u * v, 3), "ic95": None if not ic else [round(ic[0] / xt * v, 3), round(ic[1] / xt * v, 3)],
+        if abs(v) > 2 * xt:                      # sin extrapolar: tope de 2 veces el x tipico de los casos medidos
+            v = math.copysign(2 * xt, v)
+        icv = None if not ic else sorted([ic[0] / xt * v, ic[1] / xt * v])      # con x negativo los extremos se invierten
+        out.append({"codigo": c, "nombre": NOMBRES_T.get(c, m.get("angulo") or c), "x": round(v, 4), "unidad": unidad,
+                    "moveria": round(por_u * v, 3), "ic95": None if not icv else [round(icv[0], 3), round(icv[1], 3)],
                     "z": m.get("z"), "n": m.get("n_activo_total"),
                     "texto": "%s %s: moveria %+.2f %s al total (IC %s; %s partidos con el angulo; z fuera de muestra %s)" % (
                         c, NOMBRES_T.get(c, c), por_u * v, unidad,
-                        ("%+.2f a %+.2f" % (ic[0] / xt * v, ic[1] / xt * v)) if ic else "sin dato", m.get("n_activo_total"), m.get("z"))})
+                        ("%+.2f a %+.2f" % (icv[0], icv[1])) if icv else "sin dato", m.get("n_activo_total"), m.get("z"))})
     return out
 
 
