@@ -423,35 +423,47 @@ def del_juegos(n_atras, conocidos):
     print("  DEL temporada actual: %d juegos nuevos leidos (de %d terminados en el calendario)" % (len(juegos), len(ids)))
     if not n_atras or not ids:
         return juegos
-    # temporadas anteriores: los ids son consecutivos; se prueba si la pagina abre solo con el id
-    prueba = min(ids)
-    try:
-        ok = del_leer_juego(get_txt(DEL_WEB + "/statistik/spieldetails/0_x_gg_y_%d" % prueba), prueba)
-    except Exception:
-        ok = None
-    if not ok:
-        print("  DEL: la pagina no abre solo con el id; temporadas anteriores pendientes")
-        return juegos
-    corte = int(time.strftime("%Y")) - n_atras - 1          # p.ej. 2023 -> se queda con 2024-25 en adelante
-    fallas, gid, n0 = 0, prueba - 1, len(juegos)
-    while gid > 0 and fallas < 60:
-        if "DEL-%d" % gid in conocidos:
-            VISTOS.add("DEL-%d" % gid); fallas = 0; gid -= 1; continue
+    # temporadas anteriores: /statistik/saison-AAAA-AA/hauptrunde/spielplan muestra un mes; sus filtros
+    # (mes y equipo) son <select> con las direcciones de cada vista: se recorren todas y se juntan los juegos
+    n0 = len(juegos)
+    anio0 = int(time.strftime("%Y")) if int(time.strftime("%m")) >= 8 else int(time.strftime("%Y")) - 1
+    for k in range(1, n_atras + 1):
+        a = anio0 - k
+        base = "/statistik/saison-%d-%02d/hauptrunde/spielplan" % (a, (a + 1) % 100)
         try:
-            j = del_leer_juego(get_txt(DEL_WEB + "/statistik/spieldetails/0_x_gg_y_%d" % gid, intentos=1), gid)
-        except Exception:
-            j = None
-        if j:
-            if int(j["season"][:4]) <= corte:
-                break
-            juegos.append(j); fallas = 0
-            if (len(juegos) - n0) % 100 == 0:
-                print("   ... %d juegos DEL anteriores" % (len(juegos) - n0))
-        else:
-            fallas += 1
-        gid -= 1
-        time.sleep(0.2)
-    print("  DEL temporadas anteriores: %d juegos" % (len(juegos) - n0))
+            h0 = get_txt(DEL_WEB + base)
+        except Exception as e:
+            print("  DEL %d-%02d: falla %s" % (a, (a + 1) % 100, e)); continue
+        vistas = {base}
+        for sel in re.findall(r"<select[^>]*>(.*?)</select>", h0, re.S):
+            for v in re.findall(r'<option[^>]*value="([^"]+)"', sel):
+                if v.startswith("/") and "spielplan" in v:
+                    vistas.add(v)
+        links = set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", h0))
+        for v in sorted(vistas - {base}):
+            try:
+                links |= set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", get_txt(DEL_WEB + v)))
+            except Exception:
+                pass
+            time.sleep(0.2)
+        ids_t = {}
+        for l in links:
+            m = re.search(r"/(\d{2})(\d{2})(\d{4})_[\w\-]+_(\d+)$", l)
+            if m and int(m.group(3)) in (a, a + 1) and not (int(m.group(3)) == a + 1 and int(m.group(2)) >= 8):
+                ids_t[int(m.group(4))] = l
+        n_t = 0
+        for gid, l in sorted(ids_t.items()):
+            if "DEL-%d" % gid in conocidos:
+                VISTOS.add("DEL-%d" % gid); continue
+            try:
+                j = del_leer_juego(get_txt(DEL_WEB + l), gid)
+                if j:
+                    juegos.append(j); n_t += 1
+                time.sleep(0.2)
+            except Exception:
+                pass
+        print("  DEL %d-%02d: %d vistas del calendario, %d juegos en ligas, %d nuevos leidos" % (a, (a + 1) % 100, len(vistas), len(ids_t), n_t))
+    print("  DEL temporadas anteriores: %d juegos nuevos" % (len(juegos) - n0))
     return juegos
 
 
