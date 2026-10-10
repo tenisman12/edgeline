@@ -1,0 +1,637 @@
+{
+ "generado": "2026-10-10T11:38:10",
+ "deporte": "nba",
+ "red convolucional (10 partidos)": {
+  "total": {
+   "grupo": "BASQUET",
+   "n": 13897,
+   "mejora_milesimas": 0.965,
+   "z": 2.38,
+   "mitades": [
+    0.358,
+    1.572
+   ],
+   "brier_base": 0.19506,
+   "brier_angulos": 0.1947,
+   "brier_mejora_pct": 0.18,
+   "calibracion": -0.0035,
+   "deciles": [
+    [
+     0.244,
+     0.244
+    ],
+    [
+     0.388,
+     0.395
+    ],
+    [
+     0.475,
+     0.485
+    ],
+    [
+     0.545,
+     0.56
+    ],
+    [
+     0.609,
+     0.61
+    ],
+    [
+     0.667,
+     0.676
+    ],
+    [
+     0.723,
+     0.715
+    ],
+    [
+     0.78,
+     0.782
+    ],
+    [
+     0.839,
+     0.829
+    ],
+    [
+     0.92,
+     0.929
+    ]
+   ],
+   "cal_peor_decil": 0.015,
+   "mueve_pp_medio": 1.62,
+   "veredicto": "pasa",
+   "desde": "2024-11-01",
+   "hasta": "2026-06-13"
+  },
+  "por_liga": [
+   {
+    "grupo": "NBA",
+    "n": 2544,
+    "mejora_milesimas": -0.459,
+    "z": -0.84,
+    "mitades": [
+     -0.646,
+     -0.272
+    ],
+    "brier_base": 0.20723,
+    "brier_angulos": 0.20744,
+    "brier_mejora_pct": -0.1,
+    "calibracion": 0.0074,
+    "deciles": [
+     [
+      0.22,
+      0.18
+     ],
+     [
+      0.343,
+      0.325
+     ],
+     [
+      0.416,
+      0.38
+     ],
+     [
+      0.479,
+      0.502
+     ],
+     [
+      0.543,
+      0.543
+     ],
+     [
+      0.6,
+      0.575
+     ],
+     [
+      0.651,
+      0.681
+     ],
+     [
+      0.706,
+      0.736
+     ],
+     [
+      0.773,
+      0.756
+     ],
+     [
+      0.861,
+      0.839
+     ]
+    ],
+    "cal_peor_decil": 0.04,
+    "mueve_pp_medio": 0.96,
+    "veredicto": "no pasa",
+    "desde": "2024-11-01",
+    "hasta": "2026-06-13"
+   },
+   {
+    "grupo": "NCAAMB",
+    "n": 11353,
+    "mejora_milesimas": 1.284,
+    "z": 2.67,
+    "mitades": [
+     0.577,
+     1.991
+    ],
+    "brier_base": 0.19233,
+    "brier_angulos": 0.19185,
+    "brier_mejora_pct": 0.25,
+    "calibracion": -0.0059,
+    "deciles": [
+     [
+      0.251,
+      0.26
+     ],
+     [
+      0.403,
+      0.419
+     ],
+     [
+      0.491,
+      0.51
+     ],
+     [
+      0.562,
+      0.574
+     ],
+     [
+      0.625,
+      0.622
+     ],
+     [
+      0.684,
+      0.693
+     ],
+     [
+      0.739,
+      0.73
+     ],
+     [
+      0.794,
+      0.796
+     ],
+     [
+      0.851,
+      0.842
+     ],
+     [
+      0.927,
+      0.938
+     ]
+    ],
+    "cal_peor_decil": 0.019,
+    "mueve_pp_medio": 1.76,
+    "veredicto": "pasa",
+    "desde": "2024-11-06",
+    "hasta": "2026-04-06"
+   }
+  ]
+ },
+ "random forest": {
+  "total": {
+   "grupo": "BASQUET",
+   "n": 13897,
+   "mejora_milesimas": -9.309,
+   "z": -6.83,
+   "mitades": [
+    -11.365,
+    -7.254
+   ],
+   "brier_base": 0.19506,
+   "brier_angulos": 0.19794,
+   "brier_mejora_pct": -1.48,
+   "calibracion": 0.0002,
+   "deciles": [
+    [
+     0.364,
+     0.248
+    ],
+    [
+     0.421,
+     0.396
+    ],
+    [
+     0.476,
+     0.49
+    ],
+    [
+     0.548,
+     0.555
+    ],
+    [
+     0.611,
+     0.598
+    ],
+    [
+     0.679,
+     0.668
+    ],
+    [
+     0.722,
+     0.734
+    ],
+    [
+     0.757,
+     0.772
+    ],
+    [
+     0.8,
+     0.867
+    ],
+    [
+     0.849,
+     0.896
+    ]
+   ],
+   "cal_peor_decil": 0.116,
+   "mueve_pp_medio": 5.1,
+   "veredicto": "no pasa",
+   "desde": "2024-11-01",
+   "hasta": "2026-06-13"
+  },
+  "por_liga": [
+   {
+    "grupo": "NBA",
+    "n": 2544,
+    "mejora_milesimas": -14.572,
+    "z": -5.74,
+    "mitades": [
+     -16.399,
+     -12.745
+    ],
+    "brier_base": 0.20723,
+    "brier_angulos": 0.21307,
+    "brier_mejora_pct": -2.82,
+    "calibracion": 0.0196,
+    "deciles": [
+     [
+      0.351,
+      0.208
+     ],
+     [
+      0.394,
+      0.314
+     ],
+     [
+      0.433,
+      0.384
+     ],
+     [
+      0.489,
+      0.498
+     ],
+     [
+      0.555,
+      0.563
+     ],
+     [
+      0.617,
+      0.594
+     ],
+     [
+      0.656,
+      0.626
+     ],
+     [
+      0.696,
+      0.744
+     ],
+     [
+      0.741,
+      0.756
+     ],
+     [
+      0.78,
+      0.831
+     ]
+    ],
+    "cal_peor_decil": 0.143,
+    "mueve_pp_medio": 4.43,
+    "veredicto": "no pasa",
+    "desde": "2024-11-01",
+    "hasta": "2026-06-13"
+   },
+   {
+    "grupo": "NCAAMB",
+    "n": 11353,
+    "mejora_milesimas": -8.13,
+    "z": -5.19,
+    "mitades": [
+     -10.279,
+     -5.982
+    ],
+    "brier_base": 0.19233,
+    "brier_angulos": 0.19454,
+    "brier_mejora_pct": -1.15,
+    "calibracion": -0.0041,
+    "deciles": [
+     [
+      0.369,
+      0.264
+     ],
+     [
+      0.429,
+      0.418
+     ],
+     [
+      0.49,
+      0.502
+     ],
+     [
+      0.561,
+      0.582
+     ],
+     [
+      0.628,
+      0.619
+     ],
+     [
+      0.698,
+      0.677
+     ],
+     [
+      0.733,
+      0.735
+     ],
+     [
+      0.77,
+      0.804
+     ],
+     [
+      0.812,
+      0.869
+     ],
+     [
+      0.853,
+      0.914
+     ]
+    ],
+    "cal_peor_decil": 0.105,
+    "mueve_pp_medio": 5.25,
+    "veredicto": "no pasa",
+    "desde": "2024-11-06",
+    "hasta": "2026-04-06"
+   }
+  ]
+ },
+ "tmle": {
+  "k": 23,
+  "z_bonferroni": 3.07,
+  "angulos": [
+   {
+    "codigo": "K8b",
+    "expuestos": 1886,
+    "efecto_pp": -4.62,
+    "ic95": [
+     -5.93,
+     -3.32
+    ],
+    "z": -6.95,
+    "pasa_bonferroni": true
+   },
+   {
+    "codigo": "K10",
+    "expuestos": 3451,
+    "efecto_pp": -4.67,
+    "ic95": [
+     -6.46,
+     -2.88
+    ],
+    "z": -5.12,
+    "pasa_bonferroni": true
+   },
+   {
+    "codigo": "K1",
+    "expuestos": 1626,
+    "efecto_pp": 5.85,
+    "ic95": [
+     3.39,
+     8.3
+    ],
+    "z": 4.67,
+    "pasa_bonferroni": true
+   },
+   {
+    "codigo": "Q2",
+    "expuestos": 952,
+    "efecto_pp": 5.29,
+    "ic95": [
+     2.83,
+     7.76
+    ],
+    "z": 4.21,
+    "pasa_bonferroni": true
+   },
+   {
+    "codigo": "Q4",
+    "expuestos": 880,
+    "efecto_pp": 4.72,
+    "ic95": [
+     1.86,
+     7.59
+    ],
+    "z": 3.23,
+    "pasa_bonferroni": true
+   },
+   {
+    "codigo": "Q3",
+    "expuestos": 2418,
+    "efecto_pp": 3.34,
+    "ic95": [
+     1.12,
+     5.56
+    ],
+    "z": 2.95,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "S1",
+    "expuestos": 4258,
+    "efecto_pp": 2.31,
+    "ic95": [
+     0.77,
+     3.86
+    ],
+    "z": 2.93,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "S7",
+    "expuestos": 668,
+    "efecto_pp": 4.72,
+    "ic95": [
+     1.33,
+     8.11
+    ],
+    "z": 2.73,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "Q5",
+    "expuestos": 186,
+    "efecto_pp": 3.19,
+    "ic95": [
+     0.86,
+     5.52
+    ],
+    "z": 2.69,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K2",
+    "expuestos": 1770,
+    "efecto_pp": 2.96,
+    "ic95": [
+     0.75,
+     5.17
+    ],
+    "z": 2.63,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K12",
+    "expuestos": 1882,
+    "efecto_pp": 2.11,
+    "ic95": [
+     -0.06,
+     4.29
+    ],
+    "z": 1.9,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K13",
+    "expuestos": 332,
+    "efecto_pp": -1.73,
+    "ic95": [
+     -4.31,
+     0.85
+    ],
+    "z": -1.32,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K11",
+    "expuestos": 462,
+    "efecto_pp": 2.28,
+    "ic95": [
+     -1.35,
+     5.92
+    ],
+    "z": 1.23,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "Q6a",
+    "expuestos": 2212,
+    "efecto_pp": -1.49,
+    "ic95": [
+     -3.89,
+     0.91
+    ],
+    "z": -1.21,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "Q1",
+    "expuestos": 8416,
+    "efecto_pp": 0.57,
+    "ic95": [
+     -0.71,
+     1.85
+    ],
+    "z": 0.87,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K4",
+    "expuestos": 4230,
+    "efecto_pp": 0.61,
+    "ic95": [
+     -0.87,
+     2.09
+    ],
+    "z": 0.8,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K3",
+    "expuestos": 9507,
+    "efecto_pp": 0.44,
+    "ic95": [
+     -0.76,
+     1.64
+    ],
+    "z": 0.72,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "Q6b",
+    "expuestos": 2736,
+    "efecto_pp": 0.7,
+    "ic95": [
+     -1.38,
+     2.78
+    ],
+    "z": 0.66,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "S8",
+    "expuestos": 1549,
+    "efecto_pp": 0.79,
+    "ic95": [
+     -1.73,
+     3.31
+    ],
+    "z": 0.61,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "K8a",
+    "expuestos": 9883,
+    "efecto_pp": 0.31,
+    "ic95": [
+     -0.79,
+     1.42
+    ],
+    "z": 0.56,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "S3",
+    "expuestos": 684,
+    "efecto_pp": -0.51,
+    "ic95": [
+     -3.69,
+     2.66
+    ],
+    "z": -0.32,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "S2",
+    "expuestos": 907,
+    "efecto_pp": 0.48,
+    "ic95": [
+     -2.62,
+     3.58
+    ],
+    "z": 0.3,
+    "pasa_bonferroni": false
+   },
+   {
+    "codigo": "Q7",
+    "expuestos": 684,
+    "efecto_pp": -0.2,
+    "ic95": [
+     -2.17,
+     1.78
+    ],
+    "z": -0.19,
+    "pasa_bonferroni": false
+   }
+  ]
+ }
+}

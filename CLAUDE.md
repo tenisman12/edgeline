@@ -164,6 +164,10 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   Basquet y beisbol (mismo dia, `utilidades/minar_angulos_bayes.py`, `trabajo/minar/2026-10-10_bayes_nba_beisbol.md`; base con
   K14 y S4 ya aplicados): basquet z 1.75 (NCAAMB 1.86, las dos mitades a favor, no llega a 2.0; NBA 0.13), beisbol z -1.20
   (NPB empeora, z -2.44). Boosting y red neuronal no pasan. Ningun angulo nuevo gana peso.
+  CNN, random forest y TMLE (mismo dia, `utilidades/minar_angulos_secuencias.py`, `trabajo/minar/2026-10-10_secuencias.md`):
+  CNN 1D sobre los ultimos 10 partidos de cada equipo pasa en NCAAMB (z 2.67, 2.30, 2.17, 1.26 con 4 semillas; NBA no):
+  CANDIDATO, falta ensamble de semillas y medirlo en vivo; no se aplica. RF pierde en los tres deportes. TMLE dentro de
+  muestra marca H2 hockey y K1/K8b/K10 NBA, pero fuera de muestra no predicen.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

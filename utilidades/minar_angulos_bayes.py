@@ -91,6 +91,7 @@ def armar(dep):
             v = r.get(capa) if capa != "S4" else s5.get("S4")
             p = r["p"] if not v else _sig(_lg(r["p"]) + beta * v)        # la capa aprobada va en la base, como en produccion
             filas.append(dict(liga=liga, fecha=str(r["fecha"])[:10], gp=str(r["gp"]), p=float(p), y=int(r["y"]),
+                              home=str(r["home"]), away=str(r["away"]),
                               x={k: (0.0 if x.get(k) is None else float(x[k])) for k in cfg["ang"]}))
     filas.sort(key=lambda r: (r["fecha"], r["liga"], r["gp"]))
     return filas
