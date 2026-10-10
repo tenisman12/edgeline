@@ -33,6 +33,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
       "Accept-Language": "en,de;q=0.8"}
 HT = "https://lscluster.hockeytech.com/feed/?key=50c2cd9b5e18e390&client_code=ahl&"
 SHL_ACTUAL = "20961"                       # SHL 2026-27 en swehockey
+VISTOS = set()          # juegos vistos en los calendarios de esta corrida (incluye los ya guardados que no se piden)
 FIJAS = ["gamePk", "league", "season", "game_date", "team", "opp", "is_home", "goals", "goals_opp",
          "goals_reg", "goals_reg_opp", "final_tipo"]
 EXTRAS = ["h_sog", "h_sog_opp", "h_xg", "h_xg_opp", "h_powerPlayPctg", "h_powerPlayPctg_opp",
@@ -121,7 +122,7 @@ def liiga(temporadas):
                 n, gl = num(t.get("powerplayInstances")), num(t.get("powerplayGoals"))
                 return round(100.0 * gl / n, 1) if n else None
 
-            juegos.append({"id": "LIIGA-%s" % g.get("id"), "liga": "LIIGA", "season": "%d%d" % (s - 1, s),
+            juegos.append({"id": "LIIGA-%d-%s" % (s, g.get("id")), "liga": "LIIGA", "season": "%d%d" % (s - 1, s),
                            "fecha": (h.get("gameStartDateTime") or g.get("start") or "")[:10],
                            "eq_h": h.get("teamName"), "eq_a": a.get("teamName"),
                            "g_h": hs, "g_a": as_, "r_h": rh, "r_a": ra, "tipo": tipo,
@@ -230,27 +231,41 @@ def shl_temporadas(n_atras):
         r'(?:Overview|Schedule|Standings)/(\d{4,6})[^>]*>\s*(?:<[^>]+>\s*)*(\d{4}-\d{2})\s*<',
         r'(?:value|data-[\w-]+|href)="[^"]*?(\d{4,6})[^"]*"[^>]*>\s*(?:<[^>]+>\s*)*(\d{4}-\d{2})\s*<',
     ]
+    cand = {}
     for pat in patrones:
         for val, txt in re.findall(pat, h):
-            if val != SHL_ACTUAL and txt != "2026-27" and txt not in [t for t, _ in ids]:
-                ids.append((txt, val))
-        if len(ids) > 1:
-            break
-    if len(ids) == 1 and n_atras and h:
+            if val != SHL_ACTUAL and txt != "2026-27":
+                cand.setdefault(txt, [])
+                if val not in cand[txt]:
+                    cand[txt].append(val)
+    if not cand and n_atras and h:
         os.makedirs(os.path.dirname(COB), exist_ok=True)
         io.open(os.path.join(os.path.dirname(COB), "shl_overview.html"), "w", encoding="utf-8").write(h)
         print("  SHL: no encontre los ids de temporadas anteriores; pagina guardada en salida\\shl_overview.html")
-    ids.sort(reverse=True)
-    return ids[:n_atras + 1]
+    salida = [("2026-27", [SHL_ACTUAL])] + sorted(cand.items(), reverse=True)
+    return salida[:n_atras + 1]
+
+
+def shl_calendario(vals):
+    """de varios ids con la misma temporada, el calendario con mas juegos (la fase regular; no la kvalserie)."""
+    mejor, n_mejor = None, -1
+    for v in vals[:6]:
+        try:
+            h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Schedule/%s" % v)
+        except Exception:
+            continue
+        n = len(set(re.findall(r"/Game/Events/(\d+)", h)))
+        if n > n_mejor:
+            mejor, n_mejor = h, n
+    return mejor, n_mejor
 
 
 def shl(n_atras, conocidos):
     juegos = []
-    for temp, sid in shl_temporadas(n_atras):
-        try:
-            h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Schedule/%s" % sid)
-        except Exception as e:
-            print("  SHL %s: falla %s" % (temp, e)); continue
+    for temp, vals in shl_temporadas(n_atras):
+        h, n_cal = shl_calendario(vals)
+        if not h or (temp != "2026-27" and n_cal < 200):
+            print("  SHL %s: sin calendario de fase regular (mejor candidato %d juegos)" % (temp, max(n_cal, 0))); continue
         anio = int(temp[:4])
         fecha = ""
         n0 = len(juegos)
@@ -378,7 +393,7 @@ def del_juegos(n_atras, conocidos):
             ids[int(m.group(4))] = l
     for gid, l in sorted(ids.items()):
         if "DEL-%d" % gid in conocidos:
-            continue
+            VISTOS.add("DEL-%d" % gid); continue
         try:
             j = del_leer_juego(get_txt(DEL_WEB + l), gid)
             if j:
@@ -402,7 +417,7 @@ def del_juegos(n_atras, conocidos):
     fallas, gid, n0 = 0, prueba - 1, len(juegos)
     while gid > 0 and fallas < 60:
         if "DEL-%d" % gid in conocidos:
-            fallas = 0; gid -= 1; continue
+            VISTOS.add("DEL-%d" % gid); fallas = 0; gid -= 1; continue
         try:
             j = del_leer_juego(get_txt(DEL_WEB + "/statistik/spieldetails/0_x_gg_y_%d" % gid, intentos=1), gid)
         except Exception:
@@ -457,6 +472,14 @@ def main():
                 if f.get(k) in ("", None) and viejo.get(k) not in ("", None):
                     f[k] = viejo[k]
         por_llave[(f["gamePk"], f["team"])] = f
+    vistos = VISTOS | {j["id"] for j in juegos}
+    # solo se limpian las temporadas que se leyeron en esta corrida (con --solo-actual no se toca la historia)
+    leidas = {(j["liga"], str(j["season"])) for j in juegos} | {(r["league"], str(r["season"])) for r in previos if r["gamePk"] in VISTOS}
+    quitadas = [k for k, r in por_llave.items() if (r["league"], str(r["season"])) in leidas and r["gamePk"] not in vistos]
+    for k in quitadas:
+        del por_llave[k]
+    if quitadas:
+        print("  %d filas viejas quitadas (ids anteriores o fuera de la fase regular)" % len(quitadas))
     filas = sorted(por_llave.values(), key=lambda r: (r["league"], r["game_date"], str(r["gamePk"]), str(r["is_home"])))
     if not filas:
         print("Sin juegos."); return
