@@ -25,7 +25,7 @@ from . import mercado
 SHARP = ("pinnacle", "pinnacle_eu")
 # Casas que NO cuentan para la "mejor cuota": exchanges (cobran comision y su precio no es apostable tal cual).
 EXCLUIR = set((os.environ.get("EDGELINE_CASAS_EXCLUIR") or "betfair_ex_eu,betfair_ex_uk,betfair_ex_au,matchbook,smarkets").split(","))
-DIARIAS = {"mlb", "npb", "kbo"}   # ligas con el mismo cruce varios dias seguidos: emparejar solo con la fecha exacta
+DIARIAS = {"mlb", "npb", "kbo", "shl", "liiga", "ahl", "del"}   # ligas con el mismo cruce varios dias seguidos (series de fin de semana en hockey): emparejar solo con la fecha exacta
 EV_MAX_CASA = 0.08      # una cuota con mas de 8% de EV contra Pinnacle es casi siempre una linea vieja o un mercado distinto: se ignora
 # sport key de The Odds API -> liga de Edgeline
 LIGA_DE = {"baseball_mlb": "mlb", "baseball_npb": "npb", "baseball_kbo": "kbo", "icehockey_nhl": "nhl",
