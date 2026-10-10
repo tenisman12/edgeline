@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-10T19:04:22",
+ "generado": "2026-10-10T20:20:02",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -116,10 +116,10 @@
      "lado": "home",
      "texto": "Cleveland Guardians -1.5",
      "p": 0.3886,
-     "cuota": 158.0,
-     "decimal": 2.58,
+     "cuota": 154.0,
+     "decimal": 2.54,
      "casa": "DraftKings",
-     "ev": 0.0025,
+     "ev": -0.013,
      "cuota_min": 2.57,
      "en_rango": true,
      "senales_favor": 3,
@@ -142,10 +142,10 @@
      "lado": "away",
      "texto": "Chicago White Sox +1.5",
      "p": 0.6114,
-     "cuota": -193.0,
-     "decimal": 1.518,
+     "cuota": -188.0,
+     "decimal": 1.532,
      "casa": "DraftKings",
-     "ev": -0.0718,
+     "ev": -0.0634,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
@@ -569,20 +569,31 @@
    "hora": "18:00",
    "home": "Milwaukee Brewers",
    "away": "Los Angeles Dodgers",
-   "p_modelo": 0.5079,
+   "p_modelo": 0.5871,
    "p_sharp": 0.5065,
-   "p_final": 0.5069,
+   "p_final": 0.5268,
    "fuente": "pinnacle 75% + modelo 25%",
-   "margen_esperado": 0.07,
+   "margen_esperado": 0.29,
    "linea_home": "+1.5",
-   "p_runline_home": 0.6201,
+   "p_runline_home": 0.6384,
    "detalle_modelo": {
     "elo_h": 1615.0,
     "elo_a": 1594.8,
     "dif_h": 1.307,
     "dif_a": 1.247,
     "p_base": 0.5559,
-    "abridor_h": null,
+    "abridor_h": {
+     "nombre": "Jacob Misiorowski",
+     "fip_ventana": 2.01,
+     "fip_ultimas5": 1.25,
+     "k_pct": 0.3,
+     "bb_pct": 0.083,
+     "ip_ventana": "45.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 2.49,
+     "ga_equipo": 3.783
+    },
     "abridor_a": {
      "nombre": "Tarik Skubal",
      "fip_ventana": 2.09,
@@ -595,7 +606,7 @@
      "era_ajustada": 2.88,
      "ga_equipo": 3.663
     },
-    "carreras_abridor": -0.48,
+    "carreras_abridor": 0.32,
     "frio_caliente": 0
    },
    "lados": [
@@ -603,15 +614,15 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Milwaukee Brewers",
-     "p": 0.5069,
+     "p": 0.5268,
      "cuota": -113.0,
      "decimal": 1.885,
      "casa": "DraftKings",
-     "ev": -0.0446,
-     "cuota_min": 1.97,
+     "ev": -0.0069,
+     "cuota_min": 1.9,
      "en_rango": true,
      "senales_favor": 3,
-     "senales_contra": 6,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
        "consenso",
@@ -620,34 +631,31 @@
       ],
       "en_contra": [
        "movimiento",
-       "contexto",
        "osciladores",
-       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 46.7
+     "premium_pts": 51.1
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Los Angeles Dodgers",
-     "p": 0.4931,
+     "p": 0.4732,
      "cuota": -107.0,
      "decimal": 1.935,
      "casa": "DraftKings",
-     "ev": -0.046,
-     "cuota_min": 2.03,
+     "ev": -0.0846,
+     "cuota_min": 2.11,
      "en_rango": true,
-     "senales_favor": 5,
+     "senales_favor": 4,
      "senales_contra": 3,
      "senales": {
       "a_favor": [
        "movimiento",
        "osciladores",
-       "abridor",
        "bullpen",
        "racha"
       ],
@@ -658,21 +666,21 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.3
+     "premium_pts": 33.9
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Milwaukee Brewers +1.5",
-     "p": 0.6201,
+     "p": 0.6384,
      "cuota": -209.0,
      "decimal": 1.478,
      "casa": "DraftKings",
-     "ev": -0.0831,
+     "ev": -0.0562,
      "cuota_min": 1.7,
      "en_rango": false,
      "senales_favor": 1,
-     "senales_contra": 5,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
        "fuerza"
@@ -680,32 +688,30 @@
       "en_contra": [
        "movimiento",
        "osciladores",
-       "abridor",
        "bullpen",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 28.7
+     "premium_pts": 32.8
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Los Angeles Dodgers -1.5",
-     "p": 0.3799,
+     "p": 0.3616,
      "cuota": 171.0,
      "decimal": 2.71,
      "casa": "DraftKings",
-     "ev": 0.0294,
-     "cuota_min": 2.63,
+     "ev": -0.02,
+     "cuota_min": 2.77,
      "en_rango": true,
-     "senales_favor": 5,
+     "senales_favor": 4,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
        "movimiento",
        "osciladores",
-       "abridor",
        "bullpen",
        "racha"
       ],
@@ -714,22 +720,22 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 37.9
+     "premium_pts": 33.9
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Milwaukee Brewers",
-    "p": 0.5069,
+    "p": 0.5268,
     "cuota": -113.0,
     "decimal": 1.885,
     "casa": "DraftKings",
-    "ev": -0.0446,
-    "cuota_min": 1.97,
+    "ev": -0.0069,
+    "cuota_min": 1.9,
     "en_rango": true,
     "senales_favor": 3,
-    "senales_contra": 6,
+    "senales_contra": 4,
     "senales": {
      "a_favor": [
       "consenso",
@@ -738,15 +744,13 @@
      ],
      "en_contra": [
       "movimiento",
-      "contexto",
       "osciladores",
-      "abridor",
       "bullpen",
       "racha"
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 46.7
+    "premium_pts": 51.1
    },
    "confianza": "minima",
    "stake": 0.0,
