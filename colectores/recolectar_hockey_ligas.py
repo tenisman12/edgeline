@@ -216,15 +216,30 @@ def ahl(n_atras, conocidos):
 
 # ------------------------------------------------------------------ SHL
 def shl_temporadas(n_atras):
-    """ids de swehockey de la SHL: el actual y los anteriores que salgan en el selector de temporadas."""
+    """ids de swehockey de la SHL: el actual y los anteriores del selector de temporadas.
+    El selector cambia de formato; se buscan varias formas y, si no sale nada, se guarda la pagina
+    en salida/shl_overview.html para ajustar el lector."""
     ids = [("2026-27", SHL_ACTUAL)]
+    h = ""
     try:
         h = get_txt("https://stats.swehockey.se/ScheduleAndResults/Overview/%s" % SHL_ACTUAL)
-        for val, txt in re.findall(r'<option[^>]*value="(\d+)"[^>]*>\s*(\d{4}-\d{2})\s*<', h):
-            if val != SHL_ACTUAL and (txt, val) not in ids:
+    except Exception as e:
+        print("  SHL: no abre la pagina de temporadas (%s)" % e)
+    patrones = [
+        r'<option[^>]*value="[^"]*?(\d{4,6})"[^>]*>\s*(\d{4}-\d{2})\s*<',
+        r'(?:Overview|Schedule|Standings)/(\d{4,6})[^>]*>\s*(?:<[^>]+>\s*)*(\d{4}-\d{2})\s*<',
+        r'(?:value|data-[\w-]+|href)="[^"]*?(\d{4,6})[^"]*"[^>]*>\s*(?:<[^>]+>\s*)*(\d{4}-\d{2})\s*<',
+    ]
+    for pat in patrones:
+        for val, txt in re.findall(pat, h):
+            if val != SHL_ACTUAL and txt != "2026-27" and txt not in [t for t, _ in ids]:
                 ids.append((txt, val))
-    except Exception:
-        pass
+        if len(ids) > 1:
+            break
+    if len(ids) == 1 and n_atras and h:
+        os.makedirs(os.path.dirname(COB), exist_ok=True)
+        io.open(os.path.join(os.path.dirname(COB), "shl_overview.html"), "w", encoding="utf-8").write(h)
+        print("  SHL: no encontre los ids de temporadas anteriores; pagina guardada en salida\\shl_overview.html")
     ids.sort(reverse=True)
     return ids[:n_atras + 1]
 
@@ -445,6 +460,20 @@ def main():
     filas = sorted(por_llave.values(), key=lambda r: (r["league"], r["game_date"], str(r["gamePk"]), str(r["is_home"])))
     if not filas:
         print("Sin juegos."); return
+    # % de salvadas del equipo cuando la fuente trae tiros pero no porteros (AHL y juegos ya guardados):
+    # 1 - goles recibidos / tiros recibidos (sin el gol de la tanda de penales)
+    for r in filas:
+        tiros_rec = num(r.get("h_sog_opp"))
+        if r.get("goalie_sv") in ("", None) and tiros_rec:
+            g_rec, g_pro = num(r.get("goals_opp")) or 0, num(r.get("goals")) or 0
+            g_rec -= 1 if (r.get("final_tipo") == "SO" and g_rec > g_pro) else 0
+            r["goalie_sv"] = round(1.0 - g_rec / tiros_rec, 3)
+    for r in filas:
+        tiros_pro = num(r.get("h_sog"))
+        if r.get("goalie_sv_opp") in ("", None) and tiros_pro:
+            g_pro, g_rec = num(r.get("goals")) or 0, num(r.get("goals_opp")) or 0
+            g_pro -= 1 if (r.get("final_tipo") == "SO" and g_pro > g_rec) else 0
+            r["goalie_sv_opp"] = round(1.0 - g_pro / tiros_pro, 3)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with io.open(OUT, "w", encoding="utf-8-sig", newline="") as f:
