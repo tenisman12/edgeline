@@ -600,7 +600,7 @@ def _pred_base(g, c, fecha, eventos=None):
     """-> (modelo|None, motivo_si_none). Salida comun a todos los deportes. eventos = cuotas de todas las casas
     (se usa en tenis para tomar la linea de games del mercado)."""
     dep, liga, q = DEPORTE.get(g["liga"]), g["liga"], g.get("cuotas") or {}
-    if g["tipo"] != "tenis" and any("/" in (g[l]["nombre"] or "") for l in ("home", "away")):
+    if g["tipo"] != "tenis" and liga not in _HOCKEY_LIGAS and any("/" in (g[l]["nombre"] or "") for l in ("home", "away")):
         return None, "rival por definir (TBD)"            # ganador de una serie aun sin resolver, p. ej. "Phillies/Braves"
     if g["tipo"] == "tenis":
         if "TBD" in ((g["home"]["nombre"] or "").upper(), (g["away"]["nombre"] or "").upper()):
