@@ -1,254 +1,6 @@
 {
- "generado": "2026-10-10T12:07:37",
+ "generado": "2026-10-10T12:25:21",
  "ligas": [
-  {
-   "liga": "LMP",
-   "parametros": {
-    "q": 0.0001,
-    "rho": 0.15,
-    "p0": 0.001,
-    "kappa": 0.5,
-    "parque": 1
-   },
-   "r_nb": 4,
-   "w_mezcla": 1.0,
-   "corte": "2019-11-14",
-   "n_prueba": 2373,
-   "mercados": [
-    {
-     "mercado": "Ganador (motor vs produccion)",
-     "n": 2373,
-     "mejora_milesimas": -1.332,
-     "z": -0.89,
-     "mitades": [
-      0.601,
-      -3.263
-     ],
-     "brier_prod": 0.24549,
-     "brier_motor": 0.24618,
-     "brier_mejora_pct": -0.28,
-     "cal_motor": -0.0094,
-     "cal_prod": 0.001,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Ganador (apilado vs produccion)",
-     "n": 2373,
-     "mejora_milesimas": -2.418,
-     "z": -1.6,
-     "mitades": [
-      -2.581,
-      -2.256
-     ],
-     "brier_prod": 0.24549,
-     "brier_motor": 0.24672,
-     "brier_mejora_pct": -0.5,
-     "cal_motor": 0.0081,
-     "cal_prod": 0.001,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Over/Under (apilado vs capa de totales)",
-     "n": 2373,
-     "mejora_milesimas": 7.832,
-     "z": 2.8,
-     "mitades": [
-      16.833,
-      -1.161
-     ],
-     "brier_prod": 0.23648,
-     "brier_motor": 0.23279,
-     "brier_mejora_pct": 1.56,
-     "cal_motor": -0.0276,
-     "cal_prod": -0.0115,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Ganador (mezcla vs produccion)",
-     "n": 2373,
-     "mejora_milesimas": -1.332,
-     "z": -0.89,
-     "mitades": [
-      0.601,
-      -3.263
-     ],
-     "brier_prod": 0.24549,
-     "brier_motor": 0.24618,
-     "brier_mejora_pct": -0.28,
-     "cal_motor": -0.0094,
-     "cal_prod": 0.001,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Over/Under linea ~promedio (vs modelo)",
-     "n": 2373,
-     "mejora_milesimas": 15.853,
-     "z": 4.99,
-     "mitades": [
-      24.39,
-      7.324
-     ],
-     "brier_prod": 0.23883,
-     "brier_motor": 0.23266,
-     "brier_mejora_pct": 2.58,
-     "cal_motor": -0.0224,
-     "cal_prod": -0.0335,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Over/Under linea ~promedio (vs capa de totales)",
-     "n": 2373,
-     "mejora_milesimas": 7.966,
-     "z": 2.35,
-     "mitades": [
-      17.947,
-      -2.007
-     ],
-     "brier_prod": 0.23648,
-     "brier_motor": 0.23266,
-     "brier_mejora_pct": 1.62,
-     "cal_motor": -0.0224,
-     "cal_prod": -0.0115,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Run line local -1.5",
-     "n": 2373,
-     "mejora_milesimas": -0.284,
-     "z": -0.19,
-     "mitades": [
-      3.276,
-      -3.842
-     ],
-     "brier_prod": 0.22301,
-     "brier_motor": 0.223,
-     "brier_mejora_pct": 0.0,
-     "cal_motor": 0.0143,
-     "cal_prod": 0.0237,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Total local O/U",
-     "n": 2373,
-     "mejora_milesimas": 12.966,
-     "z": 4.15,
-     "mitades": [
-      24.965,
-      0.977
-     ],
-     "brier_prod": 0.23544,
-     "brier_motor": 0.23032,
-     "brier_mejora_pct": 2.17,
-     "cal_motor": -0.0183,
-     "cal_prod": -0.0121,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Total visita O/U",
-     "n": 2373,
-     "mejora_milesimas": 10.806,
-     "z": 3.59,
-     "mitades": [
-      15.558,
-      6.058
-     ],
-     "brier_prod": 0.25025,
-     "brier_motor": 0.24598,
-     "brier_mejora_pct": 1.7,
-     "cal_motor": 0.002,
-     "cal_prod": -0.0134,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Total local O/U (vs escalado a la capa)",
-     "n": 2373,
-     "mejora_milesimas": 9.459,
-     "z": 3.19,
-     "mitades": [
-      17.998,
-      0.927
-     ],
-     "brier_prod": 0.2345,
-     "brier_motor": 0.23032,
-     "brier_mejora_pct": 1.78,
-     "cal_motor": -0.0183,
-     "cal_prod": -0.0174,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Total visita O/U (vs escalado a la capa)",
-     "n": 2373,
-     "mejora_milesimas": -0.833,
-     "z": -0.29,
-     "mitades": [
-      5.963,
-      -7.623
-     ],
-     "brier_prod": 0.24545,
-     "brier_motor": 0.24598,
-     "brier_mejora_pct": -0.22,
-     "cal_motor": 0.002,
-     "cal_prod": -0.0159,
-     "veredicto": "no pasa"
-    },
-    {
-     "mercado": "Total esperado (vs modelo)",
-     "n": 2373,
-     "mae_prod": 3.638,
-     "mae_motor": 3.521,
-     "mejora_milesimas": 117.15,
-     "z": 6.06,
-     "mitades": [
-      172.55,
-      61.79
-     ],
-     "sesgo_motor": -0.016,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Total esperado (vs capa de totales)",
-     "n": 2373,
-     "mae_prod": 3.567,
-     "mae_motor": 3.521,
-     "mejora_milesimas": 46.15,
-     "z": 2.49,
-     "mitades": [
-      86.1,
-      6.24
-     ],
-     "sesgo_motor": -0.016,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Carreras local esperadas",
-     "n": 2373,
-     "mae_prod": 2.41,
-     "mae_motor": 2.356,
-     "mejora_milesimas": 54.83,
-     "z": 4.76,
-     "mitades": [
-      91.79,
-      17.91
-     ],
-     "sesgo_motor": -0.009,
-     "veredicto": "pasa"
-    },
-    {
-     "mercado": "Carreras visita esperadas",
-     "n": 2373,
-     "mae_prod": 2.383,
-     "mae_motor": 2.37,
-     "mejora_milesimas": 13.47,
-     "z": 1.4,
-     "mitades": [
-      13.89,
-      13.05
-     ],
-     "sesgo_motor": -0.007,
-     "veredicto": "no pasa"
-    }
-   ]
-  },
   {
    "liga": "MLB",
    "parametros": {
@@ -495,6 +247,17 @@
      "sesgo_motor": 0.062,
      "veredicto": "no pasa"
     }
+   ],
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": true,
+    "equipo_local": true,
+    "equipo_visita": true
+   },
+   "apilado_ou": [
+    -0.06,
+    0.12905,
+    0.79986
    ]
   },
   {
@@ -743,7 +506,13 @@
      "sesgo_motor": 0.021,
      "veredicto": "no pasa"
     }
-   ]
+   ],
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": true,
+    "equipo_visita": false
+   }
   },
   {
    "liga": "KBO",
@@ -991,7 +760,13 @@
      "sesgo_motor": -0.152,
      "veredicto": "no pasa"
     }
-   ]
+   ],
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   }
   },
   {
    "liga": "LVBP",
@@ -1239,7 +1014,13 @@
      "sesgo_motor": -0.526,
      "veredicto": "pasa"
     }
-   ]
+   ],
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   }
   },
   {
    "liga": "LIDOM",
@@ -1476,7 +1257,267 @@
      "sesgo_motor": -0.353,
      "veredicto": "no pasa"
     }
-   ]
+   ],
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   }
+  },
+  {
+   "liga": "LMP",
+   "parametros": {
+    "q": 0.0001,
+    "rho": 0.15,
+    "p0": 0.001,
+    "kappa": 0.5,
+    "parque": 1
+   },
+   "r_nb": 4,
+   "w_mezcla": 1.0,
+   "corte": "2019-11-14",
+   "n_prueba": 2373,
+   "mercados": [
+    {
+     "mercado": "Ganador (motor vs produccion)",
+     "n": 2373,
+     "mejora_milesimas": -1.332,
+     "z": -0.89,
+     "mitades": [
+      0.601,
+      -3.263
+     ],
+     "brier_prod": 0.24549,
+     "brier_motor": 0.24618,
+     "brier_mejora_pct": -0.28,
+     "cal_motor": -0.0094,
+     "cal_prod": 0.001,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Ganador (apilado vs produccion)",
+     "n": 2373,
+     "mejora_milesimas": -2.418,
+     "z": -1.6,
+     "mitades": [
+      -2.581,
+      -2.256
+     ],
+     "brier_prod": 0.24549,
+     "brier_motor": 0.24672,
+     "brier_mejora_pct": -0.5,
+     "cal_motor": 0.0081,
+     "cal_prod": 0.001,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under (apilado vs capa de totales)",
+     "n": 2373,
+     "mejora_milesimas": 7.832,
+     "z": 2.8,
+     "mitades": [
+      16.833,
+      -1.161
+     ],
+     "brier_prod": 0.23648,
+     "brier_motor": 0.23279,
+     "brier_mejora_pct": 1.56,
+     "cal_motor": -0.0276,
+     "cal_prod": -0.0115,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Ganador (mezcla vs produccion)",
+     "n": 2373,
+     "mejora_milesimas": -1.332,
+     "z": -0.89,
+     "mitades": [
+      0.601,
+      -3.263
+     ],
+     "brier_prod": 0.24549,
+     "brier_motor": 0.24618,
+     "brier_mejora_pct": -0.28,
+     "cal_motor": -0.0094,
+     "cal_prod": 0.001,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Over/Under linea ~promedio (vs modelo)",
+     "n": 2373,
+     "mejora_milesimas": 15.853,
+     "z": 4.99,
+     "mitades": [
+      24.39,
+      7.324
+     ],
+     "brier_prod": 0.23883,
+     "brier_motor": 0.23266,
+     "brier_mejora_pct": 2.58,
+     "cal_motor": -0.0224,
+     "cal_prod": -0.0335,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Over/Under linea ~promedio (vs capa de totales)",
+     "n": 2373,
+     "mejora_milesimas": 7.966,
+     "z": 2.35,
+     "mitades": [
+      17.947,
+      -2.007
+     ],
+     "brier_prod": 0.23648,
+     "brier_motor": 0.23266,
+     "brier_mejora_pct": 1.62,
+     "cal_motor": -0.0224,
+     "cal_prod": -0.0115,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Run line local -1.5",
+     "n": 2373,
+     "mejora_milesimas": -0.284,
+     "z": -0.19,
+     "mitades": [
+      3.276,
+      -3.842
+     ],
+     "brier_prod": 0.22301,
+     "brier_motor": 0.223,
+     "brier_mejora_pct": 0.0,
+     "cal_motor": 0.0143,
+     "cal_prod": 0.0237,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total local O/U",
+     "n": 2373,
+     "mejora_milesimas": 12.966,
+     "z": 4.15,
+     "mitades": [
+      24.965,
+      0.977
+     ],
+     "brier_prod": 0.23544,
+     "brier_motor": 0.23032,
+     "brier_mejora_pct": 2.17,
+     "cal_motor": -0.0183,
+     "cal_prod": -0.0121,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Total visita O/U",
+     "n": 2373,
+     "mejora_milesimas": 10.806,
+     "z": 3.59,
+     "mitades": [
+      15.558,
+      6.058
+     ],
+     "brier_prod": 0.25025,
+     "brier_motor": 0.24598,
+     "brier_mejora_pct": 1.7,
+     "cal_motor": 0.002,
+     "cal_prod": -0.0134,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Total local O/U (vs escalado a la capa)",
+     "n": 2373,
+     "mejora_milesimas": 9.459,
+     "z": 3.19,
+     "mitades": [
+      17.998,
+      0.927
+     ],
+     "brier_prod": 0.2345,
+     "brier_motor": 0.23032,
+     "brier_mejora_pct": 1.78,
+     "cal_motor": -0.0183,
+     "cal_prod": -0.0174,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Total visita O/U (vs escalado a la capa)",
+     "n": 2373,
+     "mejora_milesimas": -0.833,
+     "z": -0.29,
+     "mitades": [
+      5.963,
+      -7.623
+     ],
+     "brier_prod": 0.24545,
+     "brier_motor": 0.24598,
+     "brier_mejora_pct": -0.22,
+     "cal_motor": 0.002,
+     "cal_prod": -0.0159,
+     "veredicto": "no pasa"
+    },
+    {
+     "mercado": "Total esperado (vs modelo)",
+     "n": 2373,
+     "mae_prod": 3.638,
+     "mae_motor": 3.521,
+     "mejora_milesimas": 117.15,
+     "z": 6.06,
+     "mitades": [
+      172.55,
+      61.79
+     ],
+     "sesgo_motor": -0.016,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Total esperado (vs capa de totales)",
+     "n": 2373,
+     "mae_prod": 3.567,
+     "mae_motor": 3.521,
+     "mejora_milesimas": 46.15,
+     "z": 2.49,
+     "mitades": [
+      86.1,
+      6.24
+     ],
+     "sesgo_motor": -0.016,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Carreras local esperadas",
+     "n": 2373,
+     "mae_prod": 2.41,
+     "mae_motor": 2.356,
+     "mejora_milesimas": 54.83,
+     "z": 4.76,
+     "mitades": [
+      91.79,
+      17.91
+     ],
+     "sesgo_motor": -0.009,
+     "veredicto": "pasa"
+    },
+    {
+     "mercado": "Carreras visita esperadas",
+     "n": 2373,
+     "mae_prod": 2.383,
+     "mae_motor": 2.37,
+     "mejora_milesimas": 13.47,
+     "z": 1.4,
+     "mitades": [
+      13.89,
+      13.05
+     ],
+     "sesgo_motor": -0.007,
+     "veredicto": "no pasa"
+    }
+   ],
+   "aplicar": {
+    "total_motor": true,
+    "ou_apilado": false,
+    "equipo_local": true,
+    "equipo_visita": false
+   }
   }
  ]
 }

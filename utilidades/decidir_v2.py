@@ -184,6 +184,22 @@ def _pois_cdf(k, mu):
     return min(1.0, acc)
 
 
+def _apilar_motor(rec, linea, r):
+    """MLB (motor de carreras, 10-oct-2026, z 2.11 contra la capa): over/under = logistica sobre [logit capa, logit motor].
+    Solo en lineas .5 (sin push) y donde modelos/motor_carreras.json trae apilado_ou."""
+    mc = (rec.get("modelo") or {}).get("motor_carreras") or {}
+    if not mc or abs(linea - round(linea)) < 1e-9 or not (mc.get("aplicado") or {}).get("ou_apilado"):
+        return r
+    try:
+        from nucleo import motor_carreras as _MC
+        c = _MC.cfg_liga(rec.get("liga"))
+        pm = _MC.mercados(mc["x_home"], mc["x_away"], c["r_nb"], [linea], (mc["linea_home"], mc["linea_away"]))["over"][linea]
+        pa = _MC.apilar_over(rec.get("liga"), r[0], pm)
+        return (pa, 1 - pa, 0.0) if pa is not None else r
+    except Exception:
+        return r
+
+
 def p_over_modelo(rec, linea):
     """Probabilidad del modelo de que el total pase la linea: (p_over, p_under, p_push) desde el total esperado."""
     m = rec.get("modelo") or {}
@@ -197,7 +213,7 @@ def p_over_modelo(rec, linea):
             from nucleo import capa_totales as _CT
             r = _CT.probs_linea(BASE, ct["clave"], ct["total"], linea)
             if r:
-                return r
+                return _apilar_motor(rec, linea, r)
         except Exception:
             pass
     dep = rec.get("deporte"); tipo = rec.get("tipo")

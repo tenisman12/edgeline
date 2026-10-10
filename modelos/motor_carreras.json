@@ -1,0 +1,221 @@
+{
+ "generado": "2026-10-10T12:15:09",
+ "fuente": "utilidades/motor_carreras.py --guardar (trabajo/minar/2026-10-10_motor_carreras.md)",
+ "como_leer": "parametros del filtro por liga; aplicar = mercados que pasaron contra produccion (n>=300, z>=2, mitades, calibrado); apilado_ou = [a, b capa, c motor] en logit. Aprobado por Alejandro el 10-oct-2026.",
+ "ligas": {
+  "lmp": {
+   "parametros": {
+    "q": 0.0001,
+    "rho": 0.15,
+    "p0": 0.001,
+    "kappa": 0.5,
+    "parque": 1
+   },
+   "r_nb": 4,
+   "aplicar": {
+    "total_motor": true,
+    "ou_apilado": false,
+    "equipo_local": true,
+    "equipo_visita": false
+   },
+   "corte": "2019-11-14",
+   "n_prueba": 2373,
+   "z": {
+    "Ganador (motor vs produccion)": -0.89,
+    "Ganador (apilado vs produccion)": -1.6,
+    "Over/Under (apilado vs capa de totales)": 2.8,
+    "Ganador (mezcla vs produccion)": -0.89,
+    "Over/Under linea ~promedio (vs modelo)": 4.99,
+    "Over/Under linea ~promedio (vs capa de totales)": 2.35,
+    "Run line local -1.5": -0.19,
+    "Total local O/U": 4.15,
+    "Total visita O/U": 3.59,
+    "Total local O/U (vs escalado a la capa)": 3.19,
+    "Total visita O/U (vs escalado a la capa)": -0.29,
+    "Total esperado (vs modelo)": 6.06,
+    "Total esperado (vs capa de totales)": 2.49,
+    "Carreras local esperadas": 4.76,
+    "Carreras visita esperadas": 1.4
+   }
+  },
+  "mlb": {
+   "parametros": {
+    "q": 3e-05,
+    "rho": 0.6,
+    "p0": 0.001,
+    "kappa": 0.0,
+    "parque": 1
+   },
+   "r_nb": 4,
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": true,
+    "equipo_local": true,
+    "equipo_visita": true
+   },
+   "apilado_ou": [
+    -0.06,
+    0.12905,
+    0.79986
+   ],
+   "corte": "2021-07-19",
+   "n_prueba": 10580,
+   "z": {
+    "Ganador (motor vs produccion)": -0.91,
+    "Ganador (apilado vs produccion)": 1.82,
+    "Over/Under (apilado vs capa de totales)": 2.11,
+    "Ganador (mezcla vs produccion)": -1.49,
+    "Over/Under linea ~promedio (vs modelo)": 5.3,
+    "Over/Under linea ~promedio (vs capa de totales)": 1.21,
+    "Run line local -1.5": 1.82,
+    "Total local O/U": 5.48,
+    "Total visita O/U": 5.54,
+    "Total local O/U (vs escalado a la capa)": 2.84,
+    "Total visita O/U (vs escalado a la capa)": 2.78,
+    "Total esperado (vs modelo)": 4.58,
+    "Total esperado (vs capa de totales)": 0.04,
+    "Carreras local esperadas": 8.53,
+    "Carreras visita esperadas": -3.13
+   }
+  },
+  "npb": {
+   "parametros": {
+    "q": 3e-05,
+    "rho": 0.6,
+    "p0": 0.001,
+    "kappa": 1.0,
+    "parque": 1
+   },
+   "r_nb": 3,
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": true,
+    "equipo_visita": false
+   },
+   "corte": "2023-10-21",
+   "n_prueba": 2534,
+   "z": {
+    "Ganador (motor vs produccion)": 1.18,
+    "Ganador (apilado vs produccion)": 0.58,
+    "Over/Under (apilado vs capa de totales)": 0.39,
+    "Ganador (mezcla vs produccion)": 1.18,
+    "Over/Under linea ~promedio (vs modelo)": 4.86,
+    "Over/Under linea ~promedio (vs capa de totales)": 0.71,
+    "Run line local -1.5": 0.87,
+    "Total local O/U": 4.36,
+    "Total visita O/U": 3.23,
+    "Total local O/U (vs escalado a la capa)": 3.42,
+    "Total visita O/U (vs escalado a la capa)": 0.73,
+    "Total esperado (vs modelo)": -0.43,
+    "Total esperado (vs capa de totales)": 0.8,
+    "Carreras local esperadas": -0.15,
+    "Carreras visita esperadas": -2.67
+   }
+  },
+  "kbo": {
+   "parametros": {
+    "q": 3e-05,
+    "rho": 0.3,
+    "p0": 0.001,
+    "kappa": 0.0,
+    "parque": 0
+   },
+   "r_nb": 3,
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   },
+   "corte": "2023-06-14",
+   "n_prueba": 2555,
+   "z": {
+    "Ganador (motor vs produccion)": -0.06,
+    "Ganador (apilado vs produccion)": 0.44,
+    "Over/Under (apilado vs capa de totales)": -2.36,
+    "Ganador (mezcla vs produccion)": 0.95,
+    "Over/Under linea ~promedio (vs modelo)": 0.8,
+    "Over/Under linea ~promedio (vs capa de totales)": -0.6,
+    "Run line local -1.5": -0.51,
+    "Total local O/U": -1.17,
+    "Total visita O/U": 2.34,
+    "Total local O/U (vs escalado a la capa)": -2.22,
+    "Total visita O/U (vs escalado a la capa)": 1.09,
+    "Total esperado (vs modelo)": 1.26,
+    "Total esperado (vs capa de totales)": 0.09,
+    "Carreras local esperadas": 1.76,
+    "Carreras visita esperadas": -0.04
+   }
+  },
+  "lvbp": {
+   "parametros": {
+    "q": 3e-05,
+    "rho": 0.6,
+    "p0": 0.001,
+    "kappa": 0.0,
+    "parque": 0
+   },
+   "r_nb": 4,
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   },
+   "corte": "2018-12-22",
+   "n_prueba": 726,
+   "z": {
+    "Ganador (motor vs produccion)": 1.04,
+    "Ganador (apilado vs produccion)": 1.32,
+    "Over/Under (apilado vs capa de totales)": -0.42,
+    "Ganador (mezcla vs produccion)": 0.34,
+    "Over/Under linea ~promedio (vs modelo)": 1.15,
+    "Over/Under linea ~promedio (vs capa de totales)": -0.04,
+    "Run line local -1.5": 1.72,
+    "Total local O/U": -0.49,
+    "Total visita O/U": 1.58,
+    "Total local O/U (vs escalado a la capa)": -0.93,
+    "Total visita O/U (vs escalado a la capa)": -0.26,
+    "Total esperado (vs modelo)": 1.44,
+    "Total esperado (vs capa de totales)": 0.79,
+    "Carreras local esperadas": 1.18,
+    "Carreras visita esperadas": 2.42
+   }
+  },
+  "lidom": {
+   "parametros": {
+    "q": 3e-05,
+    "rho": 0.0,
+    "p0": 0.001,
+    "kappa": 0.0,
+    "parque": 0
+   },
+   "r_nb": 3,
+   "aplicar": {
+    "total_motor": false,
+    "ou_apilado": false,
+    "equipo_local": false,
+    "equipo_visita": false
+   },
+   "corte": "2018-12-28",
+   "n_prueba": 475,
+   "z": {
+    "Ganador (motor vs produccion)": 2.01,
+    "Ganador (apilado vs produccion)": -0.56,
+    "Ganador (mezcla vs produccion)": 0.36,
+    "Over/Under linea ~promedio (vs modelo)": -0.16,
+    "Over/Under linea ~promedio (vs capa de totales)": -1.7,
+    "Run line local -1.5": 2.72,
+    "Total local O/U": 2.56,
+    "Total visita O/U": -0.09,
+    "Total local O/U (vs escalado a la capa)": -0.93,
+    "Total visita O/U (vs escalado a la capa)": 0.21,
+    "Total esperado (vs modelo)": 2.37,
+    "Total esperado (vs capa de totales)": -1.16,
+    "Carreras local esperadas": 4.33,
+    "Carreras visita esperadas": 1.16
+   }
+  }
+ }
+}

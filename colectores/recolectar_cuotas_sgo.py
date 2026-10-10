@@ -72,11 +72,14 @@ def convertir(ev, sport):
         return None
     casas = {}
 
-    def poner(casa, mk, nombre, precio, punto):
+    def poner(casa, mk, nombre, precio, punto, desc=None):
         if precio is None:
             return
         c = casas.setdefault(CASA.get(casa, casa), {})
-        c.setdefault(mk, []).append({"name": nombre, "price": precio, "point": punto})
+        o = {"name": nombre, "price": precio, "point": punto}
+        if desc:
+            o["description"] = desc
+        c.setdefault(mk, []).append(o)
 
     for oid, o in (ev.get("odds") or {}).items():
         if o.get("periodID") != "game" or o.get("statID") not in ("points", "runs"):
@@ -90,12 +93,16 @@ def convertir(ev, sport):
                 poner(casa, "h2h", home if lado == "home" else away, precio, None)
             elif bt == "ou" and lado in ("over", "under") and ent == "all":
                 poner(casa, "totals", "Over" if lado == "over" else "Under", precio, _num(b.get("overUnder") or o.get("bookOverUnder")))
+            elif bt == "ou" and lado in ("over", "under") and ent in ("home", "away"):
+                # total por equipo (10-oct-2026, motor de carreras): formato 'team_totals' de The Odds API
+                poner(casa, "team_totals", "Over" if lado == "over" else "Under", precio,
+                      _num(b.get("overUnder") or o.get("bookOverUnder")), home if ent == "home" else away)
             elif bt == "sp" and lado in ("home", "away") and ent == lado:
                 poner(casa, "spreads", home if lado == "home" else away, precio, _num(b.get("spread") or o.get("bookSpread")))
     bks = []
     for casa, mks in casas.items():
         markets = [{"key": k, "outcomes": v} for k, v in mks.items()
-                   if (k == "h2h" and len(v) == 2) or (k != "h2h" and len(v) == 2)]
+                   if (k == "team_totals" and len(v) >= 2) or (k != "team_totals" and len(v) == 2)]
         if markets:
             bks.append({"key": casa, "markets": markets})
     if not bks:

@@ -127,11 +127,18 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   MLB 4.8, NPB 3.5, NFL 3.0. NHL y KBO no pasan (siguen con el total del modelo). plataforma.py usa la capa solo donde paso
   (modelo.capa_totales, total_modelo guarda el del modelo y los marcadores se escalan). NBA: la capa espera 15 juegos de
   temporada por equipo (en oct-nov subestima 6.4 puntos). decidir_v2 usa sus residuos tambien en lineas alternas.
-- Motor de carreras (10-oct-2026, `utilidades/motor_carreras.py`, `trabajo/minar/2026-10-10_motor_carreras.md`): ataque y
-  defensa por equipo con Kalman + abridor + parque, binomial negativa; contra produccion reproducida (media3 + abridores +
-  parque + capa de totales). Ganador: no mejora. Pasa: total esperado LMP vs capa (MAE z 2.49), O/U apilado capa+motor MLB
-  (z 2.11), totales por equipo O/U vs produccion escalada a la capa: LMP local z 3.19, MLB local 2.84 y visita 2.78, NPB
-  local 3.42. NO aplicado: falta aprobacion de Alejandro y medirlo en vivo.
+- Motor de carreras (10-oct-2026, APLICADO, Alejandro: "aplica ya todo lo relevante"; `nucleo/motor_carreras.py`, minado en
+  `utilidades/motor_carreras.py` y `trabajo/minar/2026-10-10_motor_carreras.md`): ataque y defensa por equipo con Kalman +
+  abridor (LMP, NPB) + parque, binomial negativa; contra produccion reproducida (media3 + abridores + parque + capa).
+  `modelos/motor_carreras.json` (se regenera con `python utilidades/motor_carreras.py --guardar`) dice que se aplica por liga:
+  LMP total esperado y carreras por equipo del motor (MAE z 2.49 vs capa; el O/U sigue con la capa); MLB O/U apilado
+  capa + motor (z 2.11; plataforma en la linea .5 del mercado, decidir_v2 en cada linea .5); mercado "Carreras local/visita X.5"
+  publicable en LMP local (z 3.19), MLB local (2.84) y visita (2.78), NPB local (3.42); en lo demas es contexto (sin_validar).
+  El ganador NO cambia (el motor no le gano a media3). Se ve en modelo.motor_carreras y en extra; historial_predicciones
+  registra "Carreras local/visita" y calificar_picks los califica. Cuotas de totales por equipo: SportsGameOdds (LMP,
+  mercado team_totals en cuotas_casas.json). Inicio de temporada (el modelo espera 5 juegos): el motor sale como contexto en
+  rec.motor_carreras, sin picks (su ganador en los primeros 5 juegos no le gana a la tasa historica: LMP z -0.26, n 150).
+  Las lista oficial sigue con ganador y total; los totales por equipo son lectura con estado de valor en mercados.
 - Picks de totales (9-oct-2026): la lista oficial admite hasta un ganador y un total por partido (tope 4 al dia); Picks IA
   puede guardar dos lecturas por partido (ganador y total). En beisbol el total pasa por decidir_v2 y el ganador sigue en
   decidir.py. "Publicable" = le gana a la tasa historica; contra la linea de la casa se mide en vivo.

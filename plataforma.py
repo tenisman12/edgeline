@@ -593,7 +593,92 @@ def _pred(g, c, fecha, eventos=None):
                 m["x_home"], m["x_away"] = round(m["x_home"] * f, 2), round(m["x_away"] * f, 2)
     except Exception as e:
         m["capa_totales"] = {"aplicado": False, "motivo": "error: %s" % str(e)[:120]}
+    if DEPORTE.get(g.get("liga")) == "beisbol":
+        try:
+            _motor_beisbol(g, c, fecha, m, eventos)
+        except Exception as e:
+            m["motor_carreras"] = {"aplicado": False, "motivo": "error: %s" % str(e)[:120]}
     return m, motivo
+
+
+def _motor_respaldo(g, c, fecha, eventos=None):
+    """motor de carreras como contexto cuando el modelo de produccion aun no tiene muestra (inicio de temporada)."""
+    dpq = 0.0
+    try:
+        from nucleo import parques as PQ
+        if PQ.aplica(g["liga"]):
+            h, _ = _casar(c, g["home"])
+            cl = g.get("clima") or {}
+            fac, tmp, vto = PQ.actual(BASE, g["liga"], h, fecha, temp=cl.get("temp_f") or cl.get("temperatura"),
+                                      viento=cl.get("viento_mph") or cl.get("viento"))
+            dpq = PQ.delta(g["liga"], fac, tmp, vto)
+    except Exception:
+        dpq = 0.0
+    m = {"delta_parque": dpq, "linea_total": (g.get("cuotas") or {}).get("total"), "extra": []}
+    _motor_beisbol(g, c, fecha, m, eventos)
+    r = m.get("motor_carreras")
+    if r:
+        r["respaldo"] = True
+        r["nota"] = ("Inicio de temporada: el modelo de produccion espera 5 juegos por equipo. Motor de carreras con la "
+                     "temporada pasada encogida: solo contexto, sin picks.")
+    return r
+
+
+def _motor_beisbol(g, c, fecha, m, eventos=None):
+    """MOTOR DE CARRERAS (nucleo/motor_carreras.py; aprobado 10-oct-2026, trabajo/minar/2026-10-10_motor_carreras.md).
+    Ataque y defensa por equipo con Kalman + abridor + parque. Se aplica solo lo que paso contra produccion
+    (modelos/motor_carreras.json -> aplicar):
+      total_motor   (LMP)  total esperado y carreras por equipo del motor; el over/under sigue con la capa de totales.
+      ou_apilado    (MLB)  p_over = logistica sobre [logit capa, logit motor].
+      equipo_local / equipo_visita (LMP local, MLB los dos, NPB local): mercado 'Carreras local/visita X.5'.
+    En las demas ligas el motor se muestra como dato (contexto). El ganador no cambia."""
+    from nucleo import motor_carreras as MC
+    if not MC.cfg_liga(g["liga"]):
+        return
+    h, _ = _casar(c, g["home"]); a, _ = _casar(c, g["away"])
+    vh = va = None
+    if g["liga"] in ("lmp", "npb"):
+        from nucleo import abridores as AB
+        try:
+            vh = AB.actual(BASE, g["home"].get("probable"), fecha, g["liga"], g["home"].get("nombre"))
+            va = AB.actual(BASE, g["away"].get("probable"), fecha, g["liga"], g["away"].get("nombre"))
+        except Exception:
+            vh = va = None
+    te = {}
+    if eventos:
+        try:
+            ev = sharp._ev_de_partido(eventos, g["liga"], g.get("fecha_utc") or g.get("fecha"), g["home"]["nombre"], g["away"]["nombre"])
+            te = MC.cuotas_equipo(ev, g["home"]["nombre"])
+        except Exception:
+            te = {}
+    leq = None
+    if te:
+        st = MC.estado(g["liga"])
+        leq = ((te.get("home") or {}).get("linea") or st["linea_eq"][0], (te.get("away") or {}).get("linea") or st["linea_eq"][1])
+    r = MC.predecir(g["liga"], h, a, fecha, abridor_home=vh, abridor_away=va, dpq=m.get("delta_parque") or 0.0,
+                    linea_total=m.get("linea_total"), lineas_equipo=leq)
+    if not r:
+        return
+    ap = r["aplicar"]
+    r["cuotas_equipo"] = te
+    r["aplicado"] = {k: bool(v) for k, v in ap.items()}
+    if ap.get("total_motor"):
+        m["total_capa"] = m.get("total")
+        m["total"] = r["total"]
+        m["x_home"], m["x_away"] = r["x_home"], r["x_away"]
+    lt = m.get("linea_total")
+    if ap.get("ou_apilado") and m.get("p_over") is not None and r.get("p_over") is not None and lt is not None \
+            and abs(float(lt) - round(float(lt))) > 1e-9:        # el apilado se midio en lineas .5
+        pa = MC.apilar_over(g["liga"], m["p_over"], r["p_over"])
+        if pa is not None:
+            r["p_over_capa"] = m["p_over"]
+            m["p_over"] = round(pa, 4)
+    m["motor_carreras"] = r
+    m.setdefault("extra", [])
+    m["extra"] += [("Motor: carreras local / visita", "%.2f / %.2f" % (r["x_home"], r["x_away"])),
+                   ("Motor: total esperado", r["total"]),
+                   ("Carreras local over %.1f" % r["linea_home"], r["p_over_home"]),
+                   ("Carreras visita over %.1f" % r["linea_away"], r["p_over_away"])]
 
 
 def _pred_base(g, c, fecha, eventos=None):
@@ -713,6 +798,7 @@ def _pred_base(g, c, fecha, eventos=None):
         except Exception as _e:
             capa_fc = {"aplicado": False, "motivo": "error: %s" % _e}
         m = {"p_home": p, "p_away": 1 - p, "unidad": "carreras", "capa_abridores": capa_ab, "capa_frio_caliente": capa_fc,
+             "delta_parque": round(dpq, 3),
              "x_home": r["esperado_home"], "x_away": r["esperado_away"], "total": r["total"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
              "confianza": _conf(max(p, 1 - p)), "extra": []}
@@ -858,6 +944,22 @@ def _mercados(g, m, umbral):
         fair = mercado.sin_vig([mercado.prob_implicita(q["over_odds"]), mercado.prob_implicita(q["under_odds"])])
         out.append(_fila("Total %.1f" % m["linea_total"], "over", q["over_odds"], m["p_over"], fair[0], umbral, liga))
         out.append(_fila("Total %.1f" % m["linea_total"], "under", q["under_odds"], 1 - m["p_over"], fair[1], umbral, liga))
+    mc = m.get("motor_carreras") or {}
+    for lado_e, clave in (("home", "equipo_local"), ("away", "equipo_visita")):
+        c_ = (mc.get("cuotas_equipo") or {}).get(lado_e)
+        if not c_ or c_.get("over") is None or c_.get("under") is None:
+            continue
+        L = c_["linea"]
+        if abs(L - mc["linea_" + lado_e]) > 1e-9:
+            continue
+        po = mc["p_over_" + lado_e]
+        fair = mercado.sin_vig([mercado.prob_implicita(c_["over"]), mercado.prob_implicita(c_["under"])])
+        nom = "Carreras %s %.1f" % ("local" if lado_e == "home" else "visita", L)
+        for ld, cu, pp, pf in (("over", c_["over"], po, fair[0]), ("under", c_["under"], 1 - po, fair[1])):
+            f_ = _fila(nom, ld, cu, pp, pf, umbral, liga)
+            if not (mc.get("aplicado") or {}).get(clave) and f_["estado"] in ("valor", "revisar"):
+                f_["estado"] = "sin_validar"; f_["kelly"] = 0.0
+            out.append(f_)
     if m.get("spread") and q.get("spread_home_odds") is not None and q.get("spread_away_odds") is not None \
             and q.get("spread_home") is not None and abs(float(q["spread_home"]) - float(m["spread"]["linea_home"])) < 1e-6:
         fair = mercado.sin_vig([mercado.prob_implicita(q["spread_home_odds"]), mercado.prob_implicita(q["spread_away_odds"])])
@@ -1088,6 +1190,14 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
                 m, motivo = _pred(g, c, rec["fecha"], eventos)
                 if not m:
                     rec["motivo"] = motivo
+                    if dep == "beisbol" and "muestra insuficiente" in (motivo or ""):
+                        # inicio de temporada: el modelo espera 5 juegos por equipo. El motor de carreras arranca con la
+                        # temporada pasada encogida y se muestra como CONTEXTO (no hace picks: su ganador en los primeros
+                        # 5 juegos no le gana a la tasa historica, LMP z -0.26 n 150).
+                        try:
+                            rec["motor_carreras"] = _motor_respaldo(g, c, rec["fecha"], eventos)
+                        except Exception as e:
+                            rec["motor_carreras"] = {"aplicado": False, "motivo": "error: %s" % str(e)[:120]}
                 else:
                     rec["modelo"] = m
                     rec["mercados"] = _mercados(g, m, umbral)
@@ -1744,8 +1854,10 @@ def registrar_predicciones(partidos, ruta):
             continue
         q = p.get("cuotas") or {}; val = p.get("validacion") or {}
         mk = {x["mercado"].split()[0] + "|" + x["lado"]: x for x in p.get("mercados") or []}
+        mk_nombre = {x["mercado"] + "|" + x["lado"]: x for x in p.get("mercados") or []}
         def fila(mercado, lado, pm, vm=None, linea=None):
-            base = mercado.split()[0]; x = mk.get(base + "|" + lado) or {}
+            base = mercado.split()[0]
+            x = (mk_nombre.get(mercado + "|" + lado) or {}) if base == "Carreras" else (mk.get(base + "|" + lado) or {})
             nuevos.append({"registrado": ahora, "liga": p["liga"], "id": p["id"], "fecha": p["fecha"], "home": p["home"]["nombre"],
                            "away": p["away"]["nombre"], "mercado": mercado, "lado": lado, "p_modelo": "" if pm is None else round(pm, 4),
                            "valor_modelo": "" if vm is None else round(vm, 3), "linea": "" if linea is None else linea,
@@ -1762,6 +1874,16 @@ def registrar_predicciones(partidos, ruta):
         if sp and sp.get("linea_home") is not None and (p["liga"], p["id"], "Spread") not in existentes:
             fila("Spread %+g" % sp["linea_home"], "home" if sp["p_home"] >= 0.5 else "away",
                  sp["p_home"] if sp["p_home"] >= 0.5 else sp["p_away"], linea=sp["linea_home"] if sp["p_home"] >= 0.5 else -sp["linea_home"])
+        mc = m.get("motor_carreras") or {}
+        if mc.get("linea_home") is not None:
+            for ld_e, nom_e in (("home", "local"), ("away", "visita")):
+                if (p["liga"], p["id"], "Carreras") in existentes:
+                    break
+                po = mc.get("p_over_" + ld_e); L = mc.get("linea_" + ld_e)
+                if po is None or L is None:
+                    continue
+                fila("Carreras %s %s" % (nom_e, L), "over" if po >= 0.5 else "under", po if po >= 0.5 else 1 - po,
+                     vm=mc.get("x_" + ld_e), linea=L)
         if p["tipo"] == "tenis" and (p["liga"], p["id"], "Breaks") not in existentes:
             for nom, v in m.get("extra") or []:
                 if nom == "Breaks esperados" and isinstance(v, (int, float)):

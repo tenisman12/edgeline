@@ -65,142 +65,13 @@ def medio(x):
     return math.floor(x) + 0.5
 
 
-# ------------------------------------------------------------------ binomial negativa
-def nb_pmf_vec(mu, r, kmax=KMAX):
-    k = np.arange(kmax)
-    p = r / (r + mu)
-    lg = np.array([math.lgamma(i + r) - math.lgamma(r) - math.lgamma(i + 1) for i in k])
-    v = np.exp(lg + r * math.log(p) + k * math.log(1 - p))
-    v[-1] += max(0.0, 1 - v.sum())                    # cola en el ultimo
-    return v
-
-
-def mercados(lh, la, r, lineas, linea_eq):
-    """probabilidades de todos los mercados desde las dos lambdas."""
-    ph, pa = nb_pmf_vec(lh, r), nb_pmf_vec(la, r)
-    M = np.outer(ph, pa)                               # M[i, j] = P(local i, visita j)
-    i, j = np.indices(M.shape)
-    gana = M[i > j].sum(); emp = M[i == j].sum()
-    tot = i + j
-    out = {"p_home": float(gana + EXTRA_LOCAL * emp), "lh": lh, "la": la,
-           "rl_home": float(M[i - j >= 2].sum()),
-           "over": {L: float(M[tot > L].sum()) for L in lineas},
-           "eq_h": float(ph[np.arange(len(ph)) > linea_eq[0]].sum()),
-           "eq_a": float(pa[np.arange(len(pa)) > linea_eq[1]].sum())}
-    return out
-
-
-def nb_ll(k, mu, r):
-    p = r / (r + mu)
-    return math.lgamma(k + r) - math.lgamma(r) - math.lgamma(k + 1) + r * math.log(p) + k * math.log(1 - p)
-
-
-# ------------------------------------------------------------------ juegos de una liga
-def juegos(liga):
-    from nucleo import features as F
-    feats, _ = F.construir("beisbol", liga, 0)
-    lg = io.norm(liga)
-    G = []
-    for r in feats:
-        if r["league"] != lg or r.get("total") is None or r.get("marg_home") is None:
-            continue
-        rh = (r["total"] + r["marg_home"]) / 2.0; ra = r["total"] - rh
-        G.append(dict(gp=str(r["gamePk"]), f=r["game_date"][:10], season=str(r.get("season")), h=r["home"], a=r["away"],
-                      rh=int(round(rh)), ra=int(round(ra))))
-    G.sort(key=lambda g: (g["f"], g["gp"]))
-    return G
+# ------------------------------------------------------------------ nucleo del motor (el mismo que usa plataforma)
+from nucleo.motor_carreras import nb_pmf_vec, nb_ll, mercados, juegos, parques_delta, correr as correr_motor  # noqa: E402
+from nucleo import motor_carreras as MC  # noqa: E402
 
 
 def abridores_rel(liga, G):
-    """{(gp, equipo): carreras extra que permite su abridor vs. el promedio de los abridores de ese equipo (as-of)}."""
-    from nucleo import abridores as AB
-    lg = io.norm(liga)
-    if lg not in ("lmp", "npb"):
-        return {}
-    V = AB.historicos(io.BASE, lg)
-    if not V:
-        return {}
-    out, prom = {}, {}
-    for g in G:
-        for e in (g["h"], g["a"]):
-            v = V.get((g["gp"], e))
-            if not v:
-                continue
-            runs = (v[0] - v[3]) * v[1] / 9.0          # carreras sobre la liga que permite en su salida
-            m, n = prom.get(e, (0.0, 0.0))
-            if n >= 3:
-                out[(g["gp"], e)] = runs - m / n
-            prom[e] = (0.97 * m + runs, 0.97 * n + 1)
-    return out
-
-
-def parques_delta(liga, G):
-    from nucleo import parques as PQ
-    lg = io.norm(liga)
-    if not PQ.aplica(lg):
-        return {}
-    V = PQ.historicos(io.BASE, lg)
-    out = {}
-    for g in G:
-        v = V.get((g["gp"], g["h"]))
-        if v:
-            out[g["gp"]] = PQ.delta(lg, v[0], v[1], v[2])
-    return out
-
-
-# ------------------------------------------------------------------ motor (EKF)
-def correr_motor(G, prm, ABR, PQD, r_nb):
-    q, rho, p0, kap, usa_pq = prm["q"], prm["rho"], prm["p0"], prm["kappa"], prm["parque"]
-    a = defaultdict(float); d = defaultdict(float)
-    Pa = defaultdict(lambda: p0); Pd = defaultdict(lambda: p0)
-    ult = {}
-    nivel = [4.5, 4.3]; LAM = 0.5 ** (1 / 600.0)
-    num = [0.0, 0.0]; den = 0.0
-    pred = {}
-    por_dia = defaultdict(list)
-    for g in G:
-        por_dia[g["f"]].append(g)
-    for f in sorted(por_dia):
-        fd = dt.date.fromisoformat(f)
-        dia = por_dia[f]
-        # temporada nueva por equipo (hueco > 60 dias): encoger y abrir incertidumbre
-        for g in dia:
-            for e in (g["h"], g["a"]):
-                if e in ult and (fd - ult[e]).days > 60:
-                    a[e] *= rho; d[e] *= rho; Pa[e] += p0; Pd[e] += p0
-                Pa[e] += q; Pd[e] += q
-        nh, na = (num[0] / den, num[1] / den) if den > 50 else nivel
-        upd = []
-        for g in dia:
-            pk = PQD.get(g["gp"], 0.0) if usa_pq else 0.0
-            tot0 = nh + na
-            fpq = math.log(max(tot0 + pk, 0.5 * tot0) / tot0) if pk else 0.0
-            sh = kap * ABR.get((g["gp"], g["a"]), 0.0) / na if kap else 0.0      # abridor visita -> carreras del local
-            sa = kap * ABR.get((g["gp"], g["h"]), 0.0) / nh if kap else 0.0
-            eh = math.log(nh) + a[g["h"]] - d[g["a"]] + fpq + sh
-            ea = math.log(na) + a[g["a"]] - d[g["h"]] + fpq + sa
-            lh, la = math.exp(eh), math.exp(ea)
-            pred[g["gp"]] = (lh, la, math.sqrt(Pa[g["h"]] + Pd[g["a"]]), math.sqrt(Pa[g["a"]] + Pd[g["h"]]))
-            upd.append((g, lh, la))
-        for g, lh, la in upd:
-            for k, lam, at, df in ((g["rh"], lh, g["h"], g["a"]), (g["ra"], la, g["a"], g["h"])):
-                info = lam * r_nb / (r_nb + lam)
-                score = (k - lam) * r_nb / (r_nb + lam)
-                S = Pa[at] + Pd[df] + 1.0 / info
-                z = score / info
-                ka, kd = Pa[at] / S, Pd[df] / S
-                a[at] += ka * z; d[df] -= kd * z
-                Pa[at] -= ka * Pa[at]; Pd[df] -= kd * Pd[df]
-            num[0] = LAM * num[0] + g["rh"]; num[1] = LAM * num[1] + g["ra"]; den = LAM * den + 1
-            ult[g["h"]] = fd; ult[g["a"]] = fd
-        # recentrar (promedio 0 entre los equipos vistos)
-        if a:
-            ma = sum(a.values()) / len(a); md = sum(d.values()) / len(d)
-            for e in list(a):
-                a[e] -= ma
-            for e in list(d):
-                d[e] -= md
-    return pred
+    return MC.abridores_rel(liga, G)[0]
 
 
 def ll_runs(G, pred, r_nb, desde, hasta):
@@ -473,12 +344,25 @@ def evaluar_liga(liga):
             if "brier_mejora_pct" in out else ("MAE %.3f -> %.3f  sesgo motor %+.2f" % (out["mae_prod"], out["mae_motor"], out["sesgo_motor"]))
         print("  %-48s n %5d  mejora %+8.3f  z %+6.2f  mitades %+.3f/%+.3f  %s  -> %s" % (
             out["mercado"], out["n"], out["mejora_milesimas"], out["z"], out["mitades"][0], out["mitades"][1], extra, out["veredicto"].upper()))
+    # lo que se aplica en produccion: SOLO lo que paso contra produccion (protocolo de siempre)
+    ver = {o["mercado"]: o.get("veredicto") for o in R["mercados"]}
+    R["aplicar"] = {"total_motor": ver.get("Total esperado (vs capa de totales)") == "pasa",
+                    "ou_apilado": ver.get("Over/Under (apilado vs capa de totales)") == "pasa",
+                    "equipo_local": ver.get("Total local O/U (vs escalado a la capa)") == "pasa",
+                    "equipo_visita": ver.get("Total visita O/U (vs escalado a la capa)") == "pasa"}
+    todos = ouc_t + ouc
+    if R["aplicar"]["ou_apilado"] and len(todos) >= 300:
+        from sklearn.linear_model import LogisticRegression
+        X = np.array([[_lg(f[2]), _lg(f[3])] for f in todos]); y = np.array([f[1] for f in todos])
+        lr = LogisticRegression(C=1.0).fit(X, y)
+        R["apilado_ou"] = [round(float(lr.intercept_[0]), 5), round(float(lr.coef_[0][0]), 5), round(float(lr.coef_[0][1]), 5)]
     return R
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ligas", default=",".join(LIGAS))
+    ap.add_argument("--guardar", action="store_true", help="escribe modelos/motor_carreras.json (lo que usa plataforma)")
     a = ap.parse_args()
     res = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "ligas": []}
     if os.path.exists(RUTA_OUT):
@@ -494,6 +378,19 @@ def main():
             with open(RUTA_OUT, "w", encoding="utf-8") as f:
                 json.dump(res, f, ensure_ascii=False, indent=1)
     print("\nresultados en", RUTA_OUT)
+    if a.guardar:
+        ruta = os.path.join(CODIGO, "modelos", "motor_carreras.json")
+        cfg = {"generado": res["generado"], "fuente": "utilidades/motor_carreras.py --guardar (trabajo/minar/2026-10-10_motor_carreras.md)",
+               "como_leer": "parametros del filtro por liga; aplicar = mercados que pasaron contra produccion (n>=300, z>=2, mitades, "
+                            "calibrado); apilado_ou = [a, b capa, c motor] en logit. Aprobado por Alejandro el 10-oct-2026.",
+               "ligas": {}}
+        for R in res["ligas"]:
+            cfg["ligas"][R["liga"].lower()] = {k: R.get(k) for k in ("parametros", "r_nb", "aplicar", "apilado_ou", "corte", "n_prueba")
+                                               if R.get(k) is not None}
+            cfg["ligas"][R["liga"].lower()]["z"] = {o["mercado"]: o.get("z") for o in R["mercados"] if o.get("z") is not None}
+        with open(ruta, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, ensure_ascii=False, indent=1)
+        print("configuracion de produccion en", ruta)
 
 
 if __name__ == "__main__":
