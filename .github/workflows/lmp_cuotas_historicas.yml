@@ -1,0 +1,62 @@
+name: lmp cuotas historicas
+
+# Se corre A MANO (Actions -> "lmp cuotas historicas" -> Run workflow).
+# 1) baja de SportsGameOdds las cuotas de los partidos YA JUGADOS de LMP (semillas/lmp_cuotas_sgo.csv).
+#    La historia es del plan Pro de SportsGameOdds (tiene prueba gratis): guarda esa llave en el secreto SGO_KEY_HIST.
+#    Si no existe, usa SGO_KEY (plan gratis; lo mas probable es que la API no devuelva partidos viejos y el paso lo dice).
+# 2) mide el modelo de LMP por temporada y contra esas cuotas (utilidades/evaluar_lmp_cuotas.py -> salida/evaluacion_lmp.json).
+# No toca la rama datos ni los modelos.
+
+on:
+  workflow_dispatch:
+    inputs:
+      desde:
+        description: "primer dia (AAAA-MM-DD)"
+        default: "2024-10-01"
+      hasta:
+        description: "ultimo dia (AAAA-MM-DD)"
+        default: "2026-02-15"
+      max_objetos:
+        description: "tope de eventos a pedir (cada uno cuenta como 1 objeto)"
+        default: "1200"
+
+concurrency:
+  group: edgeline-lmp-hist
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  lmp_hist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+
+      - name: Cuotas historicas de SportsGameOdds
+        env:
+          EDGELINE_SGO_KEY: ${{ secrets.SGO_KEY_HIST || secrets.SGO_KEY }}
+          EDGELINE_SGO_MAX_HIST: ${{ github.event.inputs.max_objetos }}
+        run: python colectores/sgo_historico.py --desde "${{ github.event.inputs.desde }}" --hasta "${{ github.event.inputs.hasta }}"
+
+      - name: Medir el modelo de LMP (por temporada y contra las cuotas)
+        continue-on-error: true
+        run: python utilidades/evaluar_lmp_cuotas.py --temporadas 2024,2025
+
+      - name: Guardar en main
+        continue-on-error: true
+        run: bash utilidades/subir_a_main.sh "lmp - cuotas historicas y evaluacion" semillas/lmp_cuotas_sgo.csv salida/evaluacion_lmp.json
