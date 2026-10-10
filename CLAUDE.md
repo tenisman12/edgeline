@@ -221,6 +221,12 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   (antes todo el historial pesaba igual). Fuera de muestra 1X2 z 1.82 (umbral 1.64), over 2.5 z 1.19; validacion oficial 80 -> 89
   publicables (MLS ganador/empate/totales, Premier y Serie A por 2 goles). La mejora viene de MLS, Liga MX y Premier; Serie A,
   Bundesliga y Ligue 1 bajan poco. Contra el cierre de Pinnacle sigue sin aportar. `trabajo/minar/2026-10-09_forma_rapida.md`.
+- Metamodelo (10-oct-2026, `utilidades/metamodelo.py`, `nucleo/metamodelo.py`, `trabajo/minar/2026-10-10_metamodelo.md`):
+  probabilidad apilada Pinnacle sin vig -> desacuerdo del modelo -> angulos -> publico, logistica con castigo por grupo,
+  walk-forward. Futbol 1X2 (Pinnacle temprana): log-loss +1.56 milesimas vs el mercado (z 2.34; el cierre da +2.17), casi todo
+  por recalibrar el mercado; peso del modelo -0.15. O/U 2.5 y NFL: nada. Apuestas EV>=4% cuota>=1.80: al mejor precio 1,177,
+  ROI +3.3% (z 0.68), CLV +3.9% (z 14); Bet365 132, CLV +0.3%. Beisbol/NHL/NBA sin historia de cuotas: se medira en vivo.
+  No cambia picks.
 - CLV (`utilidades/clv.py`, salida/clv.json): picks contra el cierre de Pinnacle y si el cierre se mueve hacia el modelo.
   NHL/MLB: las fotos h2h a 3 vias (casas europeas, tiempo regular) se pasan a 2 vias; desde el 6-oct el colector guarda
   2 vias fuera del futbol. El CLV solo se calcula cuando el partido ya empezo.

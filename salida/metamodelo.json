@@ -1,0 +1,1496 @@
+{
+ "generado": "2026-10-10 13:05",
+ "cuota_min": 1.8,
+ "resultados": [
+  {
+   "mercado": "Futbol 1X2 (7 ligas)",
+   "desde": "2023-05-28",
+   "hasta": "2026-01-14",
+   "ll": {
+    "partidos": 4423,
+    "mercado_al_decidir": {
+     "logloss": 0.96233,
+     "mejora_vs_mercado_milesimas": 0.0,
+     "z": null
+    },
+    "modelo_solo": {
+     "logloss": 0.98243,
+     "mejora_vs_mercado_milesimas": -20.1,
+     "z": -8.75
+    },
+    "metamodelo": {
+     "logloss": 0.96077,
+     "mejora_vs_mercado_milesimas": 1.56,
+     "z": 2.34,
+     "mitades_milesimas": [
+      2.36,
+      0.76
+     ]
+    },
+    "cierre_pinnacle": {
+     "logloss": 0.96016,
+     "mejora_vs_mercado_milesimas": 2.17,
+     "z": 2.07
+    }
+   },
+   "coeficientes_ultimo": {
+    "b0": 0.0236,
+    "lm": 1.0925,
+    "dm": -0.1474,
+    "F1": -0.0609,
+    "F13": 0.0336,
+    "S1": -0.0372,
+    "S4": -0.0254,
+    "S7": 0.0055,
+    "es_empate": 0.1077
+   },
+   "apuestas": {
+    "metamodelo|pinnacle|ev2": {
+     "n": 303,
+     "ganadas": 98,
+     "acierto_pct": 32.3,
+     "cuota_media": 3.15,
+     "unidades": -8.85,
+     "roi_pct": -2.92,
+     "z_roi": -0.35,
+     "clv_pct": -2.55,
+     "z_clv": -9.79,
+     "mitades_unidades": [
+      -20.05,
+      11.2
+     ]
+    },
+    "metamodelo|pinnacle|ev4": {
+     "n": 9,
+     "ganadas": 5,
+     "acierto_pct": 55.6,
+     "cuota_media": 2.41,
+     "unidades": 1.75,
+     "roi_pct": 19.44,
+     "z_roi": 0.51,
+     "clv_pct": -4.27,
+     "z_clv": -2.52,
+     "mitades_unidades": [
+      0.34,
+      1.41
+     ]
+    },
+    "metamodelo|pinnacle|ev6": {
+     "n": 0
+    },
+    "metamodelo|pinnacle|ev8": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev2": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev4": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev6": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev8": {
+     "n": 0
+    },
+    "modelo_solo|pinnacle|ev2": {
+     "n": 3574,
+     "ganadas": 827,
+     "acierto_pct": 23.1,
+     "cuota_media": 4.73,
+     "unidades": -575.87,
+     "roi_pct": -16.11,
+     "z_roi": -5.52,
+     "clv_pct": -4.3,
+     "z_clv": -26.49,
+     "mitades_unidades": [
+      -310.62,
+      -265.25
+     ]
+    },
+    "modelo_solo|pinnacle|ev4": {
+     "n": 3201,
+     "ganadas": 731,
+     "acierto_pct": 22.8,
+     "cuota_media": 4.86,
+     "unidades": -501.3,
+     "roi_pct": -15.66,
+     "z_roi": -5.0,
+     "clv_pct": -4.45,
+     "z_clv": -25.56,
+     "mitades_unidades": [
+      -287.77,
+      -213.53
+     ]
+    },
+    "modelo_solo|pinnacle|ev6": {
+     "n": 2879,
+     "ganadas": 638,
+     "acierto_pct": 22.2,
+     "cuota_media": 5.0,
+     "unidades": -473.32,
+     "roi_pct": -16.44,
+     "z_roi": -4.91,
+     "clv_pct": -4.49,
+     "z_clv": -23.95,
+     "mitades_unidades": [
+      -287.33,
+      -185.99
+     ]
+    },
+    "modelo_solo|pinnacle|ev8": {
+     "n": 2572,
+     "ganadas": 556,
+     "acierto_pct": 21.6,
+     "cuota_media": 5.16,
+     "unidades": -439.06,
+     "roi_pct": -17.07,
+     "z_roi": -4.76,
+     "clv_pct": -4.61,
+     "z_clv": -22.95,
+     "mitades_unidades": [
+      -273.55,
+      -165.51
+     ]
+    },
+    "metamodelo|mejor|ev2": {
+     "n": 2141,
+     "ganadas": 647,
+     "acierto_pct": 30.2,
+     "cuota_media": 3.92,
+     "unidades": 40.84,
+     "roi_pct": 1.91,
+     "z_roi": 0.51,
+     "clv_pct": 2.67,
+     "z_clv": 14.67,
+     "mitades_unidades": [
+      84.55,
+      -43.71
+     ]
+    },
+    "metamodelo|mejor|ev4": {
+     "n": 1177,
+     "ganadas": 351,
+     "acierto_pct": 29.8,
+     "cuota_media": 4.18,
+     "unidades": 38.78,
+     "roi_pct": 3.29,
+     "z_roi": 0.68,
+     "clv_pct": 3.89,
+     "z_clv": 13.97,
+     "mitades_unidades": [
+      25.58,
+      13.2
+     ]
+    },
+    "metamodelo|mejor|ev6": {
+     "n": 575,
+     "ganadas": 163,
+     "acierto_pct": 28.3,
+     "cuota_media": 4.54,
+     "unidades": 7.95,
+     "roi_pct": 1.38,
+     "z_roi": 0.19,
+     "clv_pct": 5.15,
+     "z_clv": 10.36,
+     "mitades_unidades": [
+      23.23,
+      -15.28
+     ]
+    },
+    "metamodelo|mejor|ev8": {
+     "n": 252,
+     "ganadas": 69,
+     "acierto_pct": 27.4,
+     "cuota_media": 5.37,
+     "unidades": -0.37,
+     "roi_pct": -0.15,
+     "z_roi": -0.01,
+     "clv_pct": 7.66,
+     "z_clv": 7.62,
+     "mitades_unidades": [
+      -8.35,
+      7.98
+     ]
+    },
+    "mercado_solo|mejor|ev2": {
+     "n": 1653,
+     "ganadas": 319,
+     "acierto_pct": 19.3,
+     "cuota_media": 7.08,
+     "unidades": -151.54,
+     "roi_pct": -9.17,
+     "z_roi": -1.66,
+     "clv_pct": 4.0,
+     "z_clv": 12.3,
+     "mitades_unidades": [
+      -67.89,
+      -83.65
+     ]
+    },
+    "mercado_solo|mejor|ev4": {
+     "n": 856,
+     "ganadas": 130,
+     "acierto_pct": 15.2,
+     "cuota_media": 9.26,
+     "unidades": -93.12,
+     "roi_pct": -10.88,
+     "z_roi": -1.21,
+     "clv_pct": 5.77,
+     "z_clv": 10.4,
+     "mitades_unidades": [
+      -27.1,
+      -66.02
+     ]
+    },
+    "mercado_solo|mejor|ev6": {
+     "n": 509,
+     "ganadas": 52,
+     "acierto_pct": 10.2,
+     "cuota_media": 11.56,
+     "unidades": -91.9,
+     "roi_pct": -18.06,
+     "z_roi": -1.37,
+     "clv_pct": 7.36,
+     "z_clv": 8.67,
+     "mitades_unidades": [
+      -71.63,
+      -20.27
+     ]
+    },
+    "mercado_solo|mejor|ev8": {
+     "n": 329,
+     "ganadas": 24,
+     "acierto_pct": 7.3,
+     "cuota_media": 13.5,
+     "unidades": -78.33,
+     "roi_pct": -23.81,
+     "z_roi": -1.34,
+     "clv_pct": 9.17,
+     "z_clv": 7.64,
+     "mitades_unidades": [
+      -48.63,
+      -29.7
+     ]
+    },
+    "modelo_solo|mejor|ev2": {
+     "n": 3948,
+     "ganadas": 941,
+     "acierto_pct": 23.8,
+     "cuota_media": 5.05,
+     "unidades": -497.72,
+     "roi_pct": -12.61,
+     "z_roi": -4.33,
+     "clv_pct": -0.65,
+     "z_clv": -3.62,
+     "mitades_unidades": [
+      -237.87,
+      -259.85
+     ]
+    },
+    "modelo_solo|mejor|ev4": {
+     "n": 3665,
+     "ganadas": 847,
+     "acierto_pct": 23.1,
+     "cuota_media": 5.18,
+     "unidades": -496.82,
+     "roi_pct": -13.56,
+     "z_roi": -4.43,
+     "clv_pct": -0.62,
+     "z_clv": -3.3,
+     "mitades_unidades": [
+      -234.55,
+      -262.27
+     ]
+    },
+    "modelo_solo|mejor|ev6": {
+     "n": 3307,
+     "ganadas": 734,
+     "acierto_pct": 22.2,
+     "cuota_media": 5.37,
+     "unidades": -485.72,
+     "roi_pct": -14.69,
+     "z_roi": -4.48,
+     "clv_pct": -0.61,
+     "z_clv": -2.95,
+     "mitades_unidades": [
+      -220.48,
+      -265.24
+     ]
+    },
+    "modelo_solo|mejor|ev8": {
+     "n": 2970,
+     "ganadas": 636,
+     "acierto_pct": 21.4,
+     "cuota_media": 5.55,
+     "unidades": -478.92,
+     "roi_pct": -16.13,
+     "z_roi": -4.62,
+     "clv_pct": -0.5,
+     "z_clv": -2.25,
+     "mitades_unidades": [
+      -231.31,
+      -247.61
+     ]
+    },
+    "metamodelo|bet365|ev2": {
+     "n": 395,
+     "ganadas": 112,
+     "acierto_pct": 28.4,
+     "cuota_media": 3.58,
+     "unidades": -13.39,
+     "roi_pct": -3.39,
+     "z_roi": -0.41,
+     "clv_pct": -0.73,
+     "z_clv": -2.38,
+     "mitades_unidades": [
+      7.73,
+      -21.12
+     ]
+    },
+    "metamodelo|bet365|ev4": {
+     "n": 132,
+     "ganadas": 41,
+     "acierto_pct": 31.1,
+     "cuota_media": 3.71,
+     "unidades": 18.19,
+     "roi_pct": 13.78,
+     "z_roi": 0.82,
+     "clv_pct": 0.28,
+     "z_clv": 0.48,
+     "mitades_unidades": [
+      7.83,
+      10.36
+     ]
+    },
+    "metamodelo|bet365|ev6": {
+     "n": 47,
+     "ganadas": 12,
+     "acierto_pct": 25.5,
+     "cuota_media": 4.13,
+     "unidades": 5.2,
+     "roi_pct": 11.06,
+     "z_roi": 0.34,
+     "clv_pct": 1.0,
+     "z_clv": 0.85,
+     "mitades_unidades": [
+      8.8,
+      -3.6
+     ]
+    },
+    "metamodelo|bet365|ev8": {
+     "n": 11,
+     "ganadas": 4,
+     "acierto_pct": 36.4,
+     "cuota_media": 4.46,
+     "unidades": 9.5,
+     "roi_pct": 86.36,
+     "z_roi": 0.85,
+     "clv_pct": 2.72,
+     "z_clv": 0.64,
+     "mitades_unidades": [
+      12.2,
+      -2.7
+     ]
+    },
+    "mercado_solo|bet365|ev2": {
+     "n": 200,
+     "ganadas": 26,
+     "acierto_pct": 13.0,
+     "cuota_media": 8.7,
+     "unidades": -34.77,
+     "roi_pct": -17.38,
+     "z_roi": -1.0,
+     "clv_pct": 0.86,
+     "z_clv": 0.8,
+     "mitades_unidades": [
+      -17.2,
+      -17.57
+     ]
+    },
+    "mercado_solo|bet365|ev4": {
+     "n": 108,
+     "ganadas": 11,
+     "acierto_pct": 10.2,
+     "cuota_media": 10.17,
+     "unidades": -35.12,
+     "roi_pct": -32.52,
+     "z_roi": -1.59,
+     "clv_pct": 1.34,
+     "z_clv": 0.81,
+     "mitades_unidades": [
+      -3.25,
+      -31.87
+     ]
+    },
+    "mercado_solo|bet365|ev6": {
+     "n": 71,
+     "ganadas": 5,
+     "acierto_pct": 7.0,
+     "cuota_media": 11.44,
+     "unidades": -31.0,
+     "roi_pct": -43.66,
+     "z_roi": -1.73,
+     "clv_pct": 1.93,
+     "z_clv": 0.86,
+     "mitades_unidades": [
+      -9.5,
+      -21.5
+     ]
+    },
+    "mercado_solo|bet365|ev8": {
+     "n": 50,
+     "ganadas": 3,
+     "acierto_pct": 6.0,
+     "cuota_media": 12.02,
+     "unidades": -23.0,
+     "roi_pct": -46.0,
+     "z_roi": -1.48,
+     "clv_pct": 1.56,
+     "z_clv": 0.54,
+     "mitades_unidades": [
+      -7.0,
+      -16.0
+     ]
+    },
+    "modelo_solo|bet365|ev2": {
+     "n": 3163,
+     "ganadas": 726,
+     "acierto_pct": 23.0,
+     "cuota_media": 4.72,
+     "unidades": -516.1,
+     "roi_pct": -16.32,
+     "z_roi": -5.23,
+     "clv_pct": -6.4,
+     "z_clv": -35.74,
+     "mitades_unidades": [
+      -281.65,
+      -234.45
+     ]
+    },
+    "modelo_solo|bet365|ev4": {
+     "n": 2809,
+     "ganadas": 626,
+     "acierto_pct": 22.3,
+     "cuota_media": 4.88,
+     "unidades": -476.25,
+     "roi_pct": -16.95,
+     "z_roi": -5.04,
+     "clv_pct": -6.47,
+     "z_clv": -33.33,
+     "mitades_unidades": [
+      -282.21,
+      -194.04
+     ]
+    },
+    "modelo_solo|bet365|ev6": {
+     "n": 2530,
+     "ganadas": 548,
+     "acierto_pct": 21.7,
+     "cuota_media": 5.0,
+     "unidades": -435.01,
+     "roi_pct": -17.19,
+     "z_roi": -4.76,
+     "clv_pct": -6.48,
+     "z_clv": -31.14,
+     "mitades_unidades": [
+      -254.05,
+      -180.96
+     ]
+    },
+    "modelo_solo|bet365|ev8": {
+     "n": 2235,
+     "ganadas": 464,
+     "acierto_pct": 20.8,
+     "cuota_media": 5.17,
+     "unidades": -405.47,
+     "roi_pct": -18.14,
+     "z_roi": -4.64,
+     "clv_pct": -6.48,
+     "z_clv": -28.8,
+     "mitades_unidades": [
+      -244.3,
+      -161.17
+     ]
+    }
+   },
+   "capas": {
+    "1 mercado recalibrado": {
+     "ll_vs_mercado_milesimas": 1.48,
+     "z": 2.45,
+     "mitades": [
+      2.51,
+      0.45
+     ],
+     "apuestas_pinnacle_ev4": {
+      "n": 0
+     },
+     "apuestas_mejor_ev4": {
+      "n": 983,
+      "ganadas": 285,
+      "acierto_pct": 29.0,
+      "cuota_media": 4.16,
+      "unidades": 30.64,
+      "roi_pct": 3.12,
+      "z_roi": 0.58,
+      "clv_pct": 4.36,
+      "z_clv": 14.31,
+      "mitades_unidades": [
+       40.03,
+       -9.39
+      ]
+     },
+     "apuestas_bet365_ev4": {
+      "n": 97,
+      "ganadas": 26,
+      "acierto_pct": 26.8,
+      "cuota_media": 3.67,
+      "unidades": -2.02,
+      "roi_pct": -2.08,
+      "z_roi": -0.11,
+      "clv_pct": 1.09,
+      "z_clv": 1.81,
+      "mitades_unidades": [
+       -1.07,
+       -0.95
+      ]
+     }
+    },
+    "2 + modelo": {
+     "ll_vs_mercado_milesimas": 1.66,
+     "z": 2.61,
+     "mitades": [
+      2.51,
+      0.81
+     ],
+     "apuestas_pinnacle_ev4": {
+      "n": 6,
+      "ganadas": 3,
+      "acierto_pct": 50.0,
+      "cuota_media": 2.54,
+      "unidades": 0.52,
+      "roi_pct": 8.67,
+      "z_roi": 0.18,
+      "clv_pct": -7.73,
+      "z_clv": -4.53,
+      "mitades_unidades": [
+       1.31,
+       -0.79
+      ]
+     },
+     "apuestas_mejor_ev4": {
+      "n": 1143,
+      "ganadas": 338,
+      "acierto_pct": 29.6,
+      "cuota_media": 4.26,
+      "unidades": 44.5,
+      "roi_pct": 3.89,
+      "z_roi": 0.78,
+      "clv_pct": 4.02,
+      "z_clv": 13.32,
+      "mitades_unidades": [
+       28.46,
+       16.04
+      ]
+     },
+     "apuestas_bet365_ev4": {
+      "n": 127,
+      "ganadas": 35,
+      "acierto_pct": 27.6,
+      "cuota_media": 3.69,
+      "unidades": 0.33,
+      "roi_pct": 0.26,
+      "z_roi": 0.02,
+      "clv_pct": 0.36,
+      "z_clv": 0.64,
+      "mitades_unidades": [
+       1.83,
+       -1.5
+      ]
+     }
+    },
+    "3 + angulos (completo)": {
+     "ll_vs_mercado_milesimas": 1.56,
+     "z": 2.34,
+     "mitades": [
+      2.36,
+      0.76
+     ],
+     "apuestas_pinnacle_ev4": {
+      "n": 9,
+      "ganadas": 5,
+      "acierto_pct": 55.6,
+      "cuota_media": 2.41,
+      "unidades": 1.75,
+      "roi_pct": 19.44,
+      "z_roi": 0.51,
+      "clv_pct": -4.27,
+      "z_clv": -2.52,
+      "mitades_unidades": [
+       0.34,
+       1.41
+      ]
+     },
+     "apuestas_mejor_ev4": {
+      "n": 1177,
+      "ganadas": 351,
+      "acierto_pct": 29.8,
+      "cuota_media": 4.18,
+      "unidades": 38.78,
+      "roi_pct": 3.29,
+      "z_roi": 0.68,
+      "clv_pct": 3.89,
+      "z_clv": 13.97,
+      "mitades_unidades": [
+       25.58,
+       13.2
+      ]
+     },
+     "apuestas_bet365_ev4": {
+      "n": 132,
+      "ganadas": 41,
+      "acierto_pct": 31.1,
+      "cuota_media": 3.71,
+      "unidades": 18.19,
+      "roi_pct": 13.78,
+      "z_roi": 0.82,
+      "clv_pct": 0.28,
+      "z_clv": 0.48,
+      "mitades_unidades": [
+       7.83,
+       10.36
+      ]
+     }
+    }
+   }
+  },
+  {
+   "mercado": "Futbol Over/Under 2.5",
+   "desde": "2023-05-28",
+   "hasta": "2026-01-14",
+   "ll": {
+    "partidos": 4371,
+    "mercado_al_decidir": {
+     "logloss": 0.66995,
+     "mejora_vs_mercado_milesimas": 0.0,
+     "z": null
+    },
+    "modelo_solo": {
+     "logloss": 0.67605,
+     "mejora_vs_mercado_milesimas": -6.1,
+     "z": -3.25
+    },
+    "metamodelo": {
+     "logloss": 0.67017,
+     "mejora_vs_mercado_milesimas": -0.22,
+     "z": -0.29,
+     "mitades_milesimas": [
+      1.15,
+      -1.6
+     ]
+    },
+    "cierre_pinnacle": {
+     "logloss": 0.66649,
+     "mejora_vs_mercado_milesimas": 3.46,
+     "z": 3.88
+    }
+   },
+   "coeficientes_ultimo": {
+    "b0": -0.0,
+    "lm": 1.1633,
+    "dm": 0.0099
+   },
+   "apuestas": {
+    "metamodelo|pinnacle|ev2": {
+     "n": 4,
+     "ganadas": 3,
+     "acierto_pct": 75.0,
+     "cuota_media": 1.84,
+     "unidades": 1.56,
+     "roi_pct": 39.0,
+     "z_roi": 0.84,
+     "clv_pct": -5.76,
+     "z_clv": -5.56,
+     "mitades_unidades": [
+      1.75,
+      -0.19
+     ]
+    },
+    "metamodelo|pinnacle|ev4": {
+     "n": 0
+    },
+    "metamodelo|pinnacle|ev6": {
+     "n": 0
+    },
+    "metamodelo|pinnacle|ev8": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev2": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev4": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev6": {
+     "n": 0
+    },
+    "mercado_solo|pinnacle|ev8": {
+     "n": 0
+    },
+    "modelo_solo|pinnacle|ev2": {
+     "n": 2000,
+     "ganadas": 860,
+     "acierto_pct": 43.0,
+     "cuota_media": 2.27,
+     "unidades": -89.88,
+     "roi_pct": -4.49,
+     "z_roi": -1.79,
+     "clv_pct": -3.62,
+     "z_clv": -24.21,
+     "mitades_unidades": [
+      -74.43,
+      -15.45
+     ]
+    },
+    "modelo_solo|pinnacle|ev4": {
+     "n": 1673,
+     "ganadas": 721,
+     "acierto_pct": 43.1,
+     "cuota_media": 2.29,
+     "unidades": -70.09,
+     "roi_pct": -4.19,
+     "z_roi": -1.52,
+     "clv_pct": -3.74,
+     "z_clv": -22.46,
+     "mitades_unidades": [
+      -49.07,
+      -21.02
+     ]
+    },
+    "modelo_solo|pinnacle|ev6": {
+     "n": 1391,
+     "ganadas": 601,
+     "acierto_pct": 43.2,
+     "cuota_media": 2.3,
+     "unidades": -47.83,
+     "roi_pct": -3.44,
+     "z_roi": -1.13,
+     "clv_pct": -3.79,
+     "z_clv": -20.41,
+     "mitades_unidades": [
+      -45.23,
+      -2.6
+     ]
+    },
+    "modelo_solo|pinnacle|ev8": {
+     "n": 1160,
+     "ganadas": 506,
+     "acierto_pct": 43.6,
+     "cuota_media": 2.31,
+     "unidades": -22.16,
+     "roi_pct": -1.91,
+     "z_roi": -0.57,
+     "clv_pct": -3.81,
+     "z_clv": -18.42,
+     "mitades_unidades": [
+      -40.23,
+      18.07
+     ]
+    },
+    "metamodelo|mejor|ev2": {
+     "n": 195,
+     "ganadas": 102,
+     "acierto_pct": 52.3,
+     "cuota_media": 1.95,
+     "unidades": -3.66,
+     "roi_pct": -1.88,
+     "z_roi": -0.28,
+     "clv_pct": 1.82,
+     "z_clv": 3.01,
+     "mitades_unidades": [
+      9.45,
+      -13.11
+     ]
+    },
+    "metamodelo|mejor|ev4": {
+     "n": 43,
+     "ganadas": 22,
+     "acierto_pct": 51.2,
+     "cuota_media": 2.15,
+     "unidades": -0.83,
+     "roi_pct": -1.93,
+     "z_roi": -0.13,
+     "clv_pct": 6.96,
+     "z_clv": 3.76,
+     "mitades_unidades": [
+      1.27,
+      -2.1
+     ]
+    },
+    "metamodelo|mejor|ev6": {
+     "n": 14,
+     "ganadas": 8,
+     "acierto_pct": 57.1,
+     "cuota_media": 2.38,
+     "unidades": 2.24,
+     "roi_pct": 16.0,
+     "z_roi": 0.55,
+     "clv_pct": 12.91,
+     "z_clv": 2.92,
+     "mitades_unidades": [
+      0.45,
+      1.79
+     ]
+    },
+    "metamodelo|mejor|ev8": {
+     "n": 8,
+     "ganadas": 5,
+     "acierto_pct": 62.5,
+     "cuota_media": 2.76,
+     "unidades": 2.59,
+     "roi_pct": 32.38,
+     "z_roi": 0.78,
+     "clv_pct": 20.32,
+     "z_clv": 3.17,
+     "mitades_unidades": [
+      2.92,
+      -0.33
+     ]
+    },
+    "mercado_solo|mejor|ev2": {
+     "n": 158,
+     "ganadas": 56,
+     "acierto_pct": 35.4,
+     "cuota_media": 3.0,
+     "unidades": 3.29,
+     "roi_pct": 2.08,
+     "z_roi": 0.18,
+     "clv_pct": 6.03,
+     "z_clv": 7.91,
+     "mitades_unidades": [
+      -13.35,
+      16.64
+     ]
+    },
+    "mercado_solo|mejor|ev4": {
+     "n": 60,
+     "ganadas": 21,
+     "acierto_pct": 35.0,
+     "cuota_media": 3.41,
+     "unidades": 5.43,
+     "roi_pct": 9.05,
+     "z_roi": 0.44,
+     "clv_pct": 10.94,
+     "z_clv": 7.4,
+     "mitades_unidades": [
+      -1.78,
+      7.21
+     ]
+    },
+    "mercado_solo|mejor|ev6": {
+     "n": 34,
+     "ganadas": 15,
+     "acierto_pct": 44.1,
+     "cuota_media": 3.58,
+     "unidades": 14.17,
+     "roi_pct": 41.68,
+     "z_roi": 1.4,
+     "clv_pct": 15.25,
+     "z_clv": 7.81,
+     "mitades_unidades": [
+      8.67,
+      5.5
+     ]
+    },
+    "mercado_solo|mejor|ev8": {
+     "n": 24,
+     "ganadas": 9,
+     "acierto_pct": 37.5,
+     "cuota_media": 3.9,
+     "unidades": 8.55,
+     "roi_pct": 35.62,
+     "z_roi": 0.95,
+     "clv_pct": 18.64,
+     "z_clv": 7.8,
+     "mitades_unidades": [
+      5.45,
+      3.1
+     ]
+    },
+    "modelo_solo|mejor|ev2": {
+     "n": 2392,
+     "ganadas": 1043,
+     "acierto_pct": 43.6,
+     "cuota_media": 2.29,
+     "unidades": -69.89,
+     "roi_pct": -2.92,
+     "z_roi": -1.26,
+     "clv_pct": -1.62,
+     "z_clv": -10.68,
+     "mitades_unidades": [
+      -52.11,
+      -17.78
+     ]
+    },
+    "modelo_solo|mejor|ev4": {
+     "n": 2051,
+     "ganadas": 899,
+     "acierto_pct": 43.8,
+     "cuota_media": 2.3,
+     "unidades": -37.51,
+     "roi_pct": -1.83,
+     "z_roi": -0.72,
+     "clv_pct": -1.68,
+     "z_clv": -10.23,
+     "mitades_unidades": [
+      -33.76,
+      -3.75
+     ]
+    },
+    "modelo_solo|mejor|ev6": {
+     "n": 1733,
+     "ganadas": 756,
+     "acierto_pct": 43.6,
+     "cuota_media": 2.32,
+     "unidades": -37.48,
+     "roi_pct": -2.16,
+     "z_roi": -0.79,
+     "clv_pct": -1.66,
+     "z_clv": -9.09,
+     "mitades_unidades": [
+      -31.56,
+      -5.92
+     ]
+    },
+    "modelo_solo|mejor|ev8": {
+     "n": 1434,
+     "ganadas": 627,
+     "acierto_pct": 43.7,
+     "cuota_media": 2.34,
+     "unidades": -12.2,
+     "roi_pct": -0.85,
+     "z_roi": -0.28,
+     "clv_pct": -1.59,
+     "z_clv": -7.75,
+     "mitades_unidades": [
+      -24.14,
+      11.94
+     ]
+    },
+    "metamodelo|bet365|ev2": {
+     "n": 14,
+     "ganadas": 7,
+     "acierto_pct": 50.0,
+     "cuota_media": 2.41,
+     "unidades": -1.02,
+     "roi_pct": -7.29,
+     "z_roi": -0.28,
+     "clv_pct": 2.62,
+     "z_clv": 0.7,
+     "mitades_unidades": [
+      2.3,
+      -3.32
+     ]
+    },
+    "metamodelo|bet365|ev4": {
+     "n": 4,
+     "ganadas": 1,
+     "acierto_pct": 25.0,
+     "cuota_media": 3.13,
+     "unidades": -2.01,
+     "roi_pct": -50.25,
+     "z_roi": -1.01,
+     "clv_pct": 10.59,
+     "z_clv": 1.2,
+     "mitades_unidades": [
+      -0.01,
+      -2.0
+     ]
+    },
+    "metamodelo|bet365|ev6": {
+     "n": 2,
+     "ganadas": 0,
+     "acierto_pct": 0.0,
+     "cuota_media": 3.1,
+     "unidades": -2.0,
+     "roi_pct": -100.0,
+     "z_roi": null,
+     "clv_pct": 10.8,
+     "z_clv": 0.69,
+     "mitades_unidades": [
+      -1.0,
+      -1.0
+     ]
+    },
+    "metamodelo|bet365|ev8": {
+     "n": 1,
+     "ganadas": 0,
+     "acierto_pct": 0.0,
+     "cuota_media": 4.33,
+     "unidades": -1.0,
+     "roi_pct": -100.0,
+     "z_roi": null,
+     "clv_pct": 26.45,
+     "z_clv": null,
+     "mitades_unidades": [
+      0,
+      -1.0
+     ]
+    },
+    "mercado_solo|bet365|ev2": {
+     "n": 30,
+     "ganadas": 8,
+     "acierto_pct": 26.7,
+     "cuota_media": 3.76,
+     "unidades": 0.5,
+     "roi_pct": 1.67,
+     "z_roi": 0.05,
+     "clv_pct": 9.62,
+     "z_clv": 6.02,
+     "mitades_unidades": [
+      3.75,
+      -3.25
+     ]
+    },
+    "mercado_solo|bet365|ev4": {
+     "n": 23,
+     "ganadas": 6,
+     "acierto_pct": 26.1,
+     "cuota_media": 3.92,
+     "unidades": 0.0,
+     "roi_pct": 0.0,
+     "z_roi": 0.0,
+     "clv_pct": 12.07,
+     "z_clv": 6.93,
+     "mitades_unidades": [
+      0.25,
+      -0.25
+     ]
+    },
+    "mercado_solo|bet365|ev6": {
+     "n": 15,
+     "ganadas": 4,
+     "acierto_pct": 26.7,
+     "cuota_media": 4.05,
+     "unidades": 0.75,
+     "roi_pct": 5.0,
+     "z_roi": 0.11,
+     "clv_pct": 15.76,
+     "z_clv": 7.76,
+     "mitades_unidades": [
+      -3.0,
+      3.75
+     ]
+    },
+    "mercado_solo|bet365|ev8": {
+     "n": 12,
+     "ganadas": 3,
+     "acierto_pct": 25.0,
+     "cuota_media": 4.12,
+     "unidades": 0.0,
+     "roi_pct": 0.0,
+     "z_roi": 0.0,
+     "clv_pct": 17.67,
+     "z_clv": 8.03,
+     "mitades_unidades": [
+      -2.0,
+      2.0
+     ]
+    },
+    "modelo_solo|bet365|ev2": {
+     "n": 1770,
+     "ganadas": 759,
+     "acierto_pct": 42.9,
+     "cuota_media": 2.26,
+     "unidades": -104.48,
+     "roi_pct": -5.9,
+     "z_roi": -2.23,
+     "clv_pct": -4.58,
+     "z_clv": -26.67,
+     "mitades_unidades": [
+      -80.48,
+      -24.0
+     ]
+    },
+    "modelo_solo|bet365|ev4": {
+     "n": 1481,
+     "ganadas": 639,
+     "acierto_pct": 43.1,
+     "cuota_media": 2.27,
+     "unidades": -75.41,
+     "roi_pct": -5.09,
+     "z_roi": -1.75,
+     "clv_pct": -4.65,
+     "z_clv": -24.54,
+     "mitades_unidades": [
+      -70.55,
+      -4.86
+     ]
+    },
+    "modelo_solo|bet365|ev6": {
+     "n": 1239,
+     "ganadas": 539,
+     "acierto_pct": 43.5,
+     "cuota_media": 2.27,
+     "unidades": -50.04,
+     "roi_pct": -4.04,
+     "z_roi": -1.26,
+     "clv_pct": -4.68,
+     "z_clv": -22.4,
+     "mitades_unidades": [
+      -55.52,
+      5.48
+     ]
+    },
+    "modelo_solo|bet365|ev8": {
+     "n": 990,
+     "ganadas": 429,
+     "acierto_pct": 43.3,
+     "cuota_media": 2.3,
+     "unidades": -32.86,
+     "roi_pct": -3.32,
+     "z_roi": -0.92,
+     "clv_pct": -4.62,
+     "z_clv": -19.21,
+     "mitades_unidades": [
+      -37.62,
+      4.76
+     ]
+    }
+   },
+   "capas": {
+    "1 mercado recalibrado": {
+     "ll_vs_mercado_milesimas": -0.0,
+     "z": -0.0,
+     "mitades": [
+      1.5,
+      -1.5
+     ],
+     "apuestas_pinnacle_ev4": {
+      "n": 0
+     },
+     "apuestas_mejor_ev4": {
+      "n": 24,
+      "ganadas": 11,
+      "acierto_pct": 45.8,
+      "cuota_media": 2.39,
+      "unidades": -2.21,
+      "roi_pct": -9.21,
+      "z_roi": -0.43,
+      "clv_pct": 11.42,
+      "z_clv": 3.87,
+      "mitades_unidades": [
+       -2.8,
+       0.59
+      ]
+     },
+     "apuestas_bet365_ev4": {
+      "n": 2,
+      "ganadas": 0,
+      "acierto_pct": 0.0,
+      "cuota_media": 4.33,
+      "unidades": -2.0,
+      "roi_pct": -100.0,
+      "z_roi": null,
+      "clv_pct": 25.9,
+      "z_clv": 46.69,
+      "mitades_unidades": [
+       -1.0,
+       -1.0
+      ]
+     }
+    },
+    "2 + modelo (completo)": {
+     "ll_vs_mercado_milesimas": -0.22,
+     "z": -0.29,
+     "mitades": [
+      1.15,
+      -1.6
+     ],
+     "apuestas_pinnacle_ev4": {
+      "n": 0
+     },
+     "apuestas_mejor_ev4": {
+      "n": 43,
+      "ganadas": 22,
+      "acierto_pct": 51.2,
+      "cuota_media": 2.15,
+      "unidades": -0.83,
+      "roi_pct": -1.93,
+      "z_roi": -0.13,
+      "clv_pct": 6.96,
+      "z_clv": 3.76,
+      "mitades_unidades": [
+       1.27,
+       -2.1
+      ]
+     },
+     "apuestas_bet365_ev4": {
+      "n": 4,
+      "ganadas": 1,
+      "acierto_pct": 25.0,
+      "cuota_media": 3.13,
+      "unidades": -2.01,
+      "roi_pct": -50.25,
+      "z_roi": -1.01,
+      "clv_pct": 10.59,
+      "z_clv": 1.2,
+      "mitades_unidades": [
+       -0.01,
+       -2.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "mercado": "NFL ganador (contra el cierre)",
+   "desde": "2020-11-01",
+   "hasta": "2026-10-08",
+   "ll": {
+    "partidos": 1526,
+    "mercado_al_decidir": {
+     "logloss": 0.61208,
+     "mejora_vs_mercado_milesimas": 0.0,
+     "z": null
+    },
+    "modelo_solo": {
+     "logloss": 0.6422,
+     "mejora_vs_mercado_milesimas": -30.12,
+     "z": -5.54
+    },
+    "metamodelo": {
+     "logloss": 0.61266,
+     "mejora_vs_mercado_milesimas": -0.58,
+     "z": -0.79,
+     "mitades_milesimas": [
+      -0.62,
+      -0.54
+     ]
+    },
+    "cierre_pinnacle": {
+     "logloss": 0.61208,
+     "mejora_vs_mercado_milesimas": 0.0,
+     "z": null
+    }
+   },
+   "coeficientes_ultimo": {
+    "b0": -0.0,
+    "lm": 0.9786,
+    "dm": -0.1415,
+    "N4": -0.0144,
+    "N8": 0.0014,
+    "N12": 0.0763,
+    "N13": 0.0446,
+    "S1": -0.0001,
+    "S4": -0.064,
+    "S7": -0.0662
+   },
+   "apuestas": {
+    "metamodelo|cierre|ev2": {
+     "n": 138,
+     "ganadas": 41,
+     "acierto_pct": 29.7,
+     "cuota_media": 3.69,
+     "unidades": -23.04,
+     "roi_pct": -16.7,
+     "z_roi": -1.45,
+     "clv_pct": -3.31,
+     "z_clv": -55.25,
+     "mitades_unidades": [
+      -3.34,
+      -19.7
+     ]
+    },
+    "metamodelo|cierre|ev4": {
+     "n": 72,
+     "ganadas": 17,
+     "acierto_pct": 23.6,
+     "cuota_media": 3.92,
+     "unidades": -24.18,
+     "roi_pct": -33.58,
+     "z_roi": -2.33,
+     "clv_pct": -3.38,
+     "z_clv": -42.1,
+     "mitades_unidades": [
+      -14.61,
+      -9.57
+     ]
+    },
+    "metamodelo|cierre|ev6": {
+     "n": 41,
+     "ganadas": 6,
+     "acierto_pct": 14.6,
+     "cuota_media": 4.34,
+     "unidades": -24.74,
+     "roi_pct": -60.34,
+     "z_roi": -3.93,
+     "clv_pct": -3.31,
+     "z_clv": -32.7,
+     "mitades_unidades": [
+      -14.81,
+      -9.93
+     ]
+    },
+    "metamodelo|cierre|ev8": {
+     "n": 21,
+     "ganadas": 3,
+     "acierto_pct": 14.3,
+     "cuota_media": 4.7,
+     "unidades": -12.35,
+     "roi_pct": -58.81,
+     "z_roi": -2.56,
+     "clv_pct": -3.44,
+     "z_clv": -25.18,
+     "mitades_unidades": [
+      -7.49,
+      -4.86
+     ]
+    },
+    "mercado_solo|cierre|ev2": {
+     "n": 0
+    },
+    "mercado_solo|cierre|ev4": {
+     "n": 0
+    },
+    "mercado_solo|cierre|ev6": {
+     "n": 0
+    },
+    "mercado_solo|cierre|ev8": {
+     "n": 0
+    },
+    "modelo_solo|cierre|ev2": {
+     "n": 969,
+     "ganadas": 318,
+     "acierto_pct": 32.8,
+     "cuota_media": 3.41,
+     "unidades": -45.58,
+     "roi_pct": -4.7,
+     "z_roi": -0.96,
+     "clv_pct": -3.47,
+     "z_clv": -148.85,
+     "mitades_unidades": [
+      -20.4,
+      -25.17
+     ]
+    },
+    "modelo_solo|cierre|ev4": {
+     "n": 912,
+     "ganadas": 293,
+     "acierto_pct": 32.1,
+     "cuota_media": 3.46,
+     "unidades": -47.29,
+     "roi_pct": -5.19,
+     "z_roi": -1.02,
+     "clv_pct": -3.46,
+     "z_clv": -144.35,
+     "mitades_unidades": [
+      -19.0,
+      -28.29
+     ]
+    },
+    "modelo_solo|cierre|ev6": {
+     "n": 865,
+     "ganadas": 273,
+     "acierto_pct": 31.6,
+     "cuota_media": 3.5,
+     "unidades": -50.73,
+     "roi_pct": -5.86,
+     "z_roi": -1.12,
+     "clv_pct": -3.46,
+     "z_clv": -141.77,
+     "mitades_unidades": [
+      -14.39,
+      -36.34
+     ]
+    },
+    "modelo_solo|cierre|ev8": {
+     "n": 817,
+     "ganadas": 258,
+     "acierto_pct": 31.6,
+     "cuota_media": 3.54,
+     "unidades": -41.18,
+     "roi_pct": -5.04,
+     "z_roi": -0.92,
+     "clv_pct": -3.45,
+     "z_clv": -137.94,
+     "mitades_unidades": [
+      -6.61,
+      -34.57
+     ]
+    }
+   },
+   "capas": {
+    "1 mercado recalibrado": {
+     "ll_vs_mercado_milesimas": -0.54,
+     "z": -2.13,
+     "mitades": [
+      -0.63,
+      -0.45
+     ],
+     "apuestas_cierre_ev4": {
+      "n": 1,
+      "ganadas": 0,
+      "acierto_pct": 0.0,
+      "cuota_media": 10.18,
+      "unidades": -1.0,
+      "roi_pct": -100.0,
+      "z_roi": null,
+      "clv_pct": -2.91,
+      "z_clv": null,
+      "mitades_unidades": [
+       0,
+       -1.0
+      ]
+     }
+    },
+    "2 + modelo": {
+     "ll_vs_mercado_milesimas": -0.41,
+     "z": -0.65,
+     "mitades": [
+      -0.08,
+      -0.75
+     ],
+     "apuestas_cierre_ev4": {
+      "n": 49,
+      "ganadas": 11,
+      "acierto_pct": 22.4,
+      "cuota_media": 4.1,
+      "unidades": -16.01,
+      "roi_pct": -32.67,
+      "z_roi": -1.76,
+      "clv_pct": -3.46,
+      "z_clv": -36.87,
+      "mitades_unidades": [
+       -6.3,
+       -9.71
+      ]
+     }
+    },
+    "3 + angulos (completo)": {
+     "ll_vs_mercado_milesimas": -0.58,
+     "z": -0.79,
+     "mitades": [
+      -0.62,
+      -0.54
+     ],
+     "apuestas_cierre_ev4": {
+      "n": 72,
+      "ganadas": 17,
+      "acierto_pct": 23.6,
+      "cuota_media": 3.92,
+      "unidades": -24.18,
+      "roi_pct": -33.58,
+      "z_roi": -2.33,
+      "clv_pct": -3.38,
+      "z_clv": -42.1,
+      "mitades_unidades": [
+       -14.61,
+       -9.57
+      ]
+     }
+    }
+   }
+  }
+ ]
+}
