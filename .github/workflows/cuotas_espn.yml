@@ -1,0 +1,64 @@
+name: cuotas historicas de ESPN
+
+# Manual. Baja las cuotas (moneyline, spread, total; apertura y cierre si vienen) de ESPN de cada juego de NBA, NCAAMB,
+# NCAAFB y NFL que no este guardado y publica la rama datos (datos/mercado/espn_cuotas.csv). Para medir el ganador a
+# cuota decente (trabajo/minar/2026-10-10_ganador_cuota.md).
+on:
+  workflow_dispatch:
+    inputs:
+      ligas:
+        description: "ligas separadas por coma"
+        default: "nba,ncaamb,ncaafb,nfl"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  cuotas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+      - name: Bajar cuotas
+        run: |
+          python colectores/recolectar_cuotas_espn.py --ligas "${{ github.event.inputs.ligas }}" --hilos 16
+          python - <<'EOF'
+          import csv, collections
+          R = list(csv.DictReader(open("datos/mercado/espn_cuotas.csv", encoding="utf-8")))
+          c = collections.Counter((r["liga"], r["estado"]) for r in R)
+          print("::notice title=cuotas::" + " | ".join("%s %s %d" % (k[0], k[1], v) for k, v in sorted(c.items())))
+          a = collections.Counter((r["liga"], r["game_date"][:4]) for r in R if r["estado"] == "ok")
+          print("::notice title=anios::" + " | ".join("%s %s %d" % (k[0], k[1], v) for k, v in sorted(a.items())))
+          cs = collections.Counter(r["casa"] for r in R if r["estado"] == "ok")
+          print("::notice title=casas::" + " | ".join("%s %d" % kv for kv in cs.most_common(12)))
+          ab = collections.Counter(r["liga"] for r in R if r["estado"] == "ok" and r["ml_home_open"])
+          print("::notice title=con_apertura::" + str(dict(ab)))
+          EOF
+      - name: Publicar datos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C /tmp/pub
+          mkdir -p /tmp/pub/datos/mercado && cp datos/mercado/espn_cuotas.csv /tmp/pub/datos/mercado/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (cuotas ESPN) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
