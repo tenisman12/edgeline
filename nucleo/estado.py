@@ -52,7 +52,7 @@ def beisbol(liga, min_juegos=5):
         ta = F._clave(acum, lgn, season, a.get("team"))
         csh, cah = F._f(h.get("runs")), F._f(h.get("runs_opp"))
         csa, caa = F._f(a.get("runs")), F._f(a.get("runs_opp"))
-        if None in (csh, csa):
+        if None in (csh, csa) or (csh == 0 and csa == 0):
             continue
         F._actualiza_elo(th, ta, csh, csa)
         th.ult_fecha = f; ta.ult_fecha = f
@@ -76,18 +76,20 @@ def fila_proximo(est, home, away, fecha_iso):
     if not (pre_h and pre_a) or th.j < 5 or ta.j < 5:
         return None                      # inicio de temporada: aun sin muestra
     med = est["lg_stats"].get((lg, season)) or {}
+    k = F.k_carreras(lg)
     fila = {"league": lg, "season": season, "game_date": f.isoformat(), "home": home, "away": away,
             "elo_home": round(th.elo, 1), "elo_away": round(ta.elo, 1),
             "elo_dif": round(th.elo + F._HFA - ta.elo, 1),
             "descanso_dif": F._descanso(th, f) - F._descanso(ta, f)}
     for s in F.STATS:
-        vh = F._encoge(pre_h.get(s), med.get(s), th.j)
-        va = F._encoge(pre_a.get(s), med.get(s), ta.j)
+        strength = k if s in ("cs", "ca") else 6.0
+        vh = F._encoge(pre_h.get(s), med.get(s), th.j, strength)
+        va = F._encoge(pre_a.get(s), med.get(s), ta.j, strength)
         fila[s + "_dif"] = round(vh - va, 4) if (vh is not None and va is not None) else None
-    fila["of_home"] = round(F._encoge(pre_h.get("cs"), med.get("cs"), th.j), 3)
-    fila["of_away"] = round(F._encoge(pre_a.get("cs"), med.get("cs"), ta.j), 3)
-    fila["df_home"] = round(F._encoge(pre_h.get("ca"), med.get("ca"), th.j), 3)
-    fila["df_away"] = round(F._encoge(pre_a.get("ca"), med.get("ca"), ta.j), 3)
+    fila["of_home"] = round(F._encoge(pre_h.get("cs"), med.get("cs"), th.j, k), 3)
+    fila["of_away"] = round(F._encoge(pre_a.get("cs"), med.get("cs"), ta.j, k), 3)
+    fila["df_home"] = round(F._encoge(pre_h.get("ca"), med.get("ca"), th.j, k), 3)
+    fila["df_away"] = round(F._encoge(pre_a.get("ca"), med.get("ca"), ta.j, k), 3)
     fila["lg_rs"] = round(med.get("cs") or 4.5, 3)
     return fila
 
