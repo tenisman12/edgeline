@@ -23,8 +23,12 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from nucleo import io  # noqa: E402
 
-DEP = {"nfl": "football", "ncaafb": "football", "nba": "basketball", "ncaamb": "basketball"}
-LIGA_ESPN = {"nfl": "nfl", "ncaafb": "college-football", "nba": "nba", "ncaamb": "mens-college-basketball"}
+DEP = {"nfl": "football", "ncaafb": "football", "nba": "basketball", "ncaamb": "basketball", "nhl": "hockey", "mlb": "baseball"}
+LIGA_ESPN = {"nfl": "nfl", "ncaafb": "college-football", "nba": "nba", "ncaamb": "mens-college-basketball", "nhl": "nhl", "mlb": "mlb"}
+# NHL y MLB no tienen datos/equipos/espn_<liga>_equipos.csv: los juegos salen del scoreboard de ESPN dia por dia y se guardan
+# en datos/equipos/espn_<liga>_juegos.csv (game_id, game_date, local, visita) para casarlos con el modelo.
+SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/%s/%s/scoreboard?dates=%s"
+MESES = {"nhl": (10, 11, 12, 1, 2, 3, 4, 5, 6), "mlb": (3, 4, 5, 6, 7, 8, 9, 10, 11)}
 URL = "https://sports.core.api.espn.com/v2/sports/%s/leagues/%s/events/%s/competitions/%s/odds"
 COLS = ["liga", "game_id", "game_date", "casa", "ml_home", "ml_away", "ml_home_open", "ml_away_open", "ml_home_close",
         "ml_away_close", "spread_home", "total", "over", "under", "total_open", "estado"]
@@ -80,11 +84,55 @@ def pedir(liga, gid):
     return None
 
 
+def juegos_scoreboard(liga, desde):
+    """{game_id: fecha} desde el scoreboard de ESPN; guarda datos/equipos/espn_<liga>_juegos.csv (incremental)."""
+    import datetime as dt
+    ruta = io.ruta("datos", "equipos", "espn_%s_juegos.csv" % liga)
+    hay = {}
+    if os.path.exists(ruta):
+        with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
+            for r in csv.DictReader(f):
+                hay[r["game_id"]] = r
+    fechas_hechas = {r["consultado"] for r in hay.values()}
+    d0 = dt.date.fromisoformat(desde); hoy = dt.date.today()
+    dias = []
+    while d0 <= hoy:
+        if d0.month in MESES[liga] and (d0.isoformat() not in fechas_hechas or (hoy - d0).days < 3):
+            dias.append(d0)
+        d0 += dt.timedelta(days=1)
+    def uno(d):
+        url = SCOREBOARD % (DEP[liga], liga, d.strftime("%Y%m%d"))
+        for intento in range(3):
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=25) as r:
+                    return d, json.loads(r.read().decode("utf-8"))
+            except Exception:
+                time.sleep(1 + intento)
+        return d, None
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for d, js in ex.map(uno, dias):
+            for ev in (js or {}).get("events") or []:
+                comp = (ev.get("competitions") or [{}])[0]
+                eq = {c.get("homeAway"): ((c.get("team") or {}).get("displayName") or "") for c in comp.get("competitors") or []}
+                hay[str(ev.get("id"))] = {"game_id": str(ev.get("id")), "game_date": (ev.get("date") or "")[:10], "local": eq.get("home", ""),
+                                          "visita": eq.get("away", ""), "consultado": d.isoformat()}
+    os.makedirs(os.path.dirname(ruta), exist_ok=True)
+    with _io.open(ruta, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["game_id", "game_date", "local", "visita", "consultado"])
+        w.writeheader()
+        for k in sorted(hay):
+            w.writerow(hay[k])
+    print("%s: %d juegos en el scoreboard (%d dias consultados)" % (liga, len(hay), len(dias)), flush=True)
+    return {k: v["game_date"] for k, v in hay.items()}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ligas", default="nba,ncaamb,ncaafb,nfl")
     ap.add_argument("--hilos", type=int, default=16)
     ap.add_argument("--max", type=int, default=0)
+    ap.add_argument("--desde", default="2021-10-01", help="NHL/MLB: primer dia del scoreboard")
     a = ap.parse_args()
     ruta = io.ruta(*RUTA)
     hay = {}
@@ -93,13 +141,16 @@ def main():
             for r in csv.DictReader(f):
                 hay.setdefault((r["liga"], r["game_id"]), []).append(r)
     for liga in [x.strip() for x in a.ligas.split(",") if x.strip()]:
-        fuente = io.ruta("datos", "equipos", "espn_%s_equipos.csv" % liga)
-        if not os.path.exists(fuente):
-            print("%s: sin %s" % (liga, fuente)); continue
-        juegos = {}
-        with _io.open(fuente, encoding="utf-8-sig", newline="") as f:
-            for r in csv.DictReader(f):
-                juegos[str(r["game_id"])] = (r.get("game_date") or "")[:10]
+        if liga in MESES:
+            juegos = juegos_scoreboard(liga, a.desde)
+        else:
+            fuente = io.ruta("datos", "equipos", "espn_%s_equipos.csv" % liga)
+            if not os.path.exists(fuente):
+                print("%s: sin %s" % (liga, fuente)); continue
+            juegos = {}
+            with _io.open(fuente, encoding="utf-8-sig", newline="") as f:
+                for r in csv.DictReader(f):
+                    juegos[str(r["game_id"])] = (r.get("game_date") or "")[:10]
         falta = [g for g in sorted(juegos) if (liga, g) not in hay]
         if a.max:
             falta = falta[-a.max:]

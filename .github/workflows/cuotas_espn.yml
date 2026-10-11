@@ -54,7 +54,7 @@ jobs:
           rm -rf /tmp/pub && mkdir -p /tmp/pub
           git fetch --depth=1 origin datos
           git archive FETCH_HEAD datos | tar -x -C /tmp/pub
-          mkdir -p /tmp/pub/datos/mercado && cp datos/mercado/espn_cuotas.csv /tmp/pub/datos/mercado/
+          mkdir -p /tmp/pub/datos/mercado && cp datos/mercado/espn_cuotas.csv /tmp/pub/datos/mercado/ && mkdir -p /tmp/pub/datos/equipos && cp datos/equipos/espn_*_juegos.csv /tmp/pub/datos/equipos/ 2>/dev/null || true
           cd /tmp/pub
           git init -q -b datos
           git config user.name "edgeline-bot"

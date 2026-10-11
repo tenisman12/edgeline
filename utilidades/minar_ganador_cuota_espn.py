@@ -29,8 +29,8 @@ import minar_ganador_cuota as G  # noqa: E402
 import metamodelo as MT  # noqa: E402
 from nucleo import io  # noqa: E402
 
-LIGAS = (("nba", "NBA"), ("ncaamb", "NCAAMB"), ("ncaafb", "NCAAFB"))
-SALIDA = os.path.join(CODIGO, "trabajo", "minar", "2026-10-11_ganador_cuota_espn_resultados.json")
+LIGAS = (("nba", "NBA"), ("ncaamb", "NCAAMB"), ("ncaafb", "NCAAFB"), ("nfl", "NFL"))
+SALIDA = os.path.join(CODIGO, "trabajo", "minar", "2026-10-11_ganador_cuota_espn_resultados%s.json" % (("_" + sys.argv[1].replace(",", "_")) if len(sys.argv) > 1 else ""))
 
 
 def _lg(p):
@@ -126,7 +126,10 @@ def main():
         PE[(x["liga"], x["game_id"])] = min(max((ph if ph is not None else 100 - pa) / 100.0, 0.005), 0.995)
     beta = (json.load(open(os.path.join(CODIGO, "modelos", "capa_espn.json"), encoding="utf-8")).get("ligas") or {})
     res = {"resultados": {}}
+    solo = set(sys.argv[1].split(",")) if len(sys.argv) > 1 else None
     for liga, dep in LIGAS:
+        if solo and liga not in solo:
+            continue
         filas = U[dep][0]
         loc = mapa_ids(liga, filas)
         partidos = defaultdict(list)          # fuente -> partidos (modelo base)
