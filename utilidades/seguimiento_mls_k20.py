@@ -84,12 +84,15 @@ def registrar():
 
 def resolver():
     x = _leer()
+    now = dt.datetime.now(TZ)
     juegos = {(f,h["team"],a["team"]): (futbol._f(h.get("goals")), futbol._f(h.get("goals_opp")))
               for f,_,h,a in futbol._juegos("mls")}
     nuevos = 0
     for p in x["partidos"]:
         if p["resultado"] is not None:
             continue
+        if now < dt.datetime.fromisoformat(p["inicio_local"]) + dt.timedelta(hours=3):
+            continue  # no leer un marcador parcial como resultado final
         b=p["publicado"]
         scores=juegos.get((p["fecha"],b["home_resuelto"],b["away_resuelto"]))
         if scores and None not in scores:
