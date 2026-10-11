@@ -27,10 +27,10 @@ Solo stdlib.
 import math, sys, os, datetime as _dt
 
 try:
-    from nucleo import io
+    from nucleo import io, encogimiento
 except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from nucleo import io
+    from nucleo import io, encogimiento
 
 BASE_ELO = 1500.0; K = 6.0; HFA = 35.0; REGR = 0.75; ESCALA = 400.0
 VENT_LOCAL = 0.04; SHRINK = 12; OT_LOCAL = 0.55   # ventaja local en OT
@@ -85,12 +85,12 @@ def _juegos(liga=None):
     return juegos
 
 class Eq:
-    __slots__=("elo","gf","ga","n","sv","s0","ult","fecha_ult","xf","xa","nx")
-    def __init__(s): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None; s.fecha_ult=None; s.xf=0.0; s.xa=0.0; s.nx=0.0
+    __slots__=("elo","gf","ga","n","sv","s0","ult","fecha_ult","xf","xa","nx","prior")
+    def __init__(s, prior=SHRINK): s.elo=BASE_ELO; s.gf=0.0; s.ga=0.0; s.n=0; s.sv=0.0; s.s0=0; s.ult=None; s.fecha_ult=None; s.xf=0.0; s.xa=0.0; s.nx=0.0; s.prior=prior
     def _mezcla(s, g, x, lg):
-        rg=(g+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
+        rg=(g+s.prior*lg)/(s.n+s.prior) if s.n else lg
         if XG_W<=0 or s.nx<=0: return rg
-        rx=(x+SHRINK*lg)/(s.nx+SHRINK)
+        rx=(x+s.prior*lg)/(s.nx+s.prior)
         return (1-XG_W)*rg+XG_W*rx
     def of(s,lg): return s._mezcla(s.gf, s.xf, lg)
     def df(s,lg): return s._mezcla(s.ga, s.xa, lg)
@@ -184,8 +184,9 @@ def _aplicar_b2b(xh, xa, b2b_home, b2b_away, fac):
     return max(xh,.3), max(xa,.3)
 
 
-def entrenar(liga=None, min_j=8):
+def entrenar(liga=None, min_j=8, referencia=False):
     juegos=_juegos(liga)
+    prior=encogimiento.k("hockey", liga or "nhl", referencia)
     eq={}; tot=0.0; ng=0; lg=3.0; cal=[]; b2b=_B2B()
     season=lambda f: f[:4]
     for f,gp,h,a in juegos:
@@ -195,7 +196,7 @@ def entrenar(liga=None, min_j=8):
         ah=_f(a.get("goals")) or _f(a.get("runs")); aa=_f(a.get("goals_opp")) or _f(a.get("runs_opp"))
         gh = gh if gh is not None else ah; ga_ = ga_ if ga_ is not None else aa
         if gh is None or ga_ is None: continue
-        th=eq.setdefault(h.get("team"),Eq()); ta=eq.setdefault(a.get("team"),Eq())
+        th=eq.setdefault(h.get("team"),Eq(prior)); ta=eq.setdefault(a.get("team"),Eq(prior))
         for t in (th,ta):
             if t.ult and t.ult!=season(f): t.elo=BASE_ELO+(t.elo-BASE_ELO)*REGR
             t.ult=season(f)
