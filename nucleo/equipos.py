@@ -31,6 +31,8 @@ _STOP = {"fc", "cf", "afc", "sc", "cd", "de", "la", "el", "the", "club", "and", 
 
 # nombres cortos de football-data.co.uk -> nombre completo (claves ya normalizadas)
 ALIAS = {
+    # MLS: ESPN usa LAFC; el historial guarda el nombre completo.
+    "los angeles fc": "lafc",
     # Premier
     "man city": "manchester city", "man united": "manchester united",
     "nottm forest": "nottingham forest", "newcastle": "newcastle united",
