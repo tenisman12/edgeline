@@ -50,7 +50,10 @@ ATRASO = defaultdict(lambda: 10, {
     # el chequeo marcaba las cinco ligas como atrasadas el 6-oct-2026 cuando simplemente no habia partidos.
     # 25 = 19 dias de paron + unos dias de retraso de publicacion de football-data.co.uk.
     "premier": 25, "laliga": 25, "seriea": 25, "bundesliga": 25, "ligue1": 25,
-    "ligamx": 12, "mls": 12,
+    # Liga MX tambien para en fecha FIFA: ultimo juego 28-sep-2026, vuelve el 9-oct (ESPN: Puebla-Leon), 11 dias sin
+    # partidos; mas 2-4 dias que tarda football-data.co.uk en subir /new/MEX.csv. Con 12 el chequeo se puso en rojo el
+    # 11-oct-2026 sin que faltara nada. 16 = paron de 11 dias + retraso de publicacion.
+    "ligamx": 16, "mls": 12,
     "champions": 25,                   # fase de liga cada 2-3 semanas, mas los parones
 })
 ARCHIVOS = {"beisbol.csv": ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl"),
