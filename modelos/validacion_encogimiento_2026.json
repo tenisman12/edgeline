@@ -1,0 +1,1368 @@
+{
+  "fecha_corte": "2026-10-10",
+  "metodo": "Train con juegos previos al trimestre; predicciones del trimestre sin actualización interna. Resultados 2025-2026. Selección previa de candidatos potencialmente solapada. La comparación es exploratoria, no validación final para publicar.",
+  "interpretacion": "Diferencia negativa mejora Brier, logloss y MAE. Acierto positivo mejora clasificación. Los IC por fecha tienen 1000 réplicas.",
+  "ligas": [
+    {
+      "liga": "nhl",
+      "deporte": "hockey",
+      "prior": {
+        "deporte": "hockey",
+        "liga": "nhl",
+        "k_base": 12.0,
+        "k_candidato": 20.0,
+        "k_publicado": 12.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 2264,
+        "brier": 0.243475,
+        "logloss": 0.679919,
+        "acierto": 0.552562,
+        "mae_equipo": 1.395071,
+        "mae_total": 1.863145
+      },
+      "candidato": {
+        "n": 2264,
+        "brier": 0.243449,
+        "logloss": 0.679873,
+        "acierto": 0.553445,
+        "mae_equipo": 1.392641,
+        "mae_total": 1.862372
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": -2.6e-05,
+        "logloss": -4.6e-05,
+        "acierto": 0.000883,
+        "mae_equipo": -0.00243,
+        "mae_total": -0.000773
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 580
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 218
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 631
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 556
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 207
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 8
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 64
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "por_anio": {
+        "2025": {
+          "publicado": {
+            "n": 1429,
+            "brier": 0.244484,
+            "logloss": 0.681969,
+            "acierto": 0.556333,
+            "mae_equipo": 1.391879,
+            "mae_total": 1.882323
+          },
+          "candidato": {
+            "n": 1429,
+            "brier": 0.244288,
+            "logloss": 0.681572,
+            "acierto": 0.557033,
+            "mae_equipo": 1.388639,
+            "mae_total": 1.880931
+          }
+        },
+        "2026": {
+          "publicado": {
+            "n": 835,
+            "brier": 0.241748,
+            "logloss": 0.67641,
+            "acierto": 0.546108,
+            "mae_equipo": 1.400533,
+            "mae_total": 1.830323
+          },
+          "candidato": {
+            "n": 835,
+            "brier": 0.242012,
+            "logloss": 0.676966,
+            "acierto": 0.547305,
+            "mae_equipo": 1.399491,
+            "mae_total": 1.830611
+          }
+        }
+      },
+      "ic95_delta_por_fecha": {
+        "brier": [
+          -0.000264,
+          0.00022
+        ],
+        "mae_equipo": [
+          -0.003578,
+          -0.001278
+        ],
+        "mae_total": [
+          -0.001733,
+          0.000175
+        ]
+      },
+      "sin_prior_0": {
+        "n": 2264,
+        "brier": 0.24354,
+        "logloss": 0.68005,
+        "acierto": 0.55212,
+        "mae_equipo": 1.402688,
+        "mae_total": 1.865358
+      },
+      "delta_0_menos_publicado": {
+        "brier": 6.5e-05,
+        "logloss": 0.000131,
+        "acierto": -0.000442,
+        "mae_equipo": 0.007617,
+        "mae_total": 0.002213
+      }
+    },
+    {
+      "liga": "ahl",
+      "deporte": "hockey",
+      "prior": {
+        "deporte": "hockey",
+        "liga": "ahl",
+        "k_base": 12.0,
+        "k_candidato": 30.0,
+        "k_publicado": 12.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 1875,
+        "brier": 0.246895,
+        "logloss": 0.686946,
+        "acierto": 0.557867,
+        "mae_equipo": 1.400379,
+        "mae_total": 1.843115
+      },
+      "candidato": {
+        "n": 1875,
+        "brier": 0.246683,
+        "logloss": 0.686496,
+        "acierto": 0.56,
+        "mae_equipo": 1.393456,
+        "mae_total": 1.841195
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": -0.000212,
+        "logloss": -0.00045,
+        "acierto": 0.002133,
+        "mae_equipo": -0.006923,
+        "mae_total": -0.00192
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 558
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 129
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 477
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 549
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 126
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 36
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "por_anio": {
+        "2025": {
+          "publicado": {
+            "n": 1164,
+            "brier": 0.247033,
+            "logloss": 0.6872,
+            "acierto": 0.55756,
+            "mae_equipo": 1.382135,
+            "mae_total": 1.817371
+          },
+          "candidato": {
+            "n": 1164,
+            "brier": 0.246884,
+            "logloss": 0.68689,
+            "acierto": 0.560997,
+            "mae_equipo": 1.374665,
+            "mae_total": 1.81579
+          }
+        },
+        "2026": {
+          "publicado": {
+            "n": 711,
+            "brier": 0.24667,
+            "logloss": 0.686531,
+            "acierto": 0.558368,
+            "mae_equipo": 1.430246,
+            "mae_total": 1.88526
+          },
+          "candidato": {
+            "n": 711,
+            "brier": 0.246353,
+            "logloss": 0.685849,
+            "acierto": 0.558368,
+            "mae_equipo": 1.424219,
+            "mae_total": 1.882785
+          }
+        }
+      },
+      "ic95_delta_por_fecha": {
+        "brier": [
+          -0.000566,
+          0.000164
+        ],
+        "mae_equipo": [
+          -0.010612,
+          -0.003442
+        ],
+        "mae_total": [
+          -0.004412,
+          0.000429
+        ]
+      },
+      "sin_prior_0": {
+        "n": 1875,
+        "brier": 0.24677,
+        "logloss": 0.686665,
+        "acierto": 0.559467,
+        "mae_equipo": 1.416221,
+        "mae_total": 1.846432
+      },
+      "delta_0_menos_publicado": {
+        "brier": -0.000125,
+        "logloss": -0.000281,
+        "acierto": 0.0016,
+        "mae_equipo": 0.015842,
+        "mae_total": 0.003317
+      }
+    },
+    {
+      "liga": "del",
+      "deporte": "hockey",
+      "prior": {
+        "deporte": "hockey",
+        "liga": "del",
+        "k_base": 12.0,
+        "k_candidato": 15.0,
+        "k_publicado": 12.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 522,
+        "brier": 0.223406,
+        "logloss": 0.637865,
+        "acierto": 0.643678,
+        "mae_equipo": 1.398975,
+        "mae_total": 1.855613
+      },
+      "candidato": {
+        "n": 522,
+        "brier": 0.223617,
+        "logloss": 0.638364,
+        "acierto": 0.641762,
+        "mae_equipo": 1.399071,
+        "mae_total": 1.853812
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.000211,
+        "logloss": 0.000499,
+        "acierto": -0.001916,
+        "mae_equipo": 9.6e-05,
+        "mae_total": -0.001801
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 146
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 36
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 197
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 125
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 18
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 522,
+        "brier": 0.225465,
+        "logloss": 0.642334,
+        "acierto": 0.636015,
+        "mae_equipo": 1.418822,
+        "mae_total": 1.873314
+      },
+      "delta_0_menos_publicado": {
+        "brier": 0.002059,
+        "logloss": 0.004469,
+        "acierto": -0.007663,
+        "mae_equipo": 0.019847,
+        "mae_total": 0.017701
+      }
+    },
+    {
+      "liga": "liiga",
+      "deporte": "hockey",
+      "prior": {
+        "deporte": "hockey",
+        "liga": "liiga",
+        "k_base": 12.0,
+        "k_candidato": 30.0,
+        "k_publicado": 12.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 763,
+        "brier": 0.237856,
+        "logloss": 0.668426,
+        "acierto": 0.593709,
+        "mae_equipo": 1.347818,
+        "mae_total": 1.753761
+      },
+      "candidato": {
+        "n": 763,
+        "brier": 0.239197,
+        "logloss": 0.671199,
+        "acierto": 0.583224,
+        "mae_equipo": 1.350819,
+        "mae_total": 1.764535
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.001341,
+        "logloss": 0.002773,
+        "acierto": -0.010485,
+        "mae_equipo": 0.003001,
+        "mae_total": 0.010774
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 193
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 62
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 213
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 205
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 61
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 29
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 763,
+        "brier": 0.23789,
+        "logloss": 0.668517,
+        "acierto": 0.592398,
+        "mae_equipo": 1.346992,
+        "mae_total": 1.738427
+      },
+      "delta_0_menos_publicado": {
+        "brier": 3.4e-05,
+        "logloss": 9.1e-05,
+        "acierto": -0.001311,
+        "mae_equipo": -0.000826,
+        "mae_total": -0.015334
+      }
+    },
+    {
+      "liga": "nfl",
+      "deporte": "americano",
+      "prior": {
+        "deporte": "americano",
+        "liga": "nfl",
+        "k_base": 6.0,
+        "k_candidato": 5.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 378,
+        "brier": 0.240707,
+        "logloss": 0.677652,
+        "acierto": 0.603175,
+        "mae_equipo": 7.739947,
+        "mae_total": 11.072487
+      },
+      "candidato": {
+        "n": 378,
+        "brier": 0.240707,
+        "logloss": 0.677652,
+        "acierto": 0.603175,
+        "mae_equipo": 7.740608,
+        "mae_total": 11.072487
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.0,
+        "logloss": 0.0,
+        "acierto": 0.0,
+        "mae_equipo": 0.000661,
+        "mae_total": 0.0
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 29
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 63
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 192
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 29
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 48
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 17
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 378,
+        "brier": 0.240707,
+        "logloss": 0.677652,
+        "acierto": 0.603175,
+        "mae_equipo": 7.73955,
+        "mae_total": 11.071693
+      },
+      "delta_0_menos_publicado": {
+        "brier": 0.0,
+        "logloss": 0.0,
+        "acierto": 0.0,
+        "mae_equipo": -0.000397,
+        "mae_total": -0.000794
+      }
+    },
+    {
+      "liga": "ncaafb",
+      "deporte": "americano",
+      "prior": {
+        "deporte": "americano",
+        "liga": "ncaafb",
+        "k_base": 6.0,
+        "k_candidato": 0.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 1380,
+        "brier": 0.183879,
+        "logloss": 0.545706,
+        "acierto": 0.717391,
+        "mae_equipo": 10.835761,
+        "mae_total": 12.852101
+      },
+      "candidato": {
+        "n": 1380,
+        "brier": 0.183879,
+        "logloss": 0.545706,
+        "acierto": 0.717391,
+        "mae_equipo": 10.837355,
+        "mae_total": 12.842029
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.0,
+        "logloss": 0.0,
+        "acierto": 0.0,
+        "mae_equipo": 0.001594,
+        "mae_total": -0.010072
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 11
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 368
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 575
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 10
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 325
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 91
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 1380,
+        "brier": 0.183879,
+        "logloss": 0.545706,
+        "acierto": 0.717391,
+        "mae_equipo": 10.837355,
+        "mae_total": 12.842029
+      },
+      "delta_0_menos_publicado": {
+        "brier": 0.0,
+        "logloss": 0.0,
+        "acierto": 0.0,
+        "mae_equipo": 0.001594,
+        "mae_total": -0.010072
+      }
+    },
+    {
+      "liga": "nba",
+      "deporte": "nba",
+      "prior": {
+        "deporte": "nba",
+        "liga": "nba",
+        "k_base": 8.0,
+        "k_candidato": 8.0,
+        "k_publicado": 8.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 2150,
+        "brier": 0.223832,
+        "logloss": 0.639732,
+        "acierto": 0.643256,
+        "mae_equipo": 10.018,
+        "mae_total": 15.90186
+      },
+      "candidato": {
+        "n": 2150,
+        "brier": 0.223832,
+        "logloss": 0.639732,
+        "acierto": 0.643256,
+        "mae_equipo": 10.018,
+        "mae_total": 15.90186
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.0,
+        "logloss": 0.0,
+        "acierto": 0.0,
+        "mae_equipo": 0.0,
+        "mae_total": 0.0
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 639
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 195
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 493
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 636
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 187
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 2150,
+        "brier": 0.223744,
+        "logloss": 0.639464,
+        "acierto": 0.643256,
+        "mae_equipo": 10.01814,
+        "mae_total": 15.896419
+      },
+      "delta_0_menos_publicado": {
+        "brier": -8.8e-05,
+        "logloss": -0.000268,
+        "acierto": 0.0,
+        "mae_equipo": 0.00014,
+        "mae_total": -0.005441
+      }
+    },
+    {
+      "liga": "ligamx",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "ligamx",
+        "k_base": 6.0,
+        "k_candidato": 10.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 584,
+        "brier": 0.198268,
+        "logloss": 0.997135,
+        "acierto": 0.532534,
+        "mae_equipo": 0.908716,
+        "mae_total": 1.368219
+      },
+      "candidato": {
+        "n": 584,
+        "brier": 0.198374,
+        "logloss": 0.997617,
+        "acierto": 0.532534,
+        "mae_equipo": 0.908921,
+        "mae_total": 1.365257
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.000106,
+        "logloss": 0.000482,
+        "acierto": 0.0,
+        "mae_equipo": 0.000205,
+        "mae_total": -0.002962
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 117
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 53
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 99
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 70
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 107
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 60
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 78
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 584,
+        "brier": 0.198214,
+        "logloss": 0.996846,
+        "acierto": 0.525685,
+        "mae_equipo": 0.91,
+        "mae_total": 1.374812
+      },
+      "delta_0_menos_publicado": {
+        "brier": -5.4e-05,
+        "logloss": -0.000289,
+        "acierto": -0.006849,
+        "mae_equipo": 0.001284,
+        "mae_total": 0.006593
+      }
+    },
+    {
+      "liga": "mls",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "mls",
+        "k_base": 6.0,
+        "k_candidato": 20.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 939,
+        "brier": 0.211374,
+        "logloss": 1.054039,
+        "acierto": 0.473908,
+        "mae_equipo": 1.002998,
+        "mae_total": 1.457306
+      },
+      "candidato": {
+        "n": 939,
+        "brier": 0.211087,
+        "logloss": 1.052594,
+        "acierto": 0.473908,
+        "mae_equipo": 0.999702,
+        "mae_total": 1.444995
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": -0.000287,
+        "logloss": -0.001445,
+        "acierto": 0.0,
+        "mae_equipo": -0.003296,
+        "mae_total": -0.012311
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 83
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 202
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 182
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 67
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 74
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 144
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 184
+        },
+        {
+          "inicio": "2026-10",
+          "fin": "2027-01",
+          "n": 3
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "por_anio": {
+        "2025": {
+          "publicado": {
+            "n": 534,
+            "brier": 0.209234,
+            "logloss": 1.044766,
+            "acierto": 0.486891,
+            "mae_equipo": 0.987107,
+            "mae_total": 1.462809
+          },
+          "candidato": {
+            "n": 534,
+            "brier": 0.209485,
+            "logloss": 1.045726,
+            "acierto": 0.485019,
+            "mae_equipo": 0.984541,
+            "mae_total": 1.445918
+          }
+        },
+        "2026": {
+          "publicado": {
+            "n": 405,
+            "brier": 0.214195,
+            "logloss": 1.066265,
+            "acierto": 0.45679,
+            "mae_equipo": 1.023951,
+            "mae_total": 1.450049
+          },
+          "candidato": {
+            "n": 405,
+            "brier": 0.213199,
+            "logloss": 1.061651,
+            "acierto": 0.459259,
+            "mae_equipo": 1.019691,
+            "mae_total": 1.443778
+          }
+        }
+      },
+      "ic95_delta_por_fecha": {
+        "brier": [
+          -0.00079,
+          0.000204
+        ],
+        "mae_equipo": [
+          -0.006523,
+          -0.000381
+        ],
+        "mae_total": [
+          -0.017825,
+          -0.006923
+        ]
+      },
+      "sin_prior_0": {
+        "n": 939,
+        "brier": 0.211643,
+        "logloss": 1.055353,
+        "acierto": 0.472843,
+        "mae_equipo": 1.006363,
+        "mae_total": 1.466539
+      },
+      "delta_0_menos_publicado": {
+        "brier": 0.000269,
+        "logloss": 0.001314,
+        "acierto": -0.001065,
+        "mae_equipo": 0.003365,
+        "mae_total": 0.009233
+      }
+    },
+    {
+      "liga": "ligue1",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "ligue1",
+        "k_base": 6.0,
+        "k_candidato": 8.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 510,
+        "brier": 0.196553,
+        "logloss": 0.9901,
+        "acierto": 0.535294,
+        "mae_equipo": 0.989206,
+        "mae_total": 1.420804
+      },
+      "candidato": {
+        "n": 510,
+        "brier": 0.196587,
+        "logloss": 0.990267,
+        "acierto": 0.539216,
+        "mae_equipo": 0.987961,
+        "mae_total": 1.41998
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 3.4e-05,
+        "logloss": 0.000167,
+        "acierto": 0.003922,
+        "mae_equipo": -0.001245,
+        "mae_total": -0.000824
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 107
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 63
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 48
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 90
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 98
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 64
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 40
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 510,
+        "brier": 0.196625,
+        "logloss": 0.990378,
+        "acierto": 0.529412,
+        "mae_equipo": 0.995745,
+        "mae_total": 1.429608
+      },
+      "delta_0_menos_publicado": {
+        "brier": 7.2e-05,
+        "logloss": 0.000278,
+        "acierto": -0.005882,
+        "mae_equipo": 0.006539,
+        "mae_total": 0.008804
+      }
+    },
+    {
+      "liga": "bundesliga",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "bundesliga",
+        "k_base": 6.0,
+        "k_candidato": 10.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 500,
+        "brier": 0.198083,
+        "logloss": 0.997197,
+        "acierto": 0.516,
+        "mae_equipo": 0.99287,
+        "mae_total": 1.37088
+      },
+      "candidato": {
+        "n": 500,
+        "brier": 0.198288,
+        "logloss": 0.998061,
+        "acierto": 0.514,
+        "mae_equipo": 0.99584,
+        "mae_total": 1.37328
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.000205,
+        "logloss": 0.000864,
+        "acierto": -0.002,
+        "mae_equipo": 0.00297,
+        "mae_total": 0.0024
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 108
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 63
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 40
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 90
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 108
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 63
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 28
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 500,
+        "brier": 0.198129,
+        "logloss": 0.997727,
+        "acierto": 0.518,
+        "mae_equipo": 0.99417,
+        "mae_total": 1.36942
+      },
+      "delta_0_menos_publicado": {
+        "brier": 4.6e-05,
+        "logloss": 0.00053,
+        "acierto": 0.002,
+        "mae_equipo": 0.0013,
+        "mae_total": -0.00146
+      }
+    },
+    {
+      "liga": "laliga",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "laliga",
+        "k_base": 6.0,
+        "k_candidato": 8.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 621,
+        "brier": 0.193473,
+        "logloss": 0.978086,
+        "acierto": 0.52657,
+        "mae_equipo": 0.831232,
+        "mae_total": 1.230934
+      },
+      "candidato": {
+        "n": 621,
+        "brier": 0.193647,
+        "logloss": 0.9789,
+        "acierto": 0.52657,
+        "mae_equipo": 0.830725,
+        "mae_total": 1.229855
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 0.000174,
+        "logloss": 0.000814,
+        "acierto": 0.0,
+        "mae_equipo": -0.000507,
+        "mae_total": -0.001079
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 108
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 91
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 63
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 101
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 119
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 90
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 49
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 621,
+        "brier": 0.193056,
+        "logloss": 0.975898,
+        "acierto": 0.52657,
+        "mae_equipo": 0.83529,
+        "mae_total": 1.235588
+      },
+      "delta_0_menos_publicado": {
+        "brier": -0.000417,
+        "logloss": -0.002188,
+        "acierto": 0.0,
+        "mae_equipo": 0.004058,
+        "mae_total": 0.004654
+      }
+    },
+    {
+      "liga": "premier",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "premier",
+        "k_base": 6.0,
+        "k_candidato": 8.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 607,
+        "brier": 0.200678,
+        "logloss": 1.004878,
+        "acierto": 0.507414,
+        "mae_equipo": 0.909835,
+        "mae_total": 1.2843
+      },
+      "candidato": {
+        "n": 607,
+        "brier": 0.200739,
+        "logloss": 1.005255,
+        "acierto": 0.507414,
+        "mae_equipo": 0.909794,
+        "mae_total": 1.282883
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": 6.1e-05,
+        "logloss": 0.000377,
+        "acierto": 0.0,
+        "mae_equipo": -4.1e-05,
+        "mae_total": -0.001417
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 101
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 91
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 54
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 126
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 123
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 71
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 41
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 607,
+        "brier": 0.200518,
+        "logloss": 1.003895,
+        "acierto": 0.505766,
+        "mae_equipo": 0.9121,
+        "mae_total": 1.290725
+      },
+      "delta_0_menos_publicado": {
+        "brier": -0.00016,
+        "logloss": -0.000983,
+        "acierto": -0.001648,
+        "mae_equipo": 0.002265,
+        "mae_total": 0.006425
+      }
+    },
+    {
+      "liga": "seriea",
+      "deporte": "futbol",
+      "prior": {
+        "deporte": "futbol",
+        "liga": "seriea",
+        "k_base": 6.0,
+        "k_candidato": 5.0,
+        "k_publicado": 6.0,
+        "estado": "solo_referencia"
+      },
+      "publicado": {
+        "n": 627,
+        "brier": 0.196539,
+        "logloss": 0.987983,
+        "acierto": 0.527911,
+        "mae_equipo": 0.841994,
+        "mae_total": 1.218086
+      },
+      "candidato": {
+        "n": 627,
+        "brier": 0.196414,
+        "logloss": 0.987423,
+        "acierto": 0.527911,
+        "mae_equipo": 0.84201,
+        "mae_total": 1.218118
+      },
+      "delta_candidato_menos_publicado": {
+        "brier": -0.000125,
+        "logloss": -0.00056,
+        "acierto": 0.0,
+        "mae_equipo": 1.6e-05,
+        "mae_total": 3.2e-05
+      },
+      "ventanas": [
+        {
+          "inicio": "2025-01",
+          "fin": "2025-04",
+          "n": 122
+        },
+        {
+          "inicio": "2025-04",
+          "fin": "2025-07",
+          "n": 80
+        },
+        {
+          "inicio": "2025-07",
+          "fin": "2025-10",
+          "n": 45
+        },
+        {
+          "inicio": "2025-10",
+          "fin": "2026-01",
+          "n": 116
+        },
+        {
+          "inicio": "2026-01",
+          "fin": "2026-04",
+          "n": 134
+        },
+        {
+          "inicio": "2026-04",
+          "fin": "2026-07",
+          "n": 80
+        },
+        {
+          "inicio": "2026-07",
+          "fin": "2026-10",
+          "n": 50
+        }
+      ],
+      "nota": "Candidato exploratorio: ventanas trimestrales; seleccion previa de k no independiente.",
+      "sin_prior_0": {
+        "n": 627,
+        "brier": 0.195717,
+        "logloss": 0.984153,
+        "acierto": 0.529506,
+        "mae_equipo": 0.84378,
+        "mae_total": 1.220734
+      },
+      "delta_0_menos_publicado": {
+        "brier": -0.000822,
+        "logloss": -0.00383,
+        "acierto": 0.001595,
+        "mae_equipo": 0.001786,
+        "mae_total": 0.002648
+      }
+    }
+  ],
+  "sin_candidato": [
+    "shl",
+    "ncaamb",
+    "champions",
+    "atp",
+    "wta"
+  ],
+  "decision": "No activar nuevos priors: NHL y MLS tienen Brier peor en uno de los dos años; AHL Brier y total con IC95% que incluyen cero. MLB k100 queda como único habilitado por prueba previa del motor completo."
+}
