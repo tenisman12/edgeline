@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-11T19:14:31Z",
+ "generado": "2026-10-11T23:58:23Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -46,18 +46,18 @@
    "w_usado": 0.36
   },
   "nhl|Ganador": {
-   "w_vivo": 0.2,
-   "n": 66,
-   "mejora_milesimas": 0.344,
-   "z": 0.11,
+   "w_vivo": 0.35,
+   "n": 68,
+   "mejora_milesimas": 1.022,
+   "z": 0.2,
    "mitades": [
-    2.287,
-    -1.598
+    3.899,
+    -1.855
    ],
-   "brier_pinnacle": 0.2272,
-   "brier_modelo": 0.2293,
+   "brier_pinnacle": 0.2298,
+   "brier_modelo": 0.2308,
    "previo": 0.5,
-   "w_usado": 0.446
+   "w_usado": 0.472
   },
   "wta|Ganador": {
    "w_vivo": 1.0,
@@ -75,17 +75,17 @@
   },
   "nhl|Total": {
    "w_vivo": 1.0,
-   "n": 47,
-   "mejora_milesimas": 8.754,
-   "z": 0.67,
+   "n": 48,
+   "mejora_milesimas": 6.146,
+   "z": 0.47,
    "mitades": [
-    8.948,
-    8.569
+    9.938,
+    2.353
    ],
-   "brier_pinnacle": 0.2503,
-   "brier_modelo": 0.2459,
+   "brier_pinnacle": 0.2509,
+   "brier_modelo": 0.2478,
    "previo": 0.5,
-   "w_usado": 0.568
+   "w_usado": 0.569
   },
   "ncaafb|Spread": {
    "w_vivo": 0.6,
@@ -103,17 +103,17 @@
   },
   "nhl|Spread": {
    "w_vivo": 1.0,
-   "n": 31,
-   "mejora_milesimas": 153.881,
-   "z": 1.71,
+   "n": 32,
+   "mejora_milesimas": 148.211,
+   "z": 1.7,
    "mitades": [
-    180.022,
+    167.047,
     129.374
    ],
-   "brier_pinnacle": 0.2942,
-   "brier_modelo": 0.2203,
+   "brier_pinnacle": 0.2886,
+   "brier_modelo": 0.2175,
    "previo": 0.5,
-   "w_usado": 0.547
+   "w_usado": 0.548
   },
   "kbo|Total": {
    "w_vivo": 1.0,
@@ -142,6 +142,34 @@
    "brier_modelo": 0.246,
    "previo": 0.25,
    "w_usado": 0.318
+  },
+  "nfl|Ganador": {
+   "w_vivo": 0.4,
+   "n": 27,
+   "mejora_milesimas": 5.736,
+   "z": 0.28,
+   "mitades": [
+    0.753,
+    10.363
+   ],
+   "brier_pinnacle": 0.1984,
+   "brier_modelo": 0.2076,
+   "previo": 0.0,
+   "w_usado": 0.033
+  },
+  "nfl|Total": {
+   "w_vivo": 0.0,
+   "n": 25,
+   "mejora_milesimas": 0.0,
+   "z": 0.7,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2491,
+   "brier_modelo": 0.2714,
+   "previo": 0.0,
+   "w_usado": 0.0
   },
   "kbo|Spread": {
    "w_vivo": 1.0,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-11T23:22:14",
+ "generado": "2026-10-11T23:54:06",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -205,20 +205,20 @@
    "hora": "23:00",
    "home": "Lions",
    "away": "Fighters",
-   "p_modelo": 0.5142,
+   "p_modelo": 0.5105,
    "p_sharp": 0.5325,
-   "p_final": 0.5142,
+   "p_final": 0.5105,
    "fuente": "modelo (Pinnacle de referencia 53.2%)",
-   "p_mezcla": 0.5279,
-   "margen_esperado": 0.15,
+   "p_mezcla": 0.527,
+   "margen_esperado": 0.11,
    "linea_home": "-1.5",
-   "p_runline_home": 0.3277,
+   "p_runline_home": 0.3249,
    "detalle_modelo": {
-    "elo_h": 1531.0,
-    "elo_a": 1552.9,
-    "dif_h": 0.278,
-    "dif_a": 0.424,
-    "p_base": 0.512,
+    "elo_h": 1528.9,
+    "elo_a": 1555.0,
+    "dif_h": 0.269,
+    "dif_a": 0.428,
+    "p_base": 0.5075,
     "abridor_h": {
      "nombre": "武内",
      "fip_ventana": 3.29,
@@ -228,8 +228,8 @@
      "ip_ventana": "34.0",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.34,
-     "ga_equipo": 3.236
+     "era_ajustada": 3.33,
+     "ga_equipo": 3.221
     },
     "abridor_a": {
      "nombre": "伊藤",
@@ -240,10 +240,10 @@
      "ip_ventana": "108.2",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.84,
-     "ga_equipo": 3.694
+     "era_ajustada": 3.83,
+     "ga_equipo": 3.669
     },
-    "carreras_abridor": 0.02,
+    "carreras_abridor": 0.03,
     "frio_caliente": 0
    },
    "lados": [
@@ -251,138 +251,128 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Lions",
-     "p": 0.5142,
+     "p": 0.5105,
      "cuota": -121.0,
      "decimal": 1.826,
      "casa": "pinnacle",
-     "ev": -0.0609,
-     "cuota_min": 1.94,
+     "ev": -0.0676,
+     "cuota_min": 1.96,
      "en_rango": true,
-     "senales_favor": 4,
+     "senales_favor": 2,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
-       "forma",
        "consenso",
-       "osciladores",
-       "racha"
+       "osciladores"
       ],
       "en_contra": [
        "h2h",
        "abridor"
       ]
      },
-     "premium_nivel": "lean",
-     "premium_pts": 45.3
+     "premium_nivel": "pasar",
+     "premium_pts": 40.9
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Fighters",
-     "p": 0.4858,
+     "p": 0.4895,
      "cuota": 109.0,
      "decimal": 2.09,
      "casa": "betonlineag",
-     "ev": 0.0154,
-     "cuota_min": 2.06,
+     "ev": 0.0231,
+     "cuota_min": 2.04,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 4,
+     "senales_contra": 2,
      "senales": {
       "a_favor": [
        "h2h",
        "abridor"
       ],
       "en_contra": [
-       "forma",
        "consenso",
-       "osciladores",
-       "racha"
+       "osciladores"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.5
+     "premium_pts": 44.0
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Lions -1.5",
-     "p": 0.3277,
+     "p": 0.3249,
      "cuota": 220.0,
      "decimal": 3.2,
      "casa": "pinnacle",
-     "ev": 0.0487,
-     "cuota_min": 3.05,
+     "ev": 0.0397,
+     "cuota_min": 3.08,
      "en_rango": true,
-     "senales_favor": 3,
+     "senales_favor": 1,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
-       "forma",
-       "osciladores",
-       "racha"
+       "osciladores"
       ],
       "en_contra": [
        "abridor"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.8
+     "premium_pts": 34.5
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Fighters +1.5",
-     "p": 0.6723,
+     "p": 0.6751,
      "cuota": -233.0,
      "decimal": 1.429,
      "casa": "coolbet",
-     "ev": -0.0392,
+     "ev": -0.0352,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 1,
-     "senales_contra": 3,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "abridor"
       ],
       "en_contra": [
-       "forma",
-       "osciladores",
-       "racha"
+       "osciladores"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 45.6
+     "premium_pts": 50.9
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "away",
     "texto": "Fighters",
-    "p": 0.4858,
+    "p": 0.4895,
     "cuota": 109.0,
     "decimal": 2.09,
     "casa": "betonlineag",
-    "ev": 0.0154,
-    "cuota_min": 2.06,
+    "ev": 0.0231,
+    "cuota_min": 2.04,
     "en_rango": true,
     "senales_favor": 2,
-    "senales_contra": 4,
+    "senales_contra": 2,
     "senales": {
      "a_favor": [
       "h2h",
       "abridor"
      ],
      "en_contra": [
-      "forma",
       "consenso",
-      "osciladores",
-      "racha"
+      "osciladores"
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 39.5
+    "premium_pts": 44.0
    },
    "confianza": "baja",
    "stake": 0.01,
