@@ -19,6 +19,29 @@ jobs:
             resumen=$( (curl -sS -L -A "$ua" --max-time 40 -o /tmp/r2 -w "HTTP %{http_code} %{size_download}B" "$1"; echo " | "; (zcat -f /tmp/r2 2>/dev/null || cat /tmp/r2) | head -c 600 | tr -d '\000' | tr '\n\r' '  ') 2>&1 | tr '\n' ' ' | sed 's/%/%25/g')
             echo "::notice title=$2::$resumen"
           }
+          probar "http://www.tennis-data.co.uk/2024/2024.xlsx" "t1"
+          probar "http://www.tennis-data.co.uk/2024w/2024.xlsx" "t2"
+          probar "http://www.tennis-data.co.uk/alldata.php" "t3"
+          probar "https://www.sportsbookreviewsonline.com/scoresoddsarchives/nhl/nhl%20odds%202021-22.xlsx" "s1"
+          probar "https://www.sportsbookreviewsonline.com/scoresoddsarchives/mlb/mlb%20odds%202021.xlsx" "s2"
+          probar "https://www.sportsbookreviewsonline.com/scoresoddsarchives/nba/nba%20odds%202021-22.xlsx" "s3"
+          probar "https://www.sportsbookreviewsonline.com/scoresoddsarchives/nhl-odds-2021-22" "s4"
+          python3 - <<'PY'
+          import json, urllib.request
+          ua = {"User-Agent": "Mozilla/5.0"}
+          for tag, url in (("e1", "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401859967"),
+                           ("e2", "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401856600"),
+                           ("e3", "https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/401859967/competitions/401859967/odds"),
+                           ("e4", "https://sports.core.api.espn.com/v2/sports/hockey/leagues/nhl/events/401802255/competitions/401802255/odds"),
+                           ("e5", "https://sports.core.api.espn.com/v2/sports/baseball/leagues/mlb/events/401696221/competitions/401696221/odds")):
+              try:
+                  d = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers=ua), timeout=40).read())
+                  pc = d.get("pickcenter") if "pickcenter" in d else d.get("items")
+                  txt = json.dumps(pc)[:700] if pc is not None else ("claves: " + ",".join(list(d)[:20]))
+              except Exception as e:
+                  txt = "error %s" % e
+              print("::notice title=%s::%s" % (tag, txt.replace("%", "%25").replace("\n", " ")))
+          PY
           probar "https://barttorvik.com/2025_super_sked.csv" "p1"
           probar "https://barttorvik.com/trank.php?year=2025&csv=1" "p2"
           probar "https://barttorvik.com/2025_team_results.csv" "p3"
