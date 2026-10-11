@@ -54,10 +54,14 @@ ALIAS = {
     "paris sg": "paris saint germain", "st etienne": "saint etienne",
     # LaLiga 2026-27 (ascendido): football-data lo llama "La Coruna"; ESPN "Deportivo" (11-oct-2026 empataba con Alaves)
     "la coruna": "deportivo la coruna",
+    # MLS: football-data dice "Atlanta Utd"; ESPN solo manda "Atlanta United FC" (11-oct-2026 revision lo marco mal casado)
+    "atlanta utd": "atlanta united",
 }
 
 # nombres de ESPN -> nombre normalizado comparable (lado de ESPN). FC Cologne = FC Koln (11-oct-2026 salia sin modelo).
-ALIAS_ESPN = {"internazionale": "inter milan", "stade rennais": "rennes", "fc cologne": "koln", "cologne": "koln", "deportivo": "deportivo la coruna", "deportivo la coruna": "deportivo la coruna"}
+ALIAS_ESPN = {"internazionale": "inter milan", "stade rennais": "rennes", "fc cologne": "koln", "cologne": "koln", "deportivo": "deportivo la coruna", "deportivo la coruna": "deportivo la coruna",
+              # MLS (11-oct-2026: D.C. United y LAFC salian sin modelo; ESPN solo manda displayName y abreviatura)
+              "d c united": "dc united", "lafc": "los angeles fc"}
 
 # palabras que por si solas no identifican a un equipo: un empate que solo coincide en ellas no vale
 # ("Deportivo" contra "Deportivo Alaves", "Real" contra "Real Madrid").

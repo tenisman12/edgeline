@@ -498,15 +498,21 @@ def revisar_integridad():
                     sin_casar.append("%s %s" % (p["liga"].upper(), nombre))
                 continue
             es_abrev = clave.isupper() and len(clave) <= 4
-            variantes = [x for x in (nombre, e.get("corto"), e.get("loc")) if x]
+            variantes = [x for x in (nombre, e.get("corto"), e.get("loc"),
+                                     ("%s %s" % (e.get("loc"), e.get("corto"))) if e.get("loc") and e.get("corto") else None) if x]
             if not es_abrev and EQ.Emparejador([clave]).buscar(variantes, e.get("abrev"))[0] != clave:
                 malos.append("%s: ESPN '%s' -> datos '%s'" % (p["liga"].upper(), nombre, clave))
             n_tot = total.get((p["liga"].replace(" ", ""), clave), 0)
             if 0 < n_tot < 15:
-                poca_hist.add("%s %s (%d partidos en tus datos)" % (p["liga"].upper(), clave, n_tot))
+                poca_hist.add("%s %s (%d partidos en tus datos%s)" % (
+                    p["liga"].upper(), clave, n_tot, "; FCS: solo sus juegos contra FBS" if p["liga"] == "ncaafb" else ""))
             # (b) partidos de la temporada: los que dice el record de ESPN contra los que hay en tus datos
             rec = str(e.get("record") or "")
-            if re.fullmatch(r"\d+(-\d+){1,2}", rec) and not p.get("pretemporada"):
+            # NCAAFB: los equipos FCS (Elon, The Citadel...) solo aparecen en tus datos cuando juegan contra un FBS; su
+            # record de ESPN cuenta los juegos FCS contra FCS, que la fuente no trae. Con menos de 15 partidos ya salen
+            # en el aviso de poca historia y no pueden ser pick (MIN_HISTORIA): no es un faltante del colector.
+            fcs = p["liga"] == "ncaafb" and 0 < n_tot < 15
+            if re.fullmatch(r"\d+(-\d+){1,2}", rec) and not p.get("pretemporada") and not fcs:
                 jugados = sum(int(x) for x in rec.split("-"))
                 hay = temp.get((p["liga"].replace(" ", ""), clave), 0)
                 if jugados - hay >= 2:
