@@ -29,6 +29,7 @@ Prueba (en C:\\Edgeline, ya con datos/beisbol.csv):
     python -c "import sys; sys.path.insert(0,'.'); from nucleo import features; features.diagnostico('beisbol')"
 """
 import math, datetime as _dt
+from itertools import groupby
 
 try:
     from nucleo import io
@@ -148,6 +149,13 @@ class _Acum:
 
 # ------------------------------------------------------------------ armado as-of
 STATS = ["cs", "ca", "obp", "iso", "k_pct", "bb_pct", "fip", "k9", "bb9", "hr9", "whip"]
+# Seleccionado antes de evaluar MLB 2025-26: 4,773 partidos resueltos,
+# Brier .24550 -> .24473, MAE equipo 2.5132 -> 2.5000,
+# MAE total 3.6105 -> 3.5817. No se activa en las otras ligas.
+K_CARRERAS_LIGA = {"mlb": 100.0}
+
+def k_carreras(liga, override=None):
+    return float(override) if override is not None else K_CARRERAS_LIGA.get(io.norm(liga), 6.0)
 
 def _emparejar(filas):
     """El CSV trae 2 filas por juego (una por equipo). Las une en (home, away)."""
@@ -170,7 +178,8 @@ def _emparejar(filas):
     juegos.sort(key=lambda t: (t[0], t[1]))
     return juegos
 
-def construir(deporte="beisbol", liga=None, min_juegos=5, elo=None):
+def construir(deporte="beisbol", liga=None, min_juegos=5, elo=None,
+             encogimiento_carreras=None):
     """
     Devuelve (features, saltados). features es lista de dicts as-of.
     min_juegos: no emite el juego hasta que AMBOS equipos tengan >= min_juegos.
@@ -189,54 +198,68 @@ def construir(deporte="beisbol", liga=None, min_juegos=5, elo=None):
         set_elo(ELO_HFA, ELO_K, ELO_REGR)
     filas = io.cargar_juegos(deporte, liga)
     juegos = _emparejar(filas)
-    # media de liga-temporada para encoger (Marcel), calculada en una pasada previa
-    lg_stats = _medias_liga_temporada(juegos)
+    # Media de la liga hasta el día anterior. La media final de la temporada
+    # no es conocida al momento de predecir cada partido histórico.
+    lg_live = {}
     acum = {}          # (liga, season, team) -> _Acum
     out, saltados = [], 0
 
-    for f, gp, h, a in juegos:
-        lg = io.norm(h.get("league") or h.get("liga"))
-        season = str(h.get("season") or f.year)
-        th = _clave(acum, lg, season, h.get("team"))
-        ta = _clave(acum, lg, season, a.get("team"))
-        csh, cah = _f(h.get("runs")), _f(h.get("runs_opp"))
-        csa, caa = _f(a.get("runs")), _f(a.get("runs_opp"))
-        if None in (csh, csa):
-            saltados += 1; continue
-
-        pre_h, pre_a = th.tasas(), ta.tasas()
-        listo = th.j >= min_juegos and ta.j >= min_juegos and pre_h and pre_a
-        if listo:
-            med = lg_stats.get((lg, season)) or {}
+    for f, same_day in groupby(juegos, key=lambda t: t[0]):
+        day = list(same_day)
+        for _, gp, h, a in day:
+            lg = io.norm(h.get("league") or h.get("liga"))
+            season = str(h.get("season") or f.year)
+            th = _clave(acum, lg, season, h.get("team"))
+            ta = _clave(acum, lg, season, a.get("team"))
+            csh, csa = _f(h.get("runs")), _f(a.get("runs"))
+            if None in (csh, csa) or (csh == 0 and csa == 0):
+                saltados += 1; continue
+            pre_h, pre_a = th.tasas(), ta.tasas()
+            listo = th.j >= min_juegos and ta.j >= min_juegos and pre_h and pre_a
+            if not listo:
+                continue
+            live = lg_live.get((lg, season))
+            med = (live.tasas() if live else None) or {}
+            k = k_carreras(lg, encogimiento_carreras)
             fila = {"gamePk": gp, "league": lg, "season": season,
                     "game_date": f.isoformat(),
                     "home": h.get("team"), "away": a.get("team"),
                     "y_home": 1 if csh > csa else 0,
-                    "total": (csh or 0) + (csa or 0),
-                    "marg_home": (csh or 0) - (csa or 0),
-                    "cubierto_rl": 1 if ((csh or 0) - (csa or 0)) >= 2 else 0,
+                    "total": csh + csa,
+                    "marg_home": csh - csa,
+                    "cubierto_rl": 1 if csh - csa >= 2 else 0,
                     "elo_home": round(th.elo, 1), "elo_away": round(ta.elo, 1),
                     "elo_dif": round(th.elo + _HFA - ta.elo, 1),
                     "descanso_dif": _descanso(th, f) - _descanso(ta, f)}
             for s in STATS:
-                vh = _encoge(pre_h.get(s), med.get(s), th.j)
-                va = _encoge(pre_a.get(s), med.get(s), ta.j)
+                strength = k if s in ("cs", "ca") else 6.0
+                vh = _encoge(pre_h.get(s), med.get(s), th.j, strength)
+                va = _encoge(pre_a.get(s), med.get(s), ta.j, strength)
                 fila[s + "_dif"] = (round(vh - va, 4) if (vh is not None and va is not None) else None)
-            # NIVELES para TOTALES (no diferencias): carreras anotadas/permitidas as-of
-            # de cada equipo, mas el ritmo de carreras de la liga. Con esto se estima
-            # el total esperado (Log5 de carreras), que las diferencias no permiten.
-            fila["of_home"] = round(_encoge(pre_h.get("cs"), med.get("cs"), th.j), 3)
-            fila["of_away"] = round(_encoge(pre_a.get("cs"), med.get("cs"), ta.j), 3)
-            fila["df_home"] = round(_encoge(pre_h.get("ca"), med.get("ca"), th.j), 3)
-            fila["df_away"] = round(_encoge(pre_a.get("ca"), med.get("ca"), ta.j), 3)
+            fila["of_home"] = round(_encoge(pre_h.get("cs"), med.get("cs"), th.j, k), 3)
+            fila["of_away"] = round(_encoge(pre_a.get("cs"), med.get("cs"), ta.j, k), 3)
+            fila["df_home"] = round(_encoge(pre_h.get("ca"), med.get("ca"), th.j, k), 3)
+            fila["df_away"] = round(_encoge(pre_a.get("ca"), med.get("ca"), ta.j, k), 3)
             fila["lg_rs"] = round(med.get("cs") or 4.5, 3)
             out.append(fila)
 
-        # actualizar ELO (MOV simple) y acumular DESPUES de emitir
-        _actualiza_elo(th, ta, csh, csa)
-        th.ult_fecha = f; ta.ult_fecha = f
-        th.sumar(h, csh, cah if cah is not None else csa)
-        ta.sumar(a, csa, caa if caa is not None else csh)
+        # Los juegos simultáneos comparten exactamente el mismo estado previo.
+        for _, gp, h, a in day:
+            lg = io.norm(h.get("league") or h.get("liga"))
+            season = str(h.get("season") or f.year)
+            csh, cah = _f(h.get("runs")), _f(h.get("runs_opp"))
+            csa, caa = _f(a.get("runs")), _f(a.get("runs_opp"))
+            if None in (csh, csa) or (csh == 0 and csa == 0):
+                continue
+            th = _clave(acum, lg, season, h.get("team"))
+            ta = _clave(acum, lg, season, a.get("team"))
+            _actualiza_elo(th, ta, csh, csa)
+            th.ult_fecha = f; ta.ult_fecha = f
+            th.sumar(h, csh, cah if cah is not None else csa)
+            ta.sumar(a, csa, caa if caa is not None else csh)
+            live = lg_live.setdefault((lg, season), _Acum())
+            live.sumar(h, csh, cah if cah is not None else csa)
+            live.sumar(a, csa, caa if caa is not None else csh)
 
     return out, saltados
 
@@ -289,7 +312,7 @@ def _medias_liga_temporada(juegos):
         ac = tmp.setdefault((lg, season), _Acum())
         csh, cah = _f(h.get("runs")), _f(h.get("runs_opp"))
         csa, caa = _f(a.get("runs")), _f(a.get("runs_opp"))
-        if None in (csh, csa):
+        if None in (csh, csa) or (csh == 0 and csa == 0):
             continue
         ac.sumar(h, csh, cah if cah is not None else csa)
         ac.sumar(a, csa, caa if caa is not None else csh)
