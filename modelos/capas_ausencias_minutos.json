@@ -40,5 +40,27 @@
   "x": "+1 si el local viene de 3 derrotas seguidas y la visita de 3 victorias seguidas (misma temporada, juegos a 20 dias o menos), -1 al reves, 0 si no",
   "fuente": "trabajo/minar/2026-10-09_tanda5.md (z 2.02 fuera de muestra); aprobado 9-oct-2026",
   "generado": "2026-10-09"
+ },
+ "nba_puntos_ausencias": {
+  "propia": -1.2149,
+  "ee_propia": 0.2015,
+  "rival": 1.7599,
+  "ee_rival": 0.2014,
+  "n": 9664,
+  "desde": "2022-12-17",
+  "hasta": "2026-06-13",
+  "aprobado": "Alejandro, 10-oct-2026 ('aplicalo')",
+  "x": "minutos por juego de los ausentes / 48 (misma regla que K14); puntos del equipo += propia * x_propia + rival * x_rival",
+  "uso": "plataforma.py ajusta los puntos de cada equipo y deja el total igual (el efecto en el total no paso: TAU z -1.94)",
+  "fuente": "trabajo/minar/2026-10-10_tanda9.md parte C; minimos cuadrados en toda la muestra sobre los puntos del modelo reentrenado cada 30 dias (utilidades/minar_tanda9_produccion.py)",
+  "prueba_sobre_produccion": {
+   "z": 4.53,
+   "mitades": [
+    0.968,
+    1.628
+   ],
+   "sesgo_desv": -0.017,
+   "n": 9228
+  }
  }
 }

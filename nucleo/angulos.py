@@ -830,7 +830,15 @@ def _ausencias_nba(p, fecha):
     mh, ma = perdidos("home"), perdidos("away")
     if mh is None or ma is None:
         return None
+    if p.get("_minutos"):
+        return mh, ma
     return (ma - mh) / 48.0
+
+
+def minutos_ausencias_nba(g, fecha):
+    """(minutos de los ausentes del local, de la visita) con la misma regla que K14; None sin reporte (tanda 9)."""
+    hoy = fecha if isinstance(fecha, dt.date) else _d(fecha)
+    return _ausencias_nba({"contexto": g.get("contexto") or {}, "home": g["home"], "away": g["away"], "_minutos": True}, hoy) if hoy else None
 
 
 _TEN = None

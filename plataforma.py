@@ -920,10 +920,46 @@ def _pred_base(g, c, fecha, eventos=None):
                 p_h, capa_aus = _ANG.aplicar_capa(p_h, "nba", "K14", _ANG.x_ausencias_nba(g, fecha))
             except Exception as _e:
                 capa_aus = {"aplicado": False, "motivo": "error: %s" % _e}
+        capa_espn = None
+        if g.get("liga") in ("nba", "ncaamb", "ncaafb"):
+            # predictor de ESPN (BPI/FPI) sobre el modelo (tanda 9, aprobada 10-oct-2026): nucleo/capa_espn.py + modelos/capa_espn.json
+            try:
+                from nucleo import capa_espn as _CE
+                p_h, capa_espn = _CE.aplicar(p_h, g["liga"], g.get("id"))
+            except Exception as _e:
+                capa_espn = {"aplicado": False, "motivo": "error: %s" % str(_e)[:120]}
+        pts_h, pts_a, marg = r["pts_home"], r["pts_away"], r["margen_esperado"]
+        capa_pts = None
+        if g.get("liga") == "nba":
+            # ausencias en los puntos de cada equipo (tanda 9, aprobada 10-oct-2026): propios -1.21 y del rival +1.76 puntos por
+            # 48 min de ausentes; el total no cambia (en el total no paso). modelos/capas_ausencias_minutos.json
+            try:
+                from nucleo import angulos as _ANG
+                cpa = (_ANG.capas_aprobadas() or {}).get("nba_puntos_ausencias") or {}
+                mm = _ANG.minutos_ausencias_nba(g, fecha)
+                if mm and cpa.get("propia") is not None:
+                    mh_, ma_ = mm
+                    dh = cpa["propia"] * mh_ / 48.0 + cpa["rival"] * ma_ / 48.0
+                    da = cpa["propia"] * ma_ / 48.0 + cpa["rival"] * mh_ / 48.0
+                    s_ = (dh + da) / 2.0
+                    pts_h, pts_a = round(pts_h + dh - s_, 1), round(pts_a + da - s_, 1)
+                    marg = round(marg + dh - da, 1)
+                    capa_pts = {"aplicado": True, "min_ausentes_local": round(mh_, 1), "min_ausentes_visita": round(ma_, 1),
+                                "ajuste_local": round(dh - s_, 2), "ajuste_visita": round(da - s_, 2)}
+            except Exception as _e:
+                capa_pts = {"aplicado": False, "motivo": "error: %s" % str(_e)[:120]}
         m = {"p_home": round(p_h, 4), "p_away": round(1 - p_h, 4), "unidad": "puntos",
-             "x_home": r["pts_home"], "x_away": r["pts_away"], "total": r["total_esperado"],
+             "x_home": pts_h, "x_away": pts_a, "total": r["total_esperado"],
              "linea_total": tot_m, "linea_es_mercado": tot_m is not None, "p_over": r.get("p_over"),
-             "confianza": _conf(max(p_h, 1 - p_h)) if capas and capas.get("aplicado") else r["confianza"], "margen": r["margen_esperado"], "extra": []}
+             "confianza": _conf(max(p_h, 1 - p_h)) if (capas and capas.get("aplicado")) or (capa_espn and capa_espn.get("aplicado")) else r["confianza"],
+             "margen": marg, "extra": []}
+        if capa_espn is not None:
+            m["capa_espn"] = capa_espn
+            if capa_espn.get("aplicado"):
+                m["nota"] = (m.get("nota") or "") + (" " if m.get("nota") else "") + "ESPN %.0f%% al local: %+.1f pp." % (
+                    100 * capa_espn["p_espn"], capa_espn["ajuste_pp"])
+        if capa_pts is not None:
+            m["capa_ausencias_puntos"] = capa_pts
         if capas:
             m["capas_medidas"] = capas
             if capas.get("aplicado") and g.get("liga") == "nfl":

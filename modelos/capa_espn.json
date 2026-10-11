@@ -1,0 +1,39 @@
+{
+ "generado": "2026-10-10",
+ "aprobado": "Alejandro, 10-oct-2026 ('aplicalo')",
+ "uso": "plataforma.py: logit p = logit p_modelo + beta * (logit p_ESPN - logit p_modelo), con p_ESPN de salida/espn_predictor_vivo.csv (proyeccion de ESPN antes del juego). Sin proyeccion, p = p_modelo.",
+ "fuente": "trabajo/minar/2026-10-10_tanda9.md parte E (E2); beta = offset logistico en toda la muestra contra la p as-of del modelo; 70/30 en 2026-10-10_tanda9_espn_resultados.json",
+ "ligas": {
+  "ncaamb": {
+   "beta": 0.838,
+   "ee": 0.028,
+   "n": 15939,
+   "z_prueba": 9.1,
+   "mitades_milesimas": [
+    44.114,
+    16.099
+   ]
+  },
+  "ncaafb": {
+   "beta": 0.886,
+   "ee": 0.057,
+   "n": 2969,
+   "z_prueba": 4.66,
+   "mitades_milesimas": [
+    22.256,
+    56.181
+   ]
+  },
+  "nba": {
+   "beta": 0.651,
+   "ee": 0.05,
+   "n": 5143,
+   "z_prueba": 3.87,
+   "mitades_milesimas": [
+    17.253,
+    8.118
+   ]
+  }
+ },
+ "nfl": "no se aplica: contra el mercado va al reves (E1 beta -0.34) y en NFL p final = Pinnacle"
+}

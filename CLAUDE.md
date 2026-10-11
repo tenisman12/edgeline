@@ -208,7 +208,16 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   `predictor_espn.yml`, `datos/equipos/espn_predictor.csv`) sobre el modelo PASA en NCAAMB (z 9.10), NBA (3.87) y NCAAF
   (4.66); en NFL contra el mercado va al reves. Sin señal de fuga (en NFL ESPN sola pierde contra el mercado, z -5.96);
   desde el 10-oct cuotas.yml guarda la proyeccion ANTES de cada juego en `salida/espn_predictor_vivo.csv`. Torvik: 403
-  desde Actions. Nada aplicado todavia: decide Alejandro. Sonda de fuentes: workflow manual `sonda.yml` (avisos).
+  desde Actions. Sonda de fuentes: workflow manual `sonda.yml` (avisos).
+  APLICADO (10-oct-2026, Alejandro: "aplicalo"):
+  * Capa ESPN en el ganador de NCAAMB, NCAAF y NBA (`nucleo/capa_espn.py`, `modelos/capa_espn.json`): logit p = logit p_modelo
+    + beta (logit p_ESPN - logit p_modelo), beta NCAAMB 0.838, NCAAF 0.886, NBA 0.651 (despues de K14 en NBA). p_ESPN sale de
+    `salida/espn_predictor_vivo.csv` (colector --vivo ANTES de plataforma en cuotas.yml y actualizar.yml); sin foto, p = modelo.
+    Se ve en modelo.capa_espn y en la nota. NFL no.
+  * NBA ausencias en los puntos por equipo (`modelos/capas_ausencias_minutos.json` -> nba_puntos_ausencias: propia -1.21,
+    rival +1.76 por 48 min, toda la muestra n 9,664): plataforma mueve x_home/x_away y el margen, el total queda igual;
+    `nucleo/angulos.minutos_ausencias_nba`. Se ve en modelo.capa_ausencias_puntos.
+  Pendiente: la red convolucional de NCAAMB (probarla sobre el modelo con ESPN; pasarla a stdlib).
 - Motor de goles (10-oct-2026, `nucleo/motor_goles.py`, `utilidades/motor_goles.py`, `trabajo/minar/2026-10-10_motor_goles.md`):
   Kalman de ataque/defensa/portero + xG + segunda noche contra produccion reproducida (xG, GSAx, b2b, capa). Nada pasa en NHL,
   AHL ni Liiga (DEL y SHL sin muestra): no se aplica. Empate a 60 min: ni modelo ni motor le ganan a la tasa de la liga ->

@@ -82,6 +82,11 @@ jobs:
           python colectores/recolectar_porteros.py || true
           python colectores/recolectar_xg_nhl.py || true
 
+      - name: Predictor de ESPN antes de cada juego (NFL, NCAAF, NBA, NCAAMB; capa de ganador aprobada 10-oct)
+        continue-on-error: true
+        timeout-minutes: 5
+        run: python colectores/recolectar_predictor_espn.py --vivo
+
       - name: Re-predecir con cuotas y contexto frescos
         continue-on-error: true
         timeout-minutes: 20
@@ -103,11 +108,6 @@ jobs:
       - name: Medir el movimiento de linea contra el resultado (se acumula, no decide)
         continue-on-error: true
         run: python utilidades/validar_movimiento.py
-
-      - name: Predictor de ESPN antes de cada juego (NFL, NCAAF, NBA, NCAAMB; contexto que se mide)
-        continue-on-error: true
-        timeout-minutes: 5
-        run: python colectores/recolectar_predictor_espn.py --vivo
 
       - name: Picks del dia (decision por partido y lista oficial, tope 4)
         continue-on-error: true
