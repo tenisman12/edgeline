@@ -426,6 +426,29 @@ def del_leer_juego(h, gid):
     return j
 
 
+def del_links_temporada(a):
+    """links de spieldetails de todas las vistas (mes y equipo) del spielplan de la temporada a/a+1."""
+    base = "/statistik/saison-%d-%02d/hauptrunde/spielplan" % (a, (a + 1) % 100)
+    try:
+        h0 = get_txt(DEL_WEB + base)
+    except Exception as e:
+        print("  DEL %d-%02d: falla %s" % (a, (a + 1) % 100, e)); return set()
+    vistas = set()
+    for sel in re.findall(r"<select[^>]*>(.*?)</select>", h0, re.S):
+        for v in re.findall(r'<option[^>]*value="([^"]+)"', sel):
+            if v.startswith("/") and "spielplan" in v:
+                vistas.add(v)
+    links = set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", h0))
+    for v in sorted(vistas - {base}):
+        try:
+            links |= set(re.findall(r"/statistik/spieldetails/[\w\-]+_\d+", get_txt(DEL_WEB + v)))
+        except Exception:
+            pass
+        time.sleep(0.2)
+    print("  DEL %d-%02d: %d vistas del calendario, %d links" % (a, (a + 1) % 100, len(vistas) + 1, len(links)))
+    return links
+
+
 def del_juegos(n_atras, conocidos):
     """los juegos ya guardados se saltan: sus filas se conservan del CSV anterior."""
     juegos = []
@@ -438,6 +461,11 @@ def del_juegos(n_atras, conocidos):
             print("  DEL %s: falla %s" % (url, e))
         if links:
             break
+    # /spiele solo muestra el mes en curso: el 11-oct-2026 faltaban las jornadas 1 a 4 (18 al 27 de septiembre), y el modelo
+    # de la DEL arranco la temporada con 3 juegos por equipo en lugar de 7. Se recorren tambien las vistas por mes del
+    # spielplan de la temporada actual (las mismas que se usan para las temporadas anteriores).
+    a_act = int(time.strftime("%Y")) if int(time.strftime("%m")) >= 8 else int(time.strftime("%Y")) - 1
+    links |= del_links_temporada(a_act)
     hoy = time.strftime("%d%m%Y")
     ids = {}
     for l in links:
