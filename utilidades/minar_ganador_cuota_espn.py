@@ -29,7 +29,7 @@ import minar_ganador_cuota as G  # noqa: E402
 import metamodelo as MT  # noqa: E402
 from nucleo import io  # noqa: E402
 
-LIGAS = (("nba", "NBA"), ("ncaamb", "NCAAMB"), ("ncaafb", "NCAAFB"), ("nfl", "NFL"))
+LIGAS = (("nba", "NBA"), ("ncaamb", "NCAAMB"), ("ncaafb", "NCAAFB"), ("nfl", "NFL"), ("nhl", "NHL"), ("mlb", "MLB"))
 SALIDA = os.path.join(CODIGO, "trabajo", "minar", "2026-10-11_ganador_cuota_espn_resultados%s.json" % (("_" + sys.argv[1].replace(",", "_")) if len(sys.argv) > 1 else ""))
 
 
@@ -47,26 +47,36 @@ def leer(rel):
 
 
 def mapa_ids(liga, filas):
-    """(fecha, local del modelo) -> game_id de ESPN, casando nombres por coincidencia de fechas (como la tanda 9)."""
-    loc_mod = defaultdict(set)
+    """(fecha, local del modelo) -> game_id de ESPN. Los nombres se casan por coincidencia de fechas; despues el juego se
+    acepta solo si LOCAL Y VISITA coinciden y la fecha de ESPN (UTC) es la del modelo o un dia despues. (La version
+    anterior aceptaba +-1 dia solo con el local y podia tomar el juego de otro dia del mismo local: en NHL eso pegaba
+    las cuotas de otro partido.)"""
+    loc_mod = defaultdict(set); vis_mod = defaultdict(set)
     for r in filas:
-        loc_mod[str(r["fecha"])[:10]].add(r["home"])
-    esp = [x for x in leer(("equipos", "espn_%s_equipos.csv" % liga)) if str(x.get("is_home")) in ("1", "1.0", "True")]
+        loc_mod[str(r["fecha"])[:10]].add(r["home"]); vis_mod[str(r["fecha"])[:10]].add(r["away"])
+    if liga in ("nhl", "mlb"):
+        esp = [dict(team=x["local"], opp=x["visita"], game_date=x["game_date"], game_id=x["game_id"])
+               for x in leer(("equipos", "espn_%s_juegos.csv" % liga))]
+    else:
+        esp = [x for x in leer(("equipos", "espn_%s_equipos.csv" % liga)) if str(x.get("is_home")) in ("1", "1.0", "True")]
     par = defaultdict(Counter)
     for x in esp:
-        for d in (0, -1, 1):
+        for d in (0, -1):
             f = (dt.date.fromisoformat(x["game_date"][:10]) + dt.timedelta(days=d)).isoformat()
             for t in loc_mod.get(f, ()):
-                par[x["team"]][t] += 3 if d == 0 else 1
+                par[x["team"]][t] += 3 if d == 0 else 2
+            for t in vis_mod.get(f, ()):
+                if x.get("opp"):
+                    par[x["opp"]][t] += 3 if d == 0 else 2
     nombre = {k: c.most_common(1)[0][0] for k, c in par.items() if c}
     loc = {}
     for x in esp:
-        t = nombre.get(x["team"])
-        if t is None:
+        th, ta = nombre.get(x["team"]), nombre.get(x.get("opp") or "")
+        if th is None:
             continue
-        for d in (0, -1, 1):
+        for d in (0, -1):
             f = (dt.date.fromisoformat(x["game_date"][:10]) + dt.timedelta(days=d)).isoformat()
-            loc.setdefault((f, t), str(x["game_id"]))
+            loc.setdefault((f, th, ta), str(x["game_id"]))
     return loc
 
 
@@ -76,7 +86,7 @@ def cuotas_por_juego():
         if x.get("estado") != "ok":
             continue
         casa = (x.get("casa") or "").strip()
-        if "live" in casa.lower() or "accuscore" in casa.lower() or not casa:
+        if not casa or any(k in casa.lower() for k in ("live", "accuscore", "teamrankings", "numberfire")):
             continue
         C[(x["liga"], x["game_id"])].append(x)
     return C
@@ -90,6 +100,12 @@ def lados_de(rows, p_home, y_home, ang=0):
     for x in rows:
         h, a = dec(x.get("ml_home_close") or x.get("ml_home")), dec(x.get("ml_away_close") or x.get("ml_away"))
         ho, ao = dec(x.get("ml_home_open")), dec(x.get("ml_away_open"))
+        # NHL: varias casas (DraftKings, Unibet, Bet365...) publican en ESPN la moneyline a 3 vias de tiempo regular
+        # (1/h + 1/a < 1). Solo se usan precios a 2 vias (con margen positivo).
+        if h and a and 1 / h + 1 / a < 1.0:
+            h = a = None
+        if ho and ao and 1 / ho + 1 / ao < 1.0:
+            ho = ao = None
         if h and a:
             nv = MT._novig(h, a)
             if nv:
@@ -130,13 +146,16 @@ def main():
     for liga, dep in LIGAS:
         if solo and liga not in solo:
             continue
-        filas = U[dep][0]
+        if dep == "MLB":
+            filas = [dict(r, home=r["home"][1] if isinstance(r["home"], tuple) else r["home"], away=r["away"][1] if isinstance(r["away"], tuple) else r["away"]) for r in U["BEISBOL"][0] if r.get("liga") == "MLB"]
+        else:
+            filas = U[dep][0]
         loc = mapa_ids(liga, filas)
         partidos = defaultdict(list)          # fuente -> partidos (modelo base)
         partidos_c = defaultdict(list)        # fuente -> partidos (modelo + capa ESPN)
         n_cas = 0
         for r in filas:
-            gid = loc.get((str(r["fecha"])[:10], r["home"]))
+            gid = loc.get((str(r["fecha"])[:10], r["home"], r.get("away"))) or loc.get((str(r["fecha"])[:10], r["home"], None))
             rows = CU.get((liga, gid)) if gid else None
             if not rows:
                 continue
