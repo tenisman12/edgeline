@@ -1,6 +1,6 @@
 """Compara el motor publicado con el prior candidato por liga, por trimestre.
 
-Uso: EDGELINE_BASE=$PWD python validar_encogimiento.py [--cero] [liga ...]
+Uso: EDGELINE_BASE=$PWD python validar_encogimiento.py [--diario] [--cero] [liga ...]
 
 Cada prediccion usa solo los resultados anteriores al primer dia del trimestre.
 Los parametros del motor (incluida Platt) se vuelven a entrenar en ese prefijo.
@@ -13,6 +13,8 @@ import math
 import os
 import random
 import sys
+from contextlib import nullcontext
+from datetime import date, timedelta
 from unittest.mock import patch
 
 RAIZ = os.path.dirname(os.path.abspath(__file__))
@@ -33,7 +35,27 @@ def _f(v):
         return None
 
 
-def evaluar(deporte, liga, limites=LIMITES, candidato=None):
+def _platt_vectorizado(cal, iters=600, lr=.05):
+    """Misma iteracion de Platt del motor, vectorizada solo para el validador."""
+    if len(cal) < 200:
+        return 1.0, 0.0
+    import numpy as np
+    X = np.asarray([math.log(min(max(p,1e-6),1-1e-6)/
+                             (1-min(max(p,1e-6),1-1e-6))) for p,_ in cal])
+    Y = np.asarray([y for _,y in cal]); a,b = 1.0,0.0
+    for _ in range(iters):
+        z = a*X+b
+        e = np.where(z < -35, 0., np.where(z > 35, 1., 1/(1+np.exp(-np.clip(z,-35,35))))) - Y
+        a -= lr*float(np.mean(e*X)); b -= lr*float(np.mean(e))
+    return a,b
+
+
+def limites_diarios(juegos, desde="2025-01-01"):
+    fechas = sorted({f for f, *_ in juegos if f >= desde})
+    return tuple(fechas + [(date.fromisoformat(fechas[-1])+timedelta(days=1)).isoformat()]) if fechas else ()
+
+
+def evaluar(deporte, liga, limites=LIMITES, candidato=None, rapido=False):
     motor = MOTORES[deporte]
     juegos = motor._juegos(liga)
     por_modo = {modo: [] for modo in ("publicado", "candidato")}
@@ -63,7 +85,8 @@ def evaluar(deporte, liga, limites=LIMITES, candidato=None):
                 if referencia and candidato is not None:
                     return float(candidato)
                 return original_k(d, l, referencia)
-            with patch.object(motor, "_juegos", return_value=pasado), patch.object(encogimiento, "k", prior):
+            ajuste = patch.object(motor, "_platt", _platt_vectorizado) if rapido and deporte == "hockey" else nullcontext()
+            with patch.object(motor, "_juegos", return_value=pasado), patch.object(encogimiento, "k", prior), ajuste:
                 est = motor.entrenar(liga, referencia=referencia)
             filas = []
             for fecha, home, away, gh, ga in evaluables:
@@ -148,14 +171,16 @@ def evaluar(deporte, liga, limites=LIMITES, candidato=None):
 def main():
     os.makedirs(os.path.join(RAIZ, "trabajo"), exist_ok=True)
     cero = "--cero" in sys.argv
-    ligas = [l for l in sys.argv[1:] if l != "--cero"] or [l for d in MOTORES for l in encogimiento.CANDIDATOS.get(d, {})]
+    diario = "--diario" in sys.argv
+    ligas = [l for l in sys.argv[1:] if l not in ("--cero", "--diario")] or [l for d in MOTORES for l in encogimiento.CANDIDATOS.get(d, {})]
     out = []
     for liga in ligas:
         deporte = next((d for d in MOTORES if liga in encogimiento.CANDIDATOS.get(d, {})), None)
         if not deporte:
             raise ValueError("Liga sin candidato: " + liga)
-        out.append(evaluar(deporte, liga, candidato=0 if cero else None))
-        archivo = "encogimiento_cero_resultados.json" if cero else "encogimiento_modelo_resultados.json"
+        limites = limites_diarios(MOTORES[deporte]._juegos(liga)) if diario else LIMITES
+        out.append(evaluar(deporte, liga, limites, candidato=0 if cero else None, rapido=diario))
+        archivo = "encogimiento_" + ("diario_" if diario else "") + ("cero" if cero else "modelo") + "_resultados.json"
         destino = os.path.join(RAIZ, "trabajo", archivo)
         with open(destino, "w", encoding="utf8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)
