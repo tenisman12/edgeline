@@ -1,0 +1,31 @@
+name: sonda de fuentes externas
+# Manual: prueba si Actions alcanza fuentes nuevas (Torvik, predictor de ESPN) y muestra el inicio de cada respuesta.
+# No guarda nada en el repo.
+on:
+  workflow_dispatch:
+
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: probar URLs
+        run: |
+          ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+          probar () {
+            echo "================ $1"
+            curl -sS -L -A "$ua" --max-time 40 -o /tmp/r -w "HTTP %{http_code} | %{size_download} bytes | %{content_type}\n" "$1" || true
+            (file /tmp/r; head -c 900 /tmp/r | tr -d '\000'; echo) 2>/dev/null || true
+          }
+          probar "https://barttorvik.com/2025_super_sked.csv"
+          probar "https://barttorvik.com/trank.php?year=2025&csv=1"
+          probar "https://barttorvik.com/2025_team_results.csv"
+          probar "https://barttorvik.com/timemachine/team_results/20250115_team_results.json.gz"
+          probar "https://barttorvik.com/getgamestats.php?year=2025&csv=1"
+          probar "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401859967"
+          probar "https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/401859967/competitions/401859967/predictor"
+          probar "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401547562/competitions/401547562/predictor"
+          probar "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401872980/competitions/401872980/predictor"
+          probar "https://sports.core.api.espn.com/v2/sports/basketball/leagues/mens-college-basketball/events/401856600/competitions/401856600/predictor"
+          probar "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=401856600"
+          probar "https://moneypuck.com/moneypuck/gameData/20252026/2025020001.csv"
