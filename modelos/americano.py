@@ -13,10 +13,10 @@ Mercados: ganador, spread, total. Solo stdlib.
 import math, sys, os
 
 try:
-    from nucleo import io
+    from nucleo import io, encogimiento
 except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from nucleo import io
+    from nucleo import io, encogimiento
 
 BASE_ELO=1500.0; K=20.0; HFA=48.0; REGR=0.75; ESCALA=400.0
 ELO_POR_PUNTO=25.0; SD_MARGEN=13.5; SHRINK=6; HFA_PTS=1.9
@@ -48,10 +48,10 @@ def _juegos(liga=None):
     js.sort(key=lambda t:(t[0],t[1])); return js
 
 class Eq:
-    __slots__=("elo","pf","pa","n","ult")
-    def __init__(s): s.elo=BASE_ELO; s.pf=0.0; s.pa=0.0; s.n=0; s.ult=None
-    def of(s,lg): return (s.pf+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
-    def df(s,lg): return (s.pa+SHRINK*lg)/(s.n+SHRINK) if s.n else lg
+    __slots__=("elo","pf","pa","n","ult","prior")
+    def __init__(s, prior=SHRINK): s.elo=BASE_ELO; s.pf=0.0; s.pa=0.0; s.n=0; s.ult=None; s.prior=prior
+    def of(s,lg): return (s.pf+s.prior*lg)/(s.n+s.prior) if s.n else lg
+    def df(s,lg): return (s.pa+s.prior*lg)/(s.n+s.prior) if s.n else lg
 
 def _vistas(th,ta,lg):
     """margenes esperados por ELO y por anotacion, y sus prob de local."""
@@ -69,12 +69,13 @@ def _platt(pairs, iters=600, lr=0.05):
         a-=lr*ga/n; b-=lr*gb/n
     return a,b
 
-def entrenar(liga=None, min_j=4, w=W_ENS):
+def entrenar(liga=None, min_j=4, w=W_ENS, referencia=False):
+    prior=encogimiento.k("americano", liga or "nfl", referencia)
     js=_juegos(liga); eq={}; tot=0.0; ng=0; lg=22.0; cal=[]; rm=[]; rt=[]
     for f,gp,h,a in js:
         ph=_f(h.get("points")) or _f(h.get("runs")); pa_=_f(h.get("points_opp")) or _f(h.get("runs_opp"))
         if ph is None or pa_ is None: continue
-        th=eq.setdefault(h.get("team"),Eq()); ta=eq.setdefault(a.get("team"),Eq())
+        th=eq.setdefault(h.get("team"),Eq(prior)); ta=eq.setdefault(a.get("team"),Eq(prior))
         for t in (th,ta):
             if t.ult and t.ult!=f[:4]: t.elo=BASE_ELO+(t.elo-BASE_ELO)*REGR
             t.ult=f[:4]
