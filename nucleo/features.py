@@ -152,10 +152,10 @@ STATS = ["cs", "ca", "obp", "iso", "k_pct", "bb_pct", "fip", "k9", "bb9", "hr9",
 # Seleccionado antes de evaluar MLB 2025-26: 4,773 partidos resueltos,
 # Brier .24550 -> .24473, MAE equipo 2.5132 -> 2.5000,
 # MAE total 3.6105 -> 3.5817. No se activa en las otras ligas.
-K_CARRERAS_LIGA = {"mlb": 100.0}
+from nucleo import encogimiento
 
 def k_carreras(liga, override=None):
-    return float(override) if override is not None else K_CARRERAS_LIGA.get(io.norm(liga), 6.0)
+    return float(override) if override is not None else encogimiento.k("beisbol", io.norm(liga))
 
 def _emparejar(filas):
     """El CSV trae 2 filas por juego (una por equipo). Las une en (home, away)."""
