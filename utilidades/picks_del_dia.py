@@ -51,7 +51,7 @@ def _mismo(a, b):
     A, B = _clave(a), _clave(b)
     return bool(A and B) and len(A & B) / float(min(len(A), len(B))) >= 0.5
 EV_MIN = 0.02                         # Pick Premium (deportes sin sistema estimado)
-CUOTA_MIN, CUOTA_MAX = 1.70, 99.0   # sin tope de cuota (acuerdos 4-oct y 6-oct)
+CUOTA_MIN, CUOTA_MAX = 1.80, 4.50   # 11-oct-2026 (Alejandro: "si 1 y 2"): su rango de tipster; antes 1.70 sin tope
 STAKE = {"alta": 0.03, "media": 0.02, "baja": 0.01, "premium": 0.02, "pick": 0.01}   # unidades 3/2/1 (acuerdo 4-oct)
 TZ = -6
 

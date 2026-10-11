@@ -47,8 +47,16 @@ PESO_DEFAULT = 0.25                     # futbol y lo demas
 # nota al pie. El modelo se sigue mostrando como lectura, con 0 unidades.
 SOLO_VALIDADO = True
 AJUSTE_OVER = {"nfl": -0.034}           # el modelo de NFL sobreestima el over 3.4 pp (medido)
-CUOTA_MIN = 1.70
-CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel (sin tope de cuota: sigue siendo pick)
+# 11-oct-2026 (aprobado por Alejandro: "si 1 y 2"): picks en su rango de tipster, cuota 1.80 a 4.50; fuera los perros puros
+# (p del modelo < 40 % en el ganador: medido -5.7 % con p < 35 %, n 7,101, z -3.3) y fuera si la linea sharp se movio 1 pp o
+# mas en contra. Etiqueta "por medir en vivo": ninguna regla en este rango paso la validacion
+# (trabajo/minar/2026-10-11_cuotas_chidas.md); se miden en el track record.
+CUOTA_MIN = 1.80
+CUOTA_MAX_PICK = 4.50
+P_MIN_GANADOR = 0.40
+MOV_CONTRA = -1.0                       # pp en el lado del pick (mercado_publico / movs)
+ETIQUETA = "estilo Alejandro: cuota 1.80-4.50, modelo >= 40 %, linea sin moverse en contra (por medir en vivo)"
+CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel
 UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0, "sin_cuota": 0, "solo_mercado": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 # 11-oct-2026: un equipo con menos de MIN_HISTORIA partidos en los datos (ascendido, nuevo, o un hueco del colector)
@@ -404,6 +412,14 @@ def decidir_mercado(rec, tipo, movs=None):
         else:
             razones_no.append("modelo %.0f pp arriba del mercado en el total: baja un nivel" % (100 * br))
             conf = {"alta": "media", "media": "baja", "baja": "minima"}.get(conf, conf)
+    if mejor["decimal"] is not None and mejor["decimal"] > CUOTA_MAX_PICK:
+        razones_no.append("cuota %.2f mayor a %.2f" % (mejor["decimal"], CUOTA_MAX_PICK)); conf = "minima" if conf != "sin_cuota" else conf
+    if tipo == "Ganador" and mejor.get("p_modelo") is not None and mejor["p_modelo"] < P_MIN_GANADOR:
+        razones_no.append("perro puro: el modelo le da %.0f %% (minimo %.0f %%)" % (100 * mejor["p_modelo"], 100 * P_MIN_GANADOR))
+        conf = "minima" if conf not in ("sin_cuota", "solo_mercado") else conf
+    if mejor.get("mov_linea") is not None and mejor["mov_linea"] <= MOV_CONTRA:
+        razones_no.append("la linea se movio %.1f pp en contra" % mejor["mov_linea"])
+        conf = "minima" if conf not in ("sin_cuota", "solo_mercado") else conf
     if mejor["decimal"] is not None and mejor["decimal"] > CUOTA_LONGSHOT and conf in ("alta", "media", "baja"):
         razones_no.append("cuota %.2f: el EV de un longshot depende de 1-2 pp de probabilidad que el modelo no afina; baja un nivel" % mejor["decimal"])
         conf = {"alta": "media", "media": "baja", "baja": "minima"}[conf]
@@ -442,6 +458,7 @@ def decidir_mercado(rec, tipo, movs=None):
             "ev": mejor["ev"], "cuota_min": cuota_min, "confianza": conf, "unidades": UNIDADES.get(conf, 0),
             "brecha_modelo_mercado": mejor["brecha_modelo_mercado"], "mov_linea": mejor["mov_linea"],
             "conteo": {"a_favor": len(favor), "en_contra": len(contra)}, "por_que_si": razones_si, "por_que_no": razones_no,
+            "etiqueta": ETIQUETA,
             "senales": mejor["senales"], "dudas": _dudas(rec, tipo, mejor, mejor["p_sharp"], mejor["fuente"]), "lados": evals,
             "compra_linea": compra, "linea_referencia": mejor.get("linea_referencia")}
 

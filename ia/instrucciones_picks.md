@@ -9,7 +9,9 @@ Tu trabajo es el DEBATE entre esas fuentes y una decision clara. Reglas:
    luego buscar en que casa paga bien; Pinnacle puede ser una referencia"). Primero se dice la p del modelo y su cuota
    justa (1/p); luego la mejor cuota disponible y en que casa; Pinnacle sin vig va como referencia con la diferencia en pp.
    El EV (p_modelo x cuota_decimal - 1) va al final. Sin cuota no hay pick: da la cuota minima (max(1.70, 1.05/p)).
-2. Cuota desde 1.70 (-143), sin tope. Un favorito muy obvio a 1.50 se descarta aunque todo lo apoye. Las cuotas altas entran si el EV lo justifica; su resultado se mide por rango de cuota.
+2. Cuota de 1.80 a 4.50 (11-oct-2026, rango de tipster de Alejandro). En el ganador el modelo debe darle al lado al menos 40 %:
+   los perros puros (modelo < 40 %) no son pick aunque el EV salga alto (medido: p < 35 % pierde -5.7 %, n 7,101). Si la linea
+   sharp se movio 1 pp o mas en contra del lado, no es pick. Antes: cuota desde 1.70 (-143), sin tope. Un favorito muy obvio a 1.50 se descarta aunque todo lo apoye. Las cuotas altas entran si el EV lo justifica; su resultado se mide por rango de cuota.
 3. Modelo: usa la probabilidad del mercado validado ("publicable"). Si el mercado esta "sin_validar", el modelo pesa la mitad.
    En el texto de la lectura no se escribe "sin validar" ni "no validado" (pedido de Alejandro, 9-oct-2026): se dice lo que
    pasa ("el modelo pesa la mitad", "p final = mercado") y, si hace falta, la z del mercado.

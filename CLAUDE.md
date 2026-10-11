@@ -35,7 +35,9 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 4. **Validación única y estricta** (walk-forward as-of contra línea base): n>=300, mejora a la base, z>=2.0
    (fútbol 1.64), mejora en ambas mitades, calibrado |p media - tasa real|<=0.04 (conteos: sesgo<=0.10 desv.).
    "Publicable" = supera la tasa histórica, NO a las casas. No hay edge demostrado contra el cierre (CLV pendiente).
-5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota >= 1.70 (-143), sin tope (acuerdo 6-oct). Stake plano 1 u.
+5. **Pick/VALOR:** mercado `publicable` + edge >= `umbral_edge` + cuota 1.80 a 4.50 (11-oct-2026, su rango de tipster; antes 1.70
+   sin tope) + en el ganador el modelo le da al lado >= 40 % (sin perros puros) + la linea sharp no se movio 1 pp o mas en
+   contra. Etiqueta "por medir en vivo" (ninguna regla en ese rango paso la validacion: `trabajo/minar/2026-10-11_cuotas_chidas.md`). Stake plano 1 u.
    Todos los picks del modelo se guardan y se califican; el resultado se mide también por rango de cuota.
    Sin cuota no hay pick. Criterio completo en `ia/instrucciones_picks.md`.
 6. **Pretemporada y juegos "If Necessary"** fuera de VALOR y track record.
