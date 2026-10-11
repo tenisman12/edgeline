@@ -134,7 +134,7 @@ def predecir_cnn(m, S, off, li):
 
 
 # ------------------------------------------------------------------ walk-forward
-def walk_forward(F, S, cada=3, inicio_frac=0.4):
+def walk_forward(F, S, cada=3, inicio_frac=0.4, semillas=(0,), solo_cnn=False):
     from sklearn.ensemble import RandomForestClassifier
     i0 = int(len(F) * inicio_frac)
     meses = sorted({r["fecha"][:7] for r in F[i0:]})
@@ -155,14 +155,18 @@ def walk_forward(F, S, cada=3, inicio_frac=0.4):
         if mods is None or k % cada == 0:
             mb = B.Jerarquico(nl, len(B.ANG), 1, 1, con_angulos=False).ajustar(li, off, X, y)
             Z = np.column_stack([off, np.eye(nl)[li], X])
-            rf = RandomForestClassifier(n_estimators=300, min_samples_leaf=200, max_features=0.3, n_jobs=-1, random_state=0).fit(Z, y)
-            cnn = entrenar_cnn(S[tr], off, li, y, nl)
-            mods = (mb, rf, cnn)
-            print("  %s  reentrena con %6d partidos" % (m, len(tr)))
-        mb, rf, cnn = mods
+            rf = None if solo_cnn else RandomForestClassifier(n_estimators=300, min_samples_leaf=200, max_features=0.3, n_jobs=-1,
+                                                                random_state=0).fit(Z, y)
+            cnns = [entrenar_cnn(S[tr], off, li, y, nl, semilla=sm) for sm in semillas]
+            mods = (mb, rf, cnns)
+            print("  %s  reentrena con %6d partidos (%d semillas)" % (m, len(tr), len(cnns)), flush=True)
+        mb, rf, cnns = mods
         q0 = mb.predecir(lt, ot, Xt)
-        qr = rf.predict_proba(np.column_stack([ot, np.eye(nl)[lt], Xt]))[:, 1]
-        qc = predecir_cnn(cnn, S[te], ot, lt)
+        qr = q0 if rf is None else rf.predict_proba(np.column_stack([ot, np.eye(nl)[lt], Xt]))[:, 1]
+        # ensamble (tanda 9): promedio en logit de las redes de cada semilla
+        Lg = [np.log(np.clip(predecir_cnn(c, S[te], ot, lt), 1e-6, 1 - 1e-6) / (1 - np.clip(predecir_cnn(c, S[te], ot, lt), 1e-6, 1 - 1e-6)))
+              for c in cnns]
+        qc = 1 / (1 + np.exp(-np.mean(Lg, axis=0)))
         for r, a, b_, c in zip(Fte, q0, qr, qc):
             out.append(dict(liga=r["liga"], fecha=r["fecha"], y=r["y"], q0=float(a), qr=float(b_), qc=float(c)))
     return out
@@ -206,7 +210,10 @@ def _z_bonf(alfa):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--deporte", required=True, choices=["hockey", "nba", "beisbol"])
+    ap.add_argument("--semillas", default="0", help="tanda 9: ensamble, p.ej. 0,1,2,3,4")
+    ap.add_argument("--solo-cnn", action="store_true", help="sin random forest ni TMLE")
     a = ap.parse_args()
+    sem = tuple(int(x) for x in a.semillas.split(","))
     F, ligas, ang = cargar(a.deporte)
     if "home" not in F[0]:
         sys.exit("las filas en cache no traen home/away: vuelve a correr minar_angulos_bayes.py --deporte %s sin --cache" % a.deporte)
@@ -214,7 +221,7 @@ def main():
     print("%s: %d partidos, %d angulos" % (a.deporte, len(F), len(ang)))
     S = secuencias(F)
     print("secuencias listas: %s" % (S.shape,))
-    P = walk_forward(F, S)
+    P = walk_forward(F, S, semillas=sem, solo_cnn=a.solo_cnn)
     nombre = {"hockey": "HOCKEY", "nba": "BASQUET", "beisbol": "BEISBOL"}[a.deporte]
     res = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "deporte": a.deporte}
     for clave, etiqueta in (("qc", "red convolucional (10 partidos)"), ("qr", "random forest")):
@@ -227,6 +234,13 @@ def main():
                 print("  %-32s %-8s n %6d  mejora %+.3f mil  z %+5.2f  mitades %+.3f/%+.3f  Brier %+.2f%%  cal %+.4f  -> %s" % (
                     etiqueta, v["grupo"], v["n"], v["mejora_milesimas"], v["z"], v["mitades"][0], v["mitades"][1],
                     v["brier_mejora_pct"], v["calibracion"], v["veredicto"].upper()))
+    if a.solo_cnn:
+        sufijo = "_ensamble%d" % len(sem)
+        ruta = os.path.join(CODIGO, "trabajo", "minar", "2026-10-10_secuencias_%s%s_resultados.json" % (a.deporte, sufijo))
+        res["semillas"] = list(sem)
+        with open(ruta, "w", encoding="utf-8") as f:
+            json.dump(res, f, ensure_ascii=False, indent=1)
+        print("\nresultados en", ruta); return
     print("\nTMLE por angulo (toda la muestra)")
     T = tmle_angulos(F)
     res["tmle"] = T

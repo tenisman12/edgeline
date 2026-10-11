@@ -61,12 +61,62 @@ def pedir(liga, gid):
     return None
 
 
+COLS_VIVO = ["registrado", "liga", "game_id", "fecha", "hora", "local", "visita", "p_local", "p_visita", "margen_local",
+             "ultima_modificacion"]
+
+
+def vivo():
+    """Partidos de salida/proximos.json que no han empezado: guarda la proyeccion de ESPN ANTES del juego en
+    salida/espn_predictor_vivo.csv (la ultima foto antes de empezar). Asi se comprueba en vivo que el historico de ESPN
+    no trae informacion posterior al juego."""
+    import datetime as dt
+    with _io.open(io.ruta("salida", "proximos.json"), encoding="utf-8") as f:
+        D = json.load(f)
+    ruta = io.ruta("salida", "espn_predictor_vivo.csv")
+    hay = {}
+    if os.path.exists(ruta):
+        with _io.open(ruta, encoding="utf-8-sig", newline="") as f:
+            for r in csv.DictReader(f):
+                hay[(r["liga"], r["game_id"])] = r
+    ahora_utc = dt.datetime.now(dt.timezone.utc)
+    ahora = (ahora_utc - dt.timedelta(hours=6)).replace(tzinfo=None)        # CDMX
+    sel = []
+    for p in D.get("partidos") or []:
+        if p.get("liga") not in DEP or not str(p.get("id") or "").isdigit():
+            continue
+        try:
+            ini = dt.datetime.fromisoformat("%s %s" % (p["fecha"], (p.get("hora") or "00:00")[:5]))
+        except ValueError:
+            continue
+        if ini <= ahora or ini > ahora + dt.timedelta(days=3):
+            continue
+        sel.append(p)
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        res = list(ex.map(lambda p: pedir(p["liga"], str(p["id"])), sel))
+    n = 0
+    for p, r in zip(sel, res):
+        if not r or r.get("estado") != "ok":
+            continue
+        hay[(p["liga"], str(p["id"]))] = dict(r, registrado=ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ"), liga=p["liga"],
+                                              game_id=str(p["id"]), fecha=p["fecha"], hora=p.get("hora"))
+        n += 1
+    with _io.open(ruta, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=COLS_VIVO, extrasaction="ignore")
+        w.writeheader()
+        for k in sorted(hay, key=lambda k: (hay[k].get("fecha") or "", k)):
+            w.writerow(hay[k])
+    print("predictor ESPN en vivo: %d partidos actualizados (%d por empezar en 3 dias)" % (n, len(sel)))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ligas", default="nfl,ncaafb,nba,ncaamb")
     ap.add_argument("--hilos", type=int, default=16)
     ap.add_argument("--max", type=int, default=0, help="maximo de pedidos por liga (0 = todos)")
+    ap.add_argument("--vivo", action="store_true", help="solo los partidos por empezar de salida/proximos.json")
     a = ap.parse_args()
+    if a.vivo:
+        return vivo()
     ruta = io.ruta(*RUTA)
     hay = {}
     if os.path.exists(ruta):

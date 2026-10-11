@@ -1,0 +1,185 @@
+{
+ "generado": "2026-10-10T19:33:58",
+ "hipotesis": "trabajo/minar/2026-10-10_tanda9.md",
+ "k": 5,
+ "falsos_esperados": 0.1,
+ "ganador": [
+  {
+   "n_prueba": 410,
+   "n_activo_prueba": 410,
+   "n_explorar": 955,
+   "beta": 0.6112,
+   "efecto_pp_por_unidad": 15.28,
+   "direccion_ok": true,
+   "mejora_milesimas": -0.154,
+   "z": -0.03,
+   "mitades": [
+    3.177,
+    -3.484
+   ],
+   "residuo_firmado_pp": 0.65,
+   "calibracion_activos": 0.0017,
+   "veredicto": "no pasa",
+   "desde_prueba": "2024-12-01",
+   "codigo": "E2",
+   "angulo": "predictor ESPN sobre el modelo",
+   "liga": "NFL",
+   "base": "modelo",
+   "n_total": 1365,
+   "n_activo_total": 1365
+  },
+  {
+   "n_prueba": 890,
+   "n_activo_prueba": 890,
+   "n_explorar": 2075,
+   "beta": 0.8402,
+   "efecto_pp_por_unidad": 21.0,
+   "direccion_ok": true,
+   "mejora_milesimas": 39.219,
+   "z": 4.66,
+   "mitades": [
+    22.256,
+    56.181
+   ],
+   "residuo_firmado_pp": 7.91,
+   "calibracion_activos": -0.011,
+   "veredicto": "pasa",
+   "desde_prueba": "2025-09-13",
+   "codigo": "E2",
+   "angulo": "predictor ESPN sobre el modelo",
+   "liga": "NCAAFB",
+   "base": "modelo",
+   "n_total": 2965,
+   "n_activo_total": 2965
+  },
+  {
+   "n_prueba": 1543,
+   "n_activo_prueba": 1543,
+   "n_explorar": 3600,
+   "beta": 0.5729,
+   "efecto_pp_por_unidad": 14.32,
+   "direccion_ok": true,
+   "mejora_milesimas": 12.683,
+   "z": 3.87,
+   "mitades": [
+    17.253,
+    8.118
+   ],
+   "residuo_firmado_pp": 5.5,
+   "calibracion_activos": 0.0024,
+   "veredicto": "pasa",
+   "desde_prueba": "2025-03-25",
+   "codigo": "E2",
+   "angulo": "predictor ESPN sobre el modelo",
+   "liga": "NBA",
+   "base": "modelo",
+   "n_total": 5143,
+   "n_activo_total": 5143
+  },
+  {
+   "n_prueba": 4782,
+   "n_activo_prueba": 4782,
+   "n_explorar": 11157,
+   "beta": 0.8417,
+   "efecto_pp_por_unidad": 21.04,
+   "direccion_ok": true,
+   "mejora_milesimas": 30.106,
+   "z": 9.1,
+   "mitades": [
+    44.114,
+    16.099
+   ],
+   "residuo_firmado_pp": 6.77,
+   "calibracion_activos": 0.0074,
+   "veredicto": "pasa",
+   "desde_prueba": "2025-11-25",
+   "codigo": "E2",
+   "angulo": "predictor ESPN sobre el modelo",
+   "liga": "NCAAMB",
+   "base": "modelo",
+   "n_total": 15939,
+   "n_activo_total": 15939
+  }
+ ],
+ "totales": [],
+ "mercado": [
+  {
+   "n_prueba": 410,
+   "n_activo_prueba": 410,
+   "n_explorar": 955,
+   "beta": -0.3404,
+   "efecto_pp_por_unidad": -8.51,
+   "direccion_ok": false,
+   "mejora_milesimas": 5.211,
+   "z": 2.44,
+   "mitades": [
+    6.521,
+    3.901
+   ],
+   "residuo_firmado_pp": -3.21,
+   "calibracion_activos": 0.0042,
+   "veredicto": "no pasa",
+   "desde_prueba": "2024-12-01",
+   "codigo": "E1",
+   "angulo": "predictor ESPN sobre el mercado",
+   "liga": "NFL",
+   "base": "mercado",
+   "n_total": 1365,
+   "n_activo_total": 1365
+  }
+ ],
+ "estimacion": [],
+ "fuga": [
+  {
+   "liga": "NFL",
+   "n": 1365,
+   "logloss_espn_menos_mercado_mil": 26.31,
+   "z_espn_mejor": -5.96,
+   "sospecha_de_fuga": false
+  }
+ ],
+ "pesos_totales": {
+  "ncaafb|Total": {
+   "w_vivo": 0.0,
+   "n": 81,
+   "mejora_milesimas": 0.0,
+   "z": 1.65,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2494,
+   "brier_modelo": 0.2773,
+   "previo": 0.35,
+   "w_usado": 0.276
+  },
+  "nhl|Total": {
+   "w_vivo": 1.0,
+   "n": 40,
+   "mejora_milesimas": 4.316,
+   "z": 0.3,
+   "mitades": [
+    6.863,
+    1.768
+   ],
+   "brier_pinnacle": 0.2514,
+   "brier_modelo": 0.2492,
+   "previo": 0.5,
+   "w_usado": 0.559
+  },
+  "kbo|Total": {
+   "w_vivo": 0.95,
+   "n": 29,
+   "mejora_milesimas": 10.079,
+   "z": 0.37,
+   "mitades": [
+    28.678,
+    -7.28
+   ],
+   "brier_pinnacle": 0.2483,
+   "brier_modelo": 0.2433,
+   "previo": 0.25,
+   "w_usado": 0.312
+  }
+ }
+}

@@ -1,0 +1,322 @@
+{
+ "generado": "2026-10-10T19:27:14",
+ "hipotesis": "trabajo/minar/2026-10-10_tanda9.md",
+ "k": 9,
+ "falsos_esperados": 0.2,
+ "ganador": [
+  {
+   "n_prueba": 1101,
+   "n_activo_prueba": 1101,
+   "n_explorar": 2566,
+   "beta": -0.1434,
+   "efecto_pp_por_unidad": -3.59,
+   "direccion_ok": false,
+   "mejora_milesimas": -0.352,
+   "z": -0.94,
+   "mitades": [
+    -0.978,
+    0.274
+   ],
+   "residuo_firmado_pp": -0.01,
+   "calibracion_activos": 0.0367,
+   "veredicto": "no pasa",
+   "desde_prueba": "2025-10-30",
+   "codigo": "ST1",
+   "angulo": "equipos especiales (ganador)",
+   "liga": "NHL",
+   "base": "modelo",
+   "n_total": 3667,
+   "n_activo_total": 3667
+  }
+ ],
+ "totales": [
+  {
+   "codigo": "TST",
+   "angulo": "equipos especiales (total)",
+   "liga": "NHL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1101,
+   "n_activo_prueba": 1101,
+   "n_total": 3667,
+   "n_activo_total": 3667,
+   "coef_por_unidad": -0.271,
+   "direccion_ok": false,
+   "mejora_mse": -0.007,
+   "z": -0.99,
+   "mitades": [
+    -0.001,
+    -0.0131
+   ],
+   "sesgo_activos_desv": 0.021,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.017,
+   "ic95_toda_muestra": [
+    -0.066,
+    0.031
+   ],
+   "x_tipico": 0.1337344840991912,
+   "desde_prueba": "2025-10-30"
+  },
+  {
+   "codigo": "TSTL",
+   "angulo": "equipos especiales (goles del local)",
+   "liga": "NHL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1101,
+   "n_activo_prueba": 1101,
+   "n_total": 3667,
+   "n_activo_total": 3667,
+   "coef_por_unidad": -0.083,
+   "direccion_ok": false,
+   "mejora_mse": 0.0005,
+   "z": 0.42,
+   "mitades": [
+    0.0005,
+    0.0004
+   ],
+   "sesgo_activos_desv": -0.054,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.011,
+   "ic95_toda_muestra": [
+    -0.048,
+    0.026
+   ],
+   "x_tipico": 0.09481557532892226,
+   "desde_prueba": "2025-10-30"
+  },
+  {
+   "codigo": "TSTV",
+   "angulo": "equipos especiales (goles de la visita)",
+   "liga": "NHL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1101,
+   "n_activo_prueba": 1101,
+   "n_total": 3667,
+   "n_activo_total": 3667,
+   "coef_por_unidad": -0.125,
+   "direccion_ok": false,
+   "mejora_mse": -0.0021,
+   "z": -1.28,
+   "mitades": [
+    -0.0032,
+    -0.0009
+   ],
+   "sesgo_activos_desv": 0.059,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.003,
+   "ic95_toda_muestra": [
+    -0.033,
+    0.039
+   ],
+   "x_tipico": 0.09466623036649213,
+   "desde_prueba": "2025-10-30"
+  },
+  {
+   "codigo": "TU1",
+   "angulo": "umpire de home (total)",
+   "liga": "MLB+LVBP+LIDOM+ABL",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 3809,
+   "n_activo_prueba": 3795,
+   "n_total": 12694,
+   "n_activo_total": 12502,
+   "coef_por_unidad": 0.128,
+   "direccion_ok": true,
+   "mejora_mse": 0.0139,
+   "z": 1.52,
+   "mitades": [
+    0.0231,
+    0.0048
+   ],
+   "sesgo_activos_desv": 0.022,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.051,
+   "ic95_toda_muestra": [
+    0.004,
+    0.099
+   ],
+   "x_tipico": 0.27510018723995006,
+   "desde_prueba": "2025-07-19"
+  },
+  {
+   "codigo": "TU1",
+   "angulo": "umpire de home (total)",
+   "liga": "LMP",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 729,
+   "n_activo_prueba": 727,
+   "n_total": 2427,
+   "n_activo_total": 2391,
+   "coef_por_unidad": 0.069,
+   "direccion_ok": true,
+   "mejora_mse": 0.0023,
+   "z": 0.21,
+   "mitades": [
+    0.0021,
+    0.0026
+   ],
+   "sesgo_activos_desv": 0.042,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": 0.03,
+   "ic95_toda_muestra": [
+    -0.103,
+    0.163
+   ],
+   "x_tipico": 0.3341886591833454,
+   "desde_prueba": "2023-12-20"
+  },
+  {
+   "codigo": "TAU",
+   "angulo": "ausencias de los dos (total)",
+   "liga": "NBA",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 1543,
+   "n_activo_prueba": 1145,
+   "n_total": 5143,
+   "n_activo_total": 3846,
+   "coef_por_unidad": -0.5,
+   "direccion_ok": true,
+   "mejora_mse": -1.0411,
+   "z": -1.94,
+   "mitades": [
+    -0.4227,
+    -1.6586
+   ],
+   "sesgo_activos_desv": -0.019,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.029,
+   "ic95_toda_muestra": [
+    -0.631,
+    0.574
+   ],
+   "x_tipico": 1.0708333333333333,
+   "desde_prueba": "2025-03-25"
+  },
+  {
+   "codigo": "TAUP",
+   "angulo": "ausencias propias (puntos del equipo)",
+   "liga": "NBA",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 3086,
+   "n_activo_prueba": 1598,
+   "n_total": 10286,
+   "n_activo_total": 5236,
+   "coef_por_unidad": -1.331,
+   "direccion_ok": true,
+   "mejora_mse": 0.4025,
+   "z": 0.93,
+   "mitades": [
+    0.2798,
+    0.5252
+   ],
+   "sesgo_activos_desv": -0.029,
+   "veredicto": "no pasa",
+   "efecto_toda_muestra": -0.844,
+   "ic95_toda_muestra": [
+    -1.105,
+    -0.584
+   ],
+   "x_tipico": 0.69375,
+   "desde_prueba": "2025-03-25"
+  },
+  {
+   "codigo": "TAUR",
+   "angulo": "ausencias del rival (puntos del equipo)",
+   "liga": "NBA",
+   "base": "total esperado",
+   "mercado": "total",
+   "n_prueba": 3086,
+   "n_activo_prueba": 1598,
+   "n_total": 10286,
+   "n_activo_total": 5236,
+   "coef_por_unidad": 0.786,
+   "direccion_ok": true,
+   "mejora_mse": 1.0022,
+   "z": 4.44,
+   "mitades": [
+    0.4633,
+    1.5412
+   ],
+   "sesgo_activos_desv": -0.003,
+   "veredicto": "pasa",
+   "efecto_toda_muestra": 0.809,
+   "ic95_toda_muestra": [
+    0.548,
+    1.07
+   ],
+   "x_tipico": 0.69375,
+   "desde_prueba": "2025-03-25"
+  }
+ ],
+ "mercado": [],
+ "estimacion": [
+  {
+   "liga": "NHL",
+   "n": 3667,
+   "n_activos": 3667,
+   "pp_50": 0.78,
+   "ic95_50": [
+    -0.33,
+    1.89
+   ],
+   "pp_50_encogido": 0.74,
+   "x_tipico": 0.1373219978157258,
+   "beta": 0.22739,
+   "ee": 0.16468,
+   "codigo": "ST1",
+   "angulo": "equipos especiales (ganador)"
+  }
+ ],
+ "fuga": [],
+ "pesos_totales": {
+  "ncaafb|Total": {
+   "w_vivo": 0.0,
+   "n": 81,
+   "mejora_milesimas": 0.0,
+   "z": 1.65,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2494,
+   "brier_modelo": 0.2773,
+   "previo": 0.35,
+   "w_usado": 0.276
+  },
+  "nhl|Total": {
+   "w_vivo": 1.0,
+   "n": 40,
+   "mejora_milesimas": 4.316,
+   "z": 0.3,
+   "mitades": [
+    6.863,
+    1.768
+   ],
+   "brier_pinnacle": 0.2514,
+   "brier_modelo": 0.2492,
+   "previo": 0.5,
+   "w_usado": 0.559
+  },
+  "kbo|Total": {
+   "w_vivo": 0.95,
+   "n": 29,
+   "mejora_milesimas": 10.079,
+   "z": 0.37,
+   "mitades": [
+    28.678,
+    -7.28
+   ],
+   "brier_pinnacle": 0.2483,
+   "brier_modelo": 0.2433,
+   "previo": 0.25,
+   "w_usado": 0.312
+  }
+ }
+}

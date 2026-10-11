@@ -201,6 +201,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   datos/<deporte>.csv; `_calendario(lg, lg)` ya no mezcla NCAAMB en NBA). Totales en vivo: `salida/historial_angulos_total.csv`
   (picks_del_dia) y `medir_angulos_vivo.py` -> angulos_vivo.json "totales". El efecto de totales tambien topa en 2 veces
   el x tipico (como el ganador).
+- Tanda 9 (10-oct-2026, "pruebalo todo"; `trabajo/minar/2026-10-10_tanda9.md`, `utilidades/minar_tanda9.py`,
+  `utilidades/minar_tanda9_produccion.py`): NHL equipos especiales y umpire (LMP y resto) no pasan. NBA ausencias del
+  rival -> puntos del equipo PASA (z 4.44; sobre produccion, propias + rival z 4.53). Ensamble CNN 5 semillas pasa en
+  NCAAMB (z 2.46). Predictor de ESPN (BPI/FPI; `colectores/recolectar_predictor_espn.py`, workflow manual
+  `predictor_espn.yml`, `datos/equipos/espn_predictor.csv`) sobre el modelo PASA en NCAAMB (z 9.10), NBA (3.87) y NCAAF
+  (4.66); en NFL contra el mercado va al reves. Sin señal de fuga (en NFL ESPN sola pierde contra el mercado, z -5.96);
+  desde el 10-oct cuotas.yml guarda la proyeccion ANTES de cada juego en `salida/espn_predictor_vivo.csv`. Torvik: 403
+  desde Actions. Nada aplicado todavia: decide Alejandro. Sonda de fuentes: workflow manual `sonda.yml` (avisos).
 - Motor de goles (10-oct-2026, `nucleo/motor_goles.py`, `utilidades/motor_goles.py`, `trabajo/minar/2026-10-10_motor_goles.md`):
   Kalman de ataque/defensa/portero + xG + segunda noche contra produccion reproducida (xG, GSAx, b2b, capa). Nada pasa en NHL,
   AHL ni Liiga (DEL y SHL sin muestra): no se aplica. Empate a 60 min: ni modelo ni motor le ganan a la tasa de la liga ->
