@@ -11,10 +11,10 @@ EN TU DATA antes de adoptarlo. Solo stdlib.
 import math, sys, os
 
 try:
-    from nucleo import io
+    from nucleo import io, encogimiento
 except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from nucleo import io
+    from nucleo import io, encogimiento
 
 SHRINK=6; RHO=-0.08; HFA_ELO=60.0; K_ELO=40.0; ESCALA=400.0; W_ENS=0.4   # validar() con datos reales: mejor w=0.4 (2026-09-29)
 # K_ELO 20 -> 40 y OLVIDO 1.0 -> 0.98 (aprobado por Alejandro el 9-oct-2026): forma mas rapida. Fuera de muestra 1X2 z 1.82;
@@ -45,15 +45,16 @@ def _juegos(liga=None):
     js.sort(key=lambda t:(t[0],t[1])); return js
 
 class Eq:
-    __slots__=("gf","ga","n","elo")
-    def __init__(s): s.gf=0.0; s.ga=0.0; s.n=0; s.elo=1500.0
-    def atk(s,lg): return ((s.gf+SHRINK*lg)/(s.n+SHRINK))/lg if s.n else 1.0
-    def dfn(s,lg): return ((s.ga+SHRINK*lg)/(s.n+SHRINK))/lg if s.n else 1.0
+    __slots__=("gf","ga","n","elo","prior")
+    def __init__(s, prior=SHRINK): s.gf=0.0; s.ga=0.0; s.n=0; s.elo=1500.0; s.prior=prior
+    def atk(s,lg): return ((s.gf+s.prior*lg)/(s.n+s.prior))/lg if s.n else 1.0
+    def dfn(s,lg): return ((s.ga+s.prior*lg)/(s.n+s.prior))/lg if s.n else 1.0
 
 def _sumar(t,gf,ga):
     t.gf=OLVIDO*t.gf+gf; t.ga=OLVIDO*t.ga+ga; t.n=OLVIDO*t.n+1
 
-def entrenar(liga=None, w=W_ENS):
+def entrenar(liga=None, w=W_ENS, referencia=False):
+    prior=encogimiento.k("futbol", liga or "ligamx", referencia)
     juegos=_juegos(liga); eq={}; sh=sa=0.0; n=0
     for f,gp,h,a in juegos:
         gh=_pri(_f(h.get("goals")),_f(h.get("runs"))); ga_=_pri(_f(h.get("goals_opp")),_f(h.get("runs_opp")))
@@ -64,7 +65,7 @@ def entrenar(liga=None, w=W_ENS):
     for f,gp,h,a in juegos:
         gh=_pri(_f(h.get("goals")),_f(h.get("runs"))); ga_=_pri(_f(h.get("goals_opp")),_f(h.get("runs_opp")))
         if gh is None or ga_ is None: continue
-        th=eq.setdefault(h.get("team"),Eq()); ta=eq.setdefault(a.get("team"),Eq())
+        th=eq.setdefault(h.get("team"),Eq(prior)); ta=eq.setdefault(a.get("team"),Eq(prior))
         exp=_sig((th.elo+HFA_ELO-ta.elo)/(ESCALA/math.log(10)))
         res=1.0 if gh>ga_ else (0.5 if gh==ga_ else 0.0)
         d=K_ELO*(res-exp); th.elo+=d; ta.elo-=d
