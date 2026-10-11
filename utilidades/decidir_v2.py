@@ -51,6 +51,9 @@ CUOTA_MIN = 1.70
 CUOTA_LONGSHOT = 4.0                    # arriba de +300 la confianza baja un nivel (sin tope de cuota: sigue siendo pick)
 UNIDADES = {"alta": 3, "media": 2, "baja": 1, "minima": 0, "sin_cuota": 0, "solo_mercado": 0}
 BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
+# 11-oct-2026: un equipo con menos de MIN_HISTORIA partidos en los datos (ascendido, nuevo, o un hueco del colector)
+# no genera pick: el modelo lo lee con casi nada (Hull City con 5, Krefeld con 3 en la DEL).
+MIN_HISTORIA = 15
 TZ = -6
 # total: desviacion del total real alrededor del esperado del modelo, por deporte (de los MAE medidos: sd ~ 1.25*MAE)
 SD_TOTAL = {"americano": 13.0, "nba": 19.0, "beisbol": 4.3, "tenis": 4.5}
@@ -406,6 +409,11 @@ def decidir_mercado(rec, tipo, movs=None):
         conf = {"alta": "media", "media": "baja", "baja": "minima"}[conf]
     if rec.get("pretemporada"):
         razones_no.append("pretemporada"); conf = "minima"
+    for _lado in ("home", "away"):
+        _nh = ((rec.get("forma") or {}).get(_lado) or {}).get("partidos_historia")
+        if _nh is not None and _nh < MIN_HISTORIA and conf not in ("sin_cuota", "solo_mercado"):
+            razones_no.append("%s con %d partidos en tus datos: el modelo lo lee con casi nada; revisar" % (rec[_lado]["nombre"], _nh))
+            conf = "minima"
     favor = [s for s in mejor["senales"] if s["dir"] > 0]; contra = [s for s in mejor["senales"] if s["dir"] < 0]
     if len(contra) > len(favor) and conf in ("alta", "media", "baja"):
         razones_no.append("mas senales en contra (%d) que a favor (%d): baja un nivel" % (len(contra), len(favor)))

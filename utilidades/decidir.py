@@ -258,6 +258,12 @@ def decidir(rec, C, PESOS):
                 conf, stake = "minima", 0.0
                 pick["nota_lectura"] = "modelo %.0f pp arriba del mercado en el lado del pick: revisar, no pick" % (
                     100 * (pm_l - ps_l))
+        # 11-oct-2026: equipo con menos de 15 partidos en los datos (nuevo, ascendido o hueco del colector): sin pick
+        for _lado in ("home", "away"):
+            _nh = ((rec.get("forma") or {}).get(_lado) or {}).get("partidos_historia")
+            if _nh is not None and _nh < 15:
+                conf, stake = "minima", 0.0
+                pick["nota_lectura"] = "%s con %d partidos en tus datos: revisar, no pick" % (rec[_lado]["nombre"], _nh)
         # La lectura en contra ya no pide unanimidad: 3+ en contra con a lo mas 1 a favor baja un escalon.
         if pick["senales_contra"] >= 3 and pick["senales_favor"] <= 1 and conf in ("alta", "media"):
             conf = {"alta": "media", "media": "baja"}[conf]

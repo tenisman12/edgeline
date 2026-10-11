@@ -588,6 +588,45 @@ ARCHIVOS = {"beisbol.csv": "league", "futbol.csv": "league", "americano.csv": "l
 FIJAS = {"gamePk", "league", "season", "game_date", "team", "opp", "is_home", "tour", "tourney_id", "tourney_date"}
 
 
+def _llave_jugador(n):
+    import unicodedata
+    n = "".join(c for c in unicodedata.normalize("NFKD", str(n or "")) if not unicodedata.combining(c)).lower()
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", n).split())
+
+
+def tenis(log):
+    """Un jugador = un nombre. TML y ESPN escriben a veces distinto al mismo jugador ('Felix Auger-Aliassime' y
+    'Felix Auger Aliassime', 'Alex de Minaur' y 'Alex De Minaur', espacios al inicio o al final). La forma, el H2H y la
+    carga se calculan por nombre, asi que el historial quedaba partido: el 11-oct-2026 la ficha de Auger-Aliassime
+    terminaba en Wimbledon (96 dias) y la de Van de Zandschulp en julio, y el modelo los leia con datos viejos.
+    Aqui se reescriben todas las grafias de un mismo jugador (misma llave sin acentos, guiones, mayusculas ni espacios)
+    a la que aparece en su partido mas reciente. No cambia resultados ni estadisticas, solo el nombre."""
+    ruta = os.path.join(BASE, "datos", "tenis.csv")
+    if not os.path.exists(ruta):
+        return None
+    cols, filas = leer(ruta)
+    ult = {}
+    for r in filas:
+        d = r.get("tourney_date") or ""
+        for c in ("winner_name", "loser_name"):
+            n = r.get(c) or ""
+            if n.strip():
+                k = _llave_jugador(n)
+                if k not in ult or (d, n.strip() == n) > ult[k][0]:
+                    ult[k] = ((d, n.strip() == n), n.strip())
+    cambios, jug = 0, set()
+    for r in filas:
+        for c in ("winner_name", "loser_name"):
+            n = r.get(c) or ""
+            if not n.strip():
+                continue
+            canon = ult[_llave_jugador(n)][1]
+            if n != canon:
+                r[c] = canon; cambios += 1; jug.add(canon)
+    log.append("tenis: %d nombres unificados en %d jugadores con varias grafias" % (cambios, len(jug)))
+    return (ruta, cols, filas) if cambios else None
+
+
 def cobertura(datos_mem=None):
     out = {"generado": dt.datetime.now().isoformat(timespec="seconds"), "archivos": {}}
     for nombre, lc in ARCHIVOS.items():
@@ -630,11 +669,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--aplicar", action="store_true")
     ap.add_argument("--cobertura", action="store_true")
-    ap.add_argument("--solo", help="beisbol,hockey,americano,nba,futbol")
+    ap.add_argument("--solo", help="beisbol,hockey,americano,nba,futbol,tenis")
     a = ap.parse_args()
     if a.cobertura:
         cob = cobertura(); imprimir_cobertura(cob); _guardar_cob(cob); return 0
-    pasos = {"beisbol": beisbol, "hockey": hockey, "americano": americano, "nba": nba, "futbol": futbol}
+    pasos = {"beisbol": beisbol, "hockey": hockey, "americano": americano, "nba": nba, "futbol": futbol, "tenis": tenis}
     elegidos = [x.strip() for x in a.solo.split(",")] if a.solo else list(pasos)
     log, mem = [], {}
     for p in elegidos:

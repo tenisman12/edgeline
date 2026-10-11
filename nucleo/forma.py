@@ -329,7 +329,7 @@ class Forma:
         ultimos = [{"fecha": j["f"], "rival": j["rival"], "sede": "L" if j["home"] else "V",
                     "gf": j["gf"], "ga": j["ga"], "r": _res(j)} for j in reversed(ts[-10:])]
         out = {
-            "equipo": nombre, "temporada": se, "ultimo_juego": js[-1]["f"],
+            "equipo": nombre, "temporada": se, "ultimo_juego": js[-1]["f"], "partidos_historia": len(js),
             "fuera_de_temporada": bool(self.ultima and (dt.date.fromisoformat(self.ultima) -
                                                         dt.date.fromisoformat(js[-1]["f"])).days > DIAS_FUERA),
             "record": record, "racha": _racha(ts), "ultimos10": ultimos,

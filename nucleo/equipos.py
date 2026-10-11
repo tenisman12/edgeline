@@ -52,7 +52,18 @@ ALIAS = {
     "fc koln": "koln", "koln": "koln", "bayern munich": "bayern munich",
     # Ligue 1
     "paris sg": "paris saint germain", "st etienne": "saint etienne",
+    # LaLiga 2026-27 (ascendido): football-data lo llama "La Coruna"; ESPN "Deportivo" (11-oct-2026 empataba con Alaves)
+    "la coruna": "deportivo la coruna",
 }
+
+# nombres de ESPN -> nombre normalizado comparable (lado de ESPN). FC Cologne = FC Koln (11-oct-2026 salia sin modelo).
+ALIAS_ESPN = {"internazionale": "inter milan", "stade rennais": "rennes", "fc cologne": "koln", "cologne": "koln", "deportivo": "deportivo la coruna", "deportivo la coruna": "deportivo la coruna"}
+
+# palabras que por si solas no identifican a un equipo: un empate que solo coincide en ellas no vale
+# ("Deportivo" contra "Deportivo Alaves", "Real" contra "Real Madrid").
+_GENERICOS = {"deportivo", "real", "atletico", "athletic", "sporting", "racing", "union", "united", "city", "inter",
+              "olympique", "stade", "borussia", "san", "st", "saint", "santa", "club", "town", "rovers", "wanderers",
+              "nacional", "independiente", "universidad", "new", "los", "las"}
 
 # abreviaturas de ESPN -> otras que usan nflverse / api-web.nhle.com
 ALIAS_ABREV = {
@@ -108,15 +119,17 @@ def _score(na, nb):
     if not ta or not tb:
         return 0.0
     chico, grande = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
-    usados, m = set(), 0
+    usados, m, utiles = set(), 0, 0
     for t in chico:
         for i, u in enumerate(grande):
             if i in usados:
                 continue
             if t == u or (len(t) >= 3 and len(u) >= 3 and (u.startswith(t) or t.startswith(u))):
                 usados.add(i); m += 1
+                if t not in _GENERICOS and u not in _GENERICOS:
+                    utiles += 1
                 break
-    if m < len(chico):
+    if m < len(chico) or utiles == 0:
         return 0.0
     return 0.80 + 0.19 * (m / len(grande))
 
@@ -139,14 +152,21 @@ class Emparejador:
             if ab and ab in self.claves:
                 return ab, 0.97
         mejor, sm = None, 0.0
+        empatados = set()
+        normas = []
         for v in variantes:
             nb = _norm(v)
-            if not nb:
-                continue
+            if nb:
+                normas += [nb] + ([ALIAS_ESPN[nb]] if nb in ALIAS_ESPN else [])
+        for nb in dict.fromkeys(normas):
             for c in self.claves:
                 s = _score(self.n[c], nb)
-                if s > sm:
-                    mejor, sm = c, s
+                if s > sm + 1e-9:
+                    mejor, sm, empatados = c, s, {c}
+                elif abs(s - sm) <= 1e-9 and s > 0:
+                    empatados.add(c)
+        if sm >= UMBRAL and len(empatados) > 1 and sm < 1.0:
+            return None, sm          # ambiguo: dos equipos distintos con el mismo puntaje; mejor sin dato que el equivocado
         return (mejor, sm) if sm >= UMBRAL else (None, sm)
 
 

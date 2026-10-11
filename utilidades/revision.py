@@ -22,7 +22,7 @@ la corrida se ponga roja.
     python utilidades\\revision.py --avisos-como-error (los WARN tambien fallan)
 Solo stdlib.
 """
-import argparse, csv, io, json, math, os, sys, datetime as dt
+import argparse, csv, io, json, math, os, re, sys, datetime as dt
 from collections import Counter, defaultdict
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -428,16 +428,145 @@ def revisar_git():
         ok("git", "sin archivos de salida/ modificados fuera de lo publicado")
 
 
+
+# ----------------------------------------------------------------------------- 8. INTEGRIDAD DE LO QUE LEE EL MODELO
+# 11-oct-2026 (Alejandro: "no quiero esos errores para los demas modelos"). Tres errores que dieron picks malos sin
+# que nada se pusiera en rojo: a la DEL le faltaban las jornadas 1-4 (el colector solo leia el mes en curso), ESPN
+# "Deportivo" se caso con Alaves y "FC Cologne" con nadie, y el tenis tenia jugadores partidos en dos nombres.
+# Fechas de inicio verificadas (fuente en el comentario). Solo ligas sin record de ESPN en proximos.json.
+INICIO_VERIFICADO = {
+    "del": "2026-09-18",     # hessenschau.de, calendario DEL 2026/27 (jornada 1: 18-sep-2026)
+}
+ARCHIVO_LIGA = {lg: arch for arch, ligas in ARCHIVOS.items() for lg in ligas}
+
+
+def _juegos_por_equipo(desde):
+    """{(liga, equipo): partidos de la temporada EN CURSO (columna season del ultimo juego de la liga; en las ligas con
+    inicio verificado, desde esa fecha)} y {(liga, equipo): partidos totales}."""
+    filas = defaultdict(list)
+    for arch in set(ARCHIVO_LIGA.values()):
+        ruta = os.path.join(BASE, "datos", arch)
+        if not os.path.exists(ruta):
+            continue
+        vistos = set()
+        with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+            for r in csv.DictReader(f):
+                lg = (r.get("league") or "").lower().replace(" ", "")
+                pk = str(r.get("gamePk") or r.get("game_id") or "")
+                if (lg, r.get("team"), pk) in vistos:
+                    continue
+                vistos.add((lg, r.get("team"), pk))
+                filas[lg].append((r.get("team"), (r.get("game_date") or "")[:10], str(r.get("season") or "")))
+    temp, total = Counter(), Counter()
+    for lg, L in filas.items():
+        actual = max(L, key=lambda x: x[1])[2] if L else ""
+        d0 = INICIO_VERIFICADO.get(lg)
+        for t, d, se in L:
+            total[(lg, t)] += 1
+            if (d0 and d >= d0) or (not d0 and actual and se == actual):
+                temp[(lg, t)] += 1
+    return temp, total
+
+
+def revisar_integridad():
+    print("\n8. INTEGRIDAD: equipos bien casados, partidos de la temporada completos, jugadores con un solo nombre")
+    sys.path.insert(0, REPO)
+    try:
+        from nucleo import equipos as EQ
+    except Exception as e:
+        warn("integridad", "no se pudo cargar nucleo/equipos (%s)" % e); return
+    pr = _cargar("proximos.json") or {}
+    hoy = _hoy().isoformat()
+    partidos = [p for p in pr.get("partidos") or [] if (p.get("fecha") or "") >= hoy and p.get("tipo") != "tenis"]
+    # inicio de la temporada por liga: el de la tabla verificada o el primer juego de la temporada en curso segun ESPN
+    desde = dict(INICIO_VERIFICADO)
+    for lg in set(p["liga"] for p in partidos):
+        if lg not in desde and _inicio_temporada(lg, _hoy()):
+            desde[lg] = _inicio_temporada(lg, _hoy()).isoformat()
+    temp, total = _juegos_por_equipo(desde)
+    # (a) nombres de ESPN casados con un equipo de los datos que no se parece (ni por nombre ni por abreviatura)
+    malos, sin_casar, poca_hist, faltan = [], [], set(), []
+    for p in partidos:
+        emp = p.get("emparejado") or {}
+        for lado in ("home", "away"):
+            e = p.get(lado) or {}
+            nombre, clave = e.get("nombre") or "", emp.get(lado)
+            if not emp:
+                continue
+            if not clave:
+                if p.get("modelo") is None and "TBD" not in nombre.upper():
+                    sin_casar.append("%s %s" % (p["liga"].upper(), nombre))
+                continue
+            es_abrev = clave.isupper() and len(clave) <= 4
+            variantes = [x for x in (nombre, e.get("corto"), e.get("loc")) if x]
+            if not es_abrev and EQ.Emparejador([clave]).buscar(variantes, e.get("abrev"))[0] != clave:
+                malos.append("%s: ESPN '%s' -> datos '%s'" % (p["liga"].upper(), nombre, clave))
+            n_tot = total.get((p["liga"].replace(" ", ""), clave), 0)
+            if 0 < n_tot < 15:
+                poca_hist.add("%s %s (%d partidos en tus datos)" % (p["liga"].upper(), clave, n_tot))
+            # (b) partidos de la temporada: los que dice el record de ESPN contra los que hay en tus datos
+            rec = str(e.get("record") or "")
+            if re.fullmatch(r"\d+(-\d+){1,2}", rec) and not p.get("pretemporada"):
+                jugados = sum(int(x) for x in rec.split("-"))
+                hay = temp.get((p["liga"].replace(" ", ""), clave), 0)
+                if jugados - hay >= 2:
+                    faltan.append("%s %s: ESPN %d jugados (%s), en tus datos %d de la temporada en curso" % (
+                        p["liga"].upper(), clave, jugados, rec, hay))
+    for m in sorted(set(malos)):
+        err("integridad", "nombre mal casado (el modelo leeria a OTRO equipo): " + m)
+    for m in sorted(set(sin_casar)):
+        warn("integridad", "equipo sin casar, el partido sale sin modelo: " + m)
+    for m in sorted(set(faltan)):
+        err("integridad", "faltan partidos de la temporada: " + m)
+    for m in sorted(poca_hist):
+        warn("integridad", "equipo con poca historia (ascendido o nuevo): el modelo lo lee con casi nada; no es pick: " + m)
+    # (c) ligas con inicio verificado: que el primer partido de la temporada este en los datos
+    for lg, d0 in INICIO_VERIFICADO.items():
+        n = [c for (l, t), c in temp.items() if l == lg]
+        if n:
+            fechas = []
+            ruta = os.path.join(BASE, "datos", ARCHIVO_LIGA.get(lg, ""))
+            if os.path.exists(ruta):
+                with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+                    fechas = [(r.get("game_date") or "")[:10] for r in csv.DictReader(f)
+                              if (r.get("league") or "").lower() == lg and (r.get("game_date") or "")[:10] >= d0]
+            primero = min(fechas) if fechas else ""
+            if primero and (dt.date.fromisoformat(primero) - dt.date.fromisoformat(d0)).days > 3:
+                err("integridad", "%s: la temporada empezo el %s y el primer partido en tus datos es del %s (faltan jornadas)" % (
+                    lg.upper(), d0, primero))
+            else:
+                ok("integridad", "%s: temporada completa desde %s" % (lg.upper(), d0))
+    # (d) tenis: un jugador con dos grafias parte su historial (forma, H2H, carga)
+    ruta = os.path.join(BASE, "datos", "tenis.csv")
+    if os.path.exists(ruta):
+        llaves = defaultdict(set)
+        with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+            for r in csv.DictReader(f):
+                for c in ("winner_name", "loser_name"):
+                    n = r.get(c) or ""
+                    if n.strip():
+                        k = " ".join(re.sub(r"[^a-z0-9]+", " ", EQ._norm(n)).split())
+                        llaves[k].add(n)
+        dobles = {k: v for k, v in llaves.items() if len(v) > 1}
+        if dobles:
+            err("integridad", "tenis: %d jugadores con varias grafias (historial partido), p. ej. %s. Correr "
+                              "python utilidades/completar_datos.py --solo tenis --aplicar" % (
+                len(dobles), "; ".join(" / ".join(sorted(v)) for v in list(dobles.values())[:3])))
+        else:
+            ok("integridad", "tenis: cada jugador con un solo nombre")
+    if not malos and not faltan:
+        ok("integridad", "%d partidos revisados: nombres casados y temporadas completas" % len(partidos))
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--solo", default="", help="datos,capas,validacion,cuotas,salida,calibracion,git")
+    ap.add_argument("--solo", default="", help="datos,capas,validacion,cuotas,salida,calibracion,git,integridad")
     ap.add_argument("--avisos-como-error", action="store_true")
     a = ap.parse_args()
     pedidos = {x.strip() for x in a.solo.split(",") if x.strip()}
     print("REVISION DE INTEGRIDAD  %s  (base %s)" % (dt.datetime.now().strftime("%Y-%m-%d %H:%M"), BASE))
     bloques = [("datos", revisar_datos), ("capas", revisar_capas), ("validacion", revisar_validacion),
                ("cuotas", revisar_cuotas), ("salida", revisar_frescura), ("calibracion", revisar_calibracion),
-               ("git", revisar_git)]
+               ("git", revisar_git), ("integridad", revisar_integridad)]
     for nombre, fn in bloques:
         if pedidos and nombre not in pedidos:
             continue

@@ -262,6 +262,18 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   un nivel, 15+ minima. Lineas compradas con EV > 12 % se ignoran. Textos: modelo y cuota justa primero, EV al final.
 - Lo medido antes del cambio: en NFL la mezcla con 0.5 predijo peor que el cierre (z -2.59); el modelo de NFL no ve QB ni bajas.
 
+## Integridad de lo que lee el modelo (11-oct-2026, Alejandro: "no quiero esos errores para los demas modelos")
+- Tres errores dieron picks malos sin poner nada en rojo: a la DEL le faltaban las jornadas 1-4 (penny-del.org /spiele solo
+  muestra el mes en curso; ahora `recolectar_hockey_ligas.del_links_temporada` recorre todas las vistas por mes), ESPN
+  "Deportivo" se casaba con Alaves y "FC Cologne" con nadie (`nucleo/equipos.py`: ALIAS_ESPN, palabras genericas que solas no
+  casan, empates ambiguos = sin dato) y en tenis 17 jugadores tenian dos grafias (`completar_datos.py` paso `tenis` las unifica
+  a la del partido mas reciente).
+- `utilidades/revision.py` bloque 8 INTEGRIDAD (corre en cada actualizacion): nombre mal casado = ERROR; record de ESPN contra
+  partidos de la temporada en tus datos (faltan 2+ = ERROR); inicio verificado de ligas sin record de ESPN (INICIO_VERIFICADO,
+  DEL 18-sep-2026); tenis con dos grafias = ERROR; equipo con menos de 15 partidos = aviso.
+- Picks: equipo con menos de 15 partidos en tus datos (`forma.partidos_historia`) = minima, sin pick (decidir_v2 MIN_HISTORIA y
+  decidir.py).
+
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.
 - `porteros_usados` en NHL siempre vale 2.0.
