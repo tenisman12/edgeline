@@ -31,10 +31,10 @@ class HistoricalFeaturesAsOfTest(unittest.TestCase):
                       "of_home", "of_away", "df_home", "df_away", "lg_rs"):
             self.assertEqual(first[0][field], first[1][field], field)
 
-    def test_default_prior_is_unchanged(self):
-        self.assertEqual(features.k_carreras("MLB"), 6.0)
+    def test_selected_prior_is_mlb_only(self):
+        self.assertEqual(features.k_carreras("MLB"), 100.0)
         self.assertEqual(features.k_carreras("KBO"), 6.0)
-        self.assertEqual(features.k_carreras("MLB", override=100), 100.0)
+        self.assertEqual(features.k_carreras("MLB", override=6), 6.0)
 
 
 if __name__ == "__main__":
