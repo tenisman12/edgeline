@@ -149,8 +149,10 @@ class _Acum:
 
 # ------------------------------------------------------------------ armado as-of
 STATS = ["cs", "ca", "obp", "iso", "k_pct", "bb_pct", "fip", "k9", "bb9", "hr9", "whip"]
+K_CARRERAS_LIGA = {"mlb": 100.0}
+
 def k_carreras(liga, override=None):
-    return float(override) if override is not None else 6.0
+    return float(override) if override is not None else K_CARRERAS_LIGA.get(io.norm(liga), 6.0)
 
 def _emparejar(filas):
     """El CSV trae 2 filas por juego (una por equipo). Las une en (home, away)."""
