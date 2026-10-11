@@ -1,0 +1,57 @@
+name: predictor de ESPN (BPI/FPI)
+
+# Manual (y una vez al dia con actualizar.yml cuando se apruebe). Baja la probabilidad de ESPN (BPI / FPI) de cada juego
+# de NFL, NCAAFB, NBA y NCAAMB que no este guardada y publica la rama datos (datos/equipos/espn_predictor.csv).
+on:
+  workflow_dispatch:
+    inputs:
+      ligas:
+        description: "ligas separadas por coma"
+        default: "nfl,ncaafb,nba,ncaamb"
+
+concurrency:
+  group: edgeline-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  predictor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Traer datos (rama datos)
+        run: |
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C .
+      - name: Bajar predictor
+        run: |
+          python colectores/recolectar_predictor_espn.py --ligas "${{ github.event.inputs.ligas }}" --hilos 16
+          python - <<'EOF'
+          import csv, collections
+          R = list(csv.DictReader(open("datos/equipos/espn_predictor.csv", encoding="utf-8")))
+          c = collections.Counter((r["liga"], r["estado"]) for r in R)
+          print("::notice title=predictor::" + " | ".join("%s %s %d" % (k[0], k[1], v) for k, v in sorted(c.items())))
+          EOF
+      - name: Publicar datos en la rama datos
+        run: |
+          rm -rf /tmp/pub && mkdir -p /tmp/pub
+          git fetch --depth=1 origin datos
+          git archive FETCH_HEAD datos | tar -x -C /tmp/pub
+          cp datos/equipos/espn_predictor.csv /tmp/pub/datos/equipos/
+          cd /tmp/pub
+          git init -q -b datos
+          git config user.name "edgeline-bot"
+          git config user.email "edgeline-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "datos (predictor ESPN) $(date -u +'%Y-%m-%d %H:%M')Z"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
