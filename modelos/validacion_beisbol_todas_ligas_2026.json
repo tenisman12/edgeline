@@ -1,0 +1,1452 @@
+{
+  "corte": "2025-01-01",
+  "ligas": {
+    "mlb": {
+      "k_comparados": [
+        6,
+        0,
+        100
+      ],
+      "n_train": 12760,
+      "n_test": 4773,
+      "n_capa": 12760,
+      "comparaciones": {
+        "0": {
+          "n_comun": 4773,
+          "n_dias": 389,
+          "base": {
+            "brier": 0.245498,
+            "logloss": 0.683943,
+            "acierto": 0.556882,
+            "mae_equipo_base": 2.513226,
+            "mae_total_base": 3.610538,
+            "mae_equipo_final": 2.477756,
+            "mae_total_final": 3.551935
+          },
+          "candidato": {
+            "brier": 0.245904,
+            "logloss": 0.684784,
+            "acierto": 0.552902,
+            "mae_equipo_base": 2.530936,
+            "mae_total_base": 3.63688,
+            "mae_equipo_final": 2.479382,
+            "mae_total_final": 3.551895
+          },
+          "delta": {
+            "brier": {
+              "media": 0.000406,
+              "ic95_fecha": [
+                0.00024,
+                0.000572
+              ]
+            },
+            "logloss": {
+              "media": 0.000841,
+              "ic95_fecha": [
+                0.000479,
+                0.001191
+              ]
+            },
+            "acierto": {
+              "media": -0.003981,
+              "ic95_fecha": [
+                -0.006392,
+                -0.001489
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.01771,
+              "ic95_fecha": [
+                0.012254,
+                0.023992
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.026342,
+              "ic95_fecha": [
+                0.016262,
+                0.036513
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.001626,
+              "ic95_fecha": [
+                0.000828,
+                0.002449
+              ]
+            },
+            "mae_total_final": {
+              "media": -4e-05,
+              "ic95_fecha": [
+                -0.000678,
+                0.000701
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 2397,
+              "delta_brier": 0.000432,
+              "delta_mae_total_final": -0.000363
+            },
+            "2026": {
+              "n": 2376,
+              "delta_brier": 0.00038,
+              "delta_mae_total_final": 0.000286
+            }
+          }
+        },
+        "100": {
+          "n_comun": 4773,
+          "n_dias": 389,
+          "base": {
+            "brier": 0.245498,
+            "logloss": 0.683943,
+            "acierto": 0.556882,
+            "mae_equipo_base": 2.513226,
+            "mae_total_base": 3.610538,
+            "mae_equipo_final": 2.477756,
+            "mae_total_final": 3.551935
+          },
+          "candidato": {
+            "brier": 0.244726,
+            "logloss": 0.682392,
+            "acierto": 0.557721,
+            "mae_equipo_base": 2.49999,
+            "mae_total_base": 3.581691,
+            "mae_equipo_final": 2.473009,
+            "mae_total_final": 3.552301
+          },
+          "delta": {
+            "brier": {
+              "media": -0.000772,
+              "ic95_fecha": [
+                -0.001236,
+                -0.000324
+              ]
+            },
+            "logloss": {
+              "media": -0.001551,
+              "ic95_fecha": [
+                -0.002547,
+                -0.000588
+              ]
+            },
+            "acierto": {
+              "media": 0.000838,
+              "ic95_fecha": [
+                -0.004072,
+                0.005227
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.013236,
+              "ic95_fecha": [
+                -0.022716,
+                -0.004955
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.028847,
+              "ic95_fecha": [
+                -0.047504,
+                -0.012545
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.004747,
+              "ic95_fecha": [
+                -0.007261,
+                -0.002533
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.000366,
+              "ic95_fecha": [
+                -0.001818,
+                0.002592
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 2397,
+              "delta_brier": -0.000832,
+              "delta_mae_total_final": 0.001159
+            },
+            "2026": {
+              "n": 2376,
+              "delta_brier": -0.000711,
+              "delta_mae_total_final": -0.000434
+            }
+          }
+        }
+      }
+    },
+    "npb": {
+      "k_comparados": [
+        6,
+        0,
+        100,
+        150
+      ],
+      "n_train": 2532,
+      "n_test": 1636,
+      "n_capa": 2532,
+      "comparaciones": {
+        "0": {
+          "n_comun": 1636,
+          "n_dias": 340,
+          "base": {
+            "brier": 0.242843,
+            "logloss": 0.67872,
+            "acierto": 0.576406,
+            "mae_equipo_base": 2.139379,
+            "mae_total_base": 3.046912,
+            "mae_equipo_final": 2.124701,
+            "mae_total_final": 3.032844
+          },
+          "candidato": {
+            "brier": 0.243143,
+            "logloss": 0.679373,
+            "acierto": 0.582518,
+            "mae_equipo_base": 2.152443,
+            "mae_total_base": 3.066041,
+            "mae_equipo_final": 2.124069,
+            "mae_total_final": 3.035084
+          },
+          "delta": {
+            "brier": {
+              "media": 0.0003,
+              "ic95_fecha": [
+                -0.000116,
+                0.000748
+              ]
+            },
+            "logloss": {
+              "media": 0.000653,
+              "ic95_fecha": [
+                -0.000226,
+                0.001587
+              ]
+            },
+            "acierto": {
+              "media": 0.006112,
+              "ic95_fecha": [
+                0.000639,
+                0.011743
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.013064,
+              "ic95_fecha": [
+                0.007465,
+                0.019294
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.01913,
+              "ic95_fecha": [
+                0.008957,
+                0.030528
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.000632,
+              "ic95_fecha": [
+                -0.002504,
+                0.001146
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.00224,
+              "ic95_fecha": [
+                -0.001829,
+                0.005865
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 823,
+              "delta_brier": 0.000438,
+              "delta_mae_total_final": 1.5e-05
+            },
+            "2026": {
+              "n": 813,
+              "delta_brier": 0.00016,
+              "delta_mae_total_final": 0.004493
+            }
+          }
+        },
+        "100": {
+          "n_comun": 1636,
+          "n_dias": 340,
+          "base": {
+            "brier": 0.242843,
+            "logloss": 0.67872,
+            "acierto": 0.576406,
+            "mae_equipo_base": 2.139379,
+            "mae_total_base": 3.046912,
+            "mae_equipo_final": 2.124701,
+            "mae_total_final": 3.032844
+          },
+          "candidato": {
+            "brier": 0.242675,
+            "logloss": 0.678361,
+            "acierto": 0.578851,
+            "mae_equipo_base": 2.132492,
+            "mae_total_base": 3.030123,
+            "mae_equipo_final": 2.129337,
+            "mae_total_final": 3.032602
+          },
+          "delta": {
+            "brier": {
+              "media": -0.000168,
+              "ic95_fecha": [
+                -0.001123,
+                0.00065
+              ]
+            },
+            "logloss": {
+              "media": -0.000358,
+              "ic95_fecha": [
+                -0.002345,
+                0.001343
+              ]
+            },
+            "acierto": {
+              "media": 0.002445,
+              "ic95_fecha": [
+                -0.00641,
+                0.010651
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.006887,
+              "ic95_fecha": [
+                -0.018921,
+                0.004406
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.016789,
+              "ic95_fecha": [
+                -0.038615,
+                0.004938
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.004635,
+              "ic95_fecha": [
+                0.001115,
+                0.007689
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.000243,
+              "ic95_fecha": [
+                -0.005652,
+                0.004412
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 823,
+              "delta_brier": -0.000438,
+              "delta_mae_total_final": 0.001636
+            },
+            "2026": {
+              "n": 813,
+              "delta_brier": 0.000105,
+              "delta_mae_total_final": -0.002145
+            }
+          }
+        },
+        "150": {
+          "n_comun": 1636,
+          "n_dias": 340,
+          "base": {
+            "brier": 0.242843,
+            "logloss": 0.67872,
+            "acierto": 0.576406,
+            "mae_equipo_base": 2.139379,
+            "mae_total_base": 3.046912,
+            "mae_equipo_final": 2.124701,
+            "mae_total_final": 3.032844
+          },
+          "candidato": {
+            "brier": 0.242761,
+            "logloss": 0.678541,
+            "acierto": 0.577017,
+            "mae_equipo_base": 2.134993,
+            "mae_total_base": 3.030717,
+            "mae_equipo_final": 2.130018,
+            "mae_total_final": 3.033149
+          },
+          "delta": {
+            "brier": {
+              "media": -8.2e-05,
+              "ic95_fecha": [
+                -0.001144,
+                0.000992
+              ]
+            },
+            "logloss": {
+              "media": -0.000179,
+              "ic95_fecha": [
+                -0.002349,
+                0.002074
+              ]
+            },
+            "acierto": {
+              "media": 0.000611,
+              "ic95_fecha": [
+                -0.009679,
+                0.010778
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.004386,
+              "ic95_fecha": [
+                -0.01679,
+                0.008116
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.016194,
+              "ic95_fecha": [
+                -0.039665,
+                0.004726
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.005316,
+              "ic95_fecha": [
+                0.001728,
+                0.009331
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.000305,
+              "ic95_fecha": [
+                -0.004213,
+                0.004753
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 823,
+              "delta_brier": -0.000364,
+              "delta_mae_total_final": 0.001572
+            },
+            "2026": {
+              "n": 813,
+              "delta_brier": 0.000204,
+              "delta_mae_total_final": -0.000978
+            }
+          }
+        }
+      }
+    },
+    "kbo": {
+      "k_comparados": [
+        6,
+        0,
+        100,
+        200
+      ],
+      "n_train": 2830,
+      "n_test": 1363,
+      "n_capa": 2830,
+      "comparaciones": {
+        "0": {
+          "n_comun": 1363,
+          "n_dias": 325,
+          "base": {
+            "brier": 0.2455,
+            "logloss": 0.684176,
+            "acierto": 0.55686,
+            "mae_equipo_base": 2.689978,
+            "mae_total_base": 3.787188,
+            "mae_equipo_final": 2.708556,
+            "mae_total_final": 3.81716
+          },
+          "candidato": {
+            "brier": 0.2459,
+            "logloss": 0.685032,
+            "acierto": 0.556126,
+            "mae_equipo_base": 2.716477,
+            "mae_total_base": 3.827903,
+            "mae_equipo_final": 2.71173,
+            "mae_total_final": 3.815428
+          },
+          "delta": {
+            "brier": {
+              "media": 0.0004,
+              "ic95_fecha": [
+                -2.9e-05,
+                0.000902
+              ]
+            },
+            "logloss": {
+              "media": 0.000856,
+              "ic95_fecha": [
+                -2.6e-05,
+                0.001911
+              ]
+            },
+            "acierto": {
+              "media": -0.000734,
+              "ic95_fecha": [
+                -0.008246,
+                0.005926
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.026499,
+              "ic95_fecha": [
+                0.014271,
+                0.039812
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.040715,
+              "ic95_fecha": [
+                0.022631,
+                0.063168
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.003174,
+              "ic95_fecha": [
+                0.000323,
+                0.006253
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.001731,
+              "ic95_fecha": [
+                -0.006879,
+                0.003431
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 689,
+              "delta_brier": 0.00053,
+              "delta_mae_total_final": 0.004036
+            },
+            "2026": {
+              "n": 674,
+              "delta_brier": 0.000266,
+              "delta_mae_total_final": -0.007627
+            }
+          }
+        },
+        "100": {
+          "n_comun": 1363,
+          "n_dias": 325,
+          "base": {
+            "brier": 0.2455,
+            "logloss": 0.684176,
+            "acierto": 0.55686,
+            "mae_equipo_base": 2.689978,
+            "mae_total_base": 3.787188,
+            "mae_equipo_final": 2.708556,
+            "mae_total_final": 3.81716
+          },
+          "candidato": {
+            "brier": 0.244976,
+            "logloss": 0.683042,
+            "acierto": 0.554659,
+            "mae_equipo_base": 2.675635,
+            "mae_total_base": 3.746125,
+            "mae_equipo_final": 2.69777,
+            "mae_total_final": 3.798779
+          },
+          "delta": {
+            "brier": {
+              "media": -0.000525,
+              "ic95_fecha": [
+                -0.001517,
+                0.000412
+              ]
+            },
+            "logloss": {
+              "media": -0.001134,
+              "ic95_fecha": [
+                -0.003254,
+                0.000831
+              ]
+            },
+            "acierto": {
+              "media": -0.002201,
+              "ic95_fecha": [
+                -0.011029,
+                0.006757
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.014343,
+              "ic95_fecha": [
+                -0.034315,
+                0.004299
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.041062,
+              "ic95_fecha": [
+                -0.076774,
+                -0.012956
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.010786,
+              "ic95_fecha": [
+                -0.018393,
+                -0.002548
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.01838,
+              "ic95_fecha": [
+                -0.032786,
+                -0.003068
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 689,
+              "delta_brier": -0.000859,
+              "delta_mae_total_final": -0.050425
+            },
+            "2026": {
+              "n": 674,
+              "delta_brier": -0.000183,
+              "delta_mae_total_final": 0.014377
+            }
+          }
+        },
+        "200": {
+          "n_comun": 1363,
+          "n_dias": 325,
+          "base": {
+            "brier": 0.2455,
+            "logloss": 0.684176,
+            "acierto": 0.55686,
+            "mae_equipo_base": 2.689978,
+            "mae_total_base": 3.787188,
+            "mae_equipo_final": 2.708556,
+            "mae_total_final": 3.81716
+          },
+          "candidato": {
+            "brier": 0.244991,
+            "logloss": 0.683067,
+            "acierto": 0.55099,
+            "mae_equipo_base": 2.682146,
+            "mae_total_base": 3.746666,
+            "mae_equipo_final": 2.694733,
+            "mae_total_final": 3.791423
+          },
+          "delta": {
+            "brier": {
+              "media": -0.00051,
+              "ic95_fecha": [
+                -0.001775,
+                0.000779
+              ]
+            },
+            "logloss": {
+              "media": -0.001109,
+              "ic95_fecha": [
+                -0.00379,
+                0.001631
+              ]
+            },
+            "acierto": {
+              "media": -0.005869,
+              "ic95_fecha": [
+                -0.017831,
+                0.005714
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.007832,
+              "ic95_fecha": [
+                -0.032618,
+                0.016791
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.040522,
+              "ic95_fecha": [
+                -0.084661,
+                0.009657
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.013823,
+              "ic95_fecha": [
+                -0.023472,
+                -0.00384
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.025736,
+              "ic95_fecha": [
+                -0.044894,
+                -0.007146
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 689,
+              "delta_brier": -0.000917,
+              "delta_mae_total_final": -0.061748
+            },
+            "2026": {
+              "n": 674,
+              "delta_brier": -9.3e-05,
+              "delta_mae_total_final": 0.011077
+            }
+          }
+        }
+      }
+    },
+    "lmp": {
+      "k_comparados": [
+        6,
+        0,
+        100
+      ],
+      "n_train": 3468,
+      "n_test": 390,
+      "n_capa": 3468,
+      "comparaciones": {
+        "0": {
+          "n_comun": 390,
+          "n_dias": 98,
+          "base": {
+            "brier": 0.24185,
+            "logloss": 0.676842,
+            "acierto": 0.589744,
+            "mae_equipo_base": 2.500139,
+            "mae_total_base": 3.721184,
+            "mae_equipo_final": 2.461472,
+            "mae_total_final": 3.704258
+          },
+          "candidato": {
+            "brier": 0.241876,
+            "logloss": 0.676995,
+            "acierto": 0.582051,
+            "mae_equipo_base": 2.530388,
+            "mae_total_base": 3.768959,
+            "mae_equipo_final": 2.461881,
+            "mae_total_final": 3.706072
+          },
+          "delta": {
+            "brier": {
+              "media": 2.6e-05,
+              "ic95_fecha": [
+                -0.000648,
+                0.000563
+              ]
+            },
+            "logloss": {
+              "media": 0.000153,
+              "ic95_fecha": [
+                -0.001304,
+                0.001365
+              ]
+            },
+            "acierto": {
+              "media": -0.007692,
+              "ic95_fecha": [
+                -0.020356,
+                0.002632
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.030249,
+              "ic95_fecha": [
+                0.01363,
+                0.051487
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.047775,
+              "ic95_fecha": [
+                0.008784,
+                0.099481
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.000409,
+              "ic95_fecha": [
+                -0.005182,
+                0.005098
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.001814,
+              "ic95_fecha": [
+                -0.002744,
+                0.005736
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 355,
+              "delta_brier": 1.2e-05,
+              "delta_mae_total_final": 0.000965
+            },
+            "2026": {
+              "n": 35,
+              "delta_brier": 0.000169,
+              "delta_mae_total_final": 0.010424
+            }
+          }
+        },
+        "100": {
+          "n_comun": 390,
+          "n_dias": 98,
+          "base": {
+            "brier": 0.24185,
+            "logloss": 0.676842,
+            "acierto": 0.589744,
+            "mae_equipo_base": 2.500139,
+            "mae_total_base": 3.721184,
+            "mae_equipo_final": 2.461472,
+            "mae_total_final": 3.704258
+          },
+          "candidato": {
+            "brier": 0.242575,
+            "logloss": 0.678193,
+            "acierto": 0.594872,
+            "mae_equipo_base": 2.49257,
+            "mae_total_base": 3.712593,
+            "mae_equipo_final": 2.465282,
+            "mae_total_final": 3.70215
+          },
+          "delta": {
+            "brier": {
+              "media": 0.000725,
+              "ic95_fecha": [
+                -0.001024,
+                0.00234
+              ]
+            },
+            "logloss": {
+              "media": 0.001351,
+              "ic95_fecha": [
+                -0.002391,
+                0.004754
+              ]
+            },
+            "acierto": {
+              "media": 0.005128,
+              "ic95_fecha": [
+                -0.013021,
+                0.022277
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.007568,
+              "ic95_fecha": [
+                -0.039607,
+                0.028848
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.008591,
+              "ic95_fecha": [
+                -0.089513,
+                0.071406
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.00381,
+              "ic95_fecha": [
+                -0.005261,
+                0.012671
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.002108,
+              "ic95_fecha": [
+                -0.014427,
+                0.008378
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 355,
+              "delta_brier": 0.000884,
+              "delta_mae_total_final": -0.001858
+            },
+            "2026": {
+              "n": 35,
+              "delta_brier": -0.000892,
+              "delta_mae_total_final": -0.004644
+            }
+          }
+        }
+      }
+    },
+    "lvbp": {
+      "k_comparados": [
+        6,
+        0,
+        100
+      ],
+      "n_train": 945,
+      "n_test": 251,
+      "n_capa": 945,
+      "comparaciones": {
+        "0": {
+          "n_comun": 251,
+          "n_dias": 87,
+          "base": {
+            "brier": 0.2512,
+            "logloss": 0.695626,
+            "acierto": 0.533865,
+            "mae_equipo_base": 2.936221,
+            "mae_total_base": 4.627784,
+            "mae_equipo_final": 2.907973,
+            "mae_total_final": 4.576125
+          },
+          "candidato": {
+            "brier": 0.25221,
+            "logloss": 0.697669,
+            "acierto": 0.521912,
+            "mae_equipo_base": 2.980022,
+            "mae_total_base": 4.700534,
+            "mae_equipo_final": 2.916269,
+            "mae_total_final": 4.562127
+          },
+          "delta": {
+            "brier": {
+              "media": 0.001009,
+              "ic95_fecha": [
+                -0.000128,
+                0.002149
+              ]
+            },
+            "logloss": {
+              "media": 0.002043,
+              "ic95_fecha": [
+                -0.000268,
+                0.004414
+              ]
+            },
+            "acierto": {
+              "media": -0.011952,
+              "ic95_fecha": [
+                -0.041667,
+                0.015267
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.043801,
+              "ic95_fecha": [
+                0.013003,
+                0.075525
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.072749,
+              "ic95_fecha": [
+                0.013301,
+                0.142515
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.008297,
+              "ic95_fecha": [
+                -0.003889,
+                0.027465
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.013998,
+              "ic95_fecha": [
+                -0.027271,
+                -0.000705
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 205,
+              "delta_brier": 0.001201,
+              "delta_mae_total_final": -0.012692
+            },
+            "2026": {
+              "n": 46,
+              "delta_brier": 0.000156,
+              "delta_mae_total_final": -0.019816
+            }
+          }
+        },
+        "100": {
+          "n_comun": 251,
+          "n_dias": 87,
+          "base": {
+            "brier": 0.2512,
+            "logloss": 0.695626,
+            "acierto": 0.533865,
+            "mae_equipo_base": 2.936221,
+            "mae_total_base": 4.627784,
+            "mae_equipo_final": 2.907973,
+            "mae_total_final": 4.576125
+          },
+          "candidato": {
+            "brier": 0.249319,
+            "logloss": 0.691811,
+            "acierto": 0.541833,
+            "mae_equipo_base": 2.907161,
+            "mae_total_base": 4.573847,
+            "mae_equipo_final": 2.89705,
+            "mae_total_final": 4.598834
+          },
+          "delta": {
+            "brier": {
+              "media": -0.001881,
+              "ic95_fecha": [
+                -0.004232,
+                0.000365
+              ]
+            },
+            "logloss": {
+              "media": -0.003815,
+              "ic95_fecha": [
+                -0.008553,
+                0.000753
+              ]
+            },
+            "acierto": {
+              "media": 0.007968,
+              "ic95_fecha": [
+                -0.031008,
+                0.05042
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.02906,
+              "ic95_fecha": [
+                -0.076463,
+                0.015004
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.053938,
+              "ic95_fecha": [
+                -0.152908,
+                0.027387
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.010923,
+              "ic95_fecha": [
+                -0.043794,
+                0.019189
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.022709,
+              "ic95_fecha": [
+                -0.053589,
+                0.094805
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 205,
+              "delta_brier": -0.002349,
+              "delta_mae_total_final": -0.001721
+            },
+            "2026": {
+              "n": 46,
+              "delta_brier": 0.000202,
+              "delta_mae_total_final": 0.131582
+            }
+          }
+        }
+      }
+    },
+    "lidom": {
+      "k_comparados": [
+        6,
+        0,
+        100
+      ],
+      "n_train": 622,
+      "n_test": 173,
+      "n_capa": 622,
+      "comparaciones": {
+        "0": {
+          "n_comun": 173,
+          "n_dias": 74,
+          "base": {
+            "brier": 0.247435,
+            "logloss": 0.687988,
+            "acierto": 0.543353,
+            "mae_equipo_base": 2.465552,
+            "mae_total_base": 3.800862,
+            "mae_equipo_final": 2.376265,
+            "mae_total_final": 3.670142
+          },
+          "candidato": {
+            "brier": 0.249139,
+            "logloss": 0.691476,
+            "acierto": 0.508671,
+            "mae_equipo_base": 2.489555,
+            "mae_total_base": 3.789965,
+            "mae_equipo_final": 2.381548,
+            "mae_total_final": 3.670833
+          },
+          "delta": {
+            "brier": {
+              "media": 0.001704,
+              "ic95_fecha": [
+                -0.000793,
+                0.004547
+              ]
+            },
+            "logloss": {
+              "media": 0.003488,
+              "ic95_fecha": [
+                -0.001588,
+                0.009254
+              ]
+            },
+            "acierto": {
+              "media": -0.034682,
+              "ic95_fecha": [
+                -0.069767,
+                -0.010363
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.024003,
+              "ic95_fecha": [
+                0.00027,
+                0.052002
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.010897,
+              "ic95_fecha": [
+                -0.078989,
+                0.05645
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.005284,
+              "ic95_fecha": [
+                -0.013512,
+                0.024614
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.000691,
+              "ic95_fecha": [
+                -0.037929,
+                0.037291
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 140,
+              "delta_brier": 0.002025,
+              "delta_mae_total_final": -0.009757
+            },
+            "2026": {
+              "n": 33,
+              "delta_brier": 0.000343,
+              "delta_mae_total_final": 0.045014
+            }
+          }
+        },
+        "100": {
+          "n_comun": 173,
+          "n_dias": 74,
+          "base": {
+            "brier": 0.247435,
+            "logloss": 0.687988,
+            "acierto": 0.543353,
+            "mae_equipo_base": 2.465552,
+            "mae_total_base": 3.800862,
+            "mae_equipo_final": 2.376265,
+            "mae_total_final": 3.670142
+          },
+          "candidato": {
+            "brier": 0.247398,
+            "logloss": 0.687931,
+            "acierto": 0.543353,
+            "mae_equipo_base": 2.445568,
+            "mae_total_base": 3.796178,
+            "mae_equipo_final": 2.387644,
+            "mae_total_final": 3.711593
+          },
+          "delta": {
+            "brier": {
+              "media": -3.7e-05,
+              "ic95_fecha": [
+                -0.003105,
+                0.003218
+              ]
+            },
+            "logloss": {
+              "media": -5.7e-05,
+              "ic95_fecha": [
+                -0.006236,
+                0.00651
+              ]
+            },
+            "acierto": {
+              "media": 0.0,
+              "ic95_fecha": [
+                -0.062112,
+                0.058511
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.019984,
+              "ic95_fecha": [
+                -0.067758,
+                0.031672
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.004684,
+              "ic95_fecha": [
+                -0.106259,
+                0.108096
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.011379,
+              "ic95_fecha": [
+                -0.018587,
+                0.038306
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.041451,
+              "ic95_fecha": [
+                -0.029289,
+                0.112929
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 140,
+              "delta_brier": -0.001641,
+              "delta_mae_total_final": 0.054233
+            },
+            "2026": {
+              "n": 33,
+              "delta_brier": 0.006766,
+              "delta_mae_total_final": -0.012779
+            }
+          }
+        }
+      }
+    },
+    "abl": {
+      "k_comparados": [
+        6,
+        0,
+        100
+      ],
+      "n_train": 442,
+      "n_test": 70,
+      "n_capa": 442,
+      "comparaciones": {
+        "0": {
+          "n_comun": 70,
+          "n_dias": 33,
+          "base": {
+            "brier": 0.250027,
+            "logloss": 0.693969,
+            "acierto": 0.585714,
+            "mae_equipo_base": 2.995132,
+            "mae_total_base": 4.618532,
+            "mae_equipo_final": 2.953999,
+            "mae_total_final": 4.737638
+          },
+          "candidato": {
+            "brier": 0.250881,
+            "logloss": 0.69591,
+            "acierto": 0.585714,
+            "mae_equipo_base": 3.073948,
+            "mae_total_base": 4.594526,
+            "mae_equipo_final": 2.862733,
+            "mae_total_final": 4.560608
+          },
+          "delta": {
+            "brier": {
+              "media": 0.000854,
+              "ic95_fecha": [
+                -0.0023,
+                0.003987
+              ]
+            },
+            "logloss": {
+              "media": 0.001941,
+              "ic95_fecha": [
+                -0.00472,
+                0.00849
+              ]
+            },
+            "acierto": {
+              "media": 0.0,
+              "ic95_fecha": [
+                0.0,
+                0.0
+              ]
+            },
+            "mae_equipo_base": {
+              "media": 0.078816,
+              "ic95_fecha": [
+                0.001382,
+                0.168577
+              ]
+            },
+            "mae_total_base": {
+              "media": -0.024006,
+              "ic95_fecha": [
+                -0.09364,
+                0.04228
+              ]
+            },
+            "mae_equipo_final": {
+              "media": -0.091266,
+              "ic95_fecha": [
+                -0.164168,
+                -0.01904
+              ]
+            },
+            "mae_total_final": {
+              "media": -0.17703,
+              "ic95_fecha": [
+                -0.334029,
+                -0.028078
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 43,
+              "delta_brier": 0.000791,
+              "delta_mae_total_final": -0.185203
+            },
+            "2026": {
+              "n": 27,
+              "delta_brier": 0.000954,
+              "delta_mae_total_final": -0.164013
+            }
+          }
+        },
+        "100": {
+          "n_comun": 70,
+          "n_dias": 33,
+          "base": {
+            "brier": 0.250027,
+            "logloss": 0.693969,
+            "acierto": 0.585714,
+            "mae_equipo_base": 2.995132,
+            "mae_total_base": 4.618532,
+            "mae_equipo_final": 2.953999,
+            "mae_total_final": 4.737638
+          },
+          "candidato": {
+            "brier": 0.248914,
+            "logloss": 0.691244,
+            "acierto": 0.6,
+            "mae_equipo_base": 2.96738,
+            "mae_total_base": 4.678924,
+            "mae_equipo_final": 3.176443,
+            "mae_total_final": 5.220077
+          },
+          "delta": {
+            "brier": {
+              "media": -0.001113,
+              "ic95_fecha": [
+                -0.009824,
+                0.008002
+              ]
+            },
+            "logloss": {
+              "media": -0.002724,
+              "ic95_fecha": [
+                -0.020631,
+                0.015863
+              ]
+            },
+            "acierto": {
+              "media": 0.014286,
+              "ic95_fecha": [
+                -0.070423,
+                0.095238
+              ]
+            },
+            "mae_equipo_base": {
+              "media": -0.027752,
+              "ic95_fecha": [
+                -0.152862,
+                0.100731
+              ]
+            },
+            "mae_total_base": {
+              "media": 0.060392,
+              "ic95_fecha": [
+                -0.051227,
+                0.196029
+              ]
+            },
+            "mae_equipo_final": {
+              "media": 0.222444,
+              "ic95_fecha": [
+                0.105578,
+                0.338172
+              ]
+            },
+            "mae_total_final": {
+              "media": 0.482439,
+              "ic95_fecha": [
+                0.241559,
+                0.725885
+              ]
+            }
+          },
+          "por_anio": {
+            "2025": {
+              "n": 43,
+              "delta_brier": -0.000288,
+              "delta_mae_total_final": 0.500657
+            },
+            "2026": {
+              "n": 27,
+              "delta_brier": -0.002428,
+              "delta_mae_total_final": 0.453424
+            }
+          }
+        }
+      }
+    }
+  },
+  "metodo": "Variables as-of; logística y capa de total ajustadas por k con partidos anteriores a 2025; test 2025-26, con IC bootstrap por fecha. No parque/clima/abridores/mercado/O-U. Candidatos exploratorios, elegidos antes de este cálculo, pero algunos proceden de exploración solapada."
+}
