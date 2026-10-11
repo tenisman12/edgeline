@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-11T13:19:46Z",
+ "generado": "2026-10-11T16:44:58Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -33,15 +33,15 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.4,
-   "n": 76,
-   "mejora_milesimas": 3.946,
-   "z": 0.36,
+   "n": 77,
+   "mejora_milesimas": 3.977,
+   "z": 0.37,
    "mitades": [
     15.261,
-    -7.368
+    -7.018
    ],
-   "brier_pinnacle": 0.1952,
-   "brier_modelo": 0.1959,
+   "brier_pinnacle": 0.1964,
+   "brier_modelo": 0.197,
    "previo": 0.35,
    "w_usado": 0.36
   },
@@ -61,17 +61,17 @@
   },
   "wta|Ganador": {
    "w_vivo": 1.0,
-   "n": 56,
-   "mejora_milesimas": 20.06,
-   "z": 0.81,
+   "n": 57,
+   "mejora_milesimas": 22.986,
+   "z": 0.94,
    "mitades": [
     17.726,
-    22.394
+    28.065
    ],
-   "brier_pinnacle": 0.2157,
-   "brier_modelo": 0.2095,
+   "brier_pinnacle": 0.2189,
+   "brier_modelo": 0.2112,
    "previo": 0.35,
-   "w_usado": 0.452
+   "w_usado": 0.454
   },
   "nhl|Total": {
    "w_vivo": 1.0,
@@ -101,20 +101,6 @@
    "previo": 0.35,
    "w_usado": 0.376
   },
-  "kbo|Ganador": {
-   "w_vivo": 1.0,
-   "n": 32,
-   "mejora_milesimas": 18.693,
-   "z": 0.64,
-   "mitades": [
-    -13.12,
-    50.507
-   ],
-   "brier_pinnacle": 0.2528,
-   "brier_modelo": 0.2447,
-   "previo": 0.25,
-   "w_usado": 0.322
-  },
   "nhl|Spread": {
    "w_vivo": 1.0,
    "n": 31,
@@ -143,19 +129,33 @@
    "previo": 0.25,
    "w_usado": 0.32
   },
+  "kbo|Ganador": {
+   "w_vivo": 1.0,
+   "n": 30,
+   "mejora_milesimas": 20.99,
+   "z": 0.68,
+   "mitades": [
+    -27.131,
+    69.11
+   ],
+   "brier_pinnacle": 0.2552,
+   "brier_modelo": 0.246,
+   "previo": 0.25,
+   "w_usado": 0.318
+  },
   "kbo|Spread": {
    "w_vivo": 1.0,
-   "n": 23,
-   "mejora_milesimas": 35.303,
-   "z": 0.71,
+   "n": 21,
+   "mejora_milesimas": 44.984,
+   "z": 0.84,
    "mitades": [
-    58.874,
-    13.696
+    43.499,
+    46.333
    ],
-   "brier_pinnacle": 0.2472,
-   "brier_modelo": 0.2297,
+   "brier_pinnacle": 0.2377,
+   "brier_modelo": 0.2155,
    "previo": 0.25,
-   "w_usado": 0.303
+   "w_usado": 0.299
   }
  }
 }
