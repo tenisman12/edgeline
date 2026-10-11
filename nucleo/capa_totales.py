@@ -11,6 +11,12 @@ trabajo/minar/2026-10-09_capa_totales.md, utilidades/minar_capa_totales.py: C4 +
   p(over L) = fraccion de los residuos del ultimo ano (minimo 300), centrados en el nivel, con T* + r > L (C7;
         distribucion empirica: sirve igual para goles, carreras y puntos, y corrige la forma que el modelo trae mal)
 
+Basquet (10-oct-2026, aprobado por Alejandro; tanda 8, trabajo/minar/2026-10-10_tanda8.md): termino de POSESIONES
+    P = posesiones de los dos equipos en sus juegos (FGA + 0.44 FTA + perdidas - rebotes ofensivos, los dos lados;
+        ultimos 5 de la temporada, minimo 4, y 10 o mas en la temporada) / media de la liga hasta el dia anterior - 1,
+        sumado para local y visita (TL7 de la tanda 7).
+    T*p = a + b*T_modelo + c*M + d*E + e*P + nivel, con sus propios residuos. Sin P (inicio de temporada) se usa la capa
+    de siempre. Sobre la capa paso en NCAAMB (total z 4.47, O/U z 4.11) y NBA (2.97 / 2.63).
 La validacion oficial (utilidades/validar_mercados.py) ajusta a, b, c, d en cada bloque solo con lo anterior, califica
 "Total esperado (capa)" y "Over/Under (capa)" y, al final, escribe en modelos/capa_totales.json los coeficientes y los
 residuos de toda la muestra. plataforma.py usa la capa solo en las ligas donde "Over/Under (capa)" quedo publicable.
@@ -105,6 +111,88 @@ def p_over(residuos, t, linea):
     return sum(1 for e in residuos if t + e > linea) / len(residuos)
 
 
+def total_pos(coef, pred, M, E, P):
+    """coef = [a, b, c, d, e, nivel] de la capa con posesiones."""
+    return sum(c * v for c, v in zip(coef[:5], (1.0, float(pred), float(M), float(E), float(P)))) + coef[5]
+
+
+def entrenar_pos(filas):
+    """filas = [(pred, real, M, E, P, fecha)] en orden -> (coef [a, b, c, d, e, nivel], residuos del ultimo ano centrados)."""
+    X = [(1.0, float(p), float(M), float(E), float(P)) for p, _, M, E, P, _ in filas]
+    coef = ajustar_ols(X, [r for _, r, _, _, _, _ in filas])
+    res = [r - sum(c * v for c, v in zip(coef, x)) for x, (_, r, _, _, _, _) in zip(X, filas)]
+    ult = res[-N_NIVEL:]
+    nivel = sum(ult) / len(ult) if ult else 0.0
+    f_fin = max((str(x[5])[:10] for x in filas if x[5]), default=None)
+    lim = (dt.date.fromisoformat(f_fin) - dt.timedelta(days=DIAS_RES)).isoformat() if f_fin else ""
+    rr = [e - nivel for e, x in zip(res, filas) if str(x[5] or "")[:10] >= lim]
+    if len(rr) < MIN_PREV:
+        rr = [e - nivel for e in res[-MIN_PREV:]]
+    return list(coef) + [nivel], rr
+
+
+def posesiones_juego(fila):
+    """posesiones de los dos equipos de un juego desde la fila de nba.csv (None sin box completo)."""
+    ks = ("nba_fga", "nba_fta", "nba_tov", "nba_oreb", "nba_fga_opp", "nba_fta_opp", "nba_tov_opp", "nba_oreb_opp", "nba_fg3a", "nba_fg3a_opp")
+    v = []
+    for k in ks:
+        try:
+            x = float(fila.get(k))
+        except (TypeError, ValueError):
+            return None
+        if x != x:
+            return None
+        v.append(x)
+    if not v[8] or not v[9]:
+        return None
+    return v[0] + 0.44 * v[1] + v[2] - v[3] + v[4] + 0.44 * v[5] + v[6] - v[7]
+
+
+class Posesiones:
+    """P as-of (solo juegos anteriores a la fecha). juegos = [(fecha, local, visita, posesiones o None)], un renglon por juego.
+    Mismas reglas que la tanda 7: temporada = cadena de juegos con huecos de 20 dias o menos; ultimos 5 con dato (minimo 4)
+    y 10 o mas con dato en la temporada; media de la liga con 50 juegos o mas."""
+    GAP = 20
+
+    def __init__(self, juegos):
+        J = sorted((str(f)[:10], h, a, p) for f, h, a, p in juegos if f)
+        self.eq = {}
+        self.lf, self.cs = [], []
+        s = 0.0
+        for f, h, a, p in J:
+            for e in (h, a):
+                self.eq.setdefault(e, []).append((f, p))
+            if p is not None:
+                s += p; self.lf.append(f); self.cs.append(s)
+
+    def _equipo(self, e, fecha):
+        import bisect
+        L = self.eq.get(e) or []
+        k = bisect.bisect_left([x[0] for x in L], fecha)
+        Q = []; f = dt.date.fromisoformat(fecha)
+        for fx, p in reversed(L[:k]):
+            d = dt.date.fromisoformat(fx)
+            if (f - d).days > self.GAP:
+                break
+            Q.append(p); f = d
+        U5 = [p for p in Q[:5] if p is not None]; UA = [p for p in Q if p is not None]
+        if len(U5) < 4 or len(UA) < 10:
+            return None
+        return sum(U5) / len(U5)
+
+    def estado(self, fecha, home, away):
+        import bisect
+        fecha = str(fecha)[:10]
+        k = bisect.bisect_left(self.lf, fecha)
+        if k < 50:
+            return None
+        lp = self.cs[k - 1] / k
+        ph, pa = self._equipo(home, fecha), self._equipo(away, fecha)
+        if ph is None or pa is None:
+            return None
+        return ph / lp - 1 + pa / lp - 1
+
+
 def entrenar(filas):
     """filas = [(pred, real, M, E, fecha)] en orden -> (coef con el nivel al final, residuos del ultimo ano centrados).
     total(coef, ...) ya incluye el nivel."""
@@ -134,7 +222,7 @@ def cargar(base):
     return _CACHE[ruta]
 
 
-def guardar(base, clave, coef, res, n, desde, hasta, estado):
+def guardar(base, clave, coef, res, n, desde, hasta, estado, pos=None):
     ruta = os.path.join(base, *RUTA_JSON)
     try:
         d = json.load(open(ruta, encoding="utf-8"))
@@ -145,6 +233,8 @@ def guardar(base, clave, coef, res, n, desde, hasta, estado):
     d[clave] = {"coef": [round(x, 6) for x in coef], "residuos": [round(x, 3) for x in res], "n": n,
                 "desde": desde, "hasta": hasta, "estado_validacion": estado,
                 "vida_m": VIDA_M, "vida_e": VIDA_E, "k_e": K_E, "generado": dt.date.today().isoformat()}
+    if pos:
+        d[clave].update({"coef_pos": [round(x, 6) for x in pos[0]], "residuos_pos": [round(x, 3) for x in pos[1]], "n_pos": pos[2]})
     os.makedirs(os.path.dirname(ruta), exist_ok=True)
     json.dump(d, open(ruta, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     _CACHE.pop(ruta, None)
@@ -193,6 +283,22 @@ def ritmo_liga(deporte, liga):
     return _RITMOS[k]
 
 
+_POS = {}
+
+
+def posesiones_liga(deporte, liga):
+    k = (deporte, liga)
+    if k not in _POS:
+        from nucleo import forma as FM
+        J = []
+        for t, lst in FM._juegos_equipo(deporte, liga).items():
+            for j in lst:
+                if j["home"]:
+                    J.append((j["f"], t, j["rival"], posesiones_juego(j.get("fila") or {})))
+        _POS[k] = Posesiones(J)
+    return _POS[k]
+
+
 def aplicar(base, clave, deporte, liga, home, away, fecha, pred, linea):
     """-> dict con total y p_over de la capa, o None si la liga no tiene capa publicable."""
     d = cargar(base).get(clave)
@@ -206,23 +312,32 @@ def aplicar(base, clave, deporte, liga, home, away, fecha, pred, linea):
         return None
     M, E = st
     t = total(d["coef"], pred, M, E)
+    P, campo = None, "residuos"
+    if d.get("coef_pos"):
+        try:
+            P = posesiones_liga(deporte, liga).estado(fecha, home, away)
+        except Exception:
+            P = None
+        if P is not None:
+            t = total_pos(d["coef_pos"], pred, M, E, P); campo = "residuos_pos"
     po = None
     if linea is not None:
         if abs(float(linea) - round(float(linea))) < 1e-9:      # linea entera: over sin contar el empate (push)
-            r3 = probs_linea(base, clave, t, float(linea))
+            r3 = probs_linea(base, clave, t, float(linea), campo)
             po = r3[0] / max(1e-9, r3[0] + r3[1]) if r3 else None
         else:
-            po = p_over(d["residuos"], t, float(linea))
+            po = p_over(d[campo], t, float(linea))
     return {"aplicado": True, "clave": clave, "total_modelo": round(float(pred), 2), "total": round(t, 2),
             "p_over": None if po is None else round(po, 4),
-            "media_liga": round(M, 2), "ritmo": round(E, 2), "coef": d["coef"], "n": d.get("n")}
+            "media_liga": round(M, 2), "ritmo": round(E, 2), "coef": d["coef_pos"] if P is not None else d["coef"],
+            "posesiones": None if P is None else round(P, 4), "residuos": campo, "n": d.get("n_pos") if P is not None else d.get("n")}
 
 
-def probs_linea(base, clave, t, linea):
+def probs_linea(base, clave, t, linea, campo="residuos"):
     """(p_over, p_under, p_push) a cualquier linea con la distribucion de residuos de la capa (lineas enteras: push =
-    residuos que caen a menos de medio punto de la linea)."""
+    residuos que caen a menos de medio punto de la linea). campo = "residuos_pos" con la capa de posesiones."""
     d = cargar(base).get(clave) or {}
-    res = d.get("residuos") or []
+    res = d.get(campo) or d.get("residuos") or []
     if not res or t is None:
         return None
     n = float(len(res))

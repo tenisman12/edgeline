@@ -127,6 +127,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   MLB 4.8, NPB 3.5, NFL 3.0. NHL y KBO no pasan (siguen con el total del modelo). plataforma.py usa la capa solo donde paso
   (modelo.capa_totales, total_modelo guarda el del modelo y los marcadores se escalan). NBA: la capa espera 15 juegos de
   temporada por equipo (en oct-nov subestima 6.4 puntos). decidir_v2 usa sus residuos tambien en lineas alternas.
+  Basquet con POSESIONES (10-oct-2026, aprobado: "si cambialo"; tanda 8): NBA y NCAAMB suman e*P (P = posesiones de los
+  dos en sus juegos, ultimos 5 de la temporada / media de la liga - 1; `CT.Posesiones`) con coeficientes y residuos propios
+  (coef_pos, residuos_pos en capa_totales.json); sin P (menos de 10 juegos con box) se usa la capa de siempre.
+  Validacion oficial: NBA total skill 5.2 -> 5.5 % (z 5.98), O/U 6.5 -> 6.7 % (z 9.80); NCAAMB total 9.0 -> 9.1 %,
+  O/U 11.2 -> 11.3 % (z 34.7). El sesgo del total crece (NCAAMB -1.71 puntos, 0.098 desv., justo bajo el limite 0.10).
 - Motor de carreras (10-oct-2026, APLICADO, Alejandro: "aplica ya todo lo relevante"; `nucleo/motor_carreras.py`, minado en
   `utilidades/motor_carreras.py` y `trabajo/minar/2026-10-10_motor_carreras.md`): ataque y defensa por equipo con Kalman +
   abridor (LMP, NPB) + parque, binomial negativa; contra produccion reproducida (media3 + abridores + parque + capa).
@@ -187,8 +192,8 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   tiro a puerta futbol (3.24). Contra el mercado: L3 NFL z -2.97, L3 futbol -0.23, TL4 contra el cierre O2.5 z 1.92
   (en el limite). Candidatos, nada se aplica.
 - Tanda 8 (10-oct-2026, `trabajo/minar/2026-10-10_tanda8.md`): A) TL7 posesiones SOBRE LA CAPA de totales pasa en NCAAMB
-  (total z 4.47, O/U z 4.11) y NBA (2.97 / 2.63) (`utilidades/minar_tanda8_produccion.py`): candidato para la capa de
-  basquet, falta aprobacion. L1 Pitagoras sobre el modelo reentrenado no pasa (NCAAMB z 1.47). B) k 16, nada pasa
+  (total z 4.47, O/U z 4.11) y NBA (2.97 / 2.63) (`utilidades/minar_tanda8_produccion.py`): APLICADO en la capa de
+  basquet (ver capa de totales). L1 Pitagoras sobre el modelo reentrenado no pasa (NCAAMB z 1.47). B) k 16, nada pasa
   (`utilidades/minar_angulos_tanda8.py`): ponches (R1, TR1), bullpen y pitcheos del abridor LMP/NPB (R2, R3, TR2),
   triples y choque de ritmos (TR3, TR4; NCAAMB z 3.04 pero al reves: mas distintos, mas puntos), arbitro futbol
   (TR5, TR6), movimiento de Pinnacle (ML1, ML2, MLT), numero clave 3/7 y arbitro NFL (KN1, RN1).

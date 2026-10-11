@@ -214,7 +214,7 @@ def p_over_modelo(rec, linea):
         # capa de totales (nucleo/capa_totales.py): la distribucion es la de sus residuos, la misma con que se valido
         try:
             from nucleo import capa_totales as _CT
-            r = _CT.probs_linea(BASE, ct["clave"], ct["total"], linea)
+            r = _CT.probs_linea(BASE, ct["clave"], ct["total"], linea, ct.get("residuos") or "residuos")
             if r:
                 return _apilar_motor(rec, linea, r)
         except Exception:

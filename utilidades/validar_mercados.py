@@ -172,11 +172,19 @@ def evaluar_capa(rep, filas, clave, unidad_cal=True):
         if len(prev) < CT.MIN_PREV:
             continue
         coef, res = CT.entrenar([(x["pred"], x["real"], x["M"], x["E"], x["f"]) for x in prev])
+        # basquet (10-oct-2026): capa con posesiones donde hay P; sin P (inicio de temporada) la capa de siempre
+        pv = [x for x in prev if x.get("P") is not None]
+        cp = rp = None
+        if len(pv) >= CT.MIN_PREV:
+            cp, rp = CT.entrenar_pos([(x["pred"], x["real"], x["M"], x["E"], x["P"], x["f"]) for x in pv])
         for x in cur:
-            t = CT.total(coef, x["pred"], x["M"], x["E"])
+            if cp is not None and x.get("P") is not None:
+                t, rr = CT.total_pos(cp, x["pred"], x["M"], x["E"], x["P"]), rp
+            else:
+                t, rr = CT.total(coef, x["pred"], x["M"], x["E"]), res
             rep.add_val("Total esperado (capa)", t, x["real"], x["base"])
             for L, y, fr in x["ou"]:
-                rep.add_prob("Over/Under (capa)", CT.p_over(res, t, L), y, fr)
+                rep.add_prob("Over/Under (capa)", CT.p_over(rr, t, L), y, fr)
 
 
 def guardar_capa(filas, clave):
@@ -185,7 +193,12 @@ def guardar_capa(filas, clave):
         return
     coef, res = CT.entrenar([(x["pred"], x["real"], x["M"], x["E"], x["f"]) for x in filas])
     est = ((RESULT.get(clave) or {}).get("Over/Under (capa)") or {}).get("estado", "sin_validar")
-    CT.guardar(io.BASE, clave, coef, res, len(filas), min(x["f"] for x in filas), max(x["f"] for x in filas), est)
+    pv = [x for x in filas if x.get("P") is not None]
+    pos = None
+    if len(pv) >= CT.MIN_PREV:
+        cp, rp = CT.entrenar_pos([(x["pred"], x["real"], x["M"], x["E"], x["P"], x["f"]) for x in pv])
+        pos = (cp, rp, len(pv))
+    CT.guardar(io.BASE, clave, coef, res, len(filas), min(x["f"] for x in filas), max(x["f"] for x in filas), est, pos)
 
 
 def marcador(h, campos):
@@ -222,6 +235,8 @@ def validar_equipos(clave, meses, bloque, liga=None):
     n_pre = int(math.ceil(PRECAL * 30.4 / bloque)) if con_capa else 0
     d0 = d_cal - dt.timedelta(days=bloque * n_pre); nbl = 0; nb_tot = 0
     capa, ritmo = [], (CT.Ritmo([(g[0], g[2].get("team"), g[3].get("team"), g[4] + g[5]) for g in G]) if con_capa else None)
+    posesiones = CT.Posesiones([(g[0], g[2].get("team"), g[3].get("team"), CT.posesiones_juego(g[2])) for g in G]) \
+        if (con_capa and clave in ("nba", "ncaamb")) else None
     rep_cal = rep
     while d0 <= ultimo:
         d1 = d0 + dt.timedelta(days=bloque)
@@ -270,7 +285,8 @@ def validar_equipos(clave, meses, bloque, liga=None):
                     st = ritmo.estado(f, th, ta)
                     if st:
                         fila_capa = {"b": nb_tot, "cal": cal, "f": f, "pred": tp, "real": tot, "base": base_tot,
-                                     "M": st[0], "E": st[1], "ou": []}
+                                     "M": st[0], "E": st[1], "ou": [],
+                                     "P": posesiones.estado(f, th, ta) if posesiones is not None else None}
                         capa.append(fila_capa)
                 if clave in ("nfl", "nba"):
                     rep.add_val("Margen esperado (local)", r["margen_esperado"], mar, base_mar)
