@@ -342,9 +342,10 @@ def _candidatos_v2(rec, decs):
             out.append({"origen": "decidir_v2", "mercado": d["mercado"], "lado": d["lado"], "pick": d["pick"], "cuota": d["cuota"], "decimal": round(d["decimal"], 3),
                         "casa": d.get("casa"), "p": d["p_final"], "ev": d["ev"], "confianza": d["confianza"], "stake": STAKE[d["confianza"]], "unidades": d["unidades"],
                         "senales": "%d a favor / %d en contra" % (d["conteo"]["a_favor"], d["conteo"]["en_contra"]),
-                        "razon": ("p final %.1f%% (mercado %s, modelo %s, peso %.2f) contra %.2f | si: %s | no: %s | dudas: %s" % (
-                            100 * d["p_final"], ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "-",
-                            ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", d["peso_modelo"], d["decimal"],
+                        "p_pinnacle": d.get("p_sharp"), "p_mezcla": d.get("p_mezcla"), "ev_mezcla": d.get("ev_mezcla"),
+                        "razon": ("modelo %s (cuota justa %.2f) contra %.2f; Pinnacle de referencia %s | si: %s | no: %s | dudas: %s" % (
+                            ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", 1.0 / max(d["p_final"], 1e-6), d["decimal"],
+                            ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "-",
                             "; ".join(d["por_que_si"][1:]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))[:900],
                         "_si": list(d["por_que_si"][1:]), "_no": list(d["por_que_no"]) + [x["duda"] for x in d["dudas"]]})
     return out
@@ -360,8 +361,11 @@ def _candidatos_resto(rec, dec_bb):
             out.append({"origen": "sistema estimado", "mercado": mercado, "lado": k["lado"], "pick": k["texto"], "cuota": k["cuota"], "decimal": k["decimal"],
                         "casa": k.get("casa"), "p": k["p"], "ev": k["ev"], "confianza": d["confianza"], "stake": STAKE[d["confianza"]],
                         "senales": "%d a favor / %d en contra" % (k.get("senales_favor", 0), k.get("senales_contra", 0)),
-                        "razon": "p final %.1f%% (Pinnacle %.1f%%, modelo %.1f%%) contra %s" % (100 * d["p_final"], 100 * (d["p_sharp"] or 0), 100 * (d["p_modelo"] or 0), k["cuota"]),
-                        "_si": ["modelo %.1f%% contra Pinnacle %.1f%%" % (100 * (d["p_modelo"] or 0), 100 * (d["p_sharp"] or 0))] + _abridor_txt(d, k["lado"], True)
+                        "p_pinnacle": None if d.get("p_sharp") is None else round(d["p_sharp"] if k["lado"] == "home" else 1 - d["p_sharp"], 4),
+                        "p_mezcla": d.get("p_mezcla"),
+                        "ev_mezcla": None if d.get("p_mezcla") is None else round((d["p_mezcla"] if k["lado"] == "home" else 1 - d["p_mezcla"]) * k["decimal"] - 1, 4),
+                        "razon": "modelo %.1f%% (cuota justa %.2f) contra %s; Pinnacle de referencia %.1f%%" % (100 * k["p"], 1.0 / max(k["p"], 1e-6), k["cuota"], 100 * ((d["p_sharp"] if k["lado"] == "home" else 1 - d["p_sharp"]) if d.get("p_sharp") is not None else 0)),
+                        "_si": ["modelo %.1f%% contra Pinnacle %.1f%%" % tuple(100 * ((x or 0) if k["lado"] == "home" else 1 - (x or 0)) for x in (d["p_modelo"], d["p_sharp"]))] + _abridor_txt(d, k["lado"], True)
                                + [SENAL_TXT.get(x, x) for x in ((k.get("senales") or {}).get("a_favor") or [])],
                         "_no": _abridor_txt(d, k["lado"], False) + [SENAL_TXT.get(x, x) for x in ((k.get("senales") or {}).get("en_contra") or [])]})
         return out
@@ -669,7 +673,8 @@ def main():
     rh = os.path.join(BASE, "salida", "historial_picks_dia.csv")
     cols = ["registrado", "liga", "id", "fecha", "home", "away", "origen", "mercado", "lado", "pick", "cuota", "p", "ev", "confianza", "stake", "senales",
             "publico_boletos", "publico_dinero", "notas_home", "notas_away", "mov_linea", "senales_mercado", "unidades", "razon",
-            "torneo", "ronda", "cancha", "por_que_si", "por_que_no", "angulos", "angulos_favor", "angulos_contra"]
+            "torneo", "ronda", "cancha", "por_que_si", "por_que_no", "angulos", "angulos_favor", "angulos_contra",
+            "p_pinnacle", "p_mezcla", "ev_mezcla"]
     vistos = set()
     if os.path.exists(rh):
         with io.open(rh, encoding="utf-8-sig", newline="") as f:

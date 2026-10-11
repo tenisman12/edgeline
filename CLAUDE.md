@@ -230,7 +230,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   pierde contra el cierre (moneyline z -4.13, spread -3.33, total -2.79); apilado con el cierre no suma. Solo contexto en
   plataforma (modelo.motor_puntos y extra), sin peso.
 - `decidir_v2.PESO_MODELO["nfl"]` 0.5 -> 0.0 (aprobado): con 0.5 la mezcla empeora al cierre (moneyline z -2.59, spread
-  -2.57, total -2.13, 2023-2026). En NFL p final = Pinnacle; el pick sale del precio.
+  -2.57, total -2.13, 2023-2026). Desde el 10-oct (noche) ese peso solo vale para la sombra: p final = modelo (ver abajo).
 
 ## Totales por equipo: validacion y lista oficial (10-oct-2026, Alejandro: "quiero que los totales entren en validacion y prediccion")
 - `validar_mercados.py` califica "Carreras local/visita O/U" (beisbol, con el motor de carreras as-of) y "Goles local/visita O/U"
@@ -252,6 +252,15 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - `nucleo/pesos_dinamicos.peso(liga, tipo, previo)` = (n * w_vivo + 300 * previo) / (n + 300); lo usan decidir_v2 (previo
   PESO_MODELO de la liga) y decidir.py (previo 0.25). Con poca muestra manda el previo; con mucha, lo que se mide en vivo.
   Al 10-oct: 544 predicciones; nada con z >= 2 todavia (la mayor: NHL spread z 1.71).
+
+## Probabilidad = modelo, Pinnacle de referencia (10-oct-2026, Alejandro: "tengo mi modelo y angulos y todo mi poder estadistico y luego buscar en que casa paga bien")
+- `decidir_v2.P_DESDE` y `decidir.P_DESDE` = "modelo" (variable `EDGELINE_P_DESDE`; "mezcla" regresa al sistema anterior): en
+  todos los deportes p_final = p del modelo con sus capas; el EV es contra la mejor casa. Pinnacle se muestra como referencia
+  (p_sharp, diferencia en pp). La mezcla anterior (PESO_MODELO y pesos dinamicos) se guarda como sombra: `p_mezcla`,
+  `ev_mezcla` en las decisiones y `p_pinnacle`, `p_mezcla`, `ev_mezcla` en `historial_picks_dia.csv`, para medir en vivo cual rinde.
+- Aviso que sigue: ganador 10+ pp arriba de Pinnacle = minima, 0 u, "revisar" (15+ "buscar la causa"); total 10-15 pp baja
+  un nivel, 15+ minima. Lineas compradas con EV > 12 % se ignoran. Textos: modelo y cuota justa primero, EV al final.
+- Lo medido antes del cambio: en NFL la mezcla con 0.5 predijo peor que el cierre (z -2.59); el modelo de NFL no ve QB ni bajas.
 
 ## Notas de lectura
 - `ultimos5` de ESPN van del más viejo al más nuevo y pueden incluir la temporada anterior.

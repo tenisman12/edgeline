@@ -4,6 +4,8 @@ utilidades/decidir_v2.py - DECISION POR CAPAS para todos los deportes menos beis
 
 Razona como lo hacemos a mano, con pesos medidos y todo guardado:
   1. Mercado: probabilidad sharp (Pinnacle; si no hay, consenso de casas) por lado, con la mejor cuota.
+  (10-oct-2026: P_DESDE "modelo": p_final = p del modelo en todos los deportes; Pinnacle es referencia y la mezcla de
+   abajo queda como sombra en p_mezcla / ev_mezcla.)
   2. Modelo: vota SOLO si ese mercado esta validado en esa liga (salida/validacion_mercados.json). Mezcla en logit: p_final = inv(logit(p_sharp) + w*(logit(p_modelo) - logit(p_sharp))),
      con w por liga (NHL 0.5, NFL 0.5 con -3.4 pp al over, NBA/NCAAF/tenis/futbol 0.35). Si el modelo esta
      "sin_validar" en ese mercado, pesa la mitad.
@@ -52,6 +54,12 @@ BRECHA_REVISAR, BRECHA_BUSCAR = 0.10, 0.15
 TZ = -6
 # total: desviacion del total real alrededor del esperado del modelo, por deporte (de los MAE medidos: sd ~ 1.25*MAE)
 SD_TOTAL = {"americano": 13.0, "nba": 19.0, "beisbol": 4.3, "tenis": 4.5}
+# 10-oct-2026 (Alejandro: "yo tengo mi modelo y angulos y todo mi poder estadistico y luego buscar en que casa paga bien;
+# Pinnacle puede ser una referencia"): en todos los deportes p_final = p del modelo (con sus capas). Pinnacle queda como
+# referencia (p_sharp y la diferencia en pp) y la mezcla de antes se guarda como sombra (p_mezcla, ev_mezcla) para medir
+# en vivo cual de los dos rinde. El aviso de diferencia (BRECHA_REVISAR) sigue: 10+ pp arriba de Pinnacle = revisar, 0 u.
+# EDGELINE_P_DESDE=mezcla regresa al sistema anterior.
+P_DESDE = os.environ.get("EDGELINE_P_DESDE", "modelo")
 EV_MAX_LINEA = 0.12          # una linea con mas de 12% de EV contra el modelo mezclado suele ser vieja o de otro mercado: se ignora
 _EVENTOS = None
 
@@ -339,18 +347,21 @@ def decidir_mercado(rec, tipo, movs=None):
             # (con la capa de totales el over ya sale calibrado en la validacion: no se corrige dos veces)
             p_mod = min(max(p_mod + (AJUSTE_OVER[liga] if lado == "over" else -AJUSTE_OVER[liga]), 0.01), 0.99)
         if p_sh is None:
-            p_fin = p_mod
+            p_mez = p_mod
         elif p_mod is None:
-            p_fin = p_sh
+            p_mez = p_sh
         else:
-            p_fin = _inv(_lg(p_sh) + w * (_lg(p_mod) - _lg(p_sh)))
+            p_mez = _inv(_lg(p_sh) + w * (_lg(p_mod) - _lg(p_sh)))
+        p_fin = p_mod if (P_DESDE == "modelo" and p_mod is not None) else p_mez
         ev = (p_fin * dec - 1) if dec else None
+        ev_mez = (p_mez * dec - 1) if dec else None
         mov = None
         if movs:
             mov = movs.get((tipo, lado))
         brecha = (p_mod - p_sh) if (p_mod is not None and p_sh is not None) else None
         evals.append({"lado": lado, "mercado": k.get("mercado", tipo), "p_modelo": None if p_mod is None else round(p_mod, 4),
                       "p_sharp": None if p_sh is None else round(p_sh, 4), "p_final": round(p_fin, 4), "peso_modelo": w,
+                      "p_mezcla": round(p_mez, 4), "ev_mezcla": None if ev_mez is None else round(ev_mez, 4),
                       "cuota": k.get("cuota"), "decimal": dec, "casa": k.get("casa"), "fuente": k.get("fuente"),
                       "ev": None if ev is None else round(ev, 4), "brecha_modelo_mercado": None if brecha is None else round(brecha, 4),
                       "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov)})
@@ -361,7 +372,7 @@ def decidir_mercado(rec, tipo, movs=None):
     compra = None
     if tipo == "Total":
         try:
-            compra = comprar_linea(rec, w)
+            compra = comprar_linea(rec, 1.0 if P_DESDE == "modelo" else w)
         except Exception:
             compra = None
         if compra and (mejor["ev"] is None or compra["mejor"]["ev"] > (mejor["ev"] or -1) + 0.005):
@@ -369,14 +380,15 @@ def decidir_mercado(rec, tipo, movs=None):
             # la linea alternativa sustituye a la de referencia: misma estructura, con casa y linea propias
             ref = dict(mejor)
             mejor = {"lado": b["lado"], "mercado": "Total %g" % b["linea"], "p_modelo": b["p_modelo"], "p_sharp": b["p_mercado"], "p_final": b["p_final"],
-                     "peso_modelo": w, "cuota": b["cuota_am"], "decimal": b["decimal"], "casa": b["casa"], "fuente": "linea_comprada",
+                     "peso_modelo": w, "p_mezcla": None, "ev_mezcla": None,
+                     "cuota": b["cuota_am"], "decimal": b["decimal"], "casa": b["casa"], "fuente": "linea_comprada",
                      "ev": b["ev"], "brecha_modelo_mercado": round(b["p_modelo"] - b["p_mercado"], 4), "mov_linea": ref.get("mov_linea"),
                      "senales": _senales(rec, tipo, b["lado"], b["p_modelo"], b["p_mercado"], ref.get("mov_linea")),
                      "linea_referencia": {"mercado": ref["mercado"], "lado": ref["lado"], "ev": ref["ev"], "decimal": ref["decimal"]}}
     conf = confianza(mejor["ev"])
     razones_no = []
     if SOLO_VALIDADO and not validado:
-        razones_no.append("mercado %s de %s: el modelo todavia no le gana a la tasa historica (walk-forward), p final = mercado: lectura, no pick" % (tipo, liga.upper()))
+        razones_no.append("mercado %s de %s: el modelo todavia no le gana a la tasa historica (walk-forward), lectura, no pick" % (tipo, liga.upper()))
         conf = "solo_mercado"
     if mejor["decimal"] is not None and mejor["decimal"] < CUOTA_MIN:
         razones_no.append("cuota %.2f menor a %.2f" % (mejor["decimal"], CUOTA_MIN)); conf = "minima" if conf != "sin_cuota" else conf
@@ -402,7 +414,10 @@ def decidir_mercado(rec, tipo, movs=None):
         razones_no.append("%s en contra (%s)" % (s["capa"], s["valor"]))
     razones_si = ["%s a favor (%s; %s)" % (s["capa"], s["valor"], s["peso"]) for s in favor]
     if mejor["ev"] is not None:
-        razones_si.insert(0, "p final %.1f%% contra cuota %.2f: EV %+.1f%%" % (100 * mejor["p_final"], mejor["decimal"], 100 * mejor["ev"]))
+        razones_si.insert(0, "modelo %.1f%% (cuota justa %.2f) contra %.2f en %s%s" % (
+            100 * mejor["p_final"], 1.0 / max(mejor["p_final"], 1e-6), mejor["decimal"], mejor.get("casa") or "-",
+            ("; Pinnacle %.1f%% (%+.1f pp)" % (100 * mejor["p_sharp"], 100 * (mejor["p_final"] - mejor["p_sharp"]))) if mejor.get("p_sharp") is not None else ""))
+        razones_si.append("EV %+.1f%%" % (100 * mejor["ev"]))
     if mejor.get("linea_referencia"):
         lr = mejor["linea_referencia"]
         razones_si.append("linea comprada en %s (%s): mejor que la de referencia %s %s (EV %s)" % (
@@ -414,7 +429,8 @@ def decidir_mercado(rec, tipo, movs=None):
         if mejor.get("fuente") == "linea_comprada":
             texto += " (%s)" % mejor["casa"]
     return {"mercado": mejor["mercado"], "lado": mejor["lado"], "pick": texto, "p_final": mejor["p_final"], "p_modelo": mejor["p_modelo"],
-            "p_sharp": mejor["p_sharp"], "peso_modelo": w, "cuota": mejor["cuota"], "decimal": mejor["decimal"], "casa": mejor["casa"], "fuente": mejor["fuente"],
+            "p_sharp": mejor["p_sharp"], "peso_modelo": w, "p_desde": P_DESDE if mejor.get("p_modelo") is not None else "mercado",
+            "p_mezcla": mejor.get("p_mezcla"), "ev_mezcla": mejor.get("ev_mezcla"), "cuota": mejor["cuota"], "decimal": mejor["decimal"], "casa": mejor["casa"], "fuente": mejor["fuente"],
             "ev": mejor["ev"], "cuota_min": cuota_min, "confianza": conf, "unidades": UNIDADES.get(conf, 0),
             "brecha_modelo_mercado": mejor["brecha_modelo_mercado"], "mov_linea": mejor["mov_linea"],
             "conteo": {"a_favor": len(favor), "en_contra": len(contra)}, "por_que_si": razones_si, "por_que_no": razones_no,
@@ -441,9 +457,9 @@ def decidir_partido(rec, movs=None):
     for nom, d in (("Ganador", g), ("Total", t)):
         if not d:
             partes.append("%s: sin modelo ni cuota." % nom); continue
-        partes.append("%s: %s, p final %.1f%% (mercado %s, modelo %s, peso modelo %.2f)%s -> %s, %d u. A favor %d / en contra %d. Si: %s. No: %s. Dudas: %s." % (
-            nom, d["pick"], 100 * d["p_final"], ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "sin cuota",
-            ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-", d["peso_modelo"],
+        partes.append("%s: %s, modelo %s (Pinnacle de referencia %s)%s -> %s, %d u. A favor %d / en contra %d. Si: %s. No: %s. Dudas: %s." % (
+            nom, d["pick"], ("%.1f%%" % (100 * d["p_modelo"])) if d["p_modelo"] is not None else "-",
+            ("%.1f%%" % (100 * d["p_sharp"])) if d["p_sharp"] is not None else "sin cuota",
             (", cuota %.2f EV %+.1f%%" % (d["decimal"], 100 * d["ev"])) if d["ev"] is not None else (", cuota minima %.2f" % d["cuota_min"]),
             d["confianza"], d["unidades"], d["conteo"]["a_favor"], d["conteo"]["en_contra"],
             "; ".join(d["por_que_si"]) or "-", "; ".join(d["por_que_no"]) or "-", "; ".join(x["duda"] for x in d["dudas"]) or "ninguna"))

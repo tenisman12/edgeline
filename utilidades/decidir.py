@@ -29,6 +29,7 @@ import argparse, csv, datetime as dt, io, json, math, os, sys
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, BASE)
 PESO_MODELO = float(os.environ.get("EDGELINE_PESO_MODELO", "0.25"))
+P_DESDE = os.environ.get("EDGELINE_P_DESDE", "modelo")   # 10-oct-2026: "modelo" (p = modelo) o "mezcla" (sistema anterior)
 HFA = 24.0                     # igual que nucleo/forma.py (beisbol)
 IP_ABRIDOR = 5.5
 IP_PRIOR = 30.0                # la ERA de 5 salidas es ruidosa: se encoge hacia el pitcheo del equipo con 30 IP de prior (fijo hasta estimarlo, punto 20)
@@ -182,6 +183,7 @@ def decidir(rec, C, PESOS):
         ps = 1 - float(g_a["p_sharp"])
     if pm is None and ps is None:
         return None
+    p_mez = None
     if ps is None:
         pf, fuente = pm, "solo modelo (sin cuota)"
     elif pm is None:
@@ -193,7 +195,12 @@ def decidir(rec, C, PESOS):
             w_ = _PD.peso(rec.get("liga"), "Ganador", PESO_MODELO)
         except Exception:
             pass
-        pf = _sig((1 - w_) * _logit(ps) + w_ * _logit(pm)); fuente = "pinnacle %.0f%% + modelo %.0f%%" % (100 * (1 - w_), 100 * w_)
+        p_mez = _sig((1 - w_) * _logit(ps) + w_ * _logit(pm))
+        if P_DESDE == "modelo":
+            # 10-oct-2026 (Alejandro): p = modelo; Pinnacle de referencia; la mezcla queda como sombra (p_mezcla)
+            pf, fuente = pm, "modelo (Pinnacle de referencia %.1f%%)" % (100 * ps)
+        else:
+            pf, fuente = p_mez, "pinnacle %.0f%% + modelo %.0f%%" % (100 * (1 - w_), 100 * w_)
     sd = C["margen"]["sd"]
     margen = sd * _phi_inv(pf)                       # solo informativo
     rl = (C.get("run_line") or {}); mapa = rl.get(lg) or rl.get("TODAS") or DEFECTO["run_line"]["TODAS"]
@@ -265,6 +272,7 @@ def decidir(rec, C, PESOS):
             pick["nota_lectura"] = "lectura unanime en contra: baja un escalon"
     return {"liga": rec["liga"], "id": str(rec["id"]), "fecha": rec["fecha"], "hora": rec.get("hora"), "home": rec["home"]["nombre"], "away": rec["away"]["nombre"],
             "p_modelo": None if pm is None else round(pm, 4), "p_sharp": None if ps is None else round(ps, 4), "p_final": round(pf, 4), "fuente": fuente,
+            "p_mezcla": None if p_mez is None else round(p_mez, 4),
             "margen_esperado": round(margen, 2), "linea_home": linea_h, "p_runline_home": None if p_rl_h is None else round(p_rl_h, 4), "detalle_modelo": det, "lados": lados,
             "pick": pick, "confianza": conf, "stake": stake, "pretemporada": bool(rec.get("pretemporada"))}
 
