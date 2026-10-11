@@ -47,8 +47,11 @@ def _predecir(fecha, home, away, k):
     with patch.object(futbol, "_juegos", return_value=previos), patch.object(futbol, "SHRINK", k):
         st = futbol.entrenar("mls")
         emp = equipos.Emparejador(list(st["eq"]))
-        h,_ = emp.buscar([home["nombre"]], home.get("abrev"))
-        a,_ = emp.buscar([away["nombre"]], away.get("abrev"))
+        # Solo el monitor conoce este alias: no modifica los picks publicados.
+        nombre_h = "Los Angeles FC" if home["nombre"] == "LAFC" else home["nombre"]
+        nombre_a = "Los Angeles FC" if away["nombre"] == "LAFC" else away["nombre"]
+        h,_ = emp.buscar([nombre_h], home.get("abrev"))
+        a,_ = emp.buscar([nombre_a], away.get("abrev"))
         if not h or not a:
             return None
         p = futbol.predecir(st, h, a)
