@@ -541,6 +541,15 @@ def main():
                 "publico": {"splits": (q or {}).get("splits"), "atencion": (q or {}).get("atencion")} if q else None,
                 "nivel": 1, "es_lectura": True, "apostable": apostabilidad(p, v2, dec_bb),
                 "decision_v2": v2}
+        # regla del 11-oct (linea sin moverse en contra) tambien en el ganador de beisbol, que decide decidir.py
+        ag = fila["apostable"].get("ganador") or {}
+        if p.get("deporte") == "beisbol" and ag.get("apostable"):
+            kb = ((dec_bb or {}).get((p["liga"], str(p["id"]), p["fecha"])) or {}).get("pick") or {}
+            ldb = kb.get("lado")
+            if ldb in ("home", "away"):
+                mvb = movimiento(p, "Ganador", ldb, p[ldb]["nombre"])[0]
+                if mvb is not None and mvb <= V2.MOV_CONTRA:
+                    ag.update({"apostable": False, "motivo": "la linea sharp se movio %.1f pp en contra del pick" % mvb})
         angs = _angulos(p, D["partidos"])
         fila["angulos"] = [ANG.resumen_json(x) for x in angs] if angs else []
         try:
