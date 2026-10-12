@@ -193,6 +193,63 @@ def _variantes(e):
     return [x for x in v if x]
 
 
+def _norm_nombre(s):
+    import unicodedata
+    s = "".join(ch for ch in unicodedata.normalize("NFKD", str(s or "")) if not unicodedata.combining(ch)).lower()
+    s = "".join(ch if ch.isalnum() or ch == " " else " " for ch in s)
+    t = [x for x in s.split() if x not in ("jr", "sr", "ii", "iii", "iv")]
+    return t
+
+
+def _mismo_jugador(a, b):
+    ta, tb = _norm_nombre(a), _norm_nombre(b)
+    if not ta or not tb:
+        return False
+    return ta == tb or (ta[-1] == tb[-1] and ta[0][:1] == tb[0][:1])
+
+
+QB_FUERA = ("out", "doubtful", "injured reserve", "suspension", "physically unable")
+
+
+def _capa_qb(g, rp, predecir_motor):
+    """Capa de contexto NFL: QB titular (segun el motor de puntos) en el reporte de lesiones de ESPN.
+    Devuelve {'equipos': [...], 'texto': ...} o None si ningun QB titular aparece en el reporte."""
+    les = (g.get("contexto") or {}).get("lesiones") or {}
+    eq = []
+    for lado in ("home", "away"):
+        qb = rp.get("qb_" + lado)
+        if not qb:
+            continue
+        for x in les.get(lado) or []:
+            if (x.get("pos") or "").upper() != "QB" or not _mismo_jugador(x.get("jugador"), qb):
+                continue
+            est = (x.get("estado") or "").strip()
+            fuera = any(k in est.lower() for k in QB_FUERA)
+            e = {"lado": lado, "equipo": (g.get(lado) or {}).get("nombre"), "qb": qb, "estado": est, "fuera": fuera,
+                 "valor_puntos": rp["qb_valor"][lado]}
+            try:
+                r2 = predecir_motor(**{"qb_" + lado: "__reemplazo__"})
+            except Exception:
+                r2 = None
+            if r2:
+                e["mueve_pp_local"] = round(100 * (r2["p_home"] - rp["p_home"]), 1)
+                e["mueve_total"] = round(r2["total"] - rp["total"], 1)
+            eq.append(e)
+            break
+    if not eq:
+        return None
+    partes = []
+    for e in eq:
+        mv = ""
+        if e.get("mueve_pp_local") is not None:
+            pp_equipo = e["mueve_pp_local"] if e["lado"] == "home" else -e["mueve_pp_local"]
+            mv = "; sin el, el motor mueve %+.1f pp a %s y %+.1f puntos el total" % (pp_equipo, e["equipo"], e["mueve_total"])
+        partes.append("QB titular de %s, %s, %s (vale %+.1f puntos en el motor)%s" % (
+            e["equipo"], e["qb"], e["estado"], e["valor_puntos"], mv))
+    return {"aplicado": False, "equipos": eq,
+            "texto": "Capa QB (contexto, el modelo no ve al QB): " + ". ".join(partes) + "."}
+
+
 def _casar(c, e):
     return c["emp"].buscar(_variantes(e), e.get("abrev"))
 
@@ -986,6 +1043,14 @@ def _pred_base(g, c, fecha, eventos=None):
                                    ("Motor: margen / total", "%+.1f / %.1f" % (rp["margen"], rp["total"])),
                                    ("Motor: QB titular (valor en puntos)", "%s %+.1f / %s %+.1f" % (
                                        rp.get("qb_home") or "sin dato", rp["qb_valor"]["home"], rp.get("qb_away") or "sin dato", rp["qb_valor"]["away"]))]
+                    # capa QB (11-oct-2026, Alejandro: "que lo ponga como capa extra de considerar si esta el quarterback o
+                    # no"): el modelo no ve al QB. Si el reporte de lesiones de ESPN trae al QB titular (el del motor) como
+                    # Out/Doubtful/IR, el motor se recalcula con un QB de reemplazo (valor previo) y se muestra cuanto movería
+                    # la probabilidad y el total. CONTEXTO: no cambia p del modelo; decidir_v2 lo usa en la confianza.
+                    cq = _capa_qb(g, rp, lambda **kw: _MP.predecir(h, a, fecha, spread=(-sp if sp is not None else None), total=tot_m, **kw))
+                    if cq:
+                        m["capa_qb"] = cq
+                        m["nota"] = (m.get("nota") or "") + (" " if m.get("nota") else "") + cq["texto"]
             except Exception as _e:
                 m["motor_puntos"] = {"aplicado": False, "motivo": "error: %s" % str(_e)[:120]}
         return m, None

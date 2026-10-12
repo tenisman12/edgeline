@@ -423,6 +423,24 @@ def decidir_mercado(rec, tipo, movs=None):
     if mejor["decimal"] is not None and mejor["decimal"] > CUOTA_LONGSHOT and conf in ("alta", "media", "baja"):
         razones_no.append("cuota %.2f: el EV de un longshot depende de 1-2 pp de probabilidad que el modelo no afina; baja un nivel" % mejor["decimal"])
         conf = {"alta": "media", "media": "baja", "baja": "minima"}[conf]
+    # capa QB (NFL, 11-oct-2026): el modelo no ve al QB; el motor de puntos dice cuanto valdria su baja
+    qb_si = []
+    for e in (((rec.get("modelo") or {}).get("capa_qb") or {}).get("equipos") or []):
+        mv = ""
+        if e.get("mueve_pp_local") is not None:
+            pp_eq = e["mueve_pp_local"] if e["lado"] == "home" else -e["mueve_pp_local"]
+            mv = " (sin el, el motor: %+.1f pp a %s, %+.1f puntos al total)" % (pp_eq, e["equipo"], e.get("mueve_total") or 0)
+        txt = "QB titular de %s (%s) %s%s" % (e["equipo"], e["qb"], e["estado"], mv)
+        if not e.get("fuera"):
+            razones_no.append(txt + ": en duda, revisar antes de apostar")
+        elif tipo == "Ganador" and mejor["lado"] == e["lado"]:
+            razones_no.append(txt + ": el modelo no lo ve; pick en minima")
+            conf = "minima" if conf not in ("sin_cuota", "solo_mercado") else conf
+        elif tipo == "Ganador":
+            qb_si.append(txt + ": juega a favor del pick (el mercado normalmente ya lo trae)")
+        else:
+            razones_no.append(txt + ": el total del modelo no lo ve; baja un nivel")
+            conf = {"alta": "media", "media": "baja", "baja": "minima"}.get(conf, conf)
     if rec.get("pretemporada"):
         razones_no.append("pretemporada"); conf = "minima"
     for _lado in ("home", "away"):
@@ -436,7 +454,7 @@ def decidir_mercado(rec, tipo, movs=None):
         conf = {"alta": "media", "media": "baja", "baja": "minima"}[conf]
     for s in contra:
         razones_no.append("%s en contra (%s)" % (s["capa"], s["valor"]))
-    razones_si = ["%s a favor (%s; %s)" % (s["capa"], s["valor"], s["peso"]) for s in favor]
+    razones_si = ["%s a favor (%s; %s)" % (s["capa"], s["valor"], s["peso"]) for s in favor] + qb_si
     if mejor["ev"] is not None:
         razones_si.insert(0, "modelo %.1f%% (cuota justa %.2f) contra %.2f en %s%s" % (
             100 * mejor["p_final"], 1.0 / max(mejor["p_final"], 1e-6), mejor["decimal"], mejor.get("casa") or "-",

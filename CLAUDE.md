@@ -231,6 +231,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   `trabajo/minar/2026-10-10_motor_puntos.md`): le gana a modelos/americano.py sin llegar a z 2 (ganador 1.65, total 1.41) y
   pierde contra el cierre (moneyline z -4.13, spread -3.33, total -2.79); apilado con el cierre no suma. Solo contexto en
   plataforma (modelo.motor_puntos y extra), sin peso.
+- Capa QB (11-oct-2026, Alejandro: "que lo ponga como capa extra de considerar si esta el quarterback o no"): el modelo no
+  ve al QB. `plataforma._capa_qb` cruza el QB titular del motor de puntos con el reporte de lesiones de ESPN; si sale
+  Out/Doubtful/IR recalcula el motor con un QB de reemplazo y guarda `modelo.capa_qb` (cuanto moveria p y el total) y la
+  nota. Contexto: no cambia p. decidir_v2: QB fuera en el lado del pick de ganador = minima; QB fuera en un total = baja
+  un nivel; QB del rival fuera = por_que_si; Questionable = aviso en por_que_no.
 - `decidir_v2.PESO_MODELO["nfl"]` 0.5 -> 0.0 (aprobado): con 0.5 la mezcla empeora al cierre (moneyline z -2.59, spread
   -2.57, total -2.13, 2023-2026). Desde el 10-oct (noche) ese peso solo vale para la sombra: p final = modelo (ver abajo).
 
