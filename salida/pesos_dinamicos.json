@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-13T12:12:55Z",
+ "generado": "2026-10-13T19:37:08Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -33,17 +33,17 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.65,
-   "n": 87,
-   "mejora_milesimas": 10.764,
-   "z": 0.65,
+   "n": 88,
+   "mejora_milesimas": 10.77,
+   "z": 0.66,
    "mitades": [
-    14.642,
-    6.975
+    13.497,
+    8.043
    ],
-   "brier_pinnacle": 0.2109,
-   "brier_modelo": 0.2076,
+   "brier_pinnacle": 0.2092,
+   "brier_modelo": 0.2059,
    "previo": 0.35,
-   "w_usado": 0.417
+   "w_usado": 0.418
   },
   "wta|Ganador": {
    "w_vivo": 0.9,
@@ -115,20 +115,6 @@
    "previo": 0.5,
    "w_usado": 0.552
   },
-  "kbo|Ganador": {
-   "w_vivo": 1.0,
-   "n": 34,
-   "mejora_milesimas": 13.247,
-   "z": 0.46,
-   "mitades": [
-    -29.641,
-    56.135
-   ],
-   "brier_pinnacle": 0.2523,
-   "brier_modelo": 0.2468,
-   "previo": 0.25,
-   "w_usado": 0.326
-  },
   "kbo|Total": {
    "w_vivo": 1.0,
    "n": 34,
@@ -142,6 +128,20 @@
    "brier_modelo": 0.237,
    "previo": 0.25,
    "w_usado": 0.326
+  },
+  "kbo|Ganador": {
+   "w_vivo": 1.0,
+   "n": 33,
+   "mejora_milesimas": 19.335,
+   "z": 0.66,
+   "mitades": [
+    -13.12,
+    49.881
+   ],
+   "brier_pinnacle": 0.254,
+   "brier_modelo": 0.2455,
+   "previo": 0.25,
+   "w_usado": 0.324
   },
   "nfl|Ganador": {
    "w_vivo": 0.75,
