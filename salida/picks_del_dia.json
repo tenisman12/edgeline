@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-13T19:36:21",
+ "generado": "2026-10-13T20:28:00",
  "fecha": "2026-10-13",
  "max_picks": 4,
  "tope_bank": 0.1,
@@ -92,10 +92,10 @@
    "torneo": "NHL",
    "ronda": null,
    "cancha": null,
-   "publico_boletos": 20.5,
-   "publico_dinero": 11.5,
-   "notas_home": 60,
-   "notas_away": 74,
+   "publico_boletos": 20.0,
+   "publico_dinero": 11.0,
+   "notas_home": 64,
+   "notas_away": 73,
    "mov_linea": -0.24,
    "senales_mercado": "",
    "angulos": "H1:home; H6:home; H7:home; H17:away; H23:home; L3:away; L4:home",
@@ -104,7 +104,7 @@
    "por_que_si": [
     "modelo vs mercado a favor (+8.1 pp; voto completo (w por liga))",
     "EV +16.8%",
-    "publico del otro lado (20.5% de boletos aqui)",
+    "publico del otro lado (20.0% de boletos aqui)",
     "osciladores (contexto, sin peso): MTL forma -0.17, ataque +0.01, defensa +0.37, dif5 -1.00, bajando | BUF forma -0.10, ataque -0.23, defensa +0.23, dif5 -1.07, estable",
     "angulo L3 dominio de tiros o yardas: favorece a BUF, moveria +4.7 pp (3,854 partidos con el angulo; z fuera de muestra 0.31)",
     "angulo L4 conversion neta (PDO, BABIP, triples, perdidas): favorece a BUF, moveria +1.2 pp (3,856 partidos con el angulo; z fuera de muestra -0.79)"
@@ -146,8 +146,8 @@
    "cancha": null,
    "publico_boletos": 18.0,
    "publico_dinero": 13.0,
-   "notas_home": 61,
-   "notas_away": 34,
+   "notas_home": 58,
+   "notas_away": 35,
    "mov_linea": 0.05,
    "senales_mercado": "",
    "angulos": "H4:away; H7:away; H13:home; Q1:away; H18:home; S1:home; L3:away; L4:home",
@@ -196,7 +196,7 @@
    "cancha": "Court 1",
    "publico_boletos": null,
    "publico_dinero": null,
-   "notas_home": 9,
+   "notas_home": 8,
    "notas_away": 10,
    "mov_linea": null,
    "senales_mercado": "",
@@ -242,8 +242,8 @@
    "cancha": null,
    "publico_boletos": 10.0,
    "publico_dinero": 11.0,
-   "notas_home": 21,
-   "notas_away": 53,
+   "notas_home": 26,
+   "notas_away": 54,
    "mov_linea": -0.2,
    "senales_mercado": "",
    "angulos": "H13:home; H15:home; H17:away; H22:home; H18:away; S4:home",
@@ -293,7 +293,7 @@
    "publico_boletos": null,
    "publico_dinero": null,
    "notas_home": 8,
-   "notas_away": 6,
+   "notas_away": 7,
    "mov_linea": 1.97,
    "senales_mercado": "",
    "angulos": "T1:home; T3:away",
@@ -339,7 +339,7 @@
    "publico_boletos": null,
    "publico_dinero": null,
    "notas_home": 15,
-   "notas_away": 11,
+   "notas_away": 10,
    "mov_linea": 0.0,
    "senales_mercado": "",
    "angulos": "T1:away; T2:away; T3:home",
@@ -444,29 +444,29 @@
     "splits": {
      "ml": {
       "tickets_home": 52.0,
-      "money_home": 55.0
+      "money_home": 48.0
      },
      "spread": {
-      "tickets_home": 68.0,
-      "money_home": 29.0
+      "tickets_home": 69.0,
+      "money_home": 32.0
      },
      "total": {
       "tickets_over": 85.0,
       "money_over": 86.0
      },
      "casas": 6,
-     "ml_away": -110,
-     "ml_home": -110,
+     "ml_away": -107,
+     "ml_home": -113,
      "spread_home": -1.5,
      "total_linea": 6,
-     "under_odds": -108,
-     "over_odds": -115,
+     "under_odds": 102,
+     "over_odds": -123,
      "spread_publico": -1.5,
      "total_publico": 6.0,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 69,
+     "home": 67,
      "away": 66,
      "fuente": "google_news_48h"
     }
@@ -1290,12 +1290,12 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 56.5,
-      "money_home": 59.5
+      "tickets_home": 57.0,
+      "money_home": 59.0
      },
      "spread": {
-      "tickets_home": 38.0,
-      "money_home": 40.0
+      "tickets_home": 36.0,
+      "money_home": 41.0
      },
      "total": {
       "tickets_over": 87.0,
@@ -1314,7 +1314,7 @@
     },
     "atencion": {
      "home": 36,
-     "away": 73,
+     "away": 74,
      "fuente": "google_news_48h"
     }
    },
@@ -1399,16 +1399,18 @@
        "dir": 0,
        "valor": 0.909,
        "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
+      },
+      {
+       "capa": "portero away confirmado (Akira Schmid)",
+       "dir": 0,
+       "valor": 0.868,
+       "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
       }
      ],
      "dudas": [
       {
        "duda": "capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales)",
        "efecto": "faltan hasta +-6 pp de ajuste"
-      },
-      {
-       "duda": "portero de away sin confirmar (Akira Schmid)",
-       "efecto": "idem"
       },
       {
        "duda": "home con 4 juegos de temporada",
@@ -1456,6 +1458,12 @@
          "dir": 0,
          "valor": 0.909,
          "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
+        },
+        {
+         "capa": "portero away confirmado (Akira Schmid)",
+         "dir": 0,
+         "valor": 0.868,
+         "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
         }
        ]
       },
@@ -1498,6 +1506,12 @@
          "capa": "portero home confirmado (Cam Talbot)",
          "dir": 0,
          "valor": 0.909,
+         "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
+        },
+        {
+         "capa": "portero away confirmado (Akira Schmid)",
+         "dir": 0,
+         "valor": 0.868,
          "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
         }
        ]
@@ -1697,7 +1711,7 @@
      },
      "linea_referencia": null
     },
-    "razonamiento": "Modelo: Columbus Blue Jackets 3.4 - Florida Panthers 2.8 (total 6.2 vs linea 5.5); gana Columbus Blue Jackets 60%. Portero titular (Daily Faceoff / ESPN): Columbus Blue Jackets Cam Talbot (Confirmed, sv 0.909 en 10 juegos, GSAx -0.10 por juego en 40 aperturas); Florida Panthers Akira Schmid (Likely, sv 0.868 en 10 juegos, GSAx -0.03 por juego en 40 aperturas). Back-to-back: Florida Panthers (ofensiva x0.95, defensa x1.03, estimado de los datos). 1X2 60 min: empate a 60 min = tasa de la liga (24.6 %, 1500 juegos); modelo 15.8 %. Ganador: Columbus Blue Jackets, modelo 59.7% (Pinnacle de referencia 55.0%), cuota 1.77 EV +5.9% -> minima, 0 u. A favor 3 / en contra 0. Si: modelo 59.7% (cuota justa 1.68) contra 1.77 en williamhill_us; Pinnacle 55.0% (+4.6 pp); modelo vs mercado a favor (+4.6 pp; voto completo (w por liga)); movimiento de linea a favor (1.2; informacion, no ventaja (medido en futbol: apostar al movimiento pierde)); rival en back-to-back a favor (1; +1.7 milesimas; cansado gana 44% vs 51% (ya en el modelo)); EV +5.9%. No: cuota 1.77 menor a 1.80. Dudas: capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales); portero de away sin confirmar (Akira Schmid); home con 4 juegos de temporada. Total: Over 5.5, modelo 58.7% (Pinnacle de referencia 54.7%), cuota 1.80 EV +5.7% -> solo_mercado, 0 u. A favor 1 / en contra 0. Si: modelo 58.7% (cuota justa 1.70) contra 1.80 en onexbet; Pinnacle 54.7% (+4.0 pp); modelo vs mercado a favor (+4.0 pp; voto completo (w por liga)); EV +5.7%. No: mercado Total de NHL: el modelo todavia no le gana a la tasa historica (walk-forward), lectura, no pick. Dudas: mercado Total: el modelo todavia no le gana a la tasa historica en esta liga; capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales); home con 4 juegos de temporada."
+    "razonamiento": "Modelo: Columbus Blue Jackets 3.4 - Florida Panthers 2.8 (total 6.2 vs linea 5.5); gana Columbus Blue Jackets 60%. Portero titular (Daily Faceoff / ESPN): Columbus Blue Jackets Cam Talbot (Confirmed, sv 0.909 en 10 juegos, GSAx -0.10 por juego en 40 aperturas); Florida Panthers Akira Schmid (Confirmed, sv 0.868 en 10 juegos, GSAx -0.03 por juego en 40 aperturas). Back-to-back: Florida Panthers (ofensiva x0.95, defensa x1.03, estimado de los datos). 1X2 60 min: empate a 60 min = tasa de la liga (24.6 %, 1500 juegos); modelo 15.8 %. Ganador: Columbus Blue Jackets, modelo 59.7% (Pinnacle de referencia 55.0%), cuota 1.77 EV +5.9% -> minima, 0 u. A favor 3 / en contra 0. Si: modelo 59.7% (cuota justa 1.68) contra 1.77 en williamhill_us; Pinnacle 55.0% (+4.6 pp); modelo vs mercado a favor (+4.6 pp; voto completo (w por liga)); movimiento de linea a favor (1.2; informacion, no ventaja (medido en futbol: apostar al movimiento pierde)); rival en back-to-back a favor (1; +1.7 milesimas; cansado gana 44% vs 51% (ya en el modelo)); EV +5.9%. No: cuota 1.77 menor a 1.80. Dudas: capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales); home con 4 juegos de temporada. Total: Over 5.5, modelo 58.7% (Pinnacle de referencia 54.7%), cuota 1.80 EV +5.7% -> solo_mercado, 0 u. A favor 1 / en contra 0. Si: modelo 58.7% (cuota justa 1.70) contra 1.80 en onexbet; Pinnacle 54.7% (+4.0 pp); modelo vs mercado a favor (+4.0 pp; voto completo (w por liga)); EV +5.7%. No: mercado Total de NHL: el modelo todavia no le gana a la tasa historica (walk-forward), lectura, no pick. Dudas: mercado Total: el modelo todavia no le gana a la tasa historica en esta liga; capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales); home con 4 juegos de temporada."
    },
    "angulos": [
     {
@@ -2035,12 +2049,12 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 79.5,
-      "money_home": 88.5
+      "tickets_home": 80.0,
+      "money_home": 89.0
      },
      "spread": {
-      "tickets_home": 26.0,
-      "money_home": 56.0
+      "tickets_home": 27.0,
+      "money_home": 54.0
      },
      "total": {
       "tickets_over": 87.0,
@@ -2048,7 +2062,7 @@
      },
      "casas": 6,
      "ml_home": -155,
-     "ml_away": 129,
+     "ml_away": 130,
      "spread_home": -1.5,
      "total_linea": 6.5,
      "over_odds": -105,
@@ -2058,8 +2072,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 60,
-     "away": 74,
+     "home": 64,
+     "away": 73,
      "fuente": "google_news_48h"
     }
    },
@@ -2862,16 +2876,16 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 91.5,
-      "money_home": 94.0
+      "tickets_home": 91.0,
+      "money_home": 93.0
      },
      "spread": {
       "tickets_home": 41.0,
       "money_home": 79.0
      },
      "total": {
-      "tickets_over": 94.5,
-      "money_over": 96.0
+      "tickets_over": 94.0,
+      "money_over": 95.5
      },
      "casas": 6,
      "ml_away": 127,
@@ -2879,14 +2893,14 @@
      "spread_home": -1.5,
      "total_linea": 6.5,
      "under_odds": -125,
-     "over_odds": 104,
+     "over_odds": 105,
      "spread_publico": -1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 68,
-     "away": 71,
+     "home": 72,
+     "away": 70,
      "fuente": "google_news_48h"
     }
    },
@@ -3951,16 +3965,16 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 34.0,
-      "money_home": 50.0
+      "tickets_home": 33.0,
+      "money_home": 49.0
      },
      "spread": {
       "tickets_home": 37.0,
-      "money_home": 44.0
+      "money_home": 43.0
      },
      "total": {
-      "tickets_over": 89.0,
-      "money_over": 89.0
+      "tickets_over": 88.0,
+      "money_over": 88.0
      },
      "casas": 6,
      "ml_home": 105,
@@ -3974,8 +3988,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 79,
-     "away": 83,
+     "home": 80,
+     "away": 82,
      "fuente": "google_news_48h"
     }
    },
@@ -4268,24 +4282,24 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 81.0,
-      "money_home": 35.0
+      "tickets_home": 82.0,
+      "money_home": 37.0
      },
      "spread": {
       "tickets_home": 31.0,
-      "money_home": 32.0
+      "money_home": 33.0
      },
      "total": {
-      "tickets_over": 91.0,
-      "money_over": 92.0
+      "tickets_over": 92.0,
+      "money_over": 93.0
      },
      "casas": 6,
      "ml_away": 320,
      "ml_home": -400,
-     "spread_home": -11,
+     "spread_home": -10.5,
      "total_linea": 218.5,
      "under_odds": -110,
-     "over_odds": -110,
+     "over_odds": -111,
      "spread_publico": -10.5,
      "total_publico": 218.5,
      "fuente": "action_network"
@@ -4606,16 +4620,16 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 52.0,
-      "money_home": 39.0
+      "tickets_home": 51.0,
+      "money_home": 38.0
      },
      "spread": {
-      "tickets_home": 50.0,
-      "money_home": 45.0
+      "tickets_home": 49.0,
+      "money_home": 50.0
      },
      "total": {
       "tickets_over": 71.0,
-      "money_over": 66.0
+      "money_over": 71.0
      },
      "casas": 6,
      "ml_home": -105,
@@ -4629,8 +4643,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 12,
-     "away": 14,
+     "home": 13,
+     "away": 15,
      "fuente": "google_news_48h"
     }
    },
@@ -5228,30 +5242,30 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 51.0,
-      "money_home": 27.0
+      "tickets_home": 50.0,
+      "money_home": 22.0
      },
      "spread": {
-      "tickets_home": 29.0,
-      "money_home": 36.0
+      "tickets_home": 28.0,
+      "money_home": 31.0
      },
      "total": {
-      "tickets_over": 97.0,
-      "money_over": 97.0
+      "tickets_over": 96.0,
+      "money_over": 96.0
      },
      "casas": 6,
      "ml_home": -118,
-     "ml_away": -100,
+     "ml_away": -102,
      "spread_home": -1.5,
-     "total_linea": 6,
-     "under_odds": 102,
-     "over_odds": -122,
+     "total_linea": 5.5,
+     "under_odds": 112,
+     "over_odds": -135,
      "spread_publico": -1.5,
-     "total_publico": 6.0,
+     "total_publico": 5.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 72,
+     "home": 69,
      "away": 65,
      "fuente": "google_news_48h"
     }
@@ -6120,14 +6134,14 @@
      "spread_home": 1.5,
      "total_linea": 6,
      "under_odds": -110,
-     "over_odds": -109,
+     "over_odds": -108,
      "spread_publico": 1.5,
      "total_publico": 6.0,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 61,
-     "away": 34,
+     "home": 58,
+     "away": 35,
      "fuente": "google_news_48h"
     }
    },
@@ -6945,15 +6959,15 @@
       "money_home": 66.0
      },
      "spread": {
-      "tickets_home": 46.0,
-      "money_home": 57.5
+      "tickets_home": 50.5,
+      "money_home": 60.5
      },
      "total": {
       "tickets_over": 85.0,
       "money_over": 87.0
      },
      "casas": 6,
-     "ml_away": -115,
+     "ml_away": -114,
      "ml_home": -105,
      "spread_home": 1.5,
      "total_linea": 5.5,
@@ -6964,7 +6978,7 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 74,
+     "home": 73,
      "away": 45,
      "fuente": "google_news_48h"
     }
@@ -7790,30 +7804,30 @@
     "splits": {
      "ml": {
       "tickets_home": 91.0,
-      "money_home": 52.5
+      "money_home": 54.0
      },
      "spread": {
-      "tickets_home": 48.0,
-      "money_home": 62.0
+      "tickets_home": 50.0,
+      "money_home": 64.0
      },
      "total": {
-      "tickets_over": 88.5,
-      "money_over": 87.5
+      "tickets_over": 88.0,
+      "money_over": 87.0
      },
      "casas": 6,
      "ml_home": -210,
      "ml_away": 171,
      "spread_home": -1.5,
-     "total_linea": 6.5,
-     "under_odds": -121,
-     "over_odds": -100,
+     "total_linea": 6,
+     "under_odds": -107,
+     "over_odds": -115,
      "spread_publico": -1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 47,
-     "away": 63,
+     "home": 50,
+     "away": 67,
      "fuente": "google_news_48h"
     }
    },
@@ -8676,8 +8690,8 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 69.0,
-      "money_home": 62.5
+      "tickets_home": 70.0,
+      "money_home": 63.0
      },
      "spread": {
       "tickets_home": 80.0,
@@ -8688,19 +8702,19 @@
       "money_over": 75.0
      },
      "casas": 6,
-     "ml_away": 114,
-     "ml_home": -135,
+     "ml_away": 111,
+     "ml_home": -133,
      "spread_home": -1.5,
      "total_linea": 6.5,
-     "under_odds": 106,
-     "over_odds": -136,
+     "under_odds": 104,
+     "over_odds": -133,
      "spread_publico": -1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
      "home": 90,
-     "away": 80,
+     "away": 83,
      "fuente": "google_news_48h"
     }
    },
@@ -9266,14 +9280,14 @@
     "splits": {
      "ml": {
       "tickets_home": 81.0,
-      "money_home": 29.0
+      "money_home": 31.0
      },
      "spread": {
       "tickets_home": 24.0,
       "money_home": 28.0
      },
      "total": {
-      "tickets_over": 93.0,
+      "tickets_over": 92.0,
       "money_over": 94.0
      },
      "casas": 6,
@@ -9288,8 +9302,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 86,
-     "away": 67,
+     "home": 89,
+     "away": 68,
      "fuente": "google_news_48h"
     }
    },
@@ -9612,7 +9626,7 @@
     "splits": null,
     "atencion": {
      "home": 25,
-     "away": 10,
+     "away": 12,
      "fuente": "google_news_48h"
     }
    },
@@ -10117,7 +10131,7 @@
     "splits": {
      "ml": {
       "tickets_home": 12.0,
-      "money_home": 7.5
+      "money_home": 7.0
      },
      "spread": {
       "tickets_home": 71.0,
@@ -10139,7 +10153,7 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 71,
+     "home": 74,
      "away": 77,
      "fuente": "google_news_48h"
     }
@@ -10214,6 +10228,12 @@
        "peso": "informacion, no ventaja (medido en futbol: apostar al movimiento pierde)"
       },
       {
+       "capa": "portero home confirmado (Spencer Knight)",
+       "dir": 0,
+       "valor": 0.852,
+       "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
+      },
+      {
        "capa": "portero away confirmado (Sergei Murashov)",
        "dir": 0,
        "valor": 0.937,
@@ -10224,10 +10244,6 @@
       {
        "duda": "capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales)",
        "efecto": "faltan hasta +-6 pp de ajuste"
-      },
-      {
-       "duda": "portero de home sin confirmar (Spencer Knight)",
-       "efecto": "idem"
       }
      ],
      "lados": [
@@ -10259,6 +10275,12 @@
          "dir": -1,
          "valor": -3.2,
          "peso": "informacion, no ventaja (medido en futbol: apostar al movimiento pierde)"
+        },
+        {
+         "capa": "portero home confirmado (Spencer Knight)",
+         "dir": 0,
+         "valor": 0.852,
+         "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
         },
         {
          "capa": "portero away confirmado (Sergei Murashov)",
@@ -10296,6 +10318,12 @@
          "dir": 1,
          "valor": 3.2,
          "peso": "informacion, no ventaja (medido en futbol: apostar al movimiento pierde)"
+        },
+        {
+         "capa": "portero home confirmado (Spencer Knight)",
+         "dir": 0,
+         "valor": 0.852,
+         "peso": "contexto: sv% de 10 juegos no predice (medido ~0)"
         },
         {
          "capa": "portero away confirmado (Sergei Murashov)",
@@ -10495,7 +10523,7 @@
      },
      "linea_referencia": null
     },
-    "razonamiento": "Modelo: Chicago Blackhawks 2.9 - Pittsburgh Penguins 3.5 (total 6.3 vs linea 6.5); gana Pittsburgh Penguins 61%. Portero titular (Daily Faceoff / ESPN): Chicago Blackhawks Spencer Knight (Likely, sv 0.852 en 10 juegos, GSAx -0.05 por juego en 40 aperturas); Pittsburgh Penguins Sergei Murashov (Confirmed, sv 0.937 en 10 juegos, GSAx -0.07 por juego en 4 aperturas). 1X2 60 min: empate a 60 min = tasa de la liga (24.6 %, 1500 juegos); modelo 15.6 %. Ganador: Pittsburgh Penguins, modelo 61.3% (Pinnacle de referencia 59.3%), cuota 1.68 EV +2.7% -> minima, 0 u. A favor 2 / en contra 0. Si: modelo 61.3% (cuota justa 1.63) contra 1.68 en betrivers; Pinnacle 59.3% (+1.9 pp); modelo vs mercado a favor (+1.9 pp; voto completo (w por liga)); movimiento de linea a favor (3.2; informacion, no ventaja (medido en futbol: apostar al movimiento pierde)); EV +2.7%. No: cuota 1.68 menor a 1.80. Dudas: capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales); portero de home sin confirmar (Spencer Knight). Total: Under 6.5, modelo 56.0% (Pinnacle de referencia 50.2%), cuota 1.94 EV +8.3% -> solo_mercado, 0 u. A favor 1 / en contra 0. Si: modelo 56.0% (cuota justa 1.79) contra 1.94 en pinnacle; Pinnacle 50.2% (+5.7 pp); modelo vs mercado a favor (+5.7 pp; voto completo (w por liga)); EV +8.3%. No: mercado Total de NHL: el modelo todavia no le gana a la tasa historica (walk-forward), lectura, no pick. Dudas: mercado Total: el modelo todavia no le gana a la tasa historica en esta liga; capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales)."
+    "razonamiento": "Modelo: Chicago Blackhawks 2.9 - Pittsburgh Penguins 3.5 (total 6.3 vs linea 6.5); gana Pittsburgh Penguins 61%. Portero titular (Daily Faceoff / ESPN): Chicago Blackhawks Spencer Knight (Confirmed, sv 0.852 en 10 juegos, GSAx -0.05 por juego en 40 aperturas); Pittsburgh Penguins Sergei Murashov (Confirmed, sv 0.937 en 10 juegos, GSAx -0.07 por juego en 4 aperturas). 1X2 60 min: empate a 60 min = tasa de la liga (24.6 %, 1500 juegos); modelo 15.6 %. Ganador: Pittsburgh Penguins, modelo 61.3% (Pinnacle de referencia 59.3%), cuota 1.68 EV +2.7% -> minima, 0 u. A favor 2 / en contra 0. Si: modelo 61.3% (cuota justa 1.63) contra 1.68 en betrivers; Pinnacle 59.3% (+1.9 pp); modelo vs mercado a favor (+1.9 pp; voto completo (w por liga)); movimiento de linea a favor (3.2; informacion, no ventaja (medido en futbol: apostar al movimiento pierde)); EV +2.7%. No: cuota 1.68 menor a 1.80. Dudas: capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales). Total: Under 6.5, modelo 56.0% (Pinnacle de referencia 50.2%), cuota 1.94 EV +8.3% -> solo_mercado, 0 u. A favor 1 / en contra 0. Si: modelo 56.0% (cuota justa 1.79) contra 1.94 en pinnacle; Pinnacle 50.2% (+5.7 pp); modelo vs mercado a favor (+5.7 pp; voto completo (w por liga)); EV +8.3%. No: mercado Total de NHL: el modelo todavia no le gana a la tasa historica (walk-forward), lectura, no pick. Dudas: mercado Total: el modelo todavia no le gana a la tasa historica en esta liga; capas medidas no aplicadas (el modelo ya usa xG por partido (MoneyPuck); la capa de tiros/PDO se midio sobre goles reales)."
    },
    "angulos": [
     {
@@ -10867,12 +10895,12 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 33.5,
-      "money_home": 68.0
+      "tickets_home": 34.0,
+      "money_home": 67.0
      },
      "spread": {
-      "tickets_home": 67.0,
-      "money_home": 58.0
+      "tickets_home": 68.0,
+      "money_home": 49.0
      },
      "total": {
       "tickets_over": 85.0,
@@ -10883,14 +10911,14 @@
      "ml_away": -110,
      "spread_home": 1.5,
      "total_linea": 6.5,
-     "over_odds": 103,
-     "under_odds": -123,
+     "over_odds": -106,
+     "under_odds": -116,
      "spread_publico": 1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 53,
+     "home": 57,
      "away": 75,
      "fuente": "google_news_48h"
     }
@@ -11748,31 +11776,31 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 32.5,
-      "money_home": 30.0
+      "tickets_home": 33.5,
+      "money_home": 34.5
      },
      "spread": {
-      "tickets_home": 58.0,
-      "money_home": 60.0
+      "tickets_home": 55.0,
+      "money_home": 61.0
      },
      "total": {
       "tickets_over": 91.0,
       "money_over": 94.0
      },
      "casas": 6,
-     "ml_home": -117,
+     "ml_home": -116,
      "ml_away": -103,
      "spread_home": -1.5,
      "total_linea": 6,
      "under_odds": -102,
-     "over_odds": -113,
+     "over_odds": -115,
      "spread_publico": -1.5,
      "total_publico": 6.0,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 73,
-     "away": 65,
+     "home": 72,
+     "away": 69,
      "fuente": "google_news_48h"
     }
    },
@@ -12542,16 +12570,16 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 15.0,
-      "money_home": 5.0
+      "tickets_home": 14.0,
+      "money_home": 6.0
      },
      "spread": {
-      "tickets_home": 69.0,
-      "money_home": 42.0
+      "tickets_home": 70.0,
+      "money_home": 46.0
      },
      "total": {
       "tickets_over": 88.0,
-      "money_over": 87.0
+      "money_over": 86.0
      },
      "casas": 6,
      "ml_away": -125,
@@ -12565,7 +12593,7 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 39,
+     "home": 42,
      "away": 74,
      "fuente": "google_news_48h"
     }
@@ -13429,11 +13457,11 @@
     "splits": {
      "ml": {
       "tickets_home": 75.0,
-      "money_home": 65.5
+      "money_home": 66.0
      },
      "spread": {
       "tickets_home": 20.0,
-      "money_home": 32.0
+      "money_home": 30.0
      },
      "total": {
       "tickets_over": 89.0,
@@ -13452,7 +13480,7 @@
     },
     "atencion": {
      "home": 28,
-     "away": 75,
+     "away": 78,
      "fuente": "google_news_48h"
     }
    },
@@ -14291,11 +14319,11 @@
     "splits": {
      "ml": {
       "tickets_home": 95.0,
-      "money_home": 90.5
+      "money_home": 91.5
      },
      "spread": {
       "tickets_home": 60.0,
-      "money_home": 46.0
+      "money_home": 49.0
      },
      "total": {
       "tickets_over": 87.0,
@@ -14307,14 +14335,14 @@
      "spread_home": -1.5,
      "total_linea": 6.5,
      "under_odds": -117,
-     "over_odds": -104,
+     "over_odds": -105,
      "spread_publico": -1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 32,
-     "away": 41,
+     "home": 33,
+     "away": 50,
      "fuente": "google_news_48h"
     }
    },
@@ -15084,10 +15112,10 @@
     "lado": "home",
     "nombre": "Los Angeles Lakers",
     "p": 0.7551,
-    "cuota": -130.0,
+    "cuota": -125.0,
     "fuente": "decidir_v2 (una_casa, peso modelo 0.35)",
     "cuota_min": 1.8,
-    "ev": 0.3358,
+    "ev": 0.3592,
     "confianza": "minima",
     "unidades": 0,
     "conteo": {
@@ -15116,20 +15144,20 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 68.0,
+      "tickets_home": 67.0,
       "money_home": 67.0
      },
      "spread": {
       "tickets_home": 41.0,
-      "money_home": 33.0
+      "money_home": 32.0
      },
      "total": {
-      "tickets_over": 87.0,
-      "money_over": 88.0
+      "tickets_over": 88.0,
+      "money_over": 89.0
      },
      "casas": 6,
-     "ml_away": 110,
-     "ml_home": -130,
+     "ml_away": 105,
+     "ml_home": -125,
      "spread_home": -2,
      "total_linea": 228.5,
      "over_odds": -110,
@@ -15139,8 +15167,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 88,
-     "away": 65,
+     "home": 85,
+     "away": 67,
      "fuente": "google_news_48h"
     }
    },
@@ -15163,33 +15191,32 @@
      "pick": "Los Angeles Lakers",
      "p_final": 0.7551,
      "p_modelo": 0.7551,
-     "p_sharp": 0.5427,
+     "p_sharp": 0.5325,
      "peso_modelo": 0.35,
      "p_desde": "modelo",
-     "p_mezcla": 0.6237,
-     "ev_mezcla": 0.1034,
-     "cuota": -130.0,
-     "decimal": 1.769,
+     "p_mezcla": 0.6174,
+     "ev_mezcla": 0.1114,
+     "cuota": -125.0,
+     "decimal": 1.8,
      "casa": "Draft Kings",
      "fuente": "una_casa",
-     "ev": 0.3358,
+     "ev": 0.3592,
      "cuota_min": 1.8,
      "confianza": "minima",
      "unidades": 0,
-     "brecha_modelo_mercado": 0.2124,
+     "brecha_modelo_mercado": 0.2226,
      "mov_linea": null,
      "conteo": {
       "a_favor": 1,
       "en_contra": 0
      },
      "por_que_si": [
-      "modelo 75.5% (cuota justa 1.32) contra 1.77 en Draft Kings; Pinnacle 54.3% (+21.2 pp)",
-      "modelo vs mercado a favor (+21.2 pp; voto completo (w por liga))",
-      "EV +33.6%"
+      "modelo 75.5% (cuota justa 1.32) contra 1.80 en Draft Kings; Pinnacle 53.2% (+22.3 pp)",
+      "modelo vs mercado a favor (+22.3 pp; voto completo (w por liga))",
+      "EV +35.9%"
      ],
      "por_que_no": [
-      "cuota 1.77 menor a 1.80",
-      "modelo 21 pp arriba del mercado: buscar la causa (lesion, alineacion, portero) antes de apostar",
+      "modelo 22 pp arriba del mercado: buscar la causa (lesion, alineacion, portero) antes de apostar",
       "pretemporada"
      ],
      "etiqueta": "estilo Alejandro: cuota 1.80-4.50, modelo >= 40 %, linea sin moverse en contra (por medir en vivo)",
@@ -15197,7 +15224,7 @@
       {
        "capa": "modelo vs mercado",
        "dir": 1,
-       "valor": "+21.2 pp",
+       "valor": "+22.3 pp",
        "peso": "voto completo (w por liga)"
       }
      ],
@@ -15212,23 +15239,23 @@
        "lado": "home",
        "mercado": "Ganador",
        "p_modelo": 0.7551,
-       "p_sharp": 0.5427,
+       "p_sharp": 0.5325,
        "p_final": 0.7551,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.6237,
-       "ev_mezcla": 0.1034,
-       "cuota": -130.0,
-       "decimal": 1.769,
+       "p_mezcla": 0.6174,
+       "ev_mezcla": 0.1114,
+       "cuota": -125.0,
+       "decimal": 1.8,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": 0.3358,
-       "brecha_modelo_mercado": 0.2124,
+       "ev": 0.3592,
+       "brecha_modelo_mercado": 0.2226,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": 1,
-         "valor": "+21.2 pp",
+         "valor": "+22.3 pp",
          "peso": "voto completo (w por liga)"
         }
        ]
@@ -15237,23 +15264,23 @@
        "lado": "away",
        "mercado": "Ganador",
        "p_modelo": 0.2449,
-       "p_sharp": 0.4573,
+       "p_sharp": 0.4675,
        "p_final": 0.2449,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.3763,
-       "ev_mezcla": -0.2098,
-       "cuota": 110.0,
-       "decimal": 2.1,
+       "p_mezcla": 0.3826,
+       "ev_mezcla": -0.2158,
+       "cuota": 105.0,
+       "decimal": 2.05,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": -0.4857,
-       "brecha_modelo_mercado": -0.2124,
+       "ev": -0.498,
+       "brecha_modelo_mercado": -0.2226,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": -1,
-         "valor": "-21.2 pp",
+         "valor": "-22.3 pp",
          "peso": "voto completo (w por liga)"
         }
        ]
@@ -15365,7 +15392,7 @@
      "compra_linea": null,
      "linea_referencia": null
     },
-    "razonamiento": "Modelo: Los Angeles Lakers 119.9 - Golden State Warriors 110.5 (total 230.4 vs linea 228.5); gana Los Angeles Lakers 76%. Capas medidas (descanso +0 dias, b2b +0, net rating L10 +2.5): +0.8 pp al local. Ganador: Los Angeles Lakers, modelo 75.5% (Pinnacle de referencia 54.3%), cuota 1.77 EV +33.6% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 75.5% (cuota justa 1.32) contra 1.77 en Draft Kings; Pinnacle 54.3% (+21.2 pp); modelo vs mercado a favor (+21.2 pp; voto completo (w por liga)); EV +33.6%. No: cuota 1.77 menor a 1.80; modelo 21 pp arriba del mercado: buscar la causa (lesion, alineacion, portero) antes de apostar; pretemporada. Dudas: una sola casa (no Pinnacle). Total: Over 228.5, modelo 53.9% (Pinnacle de referencia 50.0%), cuota 1.91 EV +2.9% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 53.9% (cuota justa 1.86) contra 1.91 en Draft Kings; Pinnacle 50.0% (+3.9 pp); modelo vs mercado a favor (+3.9 pp; voto completo (w por liga)); EV +2.9%. No: pretemporada. Dudas: una sola casa (no Pinnacle)."
+    "razonamiento": "Modelo: Los Angeles Lakers 119.9 - Golden State Warriors 110.5 (total 230.4 vs linea 228.5); gana Los Angeles Lakers 76%. Capas medidas (descanso +0 dias, b2b +0, net rating L10 +2.5): +0.8 pp al local. Ganador: Los Angeles Lakers, modelo 75.5% (Pinnacle de referencia 53.2%), cuota 1.80 EV +35.9% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 75.5% (cuota justa 1.32) contra 1.80 en Draft Kings; Pinnacle 53.2% (+22.3 pp); modelo vs mercado a favor (+22.3 pp; voto completo (w por liga)); EV +35.9%. No: modelo 22 pp arriba del mercado: buscar la causa (lesion, alineacion, portero) antes de apostar; pretemporada. Dudas: una sola casa (no Pinnacle). Total: Over 228.5, modelo 53.9% (Pinnacle de referencia 50.0%), cuota 1.91 EV +2.9% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 53.9% (cuota justa 1.86) contra 1.91 en Draft Kings; Pinnacle 50.0% (+3.9 pp); modelo vs mercado a favor (+3.9 pp; voto completo (w por liga)); EV +2.9%. No: pretemporada. Dudas: una sola casa (no Pinnacle)."
    },
    "angulos": [],
    "angulos_total": [],
@@ -15384,10 +15411,10 @@
     "lado": "away",
     "nombre": "Portland Trail Blazers",
     "p": 0.5665,
-    "cuota": 124.0,
+    "cuota": -108.0,
     "fuente": "decidir_v2 (una_casa, peso modelo 0.35)",
     "cuota_min": 1.8,
-    "ev": 0.269,
+    "ev": 0.0911,
     "confianza": "minima",
     "unidades": 0,
     "conteo": {
@@ -15399,9 +15426,9 @@
     "lado": "over",
     "linea": "228.5",
     "p": 0.5421,
-    "cuota": -108.0,
+    "cuota": -112.0,
     "fuente": "decidir_v2 (una_casa, peso modelo 0.35)",
-    "ev": 0.0441,
+    "ev": 0.0262,
     "confianza": "minima",
     "unidades": 0,
     "conteo": {
@@ -15416,31 +15443,31 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 25.0,
-      "money_home": 40.0
+      "tickets_home": 30.0,
+      "money_home": 39.0
      },
      "spread": {
-      "tickets_home": 25.0,
-      "money_home": 26.0
+      "tickets_home": 24.0,
+      "money_home": 24.0
      },
      "total": {
-      "tickets_over": 90.0,
-      "money_over": 91.0
+      "tickets_over": 91.0,
+      "money_over": 92.0
      },
      "casas": 6,
-     "ml_away": 118,
-     "ml_home": -140,
-     "spread_home": -2.5,
+     "ml_away": -140,
+     "ml_home": 115,
+     "spread_home": 2,
      "total_linea": 228.5,
-     "over_odds": -109,
-     "under_odds": -111,
-     "spread_publico": -2.5,
+     "over_odds": -120,
+     "under_odds": -117,
+     "spread_publico": 2.5,
      "total_publico": 228.5,
      "fuente": "action_network"
     },
     "atencion": {
      "home": 60,
-     "away": 61,
+     "away": 65,
      "fuente": "google_news_48h"
     }
    },
@@ -15463,32 +15490,31 @@
      "pick": "Portland Trail Blazers",
      "p_final": 0.5665,
      "p_modelo": 0.5665,
-     "p_sharp": 0.4279,
+     "p_sharp": 0.4957,
      "peso_modelo": 0.35,
      "p_desde": "modelo",
-     "p_mezcla": 0.4762,
-     "ev_mezcla": 0.0668,
-     "cuota": 124.0,
-     "decimal": 2.24,
+     "p_mezcla": 0.5206,
+     "ev_mezcla": 0.0027,
+     "cuota": -108.0,
+     "decimal": 1.926,
      "casa": "Draft Kings",
      "fuente": "una_casa",
-     "ev": 0.269,
+     "ev": 0.0911,
      "cuota_min": 1.8,
      "confianza": "minima",
      "unidades": 0,
-     "brecha_modelo_mercado": 0.1386,
+     "brecha_modelo_mercado": 0.0708,
      "mov_linea": null,
      "conteo": {
       "a_favor": 1,
       "en_contra": 2
      },
      "por_que_si": [
-      "modelo 56.6% (cuota justa 1.77) contra 2.24 en Draft Kings; Pinnacle 42.8% (+13.9 pp)",
-      "modelo vs mercado a favor (+13.9 pp; voto completo (w por liga))",
-      "EV +26.9%"
+      "modelo 56.6% (cuota justa 1.77) contra 1.93 en Draft Kings; Pinnacle 49.6% (+7.1 pp)",
+      "modelo vs mercado a favor (+7.1 pp; voto completo (w por liga))",
+      "EV +9.1%"
      ],
      "por_que_no": [
-      "modelo 14 pp arriba del mercado: revisar",
       "pretemporada",
       "capas medidas (L5 y diferencial) en contra (7.0)",
       "propio back-to-back en contra (1)"
@@ -15498,7 +15524,7 @@
       {
        "capa": "modelo vs mercado",
        "dir": 1,
-       "valor": "+13.9 pp",
+       "valor": "+7.1 pp",
        "peso": "voto completo (w por liga)"
       },
       {
@@ -15529,23 +15555,23 @@
        "lado": "home",
        "mercado": "Ganador",
        "p_modelo": 0.4335,
-       "p_sharp": 0.5721,
+       "p_sharp": 0.5043,
        "p_final": 0.4335,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.5238,
-       "ev_mezcla": -0.1222,
-       "cuota": -148.0,
-       "decimal": 1.676,
+       "p_mezcla": 0.4794,
+       "ev_mezcla": -0.0925,
+       "cuota": -112.0,
+       "decimal": 1.893,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": -0.2735,
-       "brecha_modelo_mercado": -0.1386,
+       "ev": -0.1794,
+       "brecha_modelo_mercado": -0.0708,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": -1,
-         "valor": "-13.9 pp",
+         "valor": "-7.1 pp",
          "peso": "voto completo (w por liga)"
         },
         {
@@ -15566,23 +15592,23 @@
        "lado": "away",
        "mercado": "Ganador",
        "p_modelo": 0.5665,
-       "p_sharp": 0.4279,
+       "p_sharp": 0.4957,
        "p_final": 0.5665,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.4762,
-       "ev_mezcla": 0.0668,
-       "cuota": 124.0,
-       "decimal": 2.24,
+       "p_mezcla": 0.5206,
+       "ev_mezcla": 0.0027,
+       "cuota": -108.0,
+       "decimal": 1.926,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": 0.269,
-       "brecha_modelo_mercado": 0.1386,
+       "ev": 0.0911,
+       "brecha_modelo_mercado": 0.0708,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": 1,
-         "valor": "+13.9 pp",
+         "valor": "+7.1 pp",
          "peso": "voto completo (w por liga)"
         },
         {
@@ -15609,29 +15635,29 @@
      "pick": "Over 228.5",
      "p_final": 0.5421,
      "p_modelo": 0.5421,
-     "p_sharp": 0.4957,
+     "p_sharp": 0.5043,
      "peso_modelo": 0.35,
      "p_desde": "modelo",
-     "p_mezcla": 0.512,
-     "ev_mezcla": -0.0139,
-     "cuota": -108.0,
-     "decimal": 1.926,
+     "p_mezcla": 0.5176,
+     "ev_mezcla": -0.0203,
+     "cuota": -112.0,
+     "decimal": 1.893,
      "casa": "Draft Kings",
      "fuente": "una_casa",
-     "ev": 0.0441,
+     "ev": 0.0262,
      "cuota_min": 1.84,
      "confianza": "minima",
      "unidades": 0,
-     "brecha_modelo_mercado": 0.0464,
+     "brecha_modelo_mercado": 0.0378,
      "mov_linea": null,
      "conteo": {
       "a_favor": 1,
       "en_contra": 0
      },
      "por_que_si": [
-      "modelo 54.2% (cuota justa 1.84) contra 1.93 en Draft Kings; Pinnacle 49.6% (+4.6 pp)",
-      "modelo vs mercado a favor (+4.6 pp; voto completo (w por liga))",
-      "EV +4.4%"
+      "modelo 54.2% (cuota justa 1.84) contra 1.89 en Draft Kings; Pinnacle 50.4% (+3.8 pp)",
+      "modelo vs mercado a favor (+3.8 pp; voto completo (w por liga))",
+      "EV +2.6%"
      ],
      "por_que_no": [
       "pretemporada"
@@ -15641,7 +15667,7 @@
       {
        "capa": "modelo vs mercado",
        "dir": 1,
-       "valor": "+4.6 pp",
+       "valor": "+3.8 pp",
        "peso": "voto completo (w por liga)"
       }
      ],
@@ -15660,23 +15686,23 @@
        "lado": "over",
        "mercado": "Total 228.5",
        "p_modelo": 0.5421,
-       "p_sharp": 0.4957,
+       "p_sharp": 0.5043,
        "p_final": 0.5421,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.512,
-       "ev_mezcla": -0.0139,
-       "cuota": -108.0,
-       "decimal": 1.926,
+       "p_mezcla": 0.5176,
+       "ev_mezcla": -0.0203,
+       "cuota": -112.0,
+       "decimal": 1.893,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": 0.0441,
-       "brecha_modelo_mercado": 0.0464,
+       "ev": 0.0262,
+       "brecha_modelo_mercado": 0.0378,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": 1,
-         "valor": "+4.6 pp",
+         "valor": "+3.8 pp",
          "peso": "voto completo (w por liga)"
         }
        ]
@@ -15685,23 +15711,23 @@
        "lado": "under",
        "mercado": "Total 228.5",
        "p_modelo": 0.4579,
-       "p_sharp": 0.5043,
+       "p_sharp": 0.4957,
        "p_final": 0.4579,
        "peso_modelo": 0.35,
-       "p_mezcla": 0.488,
-       "ev_mezcla": -0.0762,
-       "cuota": -112.0,
-       "decimal": 1.893,
+       "p_mezcla": 0.4824,
+       "ev_mezcla": -0.0708,
+       "cuota": -108.0,
+       "decimal": 1.926,
        "casa": "Draft Kings",
        "fuente": "una_casa",
-       "ev": -0.1332,
-       "brecha_modelo_mercado": -0.0464,
+       "ev": -0.1181,
+       "brecha_modelo_mercado": -0.0378,
        "mov_linea": null,
        "senales": [
         {
          "capa": "modelo vs mercado",
          "dir": -1,
-         "valor": "-4.6 pp",
+         "valor": "-3.8 pp",
          "peso": "voto completo (w por liga)"
         }
        ]
@@ -15710,7 +15736,7 @@
      "compra_linea": null,
      "linea_referencia": null
     },
-    "razonamiento": "Modelo: Sacramento Kings 112.9 - Portland Trail Blazers 117.7 (total 230.6 vs linea 228.5); gana Portland Trail Blazers 57%. Capas medidas (descanso +2 dias, b2b -1, net rating L10 -4.3): +7.0 pp al local. Ganador: Portland Trail Blazers, modelo 56.6% (Pinnacle de referencia 42.8%), cuota 2.24 EV +26.9% -> minima, 0 u. A favor 1 / en contra 2. Si: modelo 56.6% (cuota justa 1.77) contra 2.24 en Draft Kings; Pinnacle 42.8% (+13.9 pp); modelo vs mercado a favor (+13.9 pp; voto completo (w por liga)); EV +26.9%. No: modelo 14 pp arriba del mercado: revisar; pretemporada; capas medidas (L5 y diferencial) en contra (7.0); propio back-to-back en contra (1). Dudas: una sola casa (no Pinnacle); sin jugadores_clave (equipo sin empate en los archivos de jugadores). Total: Over 228.5, modelo 54.2% (Pinnacle de referencia 49.6%), cuota 1.93 EV +4.4% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 54.2% (cuota justa 1.84) contra 1.93 en Draft Kings; Pinnacle 49.6% (+4.6 pp); modelo vs mercado a favor (+4.6 pp; voto completo (w por liga)); EV +4.4%. No: pretemporada. Dudas: una sola casa (no Pinnacle); sin jugadores_clave (equipo sin empate en los archivos de jugadores)."
+    "razonamiento": "Modelo: Sacramento Kings 112.9 - Portland Trail Blazers 117.7 (total 230.6 vs linea 228.5); gana Portland Trail Blazers 57%. Capas medidas (descanso +2 dias, b2b -1, net rating L10 -4.3): +7.0 pp al local. Ganador: Portland Trail Blazers, modelo 56.6% (Pinnacle de referencia 49.6%), cuota 1.93 EV +9.1% -> minima, 0 u. A favor 1 / en contra 2. Si: modelo 56.6% (cuota justa 1.77) contra 1.93 en Draft Kings; Pinnacle 49.6% (+7.1 pp); modelo vs mercado a favor (+7.1 pp; voto completo (w por liga)); EV +9.1%. No: pretemporada; capas medidas (L5 y diferencial) en contra (7.0); propio back-to-back en contra (1). Dudas: una sola casa (no Pinnacle); sin jugadores_clave (equipo sin empate en los archivos de jugadores). Total: Over 228.5, modelo 54.2% (Pinnacle de referencia 50.4%), cuota 1.89 EV +2.6% -> minima, 0 u. A favor 1 / en contra 0. Si: modelo 54.2% (cuota justa 1.84) contra 1.89 en Draft Kings; Pinnacle 50.4% (+3.8 pp); modelo vs mercado a favor (+3.8 pp; voto completo (w por liga)); EV +2.6%. No: pretemporada. Dudas: una sola casa (no Pinnacle); sin jugadores_clave (equipo sin empate en los archivos de jugadores)."
    },
    "angulos": [],
    "angulos_total": [],
@@ -15856,27 +15882,27 @@
       "money_home": 11.0
      },
      "spread": {
-      "tickets_home": 65.0,
-      "money_home": 68.0
+      "tickets_home": 66.0,
+      "money_home": 66.0
      },
      "total": {
       "tickets_over": 95.0,
       "money_over": 98.0
      },
      "casas": 6,
-     "ml_home": 108,
+     "ml_home": 110,
      "ml_away": -130,
      "spread_home": 1.5,
      "total_linea": 6.5,
-     "over_odds": -107,
-     "under_odds": -115,
+     "over_odds": 105,
+     "under_odds": -127,
      "spread_publico": 1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 21,
-     "away": 53,
+     "home": 26,
+     "away": 54,
      "fuente": "google_news_48h"
     }
    },
@@ -16756,31 +16782,31 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 38.5,
+      "tickets_home": 38.0,
       "money_home": 21.0
      },
      "spread": {
-      "tickets_home": 50.0,
-      "money_home": 44.0
+      "tickets_home": 51.0,
+      "money_home": 45.0
      },
      "total": {
-      "tickets_over": 87.5,
-      "money_over": 91.5
+      "tickets_over": 87.0,
+      "money_over": 91.0
      },
      "casas": 6,
      "ml_away": -125,
      "ml_home": 105,
      "spread_home": 1.5,
      "total_linea": 6.5,
-     "under_odds": -116,
-     "over_odds": -105,
+     "under_odds": -114,
+     "over_odds": -106,
      "spread_publico": 1.5,
      "total_publico": 6.5,
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 36,
-     "away": 47,
+     "home": 39,
+     "away": 49,
      "fuente": "google_news_48h"
     }
    },
@@ -17540,7 +17566,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 9,
+     "home": 8,
      "away": 10,
      "fuente": "google_news_48h"
     }
@@ -18367,7 +18393,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 12,
+     "home": 11,
      "away": 20,
      "fuente": "google_news_48h"
     }
@@ -18775,7 +18801,7 @@
     "splits": null,
     "atencion": {
      "home": 8,
-     "away": 6,
+     "away": 7,
      "fuente": "google_news_48h"
     }
    },
@@ -19196,7 +19222,7 @@
     "splits": null,
     "atencion": {
      "home": 19,
-     "away": 22,
+     "away": 21,
      "fuente": "google_news_48h"
     }
    },
@@ -19228,10 +19254,10 @@
      "p_final": 0.4757,
      "p_modelo": 0.4757,
      "p_sharp": 0.3603,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
-     "p_mezcla": 0.4073,
-     "ev_mezcla": 0.1283,
+     "p_mezcla": 0.4074,
+     "ev_mezcla": 0.1285,
      "cuota": 177.0,
      "decimal": 2.77,
      "casa": "onexbet",
@@ -19279,9 +19305,9 @@
        "p_modelo": 0.4757,
        "p_sharp": 0.3603,
        "p_final": 0.4757,
-       "peso_modelo": 0.41744186046511633,
-       "p_mezcla": 0.4073,
-       "ev_mezcla": 0.1283,
+       "peso_modelo": 0.418041237113402,
+       "p_mezcla": 0.4074,
+       "ev_mezcla": 0.1285,
        "cuota": 177.0,
        "decimal": 2.77,
        "casa": "onexbet",
@@ -19310,9 +19336,9 @@
        "p_modelo": 0.5243,
        "p_sharp": 0.6397,
        "p_final": 0.5243,
-       "peso_modelo": 0.41744186046511633,
-       "p_mezcla": 0.5927,
-       "ev_mezcla": -0.092,
+       "peso_modelo": 0.418041237113402,
+       "p_mezcla": 0.5926,
+       "ev_mezcla": -0.0921,
        "cuota": -188.0,
        "decimal": 1.532,
        "casa": "betonlineag",
@@ -20049,7 +20075,7 @@
     "splits": null,
     "atencion": {
      "home": 15,
-     "away": 11,
+     "away": 10,
      "fuente": "google_news_48h"
     }
    },
@@ -21321,8 +21347,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 15,
-     "away": 18,
+     "home": 16,
+     "away": 19,
      "fuente": "google_news_48h"
     }
    },
@@ -21354,7 +21380,7 @@
      "p_final": 0.4388,
      "p_modelo": 0.4388,
      "p_sharp": 0.4267,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
      "p_mezcla": 0.4317,
      "ev_mezcla": -0.007,
@@ -21395,7 +21421,7 @@
        "p_modelo": 0.4388,
        "p_sharp": 0.4267,
        "p_final": 0.4388,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.4317,
        "ev_mezcla": -0.007,
        "cuota": 130.0,
@@ -21420,7 +21446,7 @@
        "p_modelo": 0.5612,
        "p_sharp": 0.5733,
        "p_final": 0.5612,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.5683,
        "ev_mezcla": -0.0317,
        "cuota": -142.0,
@@ -21720,8 +21746,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 8,
-     "away": 9,
+     "home": 9,
+     "away": 8,
      "fuente": "google_news_48h"
     }
    },
@@ -23351,7 +23377,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 85,
+     "home": 91,
      "away": 0,
      "fuente": "google_news_48h"
     }
@@ -24013,7 +24039,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 84,
+     "home": 81,
      "away": 52,
      "fuente": "google_news_48h"
     }
@@ -25153,7 +25179,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 14,
+     "home": 15,
      "away": 25,
      "fuente": "google_news_48h"
     }
@@ -25186,10 +25212,10 @@
      "p_final": 0.3611,
      "p_modelo": 0.3611,
      "p_sharp": 0.3232,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
      "p_mezcla": 0.3388,
-     "ev_mezcla": 0.0231,
+     "ev_mezcla": 0.0232,
      "cuota": 202.0,
      "decimal": 3.02,
      "casa": "fanduel",
@@ -25237,7 +25263,7 @@
        "p_modelo": 0.6389,
        "p_sharp": 0.6768,
        "p_final": 0.6389,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.6612,
        "ev_mezcla": -0.0227,
        "cuota": -209.0,
@@ -25268,9 +25294,9 @@
        "p_modelo": 0.3611,
        "p_sharp": 0.3232,
        "p_final": 0.3611,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.3388,
-       "ev_mezcla": 0.0231,
+       "ev_mezcla": 0.0232,
        "cuota": 202.0,
        "decimal": 3.02,
        "casa": "fanduel",
@@ -26283,8 +26309,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 18,
-     "away": 6,
+     "home": 19,
+     "away": 5,
      "fuente": "google_news_48h"
     }
    },
@@ -26686,8 +26712,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 12,
-     "away": 82,
+     "home": 13,
+     "away": 83,
      "fuente": "google_news_48h"
     }
    },
@@ -26719,7 +26745,7 @@
      "p_final": 0.3441,
      "p_modelo": 0.3441,
      "p_sharp": 0.3389,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
      "p_mezcla": 0.3411,
      "ev_mezcla": -0.0109,
@@ -26769,7 +26795,7 @@
        "p_modelo": 0.6559,
        "p_sharp": 0.6611,
        "p_final": 0.6559,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.6589,
        "ev_mezcla": -0.0274,
        "cuota": -210.0,
@@ -26800,7 +26826,7 @@
        "p_modelo": 0.3441,
        "p_sharp": 0.3389,
        "p_final": 0.3441,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.3411,
        "ev_mezcla": -0.0109,
        "cuota": 190.0,
@@ -27186,8 +27212,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 35,
-     "away": 9,
+     "home": 34,
+     "away": 10,
      "fuente": "google_news_48h"
     }
    },
@@ -27903,7 +27929,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 6,
+     "home": 5,
      "away": 2,
      "fuente": "google_news_48h"
     }
@@ -30349,7 +30375,7 @@
     "splits": null,
     "atencion": {
      "home": 1,
-     "away": 40,
+     "away": 41,
      "fuente": "google_news_48h"
     }
    },
@@ -30388,8 +30414,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 34,
-     "away": 64,
+     "home": 32,
+     "away": 62,
      "fuente": "google_news_48h"
     }
    },
@@ -30455,7 +30481,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 5,
+     "home": 4,
      "away": 9,
      "fuente": "google_news_48h"
     }
@@ -31044,7 +31070,7 @@
     "splits": null,
     "atencion": {
      "home": 57,
-     "away": 81,
+     "away": 80,
      "fuente": "google_news_48h"
     }
    },
@@ -31402,8 +31428,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 62,
-     "away": 34,
+     "home": 67,
+     "away": 41,
      "fuente": "google_news_48h"
     }
    },
@@ -31442,7 +31468,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 14,
+     "home": 20,
      "away": 66,
      "fuente": "google_news_48h"
     }
@@ -31509,7 +31535,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 74,
+     "home": 72,
      "away": 75,
      "fuente": "google_news_48h"
     }
@@ -31844,8 +31870,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 30,
-     "away": 14,
+     "home": 31,
+     "away": 13,
      "fuente": "google_news_48h"
     }
    },
@@ -31924,7 +31950,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 12,
+     "home": 13,
      "away": 13,
      "fuente": "google_news_48h"
     }
@@ -31992,7 +32018,7 @@
     "splits": null,
     "atencion": {
      "home": 4,
-     "away": 5,
+     "away": 4,
      "fuente": "google_news_48h"
     }
    },
@@ -32893,8 +32919,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 10,
-     "away": 4,
+     "home": 11,
+     "away": 5,
      "fuente": "google_news_48h"
     }
    },
@@ -33243,6 +33269,27 @@
      "texto": "Q1 revancha (perdio el ultimo cruce): favorece a MTL, moveria +0.3 pp (4,087 partidos con el angulo; z fuera de muestra -1.16)"
     },
     {
+     "codigo": "Q3",
+     "nombre": "mirando adelante",
+     "lado": "away",
+     "equipo": "ATL",
+     "x": -1,
+     "con_peso": false,
+     "efecto_pp": 2.03,
+     "mueve_pp": 0.73,
+     "favorece": "ATL",
+     "otro": "MTL",
+     "n_medido": 1272,
+     "z": 0.36,
+     "veredicto": "no pasa",
+     "tmle_pp": 1.64,
+     "tmle_ic95": [
+      -1.22,
+      4.5
+     ],
+     "texto": "Q3 mirando adelante: favorece a ATL, moveria +0.7 pp (1,272 partidos con el angulo; z fuera de muestra 0.36)"
+    },
+    {
      "codigo": "L1",
      "nombre": "Pitagoras (record arriba de su diferencial)",
      "lado": "away",
@@ -33459,7 +33506,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 13,
+     "home": 15,
      "away": 16,
      "fuente": "google_news_48h"
     }
@@ -34051,7 +34098,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 16,
+     "home": 15,
      "away": 14,
      "fuente": "google_news_48h"
     }
@@ -34681,8 +34728,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 18,
-     "away": 19,
+     "home": 19,
+     "away": 20,
      "fuente": "google_news_48h"
     }
    },
@@ -35379,7 +35426,7 @@
     "splits": null,
     "atencion": {
      "home": 21,
-     "away": 21,
+     "away": 22,
      "fuente": "google_news_48h"
     }
    },
@@ -35996,7 +36043,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 23,
+     "home": 24,
      "away": 7,
      "fuente": "google_news_48h"
     }
@@ -36576,8 +36623,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 63,
-     "away": 84,
+     "home": 66,
+     "away": 85,
      "fuente": "google_news_48h"
     }
    },
@@ -36761,7 +36808,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 69,
+     "home": 71,
      "away": 84,
      "fuente": "google_news_48h"
     }
@@ -37517,8 +37564,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 71,
-     "away": 60,
+     "home": 70,
+     "away": 64,
      "fuente": "google_news_48h"
     }
    },
@@ -38255,20 +38302,20 @@
    "publico": {
     "splits": {
      "ml": {
-      "tickets_home": 76.5,
-      "money_home": 61.5
+      "tickets_home": 77.0,
+      "money_home": 61.0
      },
      "spread": {
       "tickets_home": 74.0,
       "money_home": 88.0
      },
      "total": {
-      "tickets_over": 77.5,
-      "money_over": 79.5
+      "tickets_over": 78.0,
+      "money_over": 80.0
      },
      "casas": 6,
-     "ml_home": -179,
-     "ml_away": 149,
+     "ml_home": -176,
+     "ml_away": 148,
      "spread_home": -1.5,
      "total_linea": 7.5,
      "under_odds": -115,
@@ -38278,8 +38325,8 @@
      "fuente": "action_network"
     },
     "atencion": {
-     "home": 96,
-     "away": 94,
+     "home": 98,
+     "away": 95,
      "fuente": "google_news_48h"
     }
    },
@@ -38793,7 +38840,7 @@
     "splits": null,
     "atencion": {
      "home": 76,
-     "away": 45,
+     "away": 46,
      "fuente": "google_news_48h"
     }
    },
@@ -38973,8 +39020,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 62,
-     "away": 16,
+     "home": 63,
+     "away": 23,
      "fuente": "google_news_48h"
     }
    },
@@ -39159,7 +39206,7 @@
     "splits": null,
     "atencion": {
      "home": 62,
-     "away": 66,
+     "away": 65,
      "fuente": "google_news_48h"
     }
    },
@@ -39324,8 +39371,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 77,
-     "away": 48,
+     "home": 69,
+     "away": 55,
      "fuente": "google_news_48h"
     }
    },
@@ -39519,24 +39566,24 @@
     "splits": {
      "ml": {
       "tickets_home": 37.0,
-      "money_home": 43.0
+      "money_home": 49.0
      },
      "spread": {
       "tickets_home": 39.0,
-      "money_home": 42.0
+      "money_home": 41.0
      },
      "total": {
       "tickets_over": 59.0,
-      "money_over": 67.0
+      "money_over": 66.0
      },
      "casas": 6,
-     "ml_home": -105,
-     "ml_away": -115,
-     "spread_home": 1,
+     "ml_home": 102,
+     "ml_away": -122,
+     "spread_home": 1.5,
      "total_linea": 52.5,
-     "under_odds": -110,
-     "over_odds": -118,
-     "spread_publico": 1.0,
+     "under_odds": -108,
+     "over_odds": -115,
+     "spread_publico": 1.5,
      "total_publico": 52.5,
      "fuente": "action_network"
     },
@@ -40098,8 +40145,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 8,
-     "away": 23,
+     "home": 6,
+     "away": 25,
      "fuente": "google_news_48h"
     }
    },
@@ -41406,7 +41453,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 17,
+     "home": 18,
      "away": 17,
      "fuente": "google_news_48h"
     }
@@ -42056,7 +42103,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 41,
+     "home": 44,
      "away": 12,
      "fuente": "google_news_48h"
     }
@@ -42729,8 +42776,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 65,
-     "away": 73,
+     "home": 69,
+     "away": 72,
      "fuente": "google_news_48h"
     }
    },
@@ -43550,8 +43597,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 12,
-     "away": 7,
+     "home": 14,
+     "away": 9,
      "fuente": "google_news_48h"
     }
    },
@@ -44102,7 +44149,7 @@
     "splits": null,
     "atencion": {
      "home": 17,
-     "away": 29,
+     "away": 27,
      "fuente": "google_news_48h"
     }
    },
@@ -44441,6 +44488,27 @@
    },
    "angulos": [
     {
+     "codigo": "Q3",
+     "nombre": "mirando adelante",
+     "lado": "away",
+     "equipo": "SJ",
+     "x": -1,
+     "con_peso": false,
+     "efecto_pp": 2.03,
+     "mueve_pp": 0.73,
+     "favorece": "SJ",
+     "otro": "RSL",
+     "n_medido": 1272,
+     "z": 0.36,
+     "veredicto": "no pasa",
+     "tmle_pp": 1.64,
+     "tmle_ic95": [
+      -1.22,
+      4.5
+     ],
+     "texto": "Q3 mirando adelante: favorece a SJ, moveria +0.7 pp (1,272 partidos con el angulo; z fuera de muestra 0.36)"
+    },
+    {
      "codigo": "L1",
      "nombre": "Pitagoras (record arriba de su diferencial)",
      "lado": "away",
@@ -44667,8 +44735,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 7,
-     "away": 11,
+     "home": 6,
+     "away": 9,
      "fuente": "google_news_48h"
     }
    },
@@ -45219,8 +45287,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 1,
-     "away": 8,
+     "home": 0,
+     "away": 7,
      "fuente": "google_news_48h"
     }
    },
@@ -45933,7 +46001,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 36,
+     "home": 37,
      "away": 20,
      "fuente": "google_news_48h"
     }
@@ -46567,7 +46635,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 13,
+     "home": 14,
      "away": 13,
      "fuente": "google_news_48h"
     }
@@ -47078,8 +47146,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 9,
-     "away": 3,
+     "home": 10,
+     "away": 5,
      "fuente": "google_news_48h"
     }
    },
@@ -47680,8 +47748,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 30,
-     "away": 83,
+     "home": 32,
+     "away": 82,
      "fuente": "google_news_48h"
     }
    },
@@ -48027,8 +48095,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 76,
-     "away": 25,
+     "home": 73,
+     "away": 28,
      "fuente": "google_news_48h"
     }
    },
@@ -48060,10 +48128,10 @@
      "p_final": 0.4274,
      "p_modelo": 0.4274,
      "p_sharp": 0.3364,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
      "p_mezcla": 0.3734,
-     "ev_mezcla": 0.079,
+     "ev_mezcla": 0.0791,
      "cuota": 189.0,
      "decimal": 2.89,
      "casa": "pinnacle",
@@ -48101,9 +48169,9 @@
        "p_modelo": 0.5726,
        "p_sharp": 0.6636,
        "p_final": 0.5726,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.6266,
-       "ev_mezcla": -0.0719,
+       "ev_mezcla": -0.072,
        "cuota": -208.0,
        "decimal": 1.481,
        "casa": "onexbet",
@@ -48126,9 +48194,9 @@
        "p_modelo": 0.4274,
        "p_sharp": 0.3364,
        "p_final": 0.4274,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.3734,
-       "ev_mezcla": 0.079,
+       "ev_mezcla": 0.0791,
        "cuota": 189.0,
        "decimal": 2.89,
        "casa": "pinnacle",
@@ -48446,8 +48514,8 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 31,
-     "away": 20,
+     "home": 30,
+     "away": 19,
      "fuente": "google_news_48h"
     }
    },
@@ -48479,10 +48547,10 @@
      "p_final": 0.5738,
      "p_modelo": 0.5738,
      "p_sharp": 0.4694,
-     "peso_modelo": 0.41744186046511633,
+     "peso_modelo": 0.418041237113402,
      "p_desde": "modelo",
      "p_mezcla": 0.5132,
-     "ev_mezcla": 0.0572,
+     "ev_mezcla": 0.0573,
      "cuota": 106.0,
      "decimal": 2.06,
      "casa": "fanduel",
@@ -48522,9 +48590,9 @@
        "p_modelo": 0.5738,
        "p_sharp": 0.4694,
        "p_final": 0.5738,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.5132,
-       "ev_mezcla": 0.0572,
+       "ev_mezcla": 0.0573,
        "cuota": 106.0,
        "decimal": 2.06,
        "casa": "fanduel",
@@ -48547,9 +48615,9 @@
        "p_modelo": 0.4262,
        "p_sharp": 0.5306,
        "p_final": 0.4262,
-       "peso_modelo": 0.41744186046511633,
+       "peso_modelo": 0.418041237113402,
        "p_mezcla": 0.4868,
-       "ev_mezcla": -0.1111,
+       "ev_mezcla": -0.1112,
        "cuota": -121.0,
        "decimal": 1.826,
        "casa": "onexbet",
@@ -49028,7 +49096,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 31,
+     "home": 32,
      "away": 16,
      "fuente": "google_news_48h"
     }
@@ -50171,7 +50239,7 @@
    "publico": {
     "splits": null,
     "atencion": {
-     "home": 2,
+     "home": 3,
      "away": 2,
      "fuente": "google_news_48h"
     }
