@@ -67,6 +67,9 @@ NOMBRES = {
     "L1": "Pitagoras (record arriba de su diferencial)", "L2": "record en juegos cerrados", "L3": "dominio de tiros o yardas",
     "L4": "conversion neta (PDO, BABIP, triples, perdidas)", "R1": "ventaja de ponches (pitcheo - bateo)",
     "R2": "bullpen cargado (entradas de relevo en 3 dias)", "R3": "abridor con 105+ pitcheos en su salida anterior",
+    # tanda 11 (13-oct-2026): secuencia y senal del modelo, todos los deportes
+    "S11": "perdio su ultimo juego", "S12": "racha en dosis (el mas caliente)", "S13": "perdio cerrado su ultimo juego",
+    "S15": "persecucion: el modelo lo eligio, perdio y hoy lo vuelve a elegir", "S16": "supera al modelo en sus ultimos 10",
 }
 
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
@@ -180,7 +183,8 @@ def construir_catalogo():
                            "mueve_ic95_sin_encoger": e["ic95_50"]})
     # tandas 7 y 8 (10-oct-2026): x continuo; beta por unidad de x en toda la muestra, encogido con el mismo tau
     for ruta78, md78 in (("2026-10-10_tanda7_resultados.json", "trabajo/minar/2026-10-10_tanda7.md"),
-                         ("2026-10-10_tanda8_resultados.json", "trabajo/minar/2026-10-10_tanda8.md")):
+                         ("2026-10-10_tanda8_resultados.json", "trabajo/minar/2026-10-10_tanda8.md"),
+                         ("2026-10-13_tanda11_resultados.json", "trabajo/minar/2026-10-13_tanda11.md")):
         rr = os.path.join(CODIGO, "trabajo", "minar", ruta78)
         if not os.path.exists(rr):
             continue
@@ -1154,6 +1158,22 @@ def calcular(p, todos=None):
             vh, va = _vapuleado_lmp(p["home"].get("probable"), fecha), _vapuleado_lmp(p["away"].get("probable"), fecha)
             if vh is not None and va is not None:
                 x["S9"] = vh - va
+    # ---------------- tanda 11 (13-oct-2026): secuencia y senal del modelo (mismas definiciones que minar_angulos_tanda11.py)
+    if dep5 in CERRADO11:
+        sh11, sa11 = _estado11(Ph, fecha, dep5), _estado11(Pa, fecha, dep5)
+        if sh11 and sa11:
+            x["S11"] = sh11["perdio"] - sa11["perdio"]
+            x["S12"] = round((sh11["racha"] - sa11["racha"]) / 5.0, 3)
+            x["S13"] = sh11["cerrado"] - sa11["cerrado"]
+            m_ = p.get("modelo") or {}
+            if m_.get("p_home") is not None and m_.get("p_away") is not None:
+                hh, ha = _senal_modelo(liga, p["home"]["nombre"], ph["fecha"]), _senal_modelo(liga, p["away"]["nombre"], pa["fecha"])
+                if hh is not None and ha is not None:
+                    hoy_h = m_["p_home"] > m_["p_away"]
+                    x["S15"] = _ind(hoy_h and hh == 1 and ph["gf"] < ph["ga"]) - _ind((not hoy_h) and ha == 1 and pa["gf"] < pa["ga"])
+                rh16, ra16 = _deriva_modelo(liga, p["home"]["nombre"], T[eh], fecha), _deriva_modelo(liga, p["away"]["nombre"], T[ea], fecha)
+                if rh16 is not None and ra16 is not None:
+                    x["S16"] = round(rh16 - ra16, 4)
     # ---------------- tandas 7 y 8 (10-oct-2026): suerte contra rendimiento, ponches, bullpen
     if dep5 in REND and "L" in G:
         rh7, ra7 = _rend(dep5, liga, Ph, fecha), _rend(dep5, liga, Pa, fecha)
@@ -1181,6 +1201,182 @@ def calcular(p, todos=None):
         out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado].get("abrev") or p[lado]["nombre"],
                     "otro": p["away" if lado == "home" else "home"].get("abrev") or p["away" if lado == "home" else "home"]["nombre"],
                     "x": v, "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
+    return out
+
+
+# ------------------------------------------------------------------ tanda 11 (13-oct-2026): helpers en vivo
+CERRADO11 = {"BEISBOL": 1, "NHL": 1, "NBA": 3, "NCAAMB": 3, "NFL": 3, "NCAAFB": 3, "FUTBOL": 1}
+
+
+def _estado11(P, fecha, dep):
+    """perdio el ultimo, racha firmada (tope 5, empate la corta) y derrota cerrada; temporada = sin hueco de 60 dias."""
+    Q = []; f = fecha
+    for g in reversed(P):
+        if g.get("gf") is None:
+            continue
+        if (f - g["fecha"]).days > 60:
+            break
+        Q.append(g); f = g["fecha"]
+    if not Q:
+        return None
+    res = [1 if g["gf"] > g["ga"] else (0 if g["gf"] < g["ga"] else None) for g in Q]
+    k = 0
+    for v in res:
+        if v is not None and v == res[0]: k += 1
+        else: break
+    racha = 0 if res[0] is None else (k if res[0] == 1 else -k)
+    mg = Q[0]["gf"] - Q[0]["ga"]
+    return {"perdio": _ind(mg < 0), "racha": max(-5, min(5, racha)), "cerrado": _ind(-CERRADO11[dep] <= mg < 0)}
+
+
+_HP = None
+
+
+def _hist_modelo():
+    """(liga, fecha, equipo) -> p del modelo para ese equipo, de salida/historial_predicciones.csv (mercado Ganador)."""
+    global _HP
+    if _HP is None:
+        _HP = {}
+        ruta = os.path.join(CODIGO, "salida", "historial_predicciones.csv")
+        if not os.path.exists(ruta):
+            ruta = io.ruta("salida", "historial_predicciones.csv")
+        if os.path.exists(ruta):
+            with _io.open(ruta, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    if (r.get("mercado") or "").lower() != "ganador":
+                        continue
+                    pm = _f(r.get("p_modelo"))
+                    if pm is None or r.get("lado") not in ("home", "away"):
+                        continue
+                    ph = pm if r["lado"] == "home" else 1 - pm
+                    lg = (r.get("liga") or "").lower()
+                    _HP[(lg, r["fecha"][:10], r.get("home"))] = ph
+                    _HP[(lg, r["fecha"][:10], r.get("away"))] = 1 - ph
+    return _HP
+
+
+def _p_modelo_previo(liga, nombre, fecha):
+    H = _hist_modelo()
+    for d in (0, -1, 1):        # el historial guarda la fecha de CDMX; el calendario puede venir en UTC
+        v = H.get((liga, (fecha + dt.timedelta(days=d)).isoformat(), nombre))
+        if v is not None:
+            return v
+    return None
+
+
+def _senal_modelo(liga, nombre, fecha_prev):
+    """1 si el modelo eligio a ese equipo en su juego anterior, 0 si no, None sin registro."""
+    v = _p_modelo_previo(liga, nombre, fecha_prev)
+    return None if v is None else _ind(v > 0.5)
+
+
+def _deriva_modelo(liga, nombre, L, fecha):
+    """resultado - p del modelo en sus ultimos 10 juegos con registro (minimo 6, sin empates)."""
+    rr = []
+    for g in reversed(_previos(L, fecha)):
+        if g.get("gf") is None or g["gf"] == g["ga"]:
+            continue
+        v = _p_modelo_previo(liga, nombre, g["fecha"])
+        if v is not None:
+            rr.append((1 if g["gf"] > g["ga"] else 0) - v)
+        if len(rr) >= 10:
+            break
+    return sum(rr) / len(rr) if len(rr) >= 6 else None
+
+
+# ------------------------------------------------------------------ probabilidad ajustada con TODOS los angulos (13-oct-2026)
+# Familias: angulos que miden lo mismo (p. ej. tres formas de la racha). Dentro de una familia solo cuenta el que mas mueve,
+# para no sumar la misma situacion dos o tres veces.
+FAMILIA = {}
+for _fam, _cods in (("racha", ("S2", "S3", "S4", "S12", "Q6a", "Q6b")),
+                    ("ultimo juego", ("S1", "S11", "S13", "H21", "H22", "K10", "N12", "B21", "F13", "S9")),
+                    ("descanso", ("H1", "H2", "H4", "H6", "H7", "H8", "H23", "K1", "K2", "K3", "K4", "K12", "B2", "B5", "F1",
+                                  "N4", "N5", "F16", "T1", "T3")),
+                    ("gira", ("H13", "H14", "H15", "K8a", "K8b", "B13", "B14", "N8", "Q5")),
+                    ("senal del modelo", ("S15", "S16")),
+                    ("altitud", ("H24", "K13", "B25", "F14"))):
+    for _c in _cods:
+        FAMILIA[_c] = _fam
+TOPE_AJUSTE_PP = 5.0          # el ajuste total nunca mueve la probabilidad del modelo mas de 5 pp
+
+
+def _lgt(q):
+    q = min(max(q, 1e-4), 1 - 1e-4)
+    return math.log(q / (1 - q))
+
+
+def _sgm(z):
+    return 1 / (1 + math.exp(-z))
+
+
+def ajustar(p, angs):
+    """probabilidad del modelo y probabilidad ajustada con los angulos activos (efecto encogido de cada uno).
+    No cambia p del modelo: es un segundo numero. Los angulos con peso ya estan dentro de p y no se suman otra vez."""
+    m = p.get("modelo") or {}
+    ph, pa = m.get("p_home"), m.get("p_away")
+    if ph is None or pa is None or not angs:
+        return None
+    pdraw = max(0.0, 1.0 - ph - pa)
+    mejor = {}
+    for a in angs:
+        if a.get("con_peso"):
+            continue
+        e = mueve(a)
+        if e is None or e == 0:
+            continue
+        d = (1 if a["lado"] == "home" else -1) * _lgt(0.5 + max(-49.0, min(49.0, e)) / 100.0)
+        k = FAMILIA.get(a["codigo"], a["codigo"])
+        if k not in mejor or abs(d) > abs(mejor[k][0]):
+            mejor[k] = (d, a["codigo"])
+    if not mejor:
+        return {"p_home_modelo": round(ph, 4), "p_home_ajustada": round(ph, 4), "ajuste_pp": 0.0, "usados": [], "tope": False}
+    dz = sum(v[0] for v in mejor.values())
+    q = _sgm(_lgt(ph) + dz)
+    tope = abs(q - ph) * 100 > TOPE_AJUSTE_PP
+    if tope:
+        q = ph + (TOPE_AJUSTE_PP / 100.0) * (1 if q > ph else -1)
+    out = {"p_home_modelo": round(ph, 4), "p_away_modelo": round(pa, 4), "p_home_ajustada": round(q, 4),
+           "ajuste_pp": round(100 * (q - ph), 2), "usados": sorted(v[1] for v in mejor.values()), "tope": tope}
+    if pdraw > 0.001:                       # futbol 1X2: el empate conserva su parte, local y visita se reparten el resto
+        qa = _sgm(_lgt(pa) - dz) if not tope else max(0.0, pa - (q - ph))
+        s_ = q + qa + pdraw
+        out.update({"p_draw_modelo": round(pdraw, 4), "p_home_ajustada": round(q / s_, 4), "p_away_ajustada": round(qa / s_, 4),
+                    "p_draw_ajustada": round(pdraw / s_, 4)})
+    else:
+        out["p_away_ajustada"] = round(1 - q, 4)
+    gan_m = "home" if ph >= pa else "away"
+    gan_a = "home" if out["p_home_ajustada"] >= out["p_away_ajustada"] else "away"
+    out["ganador_modelo"], out["ganador_ajustado"] = p[gan_m]["nombre"], p[gan_a]["nombre"]
+    out["cambia_ganador"] = gan_m != gan_a
+    return out
+
+
+def balance(p, angs):
+    """por equipo: angulos que lo favorecen (con lo que mueve cada uno), cuantos y la suma; y quien trae mejores angulos."""
+    out = {}
+    for lado in ("home", "away"):
+        out[lado] = {"equipo": p[lado]["nombre"], "angulos": [], "n": 0, "suma_pp": 0.0}
+    for a in angs:
+        e = mueve(a)
+        if e is None or e == 0:
+            continue
+        ld = a["lado"] if e > 0 else ("away" if a["lado"] == "home" else "home")
+        out[ld]["angulos"].append({"codigo": a["codigo"], "nombre": a["nombre"], "pp": round(abs(e), 2),
+                                   "familia": FAMILIA.get(a["codigo"]), "ya_en_modelo": bool(a.get("con_peso")),
+                                   "veredicto": (a.get("medicion") or {}).get("veredicto")})
+    for lado in ("home", "away"):
+        L = sorted(out[lado]["angulos"], key=lambda r: -r["pp"])
+        out[lado]["angulos"] = L
+        out[lado]["n"] = sum(1 for r in L if r["pp"] >= NEUTRO_PP)
+        mx = {}                                  # la suma cuenta una vez cada familia (el que mas mueve), como el ajuste
+        for r in L:
+            k = r["familia"] or r["codigo"]
+            mx[k] = max(mx.get(k, 0.0), r["pp"])
+        out[lado]["suma_pp"] = round(sum(mx.values()), 2)
+    dif = out["home"]["suma_pp"] - out["away"]["suma_pp"]
+    out["ventaja"] = None if abs(dif) < NEUTRO_PP else ("home" if dif > 0 else "away")
+    out["ventaja_equipo"] = None if out["ventaja"] is None else p[out["ventaja"]]["nombre"]
+    out["diferencia_pp"] = round(abs(dif), 2)
     return out
 
 

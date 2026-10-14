@@ -562,6 +562,14 @@ def main():
         except Exception as _e:
             fila["marcador_angulos"] = None; print("  marcador con angulos fallo en %s %s: %s" % (p.get("liga"), p.get("id"), _e))
         fila["angulos_conteo"] = ANG.conteo(angs) if angs else None
+        # 13-oct-2026: probabilidad pura del modelo y ajustada con todos los angulos activos (segundo numero, no decide), y
+        # balance de angulos por equipo (quien trae mas y mejores). nucleo/angulos.ajustar / balance
+        try:
+            fila["prob_ajustada"] = ANG.ajustar(p, angs) if (ANG is not None and angs) else None
+            fila["balance_angulos"] = ANG.balance(p, angs) if (ANG is not None and angs) else None
+        except Exception as _e:
+            fila["prob_ajustada"] = fila["balance_angulos"] = None
+            print("  ajuste por angulos fallo en %s %s: %s" % (p.get("liga"), p.get("id"), _e))
         if ANG is not None and not p.get("pretemporada") and not _empezado(p, ahora_cdmx) and ANG._grupos(p.get("liga")):
             m_ = p.get("modelo") or {}
             hk, ak = ANG._equipo(p, "home"), ANG._equipo(p, "away")
@@ -672,6 +680,10 @@ def main():
                        # se veia bien y salida/picks_del_dia.json se quedaba con la version anterior.
                        # El telefono lee ese JSON. Se serializan como "liga Mercado".
                        "descalibrados": {("%s %s" % (lg or "?", mk)): v for (lg, mk), v in descalibrados().items()},
+                       "prob_ajustada": "'prob_ajustada' de cada partido: probabilidad pura del modelo (p_home_modelo) y la ajustada con "
+                                        "todos los angulos activos (p_home_ajustada), sumando en logit lo que mueve cada uno (efecto encogido), "
+                                        "uno por familia y con tope de 5 pp; los que ya tienen peso no se suman otra vez. 'balance_angulos': por "
+                                        "equipo, los angulos que lo favorecen con sus pp y quien trae la ventaja.",
                        "angulos": "'angulos' de cada partido: angulos situacionales activos (nucleo/angulos.py) con su medicion "
                                   "fuera de muestra (modelos/angulos_medidos.json). efecto_pp = cuanto rindio el equipo al que "
                                   "apunta el angulo contra el modelo. Ninguno paso la validacion: no cambian p ni EV. "
