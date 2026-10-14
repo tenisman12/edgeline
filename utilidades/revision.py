@@ -54,7 +54,9 @@ ATRASO = defaultdict(lambda: 10, {
     # partidos; mas 2-4 dias que tarda football-data.co.uk en subir /new/MEX.csv. Con 12 el chequeo se puso en rojo el
     # 11-oct-2026 sin que faltara nada. 16 = paron de 11 dias + retraso de publicacion.
     "ligamx": 16, "mls": 12,
-    "champions": 25,                   # fase de liga cada 2-3 semanas, mas los parones
+    # Champions 2026-27: jornada 1 el 8-10 de septiembre y jornada 2 hasta el 13-15 de octubre (33 dias, por el paron
+    # de tres semanas de septiembre). Con 25 el chequeo se pondria en rojo entre jornadas sin que faltara nada.
+    "champions": 40,
 })
 ARCHIVOS = {"beisbol.csv": ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl"),
             "nba.csv": ("nba", "ncaamb"), "americano.csv": ("nfl", "ncaafb"),
@@ -193,10 +195,13 @@ def revisar_datos():
                 if d > ult[lg]:
                     ult[lg] = d
         for lg in ligas:
+            if lg in FUENTE_EXTRA:
+                ex = _filas_extra(lg)
+                n[lg] = len({x[3] for x in ex}); ult[lg] = max((x[1] for x in ex), default="")
             c = n.get(lg, 0)
             actual[lg] = {"juegos": c, "ultimo": ult.get(lg, "")}
             if c == 0:
-                warn("datos", "%s: sin ningun juego en %s" % (lg.upper(), arch)); continue
+                warn("datos", "%s: sin ningun juego en %s" % (lg.upper(), FUENTE_EXTRA.get(lg, arch))); continue
             piso = PISO_JUEGOS.get(lg)
             if piso and c < piso:
                 err("datos", "%s: %d juegos, por debajo del piso de %d (datos incompletos)" % (lg.upper(), c, piso))
@@ -438,6 +443,24 @@ INICIO_VERIFICADO = {
     "del": "2026-09-18",     # hessenschau.de, calendario DEL 2026/27 (jornada 1: 18-sep-2026)
 }
 ARCHIVO_LIGA = {lg: arch for arch, ligas in ARCHIVOS.items() for lg in ligas}
+# Ligas que NO viven en datos/<deporte>.csv: la Champions no entra a futbol.csv (el modelo la predice con la fuerza de
+# liga local de cada equipo); sus partidos se guardan en datos/equipos/espn_champions_equipos.csv (recolectar_jugadores
+# espn --liga champions), con columnas game_id, game_date, liga, season, team. Antes del 14-oct-2026 el chequeo contaba
+# la Champions en futbol.csv, siempre 0, y se puso en rojo en cuanto los equipos llegaron a 2 partidos jugados.
+FUENTE_EXTRA = {"champions": os.path.join("equipos", "espn_champions_equipos.csv")}
+
+
+def _filas_extra(lg):
+    """filas (team, game_date, season, game_id) de una liga en FUENTE_EXTRA; [] si no hay archivo."""
+    ruta = os.path.join(BASE, "datos", FUENTE_EXTRA[lg])
+    if not os.path.exists(ruta):
+        return []
+    out = []
+    with io.open(ruta, encoding="utf-8-sig", errors="replace", newline="") as f:
+        for r in csv.DictReader(f):
+            if (r.get("liga") or lg).lower() == lg:
+                out.append((r.get("team"), (r.get("game_date") or "")[:10], str(r.get("season") or ""), str(r.get("game_id") or "")))
+    return out
 
 
 def _juegos_por_equipo(desde):
@@ -457,6 +480,8 @@ def _juegos_por_equipo(desde):
                     continue
                 vistos.add((lg, r.get("team"), pk))
                 filas[lg].append((r.get("team"), (r.get("game_date") or "")[:10], str(r.get("season") or "")))
+    for lg in FUENTE_EXTRA:
+        filas[lg] = [(t, d, se) for t, d, se, _ in {x[3] + "|" + str(x[0]): x for x in _filas_extra(lg)}.values()]
     temp, total = Counter(), Counter()
     for lg, L in filas.items():
         actual = max(L, key=lambda x: x[1])[2] if L else ""
