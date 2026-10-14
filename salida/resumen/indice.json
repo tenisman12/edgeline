@@ -1,9 +1,9 @@
 {
- "generado": "2026-10-14T05:13:58",
- "escrito": "2026-10-14T05:16:55Z",
+ "generado": "2026-10-14T10:53:55",
+ "escrito": "2026-10-14T10:57:18Z",
  "fechas": [
-  "2026-10-13",
-  "2026-10-14"
+  "2026-10-14",
+  "2026-10-15"
  ],
  "tz": "America/Mexico_City",
  "ligas": {
@@ -14,92 +14,117 @@
    "archivo": "ahl.json"
   },
   "atp": {
-   "partidos": 7,
-   "con_modelo": 5,
-   "kb": 195,
+   "partidos": 5,
+   "con_modelo": 4,
+   "kb": 154,
    "archivo": "atp.json"
   },
   "champions": {
    "partidos": 9,
    "con_modelo": 2,
-   "kb": 195,
+   "kb": 197,
    "archivo": "champions.json"
   },
-  "kbo": {
+  "del": {
    "partidos": 1,
    "con_modelo": 1,
-   "kb": 35,
+   "kb": 20,
+   "archivo": "del.json"
+  },
+  "kbo": {
+   "partidos": 2,
+   "con_modelo": 2,
+   "kb": 61,
    "archivo": "kbo.json"
   },
   "liiga": {
-   "partidos": 3,
-   "con_modelo": 3,
-   "kb": 75,
+   "partidos": 5,
+   "con_modelo": 5,
+   "kb": 125,
    "archivo": "liiga.json"
   },
   "lmp": {
-   "partidos": 4,
+   "partidos": 9,
    "con_modelo": 0,
-   "kb": 72,
+   "kb": 165,
    "archivo": "lmp.json"
   },
   "lvbp": {
-   "partidos": 3,
+   "partidos": 7,
    "con_modelo": 0,
-   "kb": 54,
+   "kb": 144,
    "archivo": "lvbp.json"
   },
   "mlb": {
-   "partidos": 1,
-   "con_modelo": 1,
-   "kb": 47,
+   "partidos": 3,
+   "con_modelo": 3,
+   "kb": 132,
    "archivo": "mlb.json"
   },
   "mls": {
    "partidos": 15,
    "con_modelo": 15,
-   "kb": 594,
-   "archivo": "mls.json"
+   "kb": 609,
+   "archivo": "mls.json",
+   "por_dia": {
+    "2026-10-14": {
+     "archivo": "mls_2026-10-14.json",
+     "partidos": 15,
+     "kb": 609
+    }
+   }
   },
   "nba": {
-   "partidos": 7,
-   "con_modelo": 7,
-   "kb": 200,
+   "partidos": 9,
+   "con_modelo": 9,
+   "kb": 255,
    "archivo": "nba.json"
   },
   "ncaafb": {
-   "partidos": 2,
-   "con_modelo": 2,
-   "kb": 62,
+   "partidos": 5,
+   "con_modelo": 5,
+   "kb": 164,
    "archivo": "ncaafb.json"
   },
+  "nfl": {
+   "partidos": 1,
+   "con_modelo": 1,
+   "kb": 57,
+   "archivo": "nfl.json"
+  },
   "nhl": {
-   "partidos": 2,
-   "con_modelo": 2,
-   "kb": 72,
+   "partidos": 13,
+   "con_modelo": 13,
+   "kb": 423,
    "archivo": "nhl.json"
   },
   "npb": {
-   "partidos": 2,
-   "con_modelo": 2,
-   "kb": 82,
+   "partidos": 4,
+   "con_modelo": 4,
+   "kb": 146,
    "archivo": "npb.json"
   },
+  "shl": {
+   "partidos": 7,
+   "con_modelo": 7,
+   "kb": 157,
+   "archivo": "shl.json"
+  },
   "wta": {
-   "partidos": 41,
-   "con_modelo": 16,
-   "kb": 825,
+   "partidos": 47,
+   "con_modelo": 11,
+   "kb": 680,
    "archivo": "wta.json",
    "por_dia": {
-    "2026-10-13": {
-     "archivo": "wta_2026-10-13.json",
-     "partidos": 3,
-     "kb": 107
-    },
     "2026-10-14": {
      "archivo": "wta_2026-10-14.json",
-     "partidos": 38,
-     "kb": 719
+     "partidos": 28,
+     "kb": 607
+    },
+    "2026-10-15": {
+     "archivo": "wta_2026-10-15.json",
+     "partidos": 19,
+     "kb": 74
     }
    }
   },
@@ -112,11 +137,6 @@
    "partidos": 0,
    "con_modelo": 0,
    "archivo": "bundesliga.json"
-  },
-  "del": {
-   "partidos": 0,
-   "con_modelo": 0,
-   "archivo": "del.json"
   },
   "laliga": {
    "partidos": 0,
@@ -143,11 +163,6 @@
    "con_modelo": 0,
    "archivo": "ncaamb.json"
   },
-  "nfl": {
-   "partidos": 0,
-   "con_modelo": 0,
-   "archivo": "nfl.json"
-  },
   "premier": {
    "partidos": 0,
    "con_modelo": 0,
@@ -157,11 +172,6 @@
    "partidos": 0,
    "con_modelo": 0,
    "archivo": "seriea.json"
-  },
-  "shl": {
-   "partidos": 0,
-   "con_modelo": 0,
-   "archivo": "shl.json"
   }
  },
  "como_leer": "salida/resumen/LEEME.md",
