@@ -1,15 +1,15 @@
 {
- "generado": "2026-10-14 17:37",
+ "generado": "2026-10-14 18:33",
  "total": {
-  "picks": 635,
-  "calificados": 472,
+  "picks": 636,
+  "calificados": 473,
   "pendientes": 70,
   "sin_resultado": 7,
   "anulados": 41,
   "aciertos": 291,
-  "acierto_pct": 61.7,
+  "acierto_pct": 61.5,
   "prob_media_pct": 59.1,
-  "brier": 0.2182,
+  "brier": 0.2183,
   "valor": {
    "apuestas": 107,
    "ganadas": 48,
@@ -129,10 +129,14 @@
   },
   "liiga": {
    "picks": 5,
-   "calificados": 0,
-   "pendientes": 5,
+   "calificados": 1,
+   "pendientes": 4,
    "sin_resultado": 0,
-   "anulados": 0
+   "anulados": 0,
+   "aciertos": 0,
+   "acierto_pct": 0.0,
+   "prob_media_pct": 52.9,
+   "brier": 0.2798
   },
   "mlb": {
    "picks": 32,
@@ -220,9 +224,9 @@
    }
   },
   "npb": {
-   "picks": 4,
+   "picks": 5,
    "calificados": 1,
-   "pendientes": 0,
+   "pendientes": 1,
    "sin_resultado": 0,
    "anulados": 1,
    "aciertos": 0,
@@ -314,9 +318,9 @@
    }
   },
   "beisbol": {
-   "picks": 45,
+   "picks": 46,
    "calificados": 32,
-   "pendientes": 3,
+   "pendientes": 4,
    "sin_resultado": 0,
    "anulados": 4,
    "aciertos": 19,
@@ -349,14 +353,14 @@
   },
   "hockey": {
    "picks": 70,
-   "calificados": 37,
-   "pendientes": 17,
+   "calificados": 38,
+   "pendientes": 16,
    "sin_resultado": 0,
    "anulados": 0,
    "aciertos": 26,
-   "acierto_pct": 70.3,
-   "prob_media_pct": 56.9,
-   "brier": 0.2201,
+   "acierto_pct": 68.4,
+   "prob_media_pct": 56.8,
+   "brier": 0.2217,
    "valor": {
     "apuestas": 20,
     "ganadas": 8,
@@ -385,9 +389,9 @@
  "calibracion": [
   {
    "rango": "50-55%",
-   "n": 92,
+   "n": 93,
    "prob_media_pct": 52.4,
-   "acierto_pct": 58.7
+   "acierto_pct": 58.1
   },
   {
    "rango": "55-60%",
@@ -417,19 +421,19 @@
  "por_nivel": {
   "lectura": {
    "picks": 407,
-   "calificados": 348,
-   "pendientes": 53,
+   "calificados": 349,
+   "pendientes": 52,
    "sin_resultado": 1,
    "anulados": 5,
    "aciertos": 220,
-   "acierto_pct": 63.2,
+   "acierto_pct": 63.0,
    "prob_media_pct": 62.5,
-   "brier": 0.2171
+   "brier": 0.2173
   },
   "pick": {
-   "picks": 226,
+   "picks": 227,
    "calificados": 124,
-   "pendientes": 17,
+   "pendientes": 18,
    "sin_resultado": 6,
    "anulados": 35,
    "aciertos": 71,
@@ -465,14 +469,14 @@
  "sin_precio": {
   "total": {
    "picks": 408,
-   "calificados": 290,
-   "pendientes": 54,
+   "calificados": 291,
+   "pendientes": 53,
    "sin_resultado": 53,
    "anulados": 8,
-   "aciertos": 176,
-   "acierto_pct": 60.7,
+   "aciertos": 177,
+   "acierto_pct": 60.8,
    "prob_media_pct": 59.4,
-   "brier": 0.2431,
+   "brier": 0.2428,
    "valor": {
     "apuestas": 9,
     "ganadas": 0,
@@ -617,14 +621,14 @@
    },
    "wta": {
     "picks": 119,
-    "calificados": 78,
-    "pendientes": 28,
+    "calificados": 79,
+    "pendientes": 27,
     "sin_resultado": 12,
     "anulados": 1,
-    "aciertos": 45,
-    "acierto_pct": 57.7,
+    "aciertos": 46,
+    "acierto_pct": 58.2,
     "prob_media_pct": 63.3,
-    "brier": 0.2568,
+    "brier": 0.2555,
     "valor": {
      "apuestas": 1,
      "ganadas": 0,
@@ -636,8 +640,8 @@
  },
  "predicciones_modelo": {
   "total": 2680,
-  "calificadas": 2019,
-  "pendientes": 386,
+  "calificadas": 2026,
+  "pendientes": 378,
   "por_liga_mercado": {
    "ahl|Ganador": {
     "n": 23,
@@ -829,24 +833,31 @@
     "mae": null
    },
    "liiga|Ganador": {
-    "n": 5,
-    "acierto_pct": 100.0,
-    "p_media_pct": 56.0,
-    "brier": 0.1976,
+    "n": 6,
+    "acierto_pct": 83.3,
+    "p_media_pct": 55.5,
+    "brier": 0.2113,
+    "mae": null
+   },
+   "liiga|Goles": {
+    "n": 2,
+    "acierto_pct": 50.0,
+    "p_media_pct": 60.4,
+    "brier": 0.1752,
     "mae": null
    },
    "liiga|Spread": {
-    "n": 5,
-    "acierto_pct": 40.0,
-    "p_media_pct": 70.9,
-    "brier": 0.3501,
+    "n": 6,
+    "acierto_pct": 50.0,
+    "p_media_pct": 71.4,
+    "brier": 0.3027,
     "mae": null
    },
    "liiga|Total": {
-    "n": 5,
-    "acierto_pct": 40.0,
-    "p_media_pct": 67.3,
-    "brier": 0.3006,
+    "n": 6,
+    "acierto_pct": 33.3,
+    "p_media_pct": 66.7,
+    "brier": 0.318,
     "mae": null
    },
    "mlb|Carreras": {
@@ -1067,17 +1078,17 @@
     "mae": 2.077
    },
    "wta|Games": {
-    "n": 127,
-    "acierto_pct": 56.7,
+    "n": 128,
+    "acierto_pct": 57.0,
     "p_media_pct": 57.3,
-    "brier": 0.2455,
+    "brier": 0.245,
     "mae": null
    },
    "wta|Ganador": {
-    "n": 127,
-    "acierto_pct": 60.6,
+    "n": 128,
+    "acierto_pct": 60.9,
     "p_media_pct": 64.4,
-    "brier": 0.2429,
+    "brier": 0.2422,
     "mae": null
    }
   }
@@ -1348,36 +1359,36 @@
  "picks_dia": {
   "registros": 106,
   "con_pick": 106,
-  "calificados": 81,
-  "pendientes": 8,
+  "calificados": 82,
+  "pendientes": 7,
   "anulados": 0,
   "total": {
-   "n": 81,
+   "n": 82,
    "gano": 25,
-   "acierto_pct": 30.9,
-   "unidades": -13.74,
-   "roi_pct": -17.0,
-   "bank_pct": -32.13,
-   "ev_medio_pct": 13.3
+   "acierto_pct": 30.5,
+   "unidades": -14.74,
+   "roi_pct": -18.0,
+   "bank_pct": -35.13,
+   "ev_medio_pct": 13.2
   },
   "con_stake": {
-   "n": 81,
+   "n": 82,
    "gano": 25,
-   "acierto_pct": 30.9,
-   "unidades": -13.74,
-   "roi_pct": -17.0,
-   "bank_pct": -32.13,
-   "ev_medio_pct": 13.3
+   "acierto_pct": 30.5,
+   "unidades": -14.74,
+   "roi_pct": -18.0,
+   "bank_pct": -35.13,
+   "ev_medio_pct": 13.2
   },
   "por_confianza": {
    "alta": {
-    "n": 29,
+    "n": 30,
     "gano": 9,
-    "acierto_pct": 31.0,
-    "unidades": -6.81,
-    "roi_pct": -23.5,
-    "bank_pct": -20.42,
-    "ev_medio_pct": 16.5
+    "acierto_pct": 30.0,
+    "unidades": -7.81,
+    "roi_pct": -26.0,
+    "bank_pct": -23.42,
+    "ev_medio_pct": 16.4
    },
    "baja": {
     "n": 7,
@@ -1427,24 +1438,24 @@
     "ev_medio_pct": 6.1
    },
    "ev>=8%": {
-    "n": 56,
+    "n": 57,
     "gano": 17,
-    "acierto_pct": 30.4,
-    "unidades": -5.4,
-    "roi_pct": -9.7,
-    "bank_pct": -17.61,
-    "ev_medio_pct": 17.0
+    "acierto_pct": 29.8,
+    "unidades": -6.4,
+    "roi_pct": -11.2,
+    "bank_pct": -20.61,
+    "ev_medio_pct": 16.9
    }
   },
   "por_lectura": {
    "lectura a favor": {
-    "n": 60,
+    "n": 61,
     "gano": 19,
-    "acierto_pct": 31.7,
-    "unidades": -7.82,
-    "roi_pct": -13.0,
-    "bank_pct": -16.99,
-    "ev_medio_pct": 14.9
+    "acierto_pct": 31.1,
+    "unidades": -8.82,
+    "roi_pct": -14.5,
+    "bank_pct": -19.99,
+    "ev_medio_pct": 14.8
    },
    "lectura en contra": {
     "n": 6,
@@ -1519,6 +1530,15 @@
     "roi_pct": -100.0,
     "bank_pct": -4.0,
     "ev_medio_pct": 28.4
+   },
+   "liiga": {
+    "n": 1,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "unidades": -1.0,
+    "roi_pct": -100.0,
+    "bank_pct": -3.0,
+    "ev_medio_pct": 11.1
    },
    "mlb": {
     "n": 6,
@@ -1595,12 +1615,12 @@
   },
   "por_mercado": {
    "Ganador": {
-    "n": 63,
+    "n": 64,
     "gano": 18,
-    "acierto_pct": 28.6,
-    "unidades": -9.97,
-    "roi_pct": -15.8,
-    "bank_pct": -21.53,
+    "acierto_pct": 28.1,
+    "unidades": -10.97,
+    "roi_pct": -17.1,
+    "bank_pct": -24.53,
     "ev_medio_pct": 11.9
    },
    "Spread": {
@@ -1624,12 +1644,12 @@
   },
   "por_origen": {
    "decidir_v2": {
-    "n": 68,
+    "n": 69,
     "gano": 20,
-    "acierto_pct": 29.4,
-    "unidades": -12.92,
-    "roi_pct": -19.0,
-    "bank_pct": -26.69,
+    "acierto_pct": 29.0,
+    "unidades": -13.92,
+    "roi_pct": -20.2,
+    "bank_pct": -29.69,
     "ev_medio_pct": 13.0
    },
    "pick premium": {
@@ -1653,13 +1673,13 @@
   },
   "por_publico": {
    "": {
-    "n": 57,
+    "n": 58,
     "gano": 14,
-    "acierto_pct": 24.6,
-    "unidades": -21.83,
-    "roi_pct": -38.3,
-    "bank_pct": -54.14,
-    "ev_medio_pct": 13.6
+    "acierto_pct": 24.1,
+    "unidades": -22.83,
+    "roi_pct": -39.4,
+    "bank_pct": -57.14,
+    "ev_medio_pct": 13.5
    },
    "publico con el pick": {
     "n": 6,
@@ -1727,13 +1747,13 @@
     "ev_medio_pct": 8.3
    },
    "linea quieta": {
-    "n": 55,
+    "n": 56,
     "gano": 20,
-    "acierto_pct": 36.4,
-    "unidades": -2.19,
-    "roi_pct": -4.0,
-    "bank_pct": -3.93,
-    "ev_medio_pct": 13.1
+    "acierto_pct": 35.7,
+    "unidades": -3.19,
+    "roi_pct": -5.7,
+    "bank_pct": -6.93,
+    "ev_medio_pct": 13.0
    }
   },
   "por_cuota": {
@@ -1747,12 +1767,12 @@
     "ev_medio_pct": 11.9
    },
    "2.00-2.49": {
-    "n": 19,
+    "n": 20,
     "gano": 6,
-    "acierto_pct": 31.6,
-    "unidades": -5.87,
-    "roi_pct": -30.9,
-    "bank_pct": -12.06,
+    "acierto_pct": 30.0,
+    "unidades": -6.87,
+    "roi_pct": -34.4,
+    "bank_pct": -15.06,
     "ev_medio_pct": 10.4
    },
    "2.50-2.99": {
