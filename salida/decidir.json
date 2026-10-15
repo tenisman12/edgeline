@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-15T17:28:30",
+ "generado": "2026-10-15T18:17:50",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -10,14 +10,14 @@
    "hora": "18:00",
    "home": "Los Angeles Dodgers",
    "away": "Milwaukee Brewers",
-   "p_modelo": 0.5669,
+   "p_modelo": 0.6183,
    "p_sharp": 0.5842,
-   "p_final": 0.5669,
+   "p_final": 0.6183,
    "fuente": "modelo (Pinnacle de referencia 58.4%)",
-   "p_mezcla": 0.5799,
-   "margen_esperado": 0.73,
+   "p_mezcla": 0.5928,
+   "margen_esperado": 1.3,
    "linea_home": "-1.5",
-   "p_runline_home": 0.3866,
+   "p_runline_home": 0.4368,
    "detalle_modelo": {
     "elo_h": 1584.6,
     "elo_a": 1625.1,
@@ -36,8 +36,19 @@
      "era_ajustada": 3.13,
      "ga_equipo": 3.686
     },
-    "abridor_a": null,
-    "carreras_abridor": 0.34,
+    "abridor_a": {
+     "nombre": "Shane Drohan",
+     "fip_ventana": 5.27,
+     "fip_ultimas5": 5.95,
+     "k_pct": 0.233,
+     "bb_pct": 0.112,
+     "ip_ventana": "26.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.62,
+     "ga_equipo": 3.757
+    },
+    "carreras_abridor": 0.87,
     "frio_caliente": 1
    },
    "lados": [
@@ -45,18 +56,19 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Los Angeles Dodgers",
-     "p": 0.5669,
+     "p": 0.6183,
      "cuota": -157.0,
      "decimal": 1.637,
      "casa": "DraftKings",
-     "ev": -0.072,
+     "ev": 0.0122,
      "cuota_min": 1.8,
      "en_rango": false,
-     "senales_favor": 1,
+     "senales_favor": 2,
      "senales_contra": 6,
      "senales": {
       "a_favor": [
-       "consenso"
+       "consenso",
+       "abridor"
       ],
       "en_contra": [
        "forma",
@@ -68,18 +80,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 22.7
+     "premium_pts": 26.4
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Milwaukee Brewers",
-     "p": 0.4331,
+     "p": 0.3817,
      "cuota": 130.0,
      "decimal": 2.3,
      "casa": "DraftKings",
-     "ev": -0.0039,
-     "cuota_min": 2.31,
+     "ev": -0.1222,
+     "cuota_min": 2.62,
      "en_rango": true,
      "senales_favor": 6,
      "senales_contra": 2,
@@ -94,27 +106,29 @@
       ],
       "en_contra": [
        "consenso",
-       "contexto"
+       "abridor"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 60.2
+     "premium_pts": 57.4
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Los Angeles Dodgers -1.5",
-     "p": 0.3866,
+     "p": 0.4368,
      "cuota": 138.0,
      "decimal": 2.38,
      "casa": "DraftKings",
-     "ev": -0.0798,
-     "cuota_min": 2.59,
+     "ev": 0.0397,
+     "cuota_min": 2.29,
      "en_rango": true,
-     "senales_favor": 0,
+     "senales_favor": 1,
      "senales_contra": 4,
      "senales": {
-      "a_favor": [],
+      "a_favor": [
+       "abridor"
+      ],
       "en_contra": [
        "forma",
        "osciladores",
@@ -123,21 +137,21 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 17.0
+     "premium_pts": 21.4
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Milwaukee Brewers +1.5",
-     "p": 0.6134,
+     "p": 0.5632,
      "cuota": -168.0,
      "decimal": 1.595,
      "casa": "DraftKings",
-     "ev": -0.0215,
+     "ev": -0.1016,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 4,
-     "senales_contra": 0,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
@@ -145,43 +159,16 @@
        "fuerza",
        "racha"
       ],
-      "en_contra": []
+      "en_contra": [
+       "abridor"
+      ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 49.7
+     "premium_pts": 45.3
     }
    ],
-   "pick": {
-    "mercado": "Ganador",
-    "lado": "away",
-    "texto": "Milwaukee Brewers",
-    "p": 0.4331,
-    "cuota": 130.0,
-    "decimal": 2.3,
-    "casa": "DraftKings",
-    "ev": -0.0039,
-    "cuota_min": 2.31,
-    "en_rango": true,
-    "senales_favor": 6,
-    "senales_contra": 2,
-    "senales": {
-     "a_favor": [
-      "forma",
-      "movimiento",
-      "h2h",
-      "osciladores",
-      "fuerza",
-      "racha"
-     ],
-     "en_contra": [
-      "consenso",
-      "contexto"
-     ]
-    },
-    "premium_nivel": "lean",
-    "premium_pts": 60.2
-   },
-   "confianza": "minima",
+   "pick": null,
+   "confianza": "sin pick",
    "stake": 0.0,
    "pretemporada": false
   },
