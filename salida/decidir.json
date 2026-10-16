@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-16T18:01:36",
+ "generado": "2026-10-16T20:21:28",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -11,10 +11,10 @@
    "home": "Cleveland Guardians",
    "away": "Tampa Bay Rays",
    "p_modelo": 0.4952,
-   "p_sharp": 0.4957,
+   "p_sharp": 0.4892,
    "p_final": 0.4952,
-   "fuente": "modelo (Pinnacle de referencia 49.6%)",
-   "p_mezcla": 0.4955,
+   "fuente": "modelo (Pinnacle de referencia 48.9%)",
+   "p_mezcla": 0.491,
    "margen_esperado": -0.05,
    "linea_home": "+1.5",
    "p_runline_home": 0.6093,
@@ -46,14 +46,14 @@
      "lado": "home",
      "texto": "Cleveland Guardians",
      "p": 0.4952,
-     "cuota": -108.0,
-     "decimal": 1.926,
+     "cuota": -105.0,
+     "decimal": 1.952,
      "casa": "DraftKings",
-     "ev": -0.0463,
+     "ev": -0.0332,
      "cuota_min": 2.02,
      "en_rango": true,
      "senales_favor": 4,
-     "senales_contra": 3,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [
        "consenso",
@@ -62,29 +62,31 @@
        "racha"
       ],
       "en_contra": [
+       "movimiento",
        "h2h",
        "fuerza",
        "abridor"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 46.1
+     "premium_pts": 47.8
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Tampa Bay Rays",
      "p": 0.5048,
-     "cuota": -112.0,
-     "decimal": 1.893,
+     "cuota": -115.0,
+     "decimal": 1.87,
      "casa": "DraftKings",
-     "ev": -0.0445,
+     "ev": -0.0562,
      "cuota_min": 1.98,
      "en_rango": true,
-     "senales_favor": 3,
+     "senales_favor": 4,
      "senales_contra": 4,
      "senales": {
       "a_favor": [
+       "movimiento",
        "h2h",
        "fuerza",
        "abridor"
@@ -104,10 +106,10 @@
      "lado": "home",
      "texto": "Cleveland Guardians +1.5",
      "p": 0.6093,
-     "cuota": -197.0,
-     "decimal": 1.508,
+     "cuota": -196.0,
+     "decimal": 1.51,
      "casa": "DraftKings",
-     "ev": -0.0814,
+     "ev": -0.0798,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 2,
@@ -130,10 +132,10 @@
      "lado": "away",
      "texto": "Tampa Bay Rays -1.5",
      "p": 0.3907,
-     "cuota": 162.0,
-     "decimal": 2.62,
+     "cuota": 161.0,
+     "decimal": 2.61,
      "casa": "DraftKings",
-     "ev": 0.0236,
+     "ev": 0.0197,
      "cuota_min": 2.56,
      "en_rango": true,
      "senales_favor": 2,
@@ -154,32 +156,33 @@
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "away",
-    "texto": "Tampa Bay Rays",
-    "p": 0.5048,
-    "cuota": -112.0,
-    "decimal": 1.893,
+    "lado": "home",
+    "texto": "Cleveland Guardians",
+    "p": 0.4952,
+    "cuota": -105.0,
+    "decimal": 1.952,
     "casa": "DraftKings",
-    "ev": -0.0445,
-    "cuota_min": 1.98,
+    "ev": -0.0332,
+    "cuota_min": 2.02,
     "en_rango": true,
-    "senales_favor": 3,
+    "senales_favor": 4,
     "senales_contra": 4,
     "senales": {
      "a_favor": [
-      "h2h",
-      "fuerza",
-      "abridor"
-     ],
-     "en_contra": [
       "consenso",
       "contexto",
       "osciladores",
       "racha"
+     ],
+     "en_contra": [
+      "movimiento",
+      "h2h",
+      "fuerza",
+      "abridor"
      ]
     },
-    "premium_nivel": "pasar",
-    "premium_pts": 32.7
+    "premium_nivel": "lean",
+    "premium_pts": 47.8
    },
    "confianza": "minima",
    "stake": 0.0,
