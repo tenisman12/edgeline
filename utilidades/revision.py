@@ -104,6 +104,14 @@ CONOCIDOS = [
 ]
 
 VENTANA_CUOTAS = 24     # horas hacia adelante en las que se exige precio
+# Ligas cuyas casas publican la linea mas tarde. Liiga (16-oct-2026, salida/cuotas_sharp_2026.csv, n 19 eventos): la
+# primera foto con precio llega con mediana 29.1 h antes del inicio, 32 % llega a menos de 21 h y la mas tardia a 9.4 h.
+# Con 24 h la corrida de las 17:09Z marco 1 de 7 a las 21 h del inicio; a 9 h todas tenian precio.
+VENTANA_LIGA = {"liiga": 9}
+# Tenis: las rondas de clasificacion no las cotiza The Odds API. En 6 fotos de proximos.json del 6 al 16-oct-2026 hubo
+# 104 partidos de qualy y 0 con cuota. No generan pick (sin precio no hay pick); se cuentan aparte para no tapar un
+# fallo real del cuadro principal.
+RONDAS_SIN_PRECIO = ("qualif",)
 
 ERR, WARN, CONOC = [], [], []
 
@@ -323,6 +331,7 @@ def revisar_cuotas():
     # (picks[].cuota), que es la que usan NPB, KBO y tenis.
     ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=-6)
     por = defaultdict(lambda: [0, 0])
+    qualy = defaultdict(int)
     for p in prx.get("partidos") or []:
         if p.get("pretemporada"):
             continue
@@ -330,7 +339,10 @@ def revisar_cuotas():
             ini = dt.datetime.fromisoformat("%s %s" % (p.get("fecha"), (p.get("hora") or "12:00")[:5]))
         except ValueError:
             continue
-        if not (ahora <= ini <= ahora + dt.timedelta(hours=VENTANA_CUOTAS)):
+        if not (ahora <= ini <= ahora + dt.timedelta(hours=VENTANA_LIGA.get(p.get("liga"), VENTANA_CUOTAS))):
+            continue
+        if any(r in str(p.get("ronda") or "").lower() for r in RONDAS_SIN_PRECIO):
+            qualy[p.get("liga")] += 1
             continue
         val = p.get("validacion") or {}
         if val.get("Ganador") != "publicable":
@@ -341,6 +353,8 @@ def revisar_cuotas():
         casas = any(k.get("cuota") is not None for k in (p.get("picks") or []) if k.get("mercado") == "Ganador")
         if (q.get("ml_home") is not None and q.get("ml_away") is not None) or casas:
             a[1] += 1
+    for lg, n in sorted(qualy.items()):
+        ok("cuotas", "%s: %d partidos de clasificacion sin contar (The Odds API no cotiza qualy)" % (lg.upper(), n))
     if not por:
         ok("cuotas", "ningun partido con ganador publicable empieza en las proximas %d h" % VENTANA_CUOTAS); return
     for lg, (n, con) in sorted(por.items()):
