@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-16T12:04:43Z",
+ "generado": "2026-10-16T17:09:38Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -17,33 +17,33 @@
    "previo": 0.35,
    "w_usado": 0.252
   },
-  "nhl|Ganador": {
-   "w_vivo": 0.4,
-   "n": 102,
-   "mejora_milesimas": 0.975,
-   "z": 0.22,
-   "mitades": [
-    1.996,
-    -0.047
-   ],
-   "brier_pinnacle": 0.2299,
-   "brier_modelo": 0.2305,
-   "previo": 0.5,
-   "w_usado": 0.475
-  },
   "wta|Ganador": {
    "w_vivo": 1.0,
-   "n": 101,
-   "mejora_milesimas": 16.308,
-   "z": 0.91,
+   "n": 102,
+   "mejora_milesimas": 16.655,
+   "z": 0.93,
    "mitades": [
-    21.389,
-    11.327
+    18.558,
+    14.752
    ],
-   "brier_pinnacle": 0.2385,
-   "brier_modelo": 0.2334,
+   "brier_pinnacle": 0.2365,
+   "brier_modelo": 0.2313,
    "previo": 0.35,
-   "w_usado": 0.514
+   "w_usado": 0.515
+  },
+  "nhl|Ganador": {
+   "w_vivo": 0.5,
+   "n": 101,
+   "mejora_milesimas": 1.525,
+   "z": 0.27,
+   "mitades": [
+    2.222,
+    0.843
+   ],
+   "brier_pinnacle": 0.2305,
+   "brier_modelo": 0.2304,
+   "previo": 0.5,
+   "w_usado": 0.5
   },
   "ncaafb|Total": {
    "w_vivo": 0.0,
@@ -61,31 +61,31 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
-   "n": 93,
-   "mejora_milesimas": 6.246,
-   "z": 0.52,
+   "n": 94,
+   "mejora_milesimas": 5.969,
+   "z": 0.5,
    "mitades": [
-    10.031,
-    2.542
+    8.91,
+    3.027
    ],
-   "brier_pinnacle": 0.2054,
-   "brier_modelo": 0.2056,
+   "brier_pinnacle": 0.2046,
+   "brier_modelo": 0.2051,
    "previo": 0.35,
-   "w_usado": 0.385
+   "w_usado": 0.386
   },
   "nhl|Total": {
    "w_vivo": 0.0,
-   "n": 61,
+   "n": 60,
    "mejora_milesimas": -0.0,
    "z": -0.7,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2518,
-   "brier_modelo": 0.2543,
+   "brier_pinnacle": 0.2516,
+   "brier_modelo": 0.2536,
    "previo": 0.5,
-   "w_usado": 0.416
+   "w_usado": 0.417
   },
   "nhl|Spread": {
    "w_vivo": 1.0,
