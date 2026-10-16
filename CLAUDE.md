@@ -162,6 +162,12 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   sigue siendo el de la sede real). Capa de abridores: en LMP y NPB se aplica la parte del total (paso) y no la del ganador
   (`nucleo/abridores.aplica`). Action Network no cubre LMP: sin publico medido. Reglas nuevas 2026-27 (reloj de pitcheo,
   ABS, 3 bateadores por relevista): el nivel reciente de la capa se ajusta solo con los primeros juegos; se mide en vivo.
+  15-oct-2026 (Alejandro: "incorpora todo lo que puedas sin afectar las probabilidades"): clima de LMP, LVBP y LIDOM
+  (`colectores/clima.ESTADIOS_INVIERNO`, ciudad + pais geocodificados con Open-Meteo; la capa de parque lee temp_f/viento_mph
+  y Open-Meteo trae temp_c/viento_kmh, asi que el total no cambia) y `modelo.calibracion_banda` en LMP (banda del favorito
+  con p media contra acierto de `salida/evaluacion_lmp.json`, total y por temporada; `cambia_p: False`). Al 15-oct la banda
+  65+ promete 66.9 % y acierta 49.1 % (n 53; 2024 29.4 % n 17, 2025 58.3 % n 36) y las bandas 55-65 aciertan 6-7 pp MAS de lo
+  que prometen: no se recalibra hasta medirlo en vivo.
 
 ## Hockey: SHL, Liiga, AHL y DEL (10-oct-2026, Alejandro: "igualito al de NHL")
 - Datos: `colectores/recolectar_hockey_ligas.py` (fuentes oficiales: stats.swehockey.se, liiga.fi/api/v2, HockeyTech de la
