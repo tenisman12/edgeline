@@ -1,21 +1,35 @@
 {
- "generado": "2026-10-17T17:42:44Z",
+ "generado": "2026-10-17T19:53:16Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
   "ncaafb|Ganador": {
    "w_vivo": 0.0,
-   "n": 118,
+   "n": 126,
    "mejora_milesimas": -0.0,
-   "z": -1.21,
+   "z": -1.51,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.1879,
-   "brier_modelo": 0.211,
+   "brier_pinnacle": 0.1886,
+   "brier_modelo": 0.2109,
    "previo": 0.35,
-   "w_usado": 0.251
+   "w_usado": 0.246
+  },
+  "ncaafb|Total": {
+   "w_vivo": 0.0,
+   "n": 108,
+   "mejora_milesimas": 0.0,
+   "z": 1.42,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2495,
+   "brier_modelo": 0.2741,
+   "previo": 0.35,
+   "w_usado": 0.257
   },
   "wta|Ganador": {
    "w_vivo": 1.0,
@@ -44,20 +58,6 @@
    "brier_modelo": 0.2304,
    "previo": 0.5,
    "w_usado": 0.449
-  },
-  "ncaafb|Total": {
-   "w_vivo": 0.0,
-   "n": 101,
-   "mejora_milesimas": 0.0,
-   "z": 1.91,
-   "mitades": [
-    0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2495,
-   "brier_modelo": 0.2779,
-   "previo": 0.35,
-   "w_usado": 0.262
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
@@ -102,18 +102,18 @@
    "w_usado": 0.568
   },
   "ncaafb|Spread": {
-   "w_vivo": 0.7,
-   "n": 40,
-   "mejora_milesimas": 24.882,
-   "z": 0.68,
+   "w_vivo": 0.8,
+   "n": 43,
+   "mejora_milesimas": 29.025,
+   "z": 0.73,
    "mitades": [
-    42.197,
-    7.566
+    43.465,
+    15.242
    ],
-   "brier_pinnacle": 0.2505,
-   "brier_modelo": 0.2381,
+   "brier_pinnacle": 0.2504,
+   "brier_modelo": 0.235,
    "previo": 0.35,
-   "w_usado": 0.391
+   "w_usado": 0.406
   },
   "kbo|Ganador": {
    "w_vivo": 0.9,
@@ -229,17 +229,17 @@
   },
   "liiga|Ganador": {
    "w_vivo": 0.0,
-   "n": 20,
+   "n": 21,
    "mejora_milesimas": -0.0,
    "z": -1.81,
    "mitades": [
     0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2313,
-   "brier_modelo": 0.2588,
+   "brier_pinnacle": 0.2371,
+   "brier_modelo": 0.2657,
    "previo": 0.5,
-   "w_usado": 0.469
+   "w_usado": 0.467
   }
  }
 }
