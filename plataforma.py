@@ -118,6 +118,17 @@ def _aplicar_validacion():
         liga = nombre.lower()
         poner(liga, "Ganador", pub(d, "1") and pub(d, "2"))
         poner(liga, "Total", pub(d, "over_2.5"))
+    # Medidos contra la LINEA DE CIERRE (lo que se apuesta), no contra la tasa historica: estos mercados quedan sin_validar
+    # aunque el validador los apruebe, porque contra la linea de la casa el modelo no elige mejor que una moneda.
+    for liga_tipo in CONTRA_CIERRE_NO:
+        NO_PUBLICABLE.add(liga_tipo)
+
+
+# (liga, tipo) que no pasan contra la linea de cierre. Cada uno con su medicion en trabajo/minar/.
+#   NFL Total (18-oct-2026, utilidades/medir_total_nfl_cierre.py, 2018-2026, n 2,281 con total_line de cierre):
+#   elige el lado correcto 49.8 % (z -0.19); promete 58.9 % al lado elegido; log loss -29.6 milesimas contra p = 0.5
+#   (z -5.91, las dos mitades negativas). En vivo: prometio 59.3 % y acerto 41.0 % en 39 (revision.py, z -2.32).
+CONTRA_CIERRE_NO = {("nfl", "Total")}
 
 
 # ---- capas de decision de pick (ver decidir_picks). Backtest: futbol 20,633 partidos con Pinnacle 2018-2026 y NFL 2,220.

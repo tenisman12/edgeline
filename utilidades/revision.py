@@ -97,6 +97,12 @@ CONOCIDOS = [
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
      "2026-12-15"),
+    ("calibracion", "NFL Total",
+     "Medido contra la linea de cierre el 18-oct-2026 (utilidades/medir_total_nfl_cierre.py, 2018-2026, n 2,281): elige el "
+     "lado correcto 49.8 % (z -0.19) y promete 58.9 %. Quedo sin_validar en plataforma.CONTRA_CIERRE_NO: no genera pick "
+     "(decidir_v2 le da peso 0 al modelo) y ademas lo bloquea descalibrados(). La lectura del modelo se sigue mostrando. "
+     "Decidir antes de esa fecha: dejarlo solo como lectura o rehacer el modelo del total.",
+     "2026-12-31"),
 ]
 
 VENTANA_CUOTAS = 24     # horas hacia adelante en las que se exige precio
