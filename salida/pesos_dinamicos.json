@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-18T11:38:37Z",
+ "generado": "2026-10-18T14:59:02Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -46,18 +46,18 @@
    "w_usado": 0.387
   },
   "wta|Ganador": {
-   "w_vivo": 1.0,
-   "n": 104,
-   "mejora_milesimas": 13.217,
+   "w_vivo": 0.95,
+   "n": 105,
+   "mejora_milesimas": 12.469,
    "z": 0.75,
    "mitades": [
-    17.722,
-    8.712
+    17.586,
+    7.449
    ],
-   "brier_pinnacle": 0.2408,
-   "brier_modelo": 0.2367,
+   "brier_pinnacle": 0.2413,
+   "brier_modelo": 0.2375,
    "previo": 0.35,
-   "w_usado": 0.517
+   "w_usado": 0.506
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
