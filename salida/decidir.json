@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-18T06:14:18",
+ "generado": "2026-10-18T10:17:03",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
@@ -10,14 +10,14 @@
    "hora": "15:00",
    "home": "Cleveland Guardians",
    "away": "Tampa Bay Rays",
-   "p_modelo": 0.4743,
-   "p_sharp": 0.4635,
-   "p_final": 0.4743,
-   "fuente": "modelo (Pinnacle de referencia 46.4%)",
-   "p_mezcla": 0.4667,
+   "p_modelo": 0.4741,
+   "p_sharp": 0.4552,
+   "p_final": 0.4741,
+   "fuente": "modelo (Pinnacle de referencia 45.5%)",
+   "p_mezcla": 0.4608,
    "margen_esperado": -0.28,
    "linea_home": "+1.5",
-   "p_runline_home": 0.5897,
+   "p_runline_home": 0.5895,
    "detalle_modelo": {
     "elo_h": 1526.1,
     "elo_a": 1566.6,
@@ -27,13 +27,13 @@
     "abridor_h": {
      "nombre": "Parker Messick",
      "fip_ventana": 2.82,
-     "fip_ultimas5": 3.34,
+     "fip_ultimas5": 3.35,
      "k_pct": 0.277,
      "bb_pct": 0.072,
      "ip_ventana": "55.2",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.42,
+     "era_ajustada": 3.43,
      "ga_equipo": 4.052
     },
     "abridor_a": {
@@ -56,15 +56,15 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Cleveland Guardians",
-     "p": 0.4743,
-     "cuota": 114.0,
-     "decimal": 2.14,
+     "p": 0.4741,
+     "cuota": 120.0,
+     "decimal": 2.2,
      "casa": "gtbets",
-     "ev": 0.015,
+     "ev": 0.043,
      "cuota_min": 2.11,
      "en_rango": true,
      "senales_favor": 2,
-     "senales_contra": 4,
+     "senales_contra": 6,
      "senales": {
       "a_favor": [
        "consenso",
@@ -72,33 +72,37 @@
       ],
       "en_contra": [
        "forma",
+       "movimiento",
        "h2h",
        "fuerza",
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 45.6
+     "premium_pts": 45.7
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Tampa Bay Rays",
-     "p": 0.5257,
+     "p": 0.5259,
      "cuota": -118.0,
      "decimal": 1.847,
      "casa": "onexbet",
-     "ev": -0.0288,
+     "ev": -0.0284,
      "cuota_min": 1.9,
      "en_rango": true,
-     "senales_favor": 4,
+     "senales_favor": 6,
      "senales_contra": 2,
      "senales": {
       "a_favor": [
        "forma",
+       "movimiento",
        "h2h",
        "fuerza",
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": [
        "consenso",
@@ -106,70 +110,72 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 47.5
+     "premium_pts": 52.6
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Cleveland Guardians +1.5",
-     "p": 0.5897,
+     "p": 0.5895,
      "cuota": -159.0,
      "decimal": 1.629,
      "casa": "onexbet",
-     "ev": -0.0395,
+     "ev": -0.0398,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 0,
-     "senales_contra": 3,
+     "senales_contra": 4,
      "senales": {
       "a_favor": [],
       "en_contra": [
        "forma",
        "fuerza",
-       "abridor"
+       "abridor",
+       "bullpen"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.0
+     "premium_pts": 35.6
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Tampa Bay Rays -1.5",
-     "p": 0.4103,
-     "cuota": 153.0,
-     "decimal": 2.53,
-     "casa": "draftkings",
-     "ev": 0.0381,
+     "p": 0.4105,
+     "cuota": 150.0,
+     "decimal": 2.5,
+     "casa": "unibet_se",
+     "ev": 0.0263,
      "cuota_min": 2.44,
      "en_rango": true,
-     "senales_favor": 3,
+     "senales_favor": 4,
      "senales_contra": 0,
      "senales": {
       "a_favor": [
        "forma",
        "fuerza",
-       "abridor"
+       "abridor",
+       "bullpen"
       ],
       "en_contra": []
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.4
+     "premium_pts": 50.1
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Cleveland Guardians",
-    "p": 0.4743,
-    "cuota": 114.0,
-    "decimal": 2.14,
+    "p": 0.4741,
+    "cuota": 120.0,
+    "decimal": 2.2,
     "casa": "gtbets",
-    "ev": 0.015,
+    "ev": 0.043,
     "cuota_min": 2.11,
     "en_rango": true,
     "senales_favor": 2,
-    "senales_contra": 4,
+    "senales_contra": 6,
     "senales": {
      "a_favor": [
       "consenso",
@@ -177,16 +183,18 @@
      ],
      "en_contra": [
       "forma",
+      "movimiento",
       "h2h",
       "fuerza",
-      "abridor"
+      "abridor",
+      "bullpen"
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 45.6
+    "premium_pts": 45.7
    },
-   "confianza": "baja",
-   "stake": 0.01,
+   "confianza": "media",
+   "stake": 0.02,
    "pretemporada": false
   }
  ]
