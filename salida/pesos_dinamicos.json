@@ -1,35 +1,35 @@
 {
- "generado": "2026-10-18T06:19:16Z",
+ "generado": "2026-10-18T11:38:37Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
   "ncaafb|Ganador": {
-   "w_vivo": 0.05,
-   "n": 165,
-   "mejora_milesimas": 0.295,
-   "z": 0.23,
+   "w_vivo": 0.1,
+   "n": 167,
+   "mejora_milesimas": 0.293,
+   "z": 0.12,
    "mitades": [
-    -1.582,
-    2.149
+    -2.386,
+    2.94
    ],
-   "brier_pinnacle": 0.1954,
-   "brier_modelo": 0.2122,
+   "brier_pinnacle": 0.1937,
+   "brier_modelo": 0.2104,
    "previo": 0.35,
-   "w_usado": 0.244
+   "w_usado": 0.261
   },
   "ncaafb|Total": {
    "w_vivo": 0.0,
-   "n": 143,
+   "n": 145,
    "mejora_milesimas": 0.0,
-   "z": 0.82,
+   "z": 0.97,
    "mitades": [
     0.0,
     -0.0
    ],
    "brier_pinnacle": 0.2494,
-   "brier_modelo": 0.2727,
+   "brier_modelo": 0.272,
    "previo": 0.35,
-   "w_usado": 0.237
+   "w_usado": 0.236
   },
   "nhl|Ganador": {
    "w_vivo": 0.1,
@@ -61,17 +61,17 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
-   "n": 96,
-   "mejora_milesimas": 5.749,
-   "z": 0.49,
+   "n": 97,
+   "mejora_milesimas": 5.488,
+   "z": 0.47,
    "mitades": [
     12.618,
-    -1.121
+    -1.498
    ],
-   "brier_pinnacle": 0.2103,
-   "brier_modelo": 0.2108,
+   "brier_pinnacle": 0.2113,
+   "brier_modelo": 0.212,
    "previo": 0.35,
-   "w_usado": 0.386
+   "w_usado": 0.387
   },
   "nhl|Total": {
    "w_vivo": 0.0,
@@ -88,18 +88,18 @@
    "w_usado": 0.401
   },
   "ncaafb|Spread": {
-   "w_vivo": 0.25,
-   "n": 61,
-   "mejora_milesimas": 4.058,
+   "w_vivo": 0.3,
+   "n": 63,
+   "mejora_milesimas": 4.732,
    "z": 0.38,
    "mitades": [
-    17.637,
-    -9.083
+    23.788,
+    -13.728
    ],
-   "brier_pinnacle": 0.2503,
-   "brier_modelo": 0.2596,
+   "brier_pinnacle": 0.2502,
+   "brier_modelo": 0.2581,
    "previo": 0.35,
-   "w_usado": 0.333
+   "w_usado": 0.341
   },
   "nhl|Spread": {
    "w_vivo": 0.75,
