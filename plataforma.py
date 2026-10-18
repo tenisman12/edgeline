@@ -449,6 +449,13 @@ def _capas_nfl(team):
     return _CAPAS_NFL.get(team)
 
 
+# Capa L5 + EPA de NFL sobre la p calibrada (Platt) del modelo. Apagada el 18-oct-2026: walk-forward 2019-2026 (n 2,039,
+# trabajo/minar/2026-10-18_capa_nfl_ganador.md) sin capa promete 64.3 % y acierta 63.6 % (z -0.66); con capa promete
+# 70.6 % y acierta 64.8 % (z -6.00) y empeora el log loss 8.9 milesimas (z -1.59). Sus pesos se midieron sobre el ELO crudo,
+# antes de Platt. En vivo: prometio 68.0 % y acerto 52.5 % en 40 (revision.py, z -2.09). True la vuelve a aplicar.
+CAPA_NFL_ACTIVA = False
+
+
 def _ajuste_capas_nfl(p_home, h, a):
     ch, ca = _capas_nfl(h), _capas_nfl(a)
     if not ch or not ca or ch["l5"] is None or ca["l5"] is None:
@@ -976,7 +983,13 @@ def _pred_base(g, c, fecha, eventos=None):
             return None, "equipo sin historial"
         p_h = r["p_home"]; capas = None
         if g.get("liga") == "nfl":
-            p_h, capas = _ajuste_capas_nfl(r["p_home"], h, a)
+            p_cap, capas = _ajuste_capas_nfl(r["p_home"], h, a)
+            if CAPA_NFL_ACTIVA or not capas.get("aplicado"):
+                p_h = p_cap
+            else:   # contexto: se calcula y se muestra lo que moveria, la p queda la del modelo validado
+                capas.update({"aplicado": False, "contexto": True, "p_con_capa": round(p_cap, 4),
+                              "motivo": "contexto sin peso (18-oct-2026): sobre el modelo calibrado infla la p "
+                                        "(trabajo/minar/2026-10-18_capa_nfl_ganador.md)"})
         elif g.get("liga") == "nba":
             p_h, capas = _ajuste_capas_nba(r["p_home"], h, a, fecha, g["home"]["nombre"], g["away"]["nombre"])
         capa_aus = None

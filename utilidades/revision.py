@@ -103,6 +103,13 @@ CONOCIDOS = [
      "(decidir_v2 le da peso 0 al modelo) y ademas lo bloquea descalibrados(). La lectura del modelo se sigue mostrando. "
      "Decidir antes de esa fecha: dejarlo solo como lectura o rehacer el modelo del total.",
      "2026-12-31"),
+    ("calibracion", "NFL Ganador",
+     "Causa medida el 18-oct-2026 (utilidades/medir_capa_nfl_ganador.py, walk-forward 2019-2026, n 2,039): la capa L5 + EPA "
+     "sobre la p ya calibrada la inflaba (promete 70.6 %, acierta 64.8 %, z -6.00); sin capa promete 64.3 % y acierta 63.6 % "
+     "(z -0.66). Desde el 18-oct la capa es contexto (plataforma.CAPA_NFL_ACTIVA = False). Las 40 filas en vivo se registraron "
+     "con la capa; descalibrados() bloquea el pick mientras el historial no se corrija. Si despues de esa fecha sigue en rojo con "
+     "filas nuevas, el problema es otro.",
+     "2026-11-30"),
 ]
 
 VENTANA_CUOTAS = 24     # horas hacia adelante en las que se exige precio

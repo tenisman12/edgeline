@@ -164,7 +164,7 @@ def _dudas(rec, tipo, lado_k, p_sharp, fuente):
         if isinstance(v, dict) and not v.get("ok") and b in ("forma", "estadisticas_equipo", "jugadores_clave", "movimiento"):
             d.append({"duda": "sin %s (%s)" % (b, v.get("motivo") or "sin dato"), "efecto": "contexto incompleto; no cambia p_final"})
     cm = m.get("capas_medidas")
-    if cm is not None and not cm.get("aplicado"):
+    if cm is not None and not cm.get("aplicado") and not cm.get("contexto"):
         d.append({"duda": "capas medidas no aplicadas (%s)" % cm.get("motivo", ""), "efecto": "faltan hasta +-6 pp de ajuste"})
     if rec.get("liga") == "nhl" and tipo == "Ganador":
         por = m.get("porteros") or {}
