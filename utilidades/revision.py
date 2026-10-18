@@ -81,10 +81,6 @@ INVENTARIO = os.path.join(REPO, "salida", "inventario_datos.json")
 # Cada entrada caduca: pasada la fecha vuelve a ser ERROR, asi nada queda silenciado para siempre.
 #   (bloque, fragmento que debe aparecer en el mensaje, motivo, revisar a partir de)
 CONOCIDOS = [
-    ("cuotas", "WTA",
-     "The Odds API no cubre Samsun ni Suzhou (si cubre China Open y Shanghai). Verificado el 7-oct-2026: "
-     "ATP salio 16 de 16 el mismo dia. No es defecto del codigo; hace falta otra fuente de precio.",
-     "2026-11-15"),
     ("cuotas", "NPB",
      "The Odds API dejo de listar beisbol NPB al terminar la temporada regular (en salida/cuotas_sharp_2026.csv hay NPB "
      "del 2 al 8-oct y ninguna fila desde el 9-oct, cuando empezo la Climax Series) y ESPN no publica cuotas de NPB. "
@@ -319,6 +315,38 @@ def revisar_validacion():
 
 
 # ----------------------------------------------------------------------------- 4. COBERTURA DE CUOTAS
+def _apellido(nombre):
+    import unicodedata
+    s = unicodedata.normalize("NFKD", str(nombre or "")).encode("ascii", "ignore").decode().lower()
+    s = re.sub(r"[^a-z ]", " ", s).split()
+    return s[-1] if s else ""
+
+
+def _apellidos(p):
+    out = set()
+    for lado in ("home", "away"):
+        v = p.get(lado)
+        a = _apellido(v.get("nombre") if isinstance(v, dict) else v)
+        if a:
+            out.add(a)
+    return out
+
+
+def _apellidos_api():
+    """liga (atp/wta) -> apellidos de los jugadores con evento en la foto mas reciente de The Odds API."""
+    out = defaultdict(set)
+    foto = _cargar("cuotas_casas.json") or {}
+    for e in foto.get("eventos") or []:
+        s = str(e.get("sport") or "")
+        lg = "atp" if s.startswith("tennis_atp") else "wta" if s.startswith("tennis_wta") else None
+        if lg:
+            for k in ("home_team", "away_team"):
+                a = _apellido(e.get(k))
+                if a:
+                    out[lg].add(a)
+    return out
+
+
 def revisar_cuotas():
     print("\n4. CUOTAS: que los mercados publicables tengan precio en los partidos del dia")
     prx = _cargar("proximos.json")
@@ -332,6 +360,7 @@ def revisar_cuotas():
     ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) + dt.timedelta(hours=-6)
     por = defaultdict(lambda: [0, 0])
     qualy = defaultdict(int)
+    torneos = defaultdict(lambda: [0, 0, set()])     # (liga, torneo) -> [partidos, con cuota, apellidos]
     for p in prx.get("partidos") or []:
         if p.get("pretemporada"):
             continue
@@ -351,10 +380,27 @@ def revisar_cuotas():
         a = por[p.get("liga")]
         a[0] += 1
         casas = any(k.get("cuota") is not None for k in (p.get("picks") or []) if k.get("mercado") == "Ganador")
-        if (q.get("ml_home") is not None and q.get("ml_away") is not None) or casas:
+        con = (q.get("ml_home") is not None and q.get("ml_away") is not None) or casas
+        if con:
             a[1] += 1
+        if p.get("liga") in ("atp", "wta"):
+            t = torneos[(p.get("liga"), p.get("torneo") or "sin torneo")]
+            t[0] += 1; t[1] += 1 if con else 0
+            t[2].update(_apellidos(p))
     for lg, n in sorted(qualy.items()):
         ok("cuotas", "%s: %d partidos de clasificacion sin contar (The Odds API no cotiza qualy)" % (lg.upper(), n))
+    # Tenis: torneo sin ninguna cuota. Si ninguno de sus jugadores aparece en la foto de The Odds API, la API no lista ese
+    # torneo (18-oct-2026: Bruselas, Almaty y Lyon, ATP 250; en salida/cuotas_sharp_2026.csv del 2 al 18-oct solo hay
+    # China Open, Japan Open, Shanghai y Wuhan). Va aparte como aviso y no cuenta en el porcentaje de la liga. Si alguno de
+    # sus jugadores SI esta en la foto, el precio existe y no se caso: eso sigue contando y marca ERROR.
+    en_api = _apellidos_api()
+    for (lg, tor), (n, con, ap) in sorted(torneos.items()):
+        if con == 0 and not (ap & en_api.get(lg, set())):
+            por[lg][0] -= n
+            warn("cuotas", "%s %s: %d partidos sin cuota; The Odds API no lista este torneo (ninguno de sus jugadores esta "
+                           "en la foto). Sin precio no hay pick." % (lg.upper(), tor, n))
+    for lg in [k for k, v in por.items() if v[0] <= 0]:
+        del por[lg]
     if not por:
         ok("cuotas", "ningun partido con ganador publicable empieza en las proximas %d h" % VENTANA_CUOTAS); return
     for lg, (n, con) in sorted(por.items()):
