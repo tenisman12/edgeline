@@ -1,199 +1,208 @@
 {
- "generado": "2026-10-17T22:42:36",
+ "generado": "2026-10-18T01:21:44",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
  "partidos": [
   {
-   "liga": "mlb",
-   "id": "401908027",
+   "liga": "kbo",
+   "id": "kbo-20261018LGHT0",
    "fecha": "2026-10-17",
-   "hora": "18:00",
-   "home": "Cleveland Guardians",
-   "away": "Tampa Bay Rays",
-   "p_modelo": 0.5195,
-   "p_sharp": 0.4945,
-   "p_final": 0.5195,
-   "fuente": "modelo (Pinnacle de referencia 49.5%)",
-   "p_mezcla": 0.502,
-   "margen_esperado": 0.21,
-   "linea_home": "+1.5",
-   "p_runline_home": 0.6317,
+   "hora": "23:00",
+   "home": "Kia Tigers",
+   "away": "LG Twins",
+   "p_modelo": 0.5877,
+   "p_sharp": 0.6771,
+   "p_final": 0.5877,
+   "fuente": "modelo (Pinnacle de referencia 67.7%)",
+   "p_mezcla": 0.6497,
+   "margen_esperado": 0.95,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.4319,
    "detalle_modelo": {
-    "elo_h": 1530.7,
-    "elo_a": 1562.0,
-    "dif_h": 0.129,
-    "dif_a": 0.521,
-    "p_base": 0.5022,
+    "elo_h": 1554.6,
+    "elo_a": 1507.6,
+    "dif_h": 0.752,
+    "dif_a": -0.027,
+    "p_base": 0.5831,
     "abridor_h": {
-     "nombre": "Shawn Armstrong",
-     "fip_ventana": 1.57,
-     "fip_ultimas5": null,
-     "k_pct": 0.24,
-     "bb_pct": 0.0,
-     "ip_ventana": "7.2",
-     "bullpen_game": true,
-     "innings": 3.0,
-     "era_ajustada": 3.56,
-     "ga_equipo": 4.035
-    },
-    "abridor_a": {
-     "nombre": "Nick Martinez",
-     "fip_ventana": 3.66,
-     "fip_ultimas5": 4.29,
-     "k_pct": 0.177,
-     "bb_pct": 0.03,
-     "ip_ventana": "42.0",
+     "nombre": "올러",
+     "fip_ventana": 3.71,
+     "fip_ultimas5": 4.03,
+     "k_pct": 0.255,
+     "bb_pct": 0.096,
+     "ip_ventana": "166.1",
      "bullpen_game": false,
      "innings": 5.5,
-     "era_ajustada": 3.96,
-     "ga_equipo": 3.941
+     "era_ajustada": 3.98,
+     "ga_equipo": 4.586
     },
-    "carreras_abridor": 0.17,
+    "abridor_a": {
+     "nombre": "임찬규",
+     "fip_ventana": 4.28,
+     "fip_ultimas5": 4.49,
+     "k_pct": 0.139,
+     "bb_pct": 0.071,
+     "ip_ventana": "161.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.48,
+     "ga_equipo": 5.014
+    },
+    "carreras_abridor": 0.05,
     "frio_caliente": 0
    },
    "lados": [
     {
      "mercado": "Ganador",
      "lado": "home",
-     "texto": "Cleveland Guardians",
-     "p": 0.5195,
-     "cuota": -107.0,
-     "decimal": 1.935,
-     "casa": "DraftKings",
-     "ev": 0.0051,
-     "cuota_min": 1.92,
-     "en_rango": true,
-     "senales_favor": 5,
-     "senales_contra": 2,
+     "texto": "Kia Tigers",
+     "p": 0.5877,
+     "cuota": -220.0,
+     "decimal": 1.455,
+     "casa": "onexbet",
+     "ev": -0.1452,
+     "cuota_min": 1.8,
+     "en_rango": false,
+     "senales_favor": 7,
+     "senales_contra": 1,
      "senales": {
       "a_favor": [
+       "forma",
        "consenso",
-       "contexto",
+       "h2h",
        "osciladores",
+       "fuerza",
        "abridor",
        "racha"
       ],
       "en_contra": [
-       "h2h",
-       "fuerza"
+       "bullpen"
       ]
      },
-     "premium_nivel": "lean",
-     "premium_pts": 47.4
+     "premium_nivel": "pasar",
+     "premium_pts": 64.5
     },
     {
      "mercado": "Ganador",
      "lado": "away",
-     "texto": "Tampa Bay Rays",
-     "p": 0.4805,
-     "cuota": -112.0,
-     "decimal": 1.893,
-     "casa": "DraftKings",
-     "ev": -0.0905,
-     "cuota_min": 2.08,
+     "texto": "LG Twins",
+     "p": 0.4123,
+     "cuota": 198.0,
+     "decimal": 2.98,
+     "casa": "fanduel",
+     "ev": 0.2288,
+     "cuota_min": 2.43,
      "en_rango": true,
-     "senales_favor": 2,
-     "senales_contra": 5,
+     "senales_favor": 1,
+     "senales_contra": 7,
      "senales": {
       "a_favor": [
-       "h2h",
-       "fuerza"
+       "bullpen"
       ],
       "en_contra": [
+       "forma",
        "consenso",
-       "contexto",
+       "h2h",
        "osciladores",
+       "fuerza",
        "abridor",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 31.7
+     "premium_pts": 12.8,
+     "nota_lectura": "lectura 7 en contra contra 1 a favor: baja un escalon"
     },
     {
      "mercado": "Run line",
      "lado": "home",
-     "texto": "Cleveland Guardians +1.5",
-     "p": 0.6317,
-     "cuota": -193.0,
-     "decimal": 1.518,
-     "casa": "DraftKings",
-     "ev": -0.0409,
-     "cuota_min": 1.8,
-     "en_rango": false,
-     "senales_favor": 3,
+     "texto": "Kia Tigers -1.5",
+     "p": 0.4319,
+     "cuota": -102.0,
+     "decimal": 1.98,
+     "casa": "onexbet",
+     "ev": -0.1447,
+     "cuota_min": 2.32,
+     "en_rango": true,
+     "senales_favor": 5,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
+       "forma",
        "osciladores",
+       "fuerza",
        "abridor",
        "racha"
       ],
       "en_contra": [
-       "fuerza"
+       "bullpen"
       ]
      },
-     "premium_nivel": "pasar",
-     "premium_pts": 39.9
+     "premium_nivel": "pick",
+     "premium_pts": 69.9
     },
     {
      "mercado": "Run line",
      "lado": "away",
-     "texto": "Tampa Bay Rays -1.5",
-     "p": 0.3683,
-     "cuota": 158.0,
-     "decimal": 2.58,
-     "casa": "DraftKings",
-     "ev": -0.0499,
-     "cuota_min": 2.72,
+     "texto": "LG Twins +1.5",
+     "p": 0.5681,
+     "cuota": 101.0,
+     "decimal": 2.01,
+     "casa": "pinnacle",
+     "ev": 0.1419,
+     "cuota_min": 1.8,
      "en_rango": true,
      "senales_favor": 1,
-     "senales_contra": 3,
+     "senales_contra": 5,
      "senales": {
       "a_favor": [
-       "fuerza"
+       "bullpen"
       ],
       "en_contra": [
+       "forma",
        "osciladores",
+       "fuerza",
        "abridor",
        "racha"
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 26.8
+     "premium_pts": 28.6
     }
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "home",
-    "texto": "Cleveland Guardians",
-    "p": 0.5195,
-    "cuota": -107.0,
-    "decimal": 1.935,
-    "casa": "DraftKings",
-    "ev": 0.0051,
-    "cuota_min": 1.92,
+    "lado": "away",
+    "texto": "LG Twins",
+    "p": 0.4123,
+    "cuota": 198.0,
+    "decimal": 2.98,
+    "casa": "fanduel",
+    "ev": 0.2288,
+    "cuota_min": 2.43,
     "en_rango": true,
-    "senales_favor": 5,
-    "senales_contra": 2,
+    "senales_favor": 1,
+    "senales_contra": 7,
     "senales": {
      "a_favor": [
-      "consenso",
-      "contexto",
-      "osciladores",
-      "abridor",
-      "racha"
+      "bullpen"
      ],
      "en_contra": [
+      "forma",
+      "consenso",
       "h2h",
-      "fuerza"
+      "osciladores",
+      "fuerza",
+      "abridor",
+      "racha"
      ]
     },
-    "premium_nivel": "lean",
-    "premium_pts": 47.4
+    "premium_nivel": "pasar",
+    "premium_pts": 12.8,
+    "nota_lectura": "lectura 7 en contra contra 1 a favor: baja un escalon"
    },
-   "confianza": "minima",
-   "stake": 0.0,
+   "confianza": "media",
+   "stake": 0.02,
    "pretemporada": false
   }
  ]
