@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-18T23:34:46Z",
+ "generado": "2026-10-19T01:40:22Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -33,17 +33,17 @@
   },
   "nhl|Ganador": {
    "w_vivo": 0.1,
-   "n": 118,
-   "mejora_milesimas": 0.091,
-   "z": 0.09,
+   "n": 119,
+   "mejora_milesimas": 0.053,
+   "z": 0.05,
    "mitades": [
     0.484,
-    -0.302
+    -0.37
    ],
-   "brier_pinnacle": 0.2262,
-   "brier_modelo": 0.2285,
+   "brier_pinnacle": 0.2255,
+   "brier_modelo": 0.2279,
    "previo": 0.5,
-   "w_usado": 0.387
+   "w_usado": 0.386
   },
   "wta|Ganador": {
    "w_vivo": 1.0,
@@ -75,17 +75,17 @@
   },
   "nhl|Total": {
    "w_vivo": 0.0,
-   "n": 74,
+   "n": 75,
    "mejora_milesimas": -0.0,
    "z": -0.7,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2498,
-   "brier_modelo": 0.2549,
+   "brier_pinnacle": 0.2494,
+   "brier_modelo": 0.2538,
    "previo": 0.5,
-   "w_usado": 0.401
+   "w_usado": 0.4
   },
   "ncaafb|Spread": {
    "w_vivo": 0.3,
@@ -117,15 +117,15 @@
   },
   "nfl|Ganador": {
    "w_vivo": 0.0,
-   "n": 40,
+   "n": 42,
    "mejora_milesimas": 0.0,
    "z": 0.0,
    "mitades": [
     0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2427,
-   "brier_modelo": 0.2696,
+   "brier_pinnacle": 0.2351,
+   "brier_modelo": 0.2577,
    "previo": 0.0,
    "w_usado": 0.0
   },
@@ -143,6 +143,20 @@
    "previo": 0.25,
    "w_usado": 0.332
   },
+  "nfl|Total": {
+   "w_vivo": 0.0,
+   "n": 37,
+   "mejora_milesimas": 0.0,
+   "z": 0.7,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2496,
+   "brier_modelo": 0.2799,
+   "previo": 0.0,
+   "w_usado": 0.0
+  },
   "kbo|Total": {
    "w_vivo": 1.0,
    "n": 36,
@@ -156,20 +170,6 @@
    "brier_modelo": 0.2389,
    "previo": 0.25,
    "w_usado": 0.33
-  },
-  "nfl|Total": {
-   "w_vivo": 0.0,
-   "n": 35,
-   "mejora_milesimas": 0.0,
-   "z": 0.7,
-   "mitades": [
-    0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2499,
-   "brier_modelo": 0.276,
-   "previo": 0.0,
-   "w_usado": 0.0
   },
   "kbo|Spread": {
    "w_vivo": 1.0,
@@ -215,17 +215,17 @@
   },
   "mlb|Ganador": {
    "w_vivo": 1.0,
-   "n": 24,
-   "mejora_milesimas": 34.547,
-   "z": 1.55,
+   "n": 22,
+   "mejora_milesimas": 36.554,
+   "z": 1.52,
    "mitades": [
-    6.088,
-    63.007
+    5.401,
+    67.706
    ],
-   "brier_pinnacle": 0.2658,
-   "brier_modelo": 0.2489,
+   "brier_pinnacle": 0.2661,
+   "brier_modelo": 0.2482,
    "previo": 0.25,
-   "w_usado": 0.306
+   "w_usado": 0.301
   },
   "liiga|Ganador": {
    "w_vivo": 0.0,

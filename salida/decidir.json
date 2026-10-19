@@ -1,6 +1,167 @@
 {
- "generado": "2026-10-18T23:31:15",
+ "generado": "2026-10-19T01:37:06",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.25,
- "partidos": []
+ "partidos": [
+  {
+   "liga": "mlb",
+   "id": "401908028",
+   "fecha": "2026-10-19",
+   "hora": "18:00",
+   "home": "Tampa Bay Rays",
+   "away": "Cleveland Guardians",
+   "p_modelo": 0.6046,
+   "p_sharp": 0.5661,
+   "p_final": 0.6046,
+   "fuente": "modelo (Pinnacle de referencia 56.6%)",
+   "p_mezcla": 0.578,
+   "margen_esperado": 1.14,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.423,
+   "detalle_modelo": {
+    "elo_h": 1569.9,
+    "elo_a": 1522.8,
+    "dif_h": 0.553,
+    "dif_a": 0.093,
+    "p_base": 0.5834,
+    "abridor_h": {
+     "nombre": "Freddy Peralta",
+     "fip_ventana": 3.51,
+     "fip_ultimas5": 3.25,
+     "k_pct": 0.207,
+     "bb_pct": 0.069,
+     "ip_ventana": "52.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.58,
+     "ga_equipo": 3.941
+    },
+    "abridor_a": null,
+    "carreras_abridor": 0.22,
+    "frio_caliente": 0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "Tampa Bay Rays",
+     "p": 0.6046,
+     "cuota": -133.0,
+     "decimal": 1.752,
+     "casa": "everygame",
+     "ev": 0.0592,
+     "cuota_min": 1.8,
+     "en_rango": false,
+     "senales_favor": 9,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "movimiento",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": [
+       "contexto"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 64.8
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Cleveland Guardians",
+     "p": 0.3954,
+     "cuota": 127.0,
+     "decimal": 2.27,
+     "casa": "betanysports",
+     "ev": -0.1024,
+     "cuota_min": 2.53,
+     "en_rango": true,
+     "senales_favor": 0,
+     "senales_contra": 9,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "movimiento",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 26.0
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "Tampa Bay Rays -1.5",
+     "p": 0.423,
+     "cuota": 180.0,
+     "decimal": 2.8,
+     "casa": "fanduel",
+     "ev": 0.1845,
+     "cuota_min": 2.36,
+     "en_rango": true,
+     "senales_favor": 6,
+     "senales_contra": 0,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "bullpen",
+       "racha"
+      ],
+      "en_contra": []
+     },
+     "premium_nivel": "pick",
+     "premium_pts": 61.3
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Cleveland Guardians +1.5",
+     "p": 0.577,
+     "cuota": -187.0,
+     "decimal": 1.535,
+     "casa": "onexbet",
+     "ev": -0.1145,
+     "cuota_min": 1.8,
+     "en_rango": false,
+     "senales_favor": 0,
+     "senales_contra": 6,
+     "senales": {
+      "a_favor": [],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "bullpen",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 27.7
+    }
+   ],
+   "pick": null,
+   "confianza": "sin pick",
+   "stake": 0.0,
+   "pretemporada": false
+  }
+ ]
 }
