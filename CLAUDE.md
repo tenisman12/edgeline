@@ -266,6 +266,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   PESO_MODELO de la liga) y decidir.py (previo 0.25). Con poca muestra manda el previo; con mucha, lo que se mide en vivo.
   Al 10-oct: 544 predicciones; nada con z >= 2 todavia (la mayor: NHL spread z 1.71).
 
+## Probabilidad = mezcla con Pinnacle (18-oct-2026, Alejandro: opcion 2; REEMPLAZA la seccion de abajo)
+- `decidir_v2.P_DESDE` y `decidir.P_DESDE` = "mezcla" por defecto: p_final = Pinnacle sin vig movido hacia el modelo en logit
+  con peso FIJO: ganador 0.35 (modelo 35 %, Pinnacle 65 %; NFL 0.0), total 0.0 (p = Pinnacle). `decidir_v2.PESO_FIJO`,
+  `PESO_FIJO_LIGA`, `decidir.PESO_MODELO` 0.35. Los pesos dinamicos quedan solo como medicion. Sin Pinnacle ni consenso, p = modelo.
+- Motivo: `trabajo/minar/2026-10-18_mezcla_pinnacle.md` (947 lecturas, 1-18 oct): Pinnacle predice mejor que el modelo
+  (z 2.46); en totales el mejor peso del modelo es 0; modelo solo -37.32 u en 314 apuestas, mezcla 0.35 -10.82 u en 161.
+- La p del modelo se sigue mostrando primero en cada partido (lectura pura); la mezcla decide EV y pick.
+
 ## Probabilidad = modelo, Pinnacle de referencia (10-oct-2026, Alejandro: "tengo mi modelo y angulos y todo mi poder estadistico y luego buscar en que casa paga bien")
 - `decidir_v2.P_DESDE` y `decidir.P_DESDE` = "modelo" (variable `EDGELINE_P_DESDE`; "mezcla" regresa al sistema anterior): en
   todos los deportes p_final = p del modelo con sus capas; el EV es contra la mejor casa. Pinnacle se muestra como referencia

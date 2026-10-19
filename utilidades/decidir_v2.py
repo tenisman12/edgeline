@@ -70,7 +70,13 @@ SD_TOTAL = {"americano": 13.0, "nba": 19.0, "beisbol": 4.3, "tenis": 4.5}
 # referencia (p_sharp y la diferencia en pp) y la mezcla de antes se guarda como sombra (p_mezcla, ev_mezcla) para medir
 # en vivo cual de los dos rinde. El aviso de diferencia (BRECHA_REVISAR) sigue: 10+ pp arriba de Pinnacle = revisar, 0 u.
 # EDGELINE_P_DESDE=mezcla regresa al sistema anterior.
-P_DESDE = os.environ.get("EDGELINE_P_DESDE", "modelo")
+P_DESDE = os.environ.get("EDGELINE_P_DESDE", "mezcla")
+# 18-oct-2026 (Alejandro, opcion 2): p_final = mezcla en logit con Pinnacle, peso FIJO del modelo: ganador 0.35 (NFL 0.0,
+# medido 10-oct), total 0.0. Simulacion 1-18 oct (trabajo/minar/2026-10-18_mezcla_pinnacle.md, n 947): Pinnacle predice
+# mejor que el modelo (z 2.46); en totales el mejor peso del modelo es 0; modelo solo -37.32 u en 314, w 0.35 -10.82 u en 161.
+# Los pesos dinamicos quedan solo como medicion (salida/pesos_dinamicos.json).
+PESO_FIJO = {"Ganador": 0.35, "Total": 0.0}
+PESO_FIJO_LIGA = {("nfl", "Ganador"): 0.0}
 EV_MAX_LINEA = 0.12          # una linea con mas de 12% de EV contra el modelo mezclado suele ser vieja o de otro mercado: se ignora
 _EVENTOS = None
 
@@ -102,13 +108,17 @@ def _lados(rec, tipo):
     return out
 
 
+def _w_txt(rec, tipo):
+    return PESO_FIJO_LIGA.get((rec.get("liga"), tipo), PESO_FIJO.get(tipo, 0.0))
+
+
 def _senales(rec, tipo, lado, p_mod, p_sharp, mov):
     """Lista de senales con direccion (+1 a favor del lado, -1 en contra, 0 neutra), fuente y peso medido."""
     s = []
     m = rec.get("modelo") or {}
     if p_mod is not None and p_sharp is not None:
         dif = p_mod - p_sharp
-        s.append({"capa": "modelo vs mercado", "dir": 1 if dif >= 0.01 else (-1 if dif <= -0.01 else 0), "valor": "%+.1f pp" % (100 * dif), "peso": "voto completo (w por liga)"})
+        s.append({"capa": "modelo vs mercado", "dir": 1 if dif >= 0.01 else (-1 if dif <= -0.01 else 0), "valor": "%+.1f pp" % (100 * dif), "peso": ("modelo %.0f %% + Pinnacle %.0f %%" % (100 * _w_txt(rec, tipo), 100 * (1 - _w_txt(rec, tipo)))) if P_DESDE == "mezcla" else "voto completo (w por liga)"})
     elif p_mod is not None:
         s.append({"capa": "modelo", "dir": 1 if p_mod > 0.5 else -1, "valor": round(p_mod, 3), "peso": "sin cuota: el modelo es la unica probabilidad"})
     if mov is not None and abs(mov) >= 1.0:
@@ -328,14 +338,17 @@ def decidir_mercado(rec, tipo, movs=None):
     """Decision de un mercado (Ganador o Total): evalua los dos lados y se queda con el de mejor EV (o mayor p sin cuota)."""
     m = rec.get("modelo") or {}
     liga = rec["liga"]
-    w0 = PESO_MODELO.get(liga, PESO_DEFAULT)
-    try:
-        # peso dinamico (10-oct-2026): el previo de la liga se mezcla con el peso que mejor predice EN VIVO frente a la foto
-        # de Pinnacle al registrar (utilidades/pesos_dinamicos.py -> salida/pesos_dinamicos.json), segun la muestra.
-        from nucleo import pesos_dinamicos as _PD
-        w0 = _PD.peso(liga, tipo, w0)
-    except Exception:
-        pass
+    if P_DESDE == "mezcla":
+        w0 = PESO_FIJO_LIGA.get((liga, tipo), PESO_FIJO.get(tipo, 0.0))
+    else:
+        w0 = PESO_MODELO.get(liga, PESO_DEFAULT)
+        try:
+            # peso dinamico (10-oct-2026): el previo de la liga se mezcla con el peso que mejor predice EN VIVO frente a la foto
+            # de Pinnacle al registrar (utilidades/pesos_dinamicos.py -> salida/pesos_dinamicos.json), segun la muestra.
+            from nucleo import pesos_dinamicos as _PD
+            w0 = _PD.peso(liga, tipo, w0)
+        except Exception:
+            pass
     val = (rec.get("validacion") or {}).get(tipo)
     validado = (val == "publicable")
     w = w0 if validado else 0.0        # sin validacion el modelo no vota: la probabilidad es la del mercado

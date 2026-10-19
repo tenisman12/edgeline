@@ -28,8 +28,8 @@ import argparse, csv, datetime as dt, io, json, math, os, sys
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, BASE)
-PESO_MODELO = float(os.environ.get("EDGELINE_PESO_MODELO", "0.25"))
-P_DESDE = os.environ.get("EDGELINE_P_DESDE", "modelo")   # 10-oct-2026: "modelo" (p = modelo) o "mezcla" (sistema anterior)
+PESO_MODELO = float(os.environ.get("EDGELINE_PESO_MODELO", "0.35"))   # 18-oct-2026: 0.35 fijo (opcion 2, como decidir_v2)
+P_DESDE = os.environ.get("EDGELINE_P_DESDE", "mezcla")   # 18-oct-2026: "mezcla" (Pinnacle 65 % + modelo 35 %); "modelo" = p del modelo
 HFA = 24.0                     # igual que nucleo/forma.py (beisbol)
 IP_ABRIDOR = 5.5
 IP_PRIOR = 30.0                # la ERA de 5 salidas es ruidosa: se encoge hacia el pitcheo del equipo con 30 IP de prior (fijo hasta estimarlo, punto 20)
@@ -190,12 +190,7 @@ def decidir(rec, C, PESOS):
     elif pm is None:
         pf, fuente = ps, "solo mercado (sin ficha)"
     else:
-        w_ = PESO_MODELO
-        try:
-            from nucleo import pesos_dinamicos as _PD        # peso dinamico por liga (10-oct-2026)
-            w_ = _PD.peso(rec.get("liga"), "Ganador", PESO_MODELO)
-        except Exception:
-            pass
+        w_ = PESO_MODELO                                 # 18-oct-2026: peso fijo; los pesos dinamicos quedan como medicion
         p_mez = _sig((1 - w_) * _logit(ps) + w_ * _logit(pm))
         if P_DESDE == "modelo":
             # 10-oct-2026 (Alejandro): p = modelo; Pinnacle de referencia; la mezcla queda como sombra (p_mezcla)
