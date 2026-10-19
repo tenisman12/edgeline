@@ -138,7 +138,7 @@ def main():
         return 0
     key = os.environ.get("EDGELINE_SGO_KEY")
     if not key:
-        print("Sin EDGELINE_SGO_KEY: no se piden cuotas de %s (crea la cuenta en sportsgameodds.com y guarda la llave en el secreto SGO_KEY)." % a.ligas)
+        print("::warning::Sin EDGELINE_SGO_KEY: no se piden cuotas de %s (crea la cuenta en sportsgameodds.com y guarda la llave en el secreto SGO_KEY)." % a.ligas)
         return 0
     tope = int(os.environ.get("EDGELINE_SGO_PRESUPUESTO", "2400"))
     cr = _creditos()

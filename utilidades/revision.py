@@ -412,6 +412,27 @@ def revisar_cuotas():
             por[lg][0] -= n
             warn("cuotas", "%s %s: %d partidos sin cuota; The Odds API no lista este torneo (ninguno de sus jugadores esta "
                            "en la foto). Sin precio no hay pick." % (lg.upper(), tor, n))
+    # LMP (18-oct-2026, Alejandro: "busca cuotas para lmp"): The Odds API no la cubre y su precio sale solo de
+    # SportsGameOdds (colectores/recolectar_cuotas_sgo.py). Se revisa aunque el ganador no sea publicable: sin precio no
+    # hay pick ni de total. Sin salida/sgo_creditos.json el colector nunca ha corrido con llave (falta el secreto SGO_KEY).
+    lmp = [p for p in prx.get("partidos") or [] if p.get("liga") == "lmp"]
+    lmp_24 = []
+    for p in lmp:
+        try:
+            ini = dt.datetime.fromisoformat("%s %s" % (p.get("fecha"), (p.get("hora") or "12:00")[:5]))
+        except ValueError:
+            continue
+        if ahora <= ini <= ahora + dt.timedelta(hours=VENTANA_CUOTAS):
+            lmp_24.append(p)
+    if lmp_24:
+        con_lmp = sum(1 for p in lmp_24 if p.get("mercados") or (p.get("cuotas") or {}).get("ml_home") is not None)
+        if not os.path.exists(os.path.join(BASE, "salida", "sgo_creditos.json")):
+            err("cuotas", "LMP: %d partidos en las proximas %d h y SportsGameOdds nunca ha bajado nada (no existe "
+                          "salida/sgo_creditos.json): falta el secreto SGO_KEY en GitHub." % (len(lmp_24), VENTANA_CUOTAS))
+        elif con_lmp < len(lmp_24):
+            warn("cuotas", "LMP: %d de %d partidos con cuota (SportsGameOdds)" % (con_lmp, len(lmp_24)))
+        else:
+            ok("cuotas", "LMP: %d de %d con cuota (SportsGameOdds)" % (con_lmp, len(lmp_24)))
     for lg in [k for k, v in por.items() if v[0] <= 0]:
         del por[lg]
     if not por:
