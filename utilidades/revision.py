@@ -93,6 +93,12 @@ CONOCIDOS = [
     ("cuotas", "DEL",
      "La DEL no esta en The Odds API (lista de deportes verificada el 9-oct-2026). Hace falta otra fuente de precio.",
      "2026-11-15"),
+    ("cuotas", "LMP:",
+     "Diagnosticado el 18-oct-2026: la unica fuente de precio de la LMP es SportsGameOdds (The Odds API no la lista, "
+     "salida/sonda_lmp.json) y el secreto SGO_KEY no existe en GitHub (el paso de Actions avisa 'Sin EDGELINE_SGO_KEY'). "
+     "Se arregla cuando Alejandro cree la cuenta y guarde la llave: gh secret set SGO_KEY -R tenisman12/edgeline. Mientras, "
+     "la LMP sale sin cuota y sin pick; los momios se buscan a mano en cada analisis. Caduca pronto a proposito.",
+     "2026-11-03"),
     ("calibracion", "NCAAFB Total",
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
