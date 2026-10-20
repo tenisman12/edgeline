@@ -131,15 +131,16 @@ def construir(dias=2):
                "validacion_modelo": (val or {}).get(liga) if isinstance(val, dict) else None,
                "track_record_picks": (track.get("por_liga") or {}).get(liga), "partidos_lista": [],
                "nota": "sin partidos en las fechas del resumen"}
-        with open(os.path.join(DESTINO, "%s.json" % liga), "w", encoding="utf-8") as f:
+        ruta = os.path.join(DESTINO, "%s.json" % liga)
+        with open(ruta, "w", encoding="utf-8") as f:
             json.dump(rec, f, ensure_ascii=False, separators=(",", ":"))
-        indice["ligas"][liga] = {"partidos": 0, "con_modelo": 0, "archivo": "%s.json" % liga}
+        indice["ligas"][liga] = {"partidos": 0, "con_modelo": 0, "kb": round(os.path.getsize(ruta) / 1024), "archivo": "%s.json" % liga}
     with open(os.path.join(DESTINO, "indice.json"), "w", encoding="utf-8") as f:
         json.dump(indice, f, ensure_ascii=False, indent=1)
     with open(os.path.join(DESTINO, "LEEME.md"), "w", encoding="utf-8") as f:
         f.write(LEEME)
     for liga, d in indice["ligas"].items():
-        print("  %-10s %3d partidos (%d con modelo) %5d KB" % (liga, d["partidos"], d["con_modelo"], d["kb"]))
+        print("  %-10s %3d partidos (%d con modelo) %5d KB" % (liga, d["partidos"], d["con_modelo"], d.get("kb", 0)))
     print("Escrito %s (%d ligas)" % (DESTINO, len(indice["ligas"])))
     return indice
 

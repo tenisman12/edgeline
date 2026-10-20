@@ -43,6 +43,7 @@ jobs:
           ls datos | head -30
 
       - name: Jugadores (sembrar desde datos/jugadores_recientes y bajar solo lo nuevo)
+        id: jugadores
         continue-on-error: true
         timeout-minutes: 60
         run: |
@@ -51,10 +52,12 @@ jobs:
           python utilidades/jugadores_recientes.py estado | tail -25
 
       - name: Actualizar datos (solo lo nuevo)
+        id: actualizar_datos
         continue-on-error: true
         run: python actualizar_todo.py
 
       - name: Diagnostico ESPN (que contesta al servidor)
+        id: diagnostico_espn
         continue-on-error: true
         run: |
           for h in site.api.espn.com site.web.api.espn.com; do
@@ -63,10 +66,12 @@ jobs:
             head -c 200 /tmp/espn.txt; echo
           done
       - name: Validar mercados de futbol (walk-forward)
+        id: validar_mercados_de_futbol
         continue-on-error: true
         run: python utilidades/validar_futbol_mercados.py | tail -5
 
       - name: Validar mercados de los demas deportes (lunes, o si falta el archivo)
+        id: validar_mercados_de_los_demas
         continue-on-error: true
         timeout-minutes: 90
         run: |
@@ -77,6 +82,7 @@ jobs:
           fi
 
       - name: Cuotas de todas las casas (The Odds API, si la foto tiene 3 h o mas)
+        id: cuotas_de_todas_las_casas
         env:
           EDGELINE_ODDS_KEY: ${{ secrets.ODDS_KEY }}
           EDGELINE_ODDS_PRESUPUESTO: "72"       # plan de pago (20,000/mes): 16 deportes por foto, us+eu
@@ -90,16 +96,19 @@ jobs:
           python colectores/recolectar_cuotas.py --solo-compacto --min-horas 3   # no gasta si la foto tiene menos de 3 h
 
       - name: Lectura sharp vs publico (casas sharp contra casas del publico)
+        id: lectura_sharp_vs_publico
         continue-on-error: true
         run: python utilidades/mercado_libros.py --actualizar --ver --horas 48 > /tmp/mercado.txt; head -5 /tmp/mercado.txt
 
       - name: Porteros titulares de NHL (Daily Faceoff) y xG por equipo (MoneyPuck)
+        id: porteros_titulares_de_nhl_y
         continue-on-error: true
         run: |
           python colectores/recolectar_porteros.py || true
           python colectores/recolectar_xg_nhl.py || true
 
       - name: Predictor de ESPN antes de cada juego (NFL, NCAAF, NBA, NCAAMB; capa de ganador aprobada 10-oct)
+        id: predictor_de_espn_antes_de
         continue-on-error: true
         timeout-minutes: 5
         run: python colectores/recolectar_predictor_espn.py --vivo
@@ -108,27 +117,33 @@ jobs:
         run: python plataforma.py --dias 7
 
       - name: Sistema estimado de beisbol (ELO + diferencial + abridor contra Pinnacle)
+        id: sistema_estimado_de_beisbol
         continue-on-error: true
         run: python utilidades/decidir.py --dias 2
 
       - name: Publico (boletos y dinero de Action Network, notas de Google News)
+        id: publico
         continue-on-error: true
         timeout-minutes: 15
         run: python colectores/recolectar_publico.py --dias 2
 
       - name: Medir las reglas de ir contra el publico (se acumula, no decide)
+        id: medir_las_reglas_de_ir
         continue-on-error: true
         run: python utilidades/validar_contrapublico.py
 
       - name: Medir el movimiento de linea contra el resultado (se acumula, no decide)
+        id: medir_el_movimiento_de_linea
         continue-on-error: true
         run: python utilidades/validar_movimiento.py
 
       - name: Picks del dia (decision por partido y lista oficial, tope 4)
+        id: picks_del_dia
         continue-on-error: true
         run: python utilidades/picks_del_dia.py --dias 2
 
       - name: Picks IA (lectura razonada; se salta si no hay ANTHROPIC_API_KEY)
+        id: picks_ia
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         continue-on-error: true
@@ -136,28 +151,34 @@ jobs:
           if [ -n "$ANTHROPIC_API_KEY" ]; then python utilidades/picks_ia.py --dias 2; else echo "Sin ANTHROPIC_API_KEY: se omite Picks IA"; fi
 
       - name: Dispersion real del total de carreras por liga (beisbol)
+        id: dispersion_real_del_total_de
         continue-on-error: true
         run: python utilidades/dispersion_beisbol.py
 
       - name: Totales del modelo contra la linea de cierre (acumula medicion)
+        id: totales_del_modelo_contra_la
         continue-on-error: true
         run: python utilidades/totales_vs_linea.py
 
       - name: Resumen por liga (archivos chicos legibles por enlace)
+        id: resumen_por_liga
         continue-on-error: true
         run: python utilidades/resumen_ligas.py --dias 2
 
       - name: Seguimiento prospectivo MLS k=20 (solo referencia)
+        id: seguimiento_prospectivo_mls_k_20
         continue-on-error: true
         run: |
           python utilidades/seguimiento_mls_k20.py resolver
           python utilidades/seguimiento_mls_k20.py registrar
 
       - name: Limpiar historial (pretemporada y formato viejo)
+        id: limpiar_historial
         continue-on-error: true
         run: python utilidades/limpiar_historial.py --aplicar
 
       - name: Calificar picks contra resultados reales
+        id: calificar_picks_contra_resultados_reales
         continue-on-error: true
         run: python utilidades/calificar_picks.py
 
@@ -176,6 +197,22 @@ jobs:
           git add -A
           git commit -qm "datos $(date -u +'%Y-%m-%d %H:%M')Z"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos
+
+      # Pasos con continue-on-error que fallaron (20-oct-2026): antes un fallo asi quedaba en verde sin decir cual
+      # (resumen_ligas.py se caia en cada corrida con KeyError 'kb' desde el 14-oct). Ahora cada uno deja un aviso con su nombre.
+      - name: Pasos que fallaron sin detener la corrida
+        if: always()
+        env:
+          PASOS: ${{ toJSON(steps) }}
+        run: |
+          python - <<'PY'
+          import json, os
+          s = json.loads(os.environ.get("PASOS") or "{}")
+          malos = [k for k, v in s.items() if v.get("outcome") == "failure"]
+          print("Pasos con error: %s" % (", ".join(malos) or "ninguno"))
+          for k in malos:
+              print("::warning::Paso %s termino con error (continue-on-error): revisar su log" % k)
+          PY
 
       - name: Revision de integridad (va al final, con los datos ya publicados, para que la corrida se ponga en rojo sin bloquear la salida)
         run: python utilidades/revision.py
