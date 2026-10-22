@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-22T12:24:41",
+ "generado": "2026-10-22T17:35:55",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
  "partidos": [
@@ -11,13 +11,13 @@
    "home": "Milwaukee Brewers",
    "away": "Tampa Bay Rays",
    "p_modelo": 0.6512,
-   "p_sharp": 0.5897,
-   "p_final": 0.6117,
+   "p_sharp": 0.5923,
+   "p_final": 0.6133,
    "fuente": "pinnacle 65% + modelo 35%",
-   "p_mezcla": 0.6117,
-   "margen_esperado": 1.22,
+   "p_mezcla": 0.6133,
+   "margen_esperado": 1.24,
    "linea_home": "-1.5",
-   "p_runline_home": 0.4301,
+   "p_runline_home": 0.4318,
    "detalle_modelo": {
     "elo_h": 1628.3,
     "elo_a": 1573.7,
@@ -45,18 +45,19 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Milwaukee Brewers",
-     "p": 0.6117,
-     "cuota": -161.0,
-     "decimal": 1.621,
-     "casa": "DraftKings",
-     "ev": -0.0084,
+     "p": 0.6133,
+     "cuota": -155.0,
+     "decimal": 1.645,
+     "casa": "pinnacle",
+     "ev": 0.009,
      "cuota_min": 1.8,
      "en_rango": false,
-     "senales_favor": 6,
+     "senales_favor": 7,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
+       "movimiento",
        "consenso",
        "h2h",
        "fuerza",
@@ -68,27 +69,28 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 56.1
+     "premium_pts": 58.8
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Tampa Bay Rays",
-     "p": 0.3883,
-     "cuota": 133.0,
-     "decimal": 2.33,
-     "casa": "DraftKings",
-     "ev": -0.0952,
-     "cuota_min": 2.58,
+     "p": 0.3867,
+     "cuota": 148.0,
+     "decimal": 2.48,
+     "casa": "unibet_nl",
+     "ev": -0.041,
+     "cuota_min": 2.59,
      "en_rango": true,
      "senales_favor": 1,
-     "senales_contra": 7,
+     "senales_contra": 8,
      "senales": {
       "a_favor": [
        "bullpen"
       ],
       "en_contra": [
        "forma",
+       "movimiento",
        "consenso",
        "h2h",
        "contexto",
@@ -98,18 +100,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 21.3
+     "premium_pts": 33.9
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Milwaukee Brewers -1.5",
-     "p": 0.4301,
-     "cuota": 149.0,
-     "decimal": 2.49,
-     "casa": "DraftKings",
-     "ev": 0.071,
-     "cuota_min": 2.33,
+     "p": 0.4318,
+     "cuota": 154.0,
+     "decimal": 2.54,
+     "casa": "lowvig",
+     "ev": 0.0967,
+     "cuota_min": 2.32,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 1,
@@ -124,18 +126,18 @@
        "bullpen"
       ]
      },
-     "premium_nivel": "pasar",
-     "premium_pts": 41.0
+     "premium_nivel": "lean",
+     "premium_pts": 47.7
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Tampa Bay Rays +1.5",
-     "p": 0.5699,
-     "cuota": -181.0,
-     "decimal": 1.552,
-     "casa": "DraftKings",
-     "ev": -0.1152,
+     "p": 0.5682,
+     "cuota": -162.0,
+     "decimal": 1.617,
+     "casa": "unibet_nl",
+     "ev": -0.081,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 1,
@@ -152,7 +154,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 22.0
+     "premium_pts": 33.3
     }
    ],
    "pick": null,
