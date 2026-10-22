@@ -41,6 +41,25 @@ ESTADIOS = {
     "ZOZO": (35.645, 140.031, False), "エスコン": (42.990, 141.550, True), "札幌ドーム": (43.015, 141.410, True),
 }
 
+# Ligas de invierno (LMP, LVBP, LIDOM; 15-oct-2026): estadio como lo publica la MLB Stats API -> (ciudad, codigo de pais).
+# Las coordenadas salen del geocodificador de Open-Meteo filtrado por pais (Valencia, Santiago y Caracas tienen homonimos).
+# Solo contexto: plataforma lee temp_f / viento_mph para la capa de parque y Open-Meteo trae temp_c / viento_kmh, asi que
+# el total y la probabilidad no cambian; el clima se muestra en la ficha y en las alertas.
+ESTADIOS_INVIERNO = {
+    "lmp": {"Coloso del Pacifico": ("Tepic", "MX"), "Emilio Ibarra Almada": ("Los Mochis", "MX"),
+            "Fernando Valenzuela": ("Hermosillo", "MX"), "Francisco Carranza Limon": ("Guasave", "MX"),
+            "Manuel Ciclon Echeverria": ("Navojoa", "MX"), "Nido de los Aguilas": ("Mexicali", "MX"),
+            "Teodoro Mariscal": ("Mazatlan", "MX"), "de los Tomateros": ("Culiacan", "MX"),
+            "de los Yaquis": ("Ciudad Obregon", "MX"), "Panamericano": ("Zapopan", "MX")},
+    "lvbp": {"Alfonso Carrasquel": ("Puerto La Cruz", "VE"), "Antonio Herrera Gutierrez": ("Barquisimeto", "VE"),
+             "Jose Bernardo Perez": ("Valencia", "VE"), "Jose Perez Colmenares": ("Maracay", "VE"),
+             "Luis Aparicio": ("Maracaibo", "VE"), "Universitario": ("Caracas", "VE"),
+             "Simon Bolivar": ("Caracas", "VE")},
+    "lidom": {"Estadio Cibao": ("Santiago de los Caballeros", "DO"), "Francisco Micheli": ("La Romana", "DO"),
+              "Julian Javier": ("San Francisco de Macoris", "DO"), "Quisqueya": ("Santo Domingo", "DO"),
+              "Tetelo Vargas": ("San Pedro de Macoris", "DO")},
+}
+
 # tenis: palabra clave del torneo -> (lat, lon, techado)
 TORNEOS = {
     "shanghai": (31.042, 121.360, False), "wuhan": (30.593, 114.305, False), "beijing": (39.990, 116.390, False),
@@ -100,6 +119,25 @@ def geocodificar(texto, cache):
     return ll
 
 
+def geocodificar_pais(ciudad, pais, cache):
+    """('Valencia', 'VE') -> (lat, lon) con Open-Meteo filtrando por pais; usa cache. None si no se encuentra."""
+    k = ("%s|%s" % (ciudad or "", pais or "")).strip().lower()
+    if not ciudad:
+        return None
+    if k in cache:
+        return tuple(cache[k]) if cache[k] else None
+    ll = None
+    try:
+        d = _get(GEO % urllib.parse.quote(ciudad) + "&countryCode=%s" % pais)
+        r = (d.get("results") or [None])[0]
+        if r:
+            ll = (round(r["latitude"], 3), round(r["longitude"], 3))
+    except Exception:
+        pass
+    cache[k] = list(ll) if ll else None
+    return ll
+
+
 def lugar(g, cache):
     """(lat, lon, techado, etiqueta) del partido; None si no se puede ubicar."""
     liga = g.get("liga")
@@ -110,6 +148,12 @@ def lugar(g, cache):
         for k, (la, lo, tch) in ESTADIOS.items():
             if k in est:
                 return (la, lo, tch, est)
+        return None
+    if liga in ESTADIOS_INVIERNO:
+        for k, (ciudad, pais) in ESTADIOS_INVIERNO[liga].items():
+            if k.lower() in est.lower():
+                ll = geocodificar_pais(ciudad, pais, cache)
+                return (ll[0], ll[1], False, "%s (%s)" % (est, ciudad)) if ll else None
         return None
     if g.get("tipo") != "equipos":            # tenis
         t = (g.get("torneo") or "").lower()

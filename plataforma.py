@@ -1113,6 +1113,36 @@ def _val_futbol():
 
 
 # ================================================================== mercado / edge
+_CALIB_BANDA = {}
+
+
+def _calibracion_banda(liga, p_home):
+    """Calibracion historica de la banda donde cae el favorito (15-oct-2026, Alejandro: "incorpora sin afectar las
+    probabilidades"). Hoy solo LMP, de salida/evaluacion_lmp.json (utilidades/evaluar_lmp_cuotas.py, walk-forward por
+    temporada). Es un dato al lado: p, EV y picks no cambian. Sirve para ver en cada juego si la banda promete mas o menos
+    de lo que acerto y para decidir, con la muestra en vivo, si conviene recalibrar."""
+    if (liga or "").lower() != "lmp" or p_home is None:
+        return None
+    if "lmp" not in _CALIB_BANDA:
+        try:
+            with open(os.path.join(BASE, "salida", "evaluacion_lmp.json"), encoding="utf-8") as f:
+                _CALIB_BANDA["lmp"] = (json.load(f).get("modelo") or {})
+        except Exception:
+            _CALIB_BANDA["lmp"] = {}
+    ev = _CALIB_BANDA["lmp"]
+    if not ev:
+        return None
+    pf = max(p_home, 1 - p_home) * 100
+    banda = "50-55" if pf < 55 else "55-60" if pf < 60 else "60-65" if pf < 65 else "65+"
+    out = {"banda": banda, "p_favorito": round(pf, 1), "fuente": "salida/evaluacion_lmp.json", "cambia_p": False}
+    for k in ("todas", "2024", "2025"):
+        b = ((ev.get(k) or {}).get("calibracion_favorito") or {}).get(banda)
+        if b:
+            out[k] = {"n": b.get("n"), "p_media": b.get("p_media"), "real": b.get("real"),
+                      "diferencia_pp": round((b.get("real") or 0) - (b.get("p_media") or 0), 1)}
+    return out
+
+
 def _mercados(g, m, umbral):
     liga = g['liga']
     q, out = g.get("cuotas") or {}, []
@@ -1381,6 +1411,12 @@ def predecir_juegos(juegos, cache, umbral=UMBRAL_EDGE, eventos=None):
                             rec["motor_carreras"] = {"aplicado": False, "motivo": "error: %s" % str(e)[:120]}
                 else:
                     rec["modelo"] = m
+                    try:
+                        cb = _calibracion_banda(g["liga"], m.get("p_home"))
+                        if cb:
+                            m["calibracion_banda"] = cb
+                    except Exception:
+                        pass
                     rec["mercados"] = _mercados(g, m, umbral)
                     valores = [x for x in rec["mercados"] if x["estado"] == "valor"]
                     if valores:
