@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-25T19:55:51",
+ "generado": "2026-10-25T22:17:11",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
  "partidos": [
@@ -258,13 +258,14 @@
      "cuota_min": 1.95,
      "en_rango": true,
      "senales_favor": 1,
-     "senales_contra": 7,
+     "senales_contra": 8,
      "senales": {
       "a_favor": [
        "bullpen"
       ],
       "en_contra": [
        "forma",
+       "movimiento",
        "consenso",
        "h2h",
        "contexto",
@@ -274,7 +275,7 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 26.4
+     "premium_pts": 26.0
     },
     {
      "mercado": "Ganador",
@@ -287,11 +288,12 @@
      "ev": -0.0003,
      "cuota_min": 2.05,
      "en_rango": true,
-     "senales_favor": 7,
+     "senales_favor": 8,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
        "forma",
+       "movimiento",
        "consenso",
        "h2h",
        "contexto",
@@ -304,7 +306,7 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 62.5
+     "premium_pts": 62.9
     },
     {
      "mercado": "Run line",
@@ -372,11 +374,12 @@
     "ev": -0.0003,
     "cuota_min": 2.05,
     "en_rango": true,
-    "senales_favor": 7,
+    "senales_favor": 8,
     "senales_contra": 1,
     "senales": {
      "a_favor": [
       "forma",
+      "movimiento",
       "consenso",
       "h2h",
       "contexto",
@@ -389,7 +392,7 @@
      ]
     },
     "premium_nivel": "lean",
-    "premium_pts": 62.5
+    "premium_pts": 62.9
    },
    "confianza": "minima",
    "stake": 0.0,
