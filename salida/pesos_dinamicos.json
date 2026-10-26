@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-26T01:37:07Z",
+ "generado": "2026-10-26T06:45:25Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -33,17 +33,17 @@
   },
   "nhl|Ganador": {
    "w_vivo": 0.0,
-   "n": 165,
+   "n": 168,
    "mejora_milesimas": -0.0,
    "z": -0.75,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2298,
-   "brier_modelo": 0.2341,
+   "brier_pinnacle": 0.2306,
+   "brier_modelo": 0.2352,
    "previo": 0.5,
-   "w_usado": 0.323
+   "w_usado": 0.321
   },
   "wta|Ganador": {
    "w_vivo": 0.9,
@@ -61,17 +61,17 @@
   },
   "nhl|Total": {
    "w_vivo": 0.0,
-   "n": 110,
+   "n": 113,
    "mejora_milesimas": -0.0,
    "z": -1.72,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.25,
-   "brier_modelo": 0.2588,
+   "brier_pinnacle": 0.2494,
+   "brier_modelo": 0.2581,
    "previo": 0.5,
-   "w_usado": 0.366
+   "w_usado": 0.363
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
@@ -102,36 +102,36 @@
    "w_usado": 0.339
   },
   "nhl|Spread": {
-   "w_vivo": 0.75,
-   "n": 74,
-   "mejora_milesimas": 61.401,
-   "z": 1.44,
+   "w_vivo": 0.8,
+   "n": 77,
+   "mejora_milesimas": 66.774,
+   "z": 1.5,
    "mitades": [
-    126.606,
-    -3.803
+    145.306,
+    -9.745
    ],
-   "brier_pinnacle": 0.2677,
-   "brier_modelo": 0.2408,
+   "brier_pinnacle": 0.2709,
+   "brier_modelo": 0.2406,
    "previo": 0.5,
-   "w_usado": 0.549
+   "w_usado": 0.561
   },
   "nfl|Ganador": {
-   "w_vivo": 0.15,
-   "n": 56,
-   "mejora_milesimas": 1.22,
+   "w_vivo": 0.2,
+   "n": 57,
+   "mejora_milesimas": 1.619,
    "z": 0.21,
    "mitades": [
-    3.673,
-    -1.232
+    4.501,
+    -1.163
    ],
-   "brier_pinnacle": 0.2342,
-   "brier_modelo": 0.2474,
+   "brier_pinnacle": 0.2333,
+   "brier_modelo": 0.2452,
    "previo": 0.0,
-   "w_usado": 0.024
+   "w_usado": 0.032
   },
   "nfl|Total": {
    "w_vivo": 0.0,
-   "n": 49,
+   "n": 50,
    "mejora_milesimas": 0.0,
    "z": 0.33,
    "mitades": [
@@ -139,7 +139,7 @@
     -0.0
    ],
    "brier_pinnacle": 0.2505,
-   "brier_modelo": 0.2736,
+   "brier_modelo": 0.2735,
    "previo": 0.0,
    "w_usado": 0.0
   },
