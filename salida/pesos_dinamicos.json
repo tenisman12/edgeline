@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-26T06:45:25Z",
+ "generado": "2026-10-26T14:40:02Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -75,15 +75,15 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.5,
-   "n": 98,
-   "mejora_milesimas": 5.108,
-   "z": 0.44,
+   "n": 99,
+   "mejora_milesimas": 5.118,
+   "z": 0.45,
    "mitades": [
     19.328,
-    -9.113
+    -8.808
    ],
-   "brier_pinnacle": 0.2094,
-   "brier_modelo": 0.2103,
+   "brier_pinnacle": 0.2088,
+   "brier_modelo": 0.2097,
    "previo": 0.35,
    "w_usado": 0.387
   },
@@ -171,6 +171,20 @@
    "previo": 0.25,
    "w_usado": 0.285
   },
+  "kbo|Ganador": {
+   "w_vivo": 1.0,
+   "n": 39,
+   "mejora_milesimas": 11.42,
+   "z": 0.42,
+   "mitades": [
+    -36.138,
+    56.601
+   ],
+   "brier_pinnacle": 0.2496,
+   "brier_modelo": 0.2449,
+   "previo": 0.25,
+   "w_usado": 0.336
+  },
   "mls|Total": {
    "w_vivo": 0.0,
    "n": 39,
@@ -185,47 +199,33 @@
    "previo": 0.25,
    "w_usado": 0.221
   },
-  "kbo|Ganador": {
-   "w_vivo": 1.0,
-   "n": 38,
-   "mejora_milesimas": 18.168,
-   "z": 0.68,
-   "mitades": [
-    -36.138,
-    72.474
-   ],
-   "brier_pinnacle": 0.2513,
-   "brier_modelo": 0.2433,
-   "previo": 0.25,
-   "w_usado": 0.334
-  },
   "kbo|Total": {
    "w_vivo": 1.0,
-   "n": 37,
-   "mejora_milesimas": 16.319,
-   "z": 0.68,
+   "n": 38,
+   "mejora_milesimas": 16.087,
+   "z": 0.69,
    "mitades": [
-    51.01,
-    -16.546
+    49.633,
+    -17.459
    ],
    "brier_pinnacle": 0.2476,
    "brier_modelo": 0.2396,
    "previo": 0.25,
-   "w_usado": 0.332
+   "w_usado": 0.334
   },
   "kbo|Spread": {
    "w_vivo": 1.0,
-   "n": 28,
-   "mejora_milesimas": 29.495,
-   "z": 0.67,
+   "n": 29,
+   "mejora_milesimas": 37.645,
+   "z": 0.88,
    "mitades": [
     46.411,
-    12.579
+    29.464
    ],
-   "brier_pinnacle": 0.2454,
-   "brier_modelo": 0.2308,
+   "brier_pinnacle": 0.2467,
+   "brier_modelo": 0.2281,
    "previo": 0.25,
-   "w_usado": 0.314
+   "w_usado": 0.316
   },
   "mlb|Ganador": {
    "w_vivo": 1.0,
