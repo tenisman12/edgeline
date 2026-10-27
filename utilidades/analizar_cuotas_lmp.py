@@ -215,6 +215,24 @@ def principal():
     out["tt_over"] = resumen([f for f in tt if f["lado"] == "O"])
     out["tt_under"] = resumen([f for f in tt if f["lado"] == "U"])
 
+    def temporada(f):
+        a = int(f["fecha_cdmx"][:4])
+        return f"{a}-{str(a + 1)[2:]}" if int(f["fecha_cdmx"][5:7]) >= 9 else f"{a - 1}-{str(a)[2:]}"
+    out["por_temporada"] = {}
+    for t in sorted({temporada(f) for f in U}):
+        S = [f for f in U if temporada(f) == t]
+        sml = [f for f in S if f["mercado_tipo"] == "ML"]
+        out["por_temporada"][t] = {
+            "juegos": len({(f["fecha_cdmx"], f["local"]) for f in S}),
+            "ml_favoritos": resumen([f for f in sml if f["p"] > 0.5]), "ml_perros": resumen([f for f in sml if f["p"] < 0.5]),
+            "total_over": resumen([f for f in S if f["mercado_tipo"] == "Total" and f["lado"] == "O"]),
+            "total_under": resumen([f for f in S if f["mercado_tipo"] == "Total" and f["lado"] == "U"]),
+            "tt_over": resumen([f for f in S if f["mercado_tipo"] == "TT" and f["lado"] == "O"]),
+            "tt_under": resumen([f for f in S if f["mercado_tipo"] == "TT" and f["lado"] == "U"]),
+            "carreras_por_juego": round(sum(float(f["final_local"]) + float(f["final_visita"]) for f in
+                                            {(g["fecha_cdmx"], g["local"]): g for g in S}.values()) /
+                                        max(1, len({(g["fecha_cdmx"], g["local"]) for g in S})), 2)}
+
     # 2 y 3. modelo contra mercado
     M = cargar_modelo()
     comp, sombra, desac = [], [], []

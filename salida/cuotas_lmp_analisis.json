@@ -1,131 +1,147 @@
 {
  "fuente": "semillas/lmp_cuotas_2026.csv",
- "filas": 148,
- "calificadas": 136,
- "juegos": 52,
+ "filas": 206,
+ "calificadas": 194,
+ "juegos": 73,
  "supuesto": "un solo lado publicado: p = implicita / 1.0225 (vig total 4.5 %)",
  "ml_lado_publicado": {
-  "n": 47,
-  "gano": 27,
-  "acierto_pct": 57.4,
-  "implicita_pct": 57.4,
-  "z": 0.01,
-  "unidades": -0.84,
-  "roi_pct": -1.8
+  "n": 63,
+  "gano": 36,
+  "acierto_pct": 57.1,
+  "implicita_pct": 57.2,
+  "z": -0.01,
+  "unidades": -1.74,
+  "roi_pct": -2.8
  },
  "ml_favoritos": {
-  "n": 37,
-  "gano": 20,
-  "acierto_pct": 54.1,
-  "implicita_pct": 60.2,
-  "z": -0.77,
-  "unidades": -4.78,
-  "roi_pct": -12.9
+  "n": 50,
+  "gano": 29,
+  "acierto_pct": 58.0,
+  "implicita_pct": 59.9,
+  "z": -0.27,
+  "unidades": -2.68,
+  "roi_pct": -5.4
  },
  "ml_perros": {
-  "n": 8,
+  "n": 11,
   "gano": 6,
-  "acierto_pct": 75.0,
-  "implicita_pct": 46.2,
-  "z": 1.64,
-  "unidades": 4.11,
-  "roi_pct": 51.4
+  "acierto_pct": 54.5,
+  "implicita_pct": 46.4,
+  "z": 0.54,
+  "unidades": 1.11,
+  "roi_pct": 10.1
  },
  "ml_por_banda": {
   "-200 o menos": {
+   "n": 9,
+   "gano": 4,
+   "acierto_pct": 44.4,
+   "implicita_pct": 67.4,
+   "z": -1.47,
+   "unidades": -3.17,
+   "roi_pct": -35.2
+  },
+  "-160 a -199": {
+   "n": 16,
+   "gano": 11,
+   "acierto_pct": 68.8,
+   "implicita_pct": 61.8,
+   "z": 0.57,
+   "unidades": 1.38,
+   "roi_pct": 8.6
+  },
+  "-130 a -159": {
+   "n": 20,
+   "gano": 11,
+   "acierto_pct": 55.0,
+   "implicita_pct": 57.2,
+   "z": -0.2,
+   "unidades": -1.42,
+   "roi_pct": -7.1
+  },
+  "-101 a -129": {
+   "n": 12,
+   "gano": 7,
+   "acierto_pct": 58.3,
+   "implicita_pct": 49.9,
+   "z": 0.59,
+   "unidades": 1.1,
+   "roi_pct": 9.2
+  },
+  "+100 o mas": {
    "n": 6,
    "gano": 3,
    "acierto_pct": 50.0,
-   "implicita_pct": 68.2,
-   "z": -0.96,
-   "unidades": -1.64,
-   "roi_pct": -27.3
-  },
-  "-160 a -199": {
-   "n": 13,
-   "gano": 8,
-   "acierto_pct": 61.5,
-   "implicita_pct": 61.9,
-   "z": -0.03,
-   "unidades": -0.32,
-   "roi_pct": -2.5
-  },
-  "-130 a -159": {
-   "n": 15,
-   "gano": 8,
-   "acierto_pct": 53.3,
-   "implicita_pct": 57.4,
-   "z": -0.32,
-   "unidades": -1.64,
-   "roi_pct": -10.9
-  },
-  "-101 a -129": {
-   "n": 9,
-   "gano": 5,
-   "acierto_pct": 55.6,
-   "implicita_pct": 49.7,
-   "z": 0.35,
-   "unidades": 0.39,
-   "roi_pct": 4.4
-  },
-  "+100 o mas": {
-   "n": 4,
-   "gano": 3,
-   "acierto_pct": 75.0,
-   "implicita_pct": 43.8,
-   "z": 1.26,
-   "unidades": 2.37,
-   "roi_pct": 59.3
+   "implicita_pct": 44.5,
+   "z": 0.27,
+   "unidades": 0.37,
+   "roi_pct": 6.2
   }
  },
  "ml_favorito_local": {
-  "n": 19,
-  "gano": 10,
-  "acierto_pct": 52.6,
-  "implicita_pct": 59.8,
-  "z": -0.64,
-  "unidades": -2.9,
-  "roi_pct": -15.3
+  "n": 26,
+  "gano": 16,
+  "acierto_pct": 61.5,
+  "implicita_pct": 59.6,
+  "z": 0.21,
+  "unidades": -0.16,
+  "roi_pct": -0.6
  },
  "ml_favorito_visita": {
-  "n": 18,
-  "gano": 10,
-  "acierto_pct": 55.6,
-  "implicita_pct": 60.8,
-  "z": -0.45,
-  "unidades": -1.88,
-  "roi_pct": -10.4
+  "n": 24,
+  "gano": 13,
+  "acierto_pct": 54.2,
+  "implicita_pct": 60.2,
+  "z": -0.61,
+  "unidades": -2.52,
+  "roi_pct": -10.5
  },
  "total_over": {
-  "n": 19,
-  "gano": 8,
-  "acierto_pct": 42.1,
-  "implicita_pct": 55.2,
-  "z": -1.16,
-  "unidades": -5.42,
-  "roi_pct": -28.5
+  "n": 32,
+  "gano": 11,
+  "acierto_pct": 34.4,
+  "implicita_pct": 55.5,
+  "z": -2.43,
+  "unidades": -12.99,
+  "roi_pct": -40.6
  },
  "total_under": {
-  "n": 27,
-  "gano": 12,
-  "acierto_pct": 44.4,
-  "implicita_pct": 54.8,
-  "z": -1.09,
-  "unidades": -5.91,
-  "roi_pct": -21.9
+  "n": 38,
+  "gano": 17,
+  "acierto_pct": 44.7,
+  "implicita_pct": 55.4,
+  "z": -1.32,
+  "unidades": -7.94,
+  "roi_pct": -20.9
  },
  "total_por_linea": {
-  "6.5": {
-   "n": 4,
-   "over_real_pct": 75.0,
+  "5.5": {
+   "n": 1,
+   "over_real_pct": 0.0,
    "over": {
-    "n": 3,
-    "gano": 2,
-    "acierto_pct": 66.7,
-    "implicita_pct": 66.8,
-    "z": -0.01,
-    "unidades": -0.12,
-    "roi_pct": -4.0
+    "n": 1,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 69.9,
+    "z": -1.52,
+    "unidades": -1,
+    "roi_pct": -100.0
+   },
+   "under": {
+    "n": 0
+   }
+  },
+  "6.5": {
+   "n": 8,
+   "over_real_pct": 50.0,
+   "over": {
+    "n": 7,
+    "gano": 3,
+    "acierto_pct": 42.9,
+    "implicita_pct": 62.3,
+    "z": -1.07,
+    "unidades": -2.56,
+    "roi_pct": -36.6
    },
    "under": {
     "n": 1,
@@ -138,74 +154,74 @@
    }
   },
   "7.5": {
-   "n": 5,
-   "over_real_pct": 0.0,
+   "n": 11,
+   "over_real_pct": 18.2,
    "over": {
-    "n": 2,
-    "gano": 0,
-    "acierto_pct": 0.0,
-    "implicita_pct": 55.9,
-    "z": -1.59,
-    "unidades": -2,
-    "roi_pct": -100.0
+    "n": 6,
+    "gano": 1,
+    "acierto_pct": 16.7,
+    "implicita_pct": 53.8,
+    "z": -1.83,
+    "unidades": -3.97,
+    "roi_pct": -66.2
    },
    "under": {
-    "n": 3,
-    "gano": 3,
-    "acierto_pct": 100.0,
-    "implicita_pct": 52.5,
-    "z": 1.65,
-    "unidades": 2.6,
-    "roi_pct": 86.7
+    "n": 5,
+    "gano": 4,
+    "acierto_pct": 80.0,
+    "implicita_pct": 52.6,
+    "z": 1.23,
+    "unidades": 2.34,
+    "roi_pct": 46.8
    }
   },
   "8.5": {
-   "n": 8,
-   "over_real_pct": 62.5,
+   "n": 10,
+   "over_real_pct": 60.0,
    "over": {
-    "n": 4,
+    "n": 5,
     "gano": 2,
-    "acierto_pct": 50.0,
-    "implicita_pct": 53.6,
-    "z": -0.14,
-    "unidades": -0.44,
-    "roi_pct": -11.0
+    "acierto_pct": 40.0,
+    "implicita_pct": 52.8,
+    "z": -0.58,
+    "unidades": -1.44,
+    "roi_pct": -28.8
    },
    "under": {
-    "n": 4,
-    "gano": 1,
-    "acierto_pct": 25.0,
-    "implicita_pct": 51.6,
-    "z": -1.07,
-    "unidades": -2.18,
-    "roi_pct": -54.5
-   }
-  },
-  "9.5": {
-   "n": 14,
-   "over_real_pct": 50.0,
-   "over": {
     "n": 5,
     "gano": 1,
     "acierto_pct": 20.0,
-    "implicita_pct": 50.1,
-    "z": -1.35,
-    "unidades": -2.99,
-    "roi_pct": -59.8
+    "implicita_pct": 53.2,
+    "z": -1.49,
+    "unidades": -3.18,
+    "roi_pct": -63.6
+   }
+  },
+  "9.5": {
+   "n": 22,
+   "over_real_pct": 50.0,
+   "over": {
+    "n": 8,
+    "gano": 2,
+    "acierto_pct": 25.0,
+    "implicita_pct": 51.4,
+    "z": -1.5,
+    "unidades": -4.14,
+    "roi_pct": -51.8
    },
    "under": {
-    "n": 9,
-    "gano": 3,
-    "acierto_pct": 33.3,
-    "implicita_pct": 54.9,
-    "z": -1.31,
-    "unidades": -3.59,
-    "roi_pct": -39.9
+    "n": 14,
+    "gano": 5,
+    "acierto_pct": 35.7,
+    "implicita_pct": 56.2,
+    "z": -1.55,
+    "unidades": -5.18,
+    "roi_pct": -37.0
    }
   },
   "10.5": {
-   "n": 7,
-   "over_real_pct": 57.1,
+   "n": 9,
+   "over_real_pct": 55.6,
    "over": {
     "n": 3,
     "gano": 3,
@@ -216,18 +232,18 @@
     "roi_pct": 70.9
    },
    "under": {
-    "n": 4,
-    "gano": 3,
-    "acierto_pct": 75.0,
-    "implicita_pct": 59.2,
-    "z": 0.64,
-    "unidades": 0.92,
-    "roi_pct": 23.1
+    "n": 6,
+    "gano": 4,
+    "acierto_pct": 66.7,
+    "implicita_pct": 58.4,
+    "z": 0.41,
+    "unidades": 0.89,
+    "roi_pct": 14.9
    }
   },
   "11.5": {
-   "n": 7,
-   "over_real_pct": 42.9,
+   "n": 8,
+   "over_real_pct": 37.5,
    "over": {
     "n": 2,
     "gano": 0,
@@ -238,13 +254,13 @@
     "roi_pct": -100.0
    },
    "under": {
-    "n": 5,
-    "gano": 2,
-    "acierto_pct": 40.0,
-    "implicita_pct": 55.4,
-    "z": -0.69,
-    "unidades": -1.66,
-    "roi_pct": -33.2
+    "n": 6,
+    "gano": 3,
+    "acierto_pct": 50.0,
+    "implicita_pct": 55.0,
+    "z": -0.25,
+    "unidades": -0.81,
+    "roi_pct": -13.5
    }
   },
   "13.5": {
@@ -265,22 +281,140 @@
   }
  },
  "tt_over": {
-  "n": 13,
-  "gano": 8,
-  "acierto_pct": 61.5,
-  "implicita_pct": 53.9,
-  "z": 0.55,
-  "unidades": 1.21,
-  "roi_pct": 9.3
+  "n": 23,
+  "gano": 10,
+  "acierto_pct": 43.5,
+  "implicita_pct": 53.8,
+  "z": -0.99,
+  "unidades": -5.41,
+  "roi_pct": -23.5
  },
  "tt_under": {
-  "n": 30,
-  "gano": 13,
-  "acierto_pct": 43.3,
-  "implicita_pct": 55.7,
-  "z": -1.36,
-  "unidades": -7.07,
-  "roi_pct": -23.6
+  "n": 38,
+  "gano": 17,
+  "acierto_pct": 44.7,
+  "implicita_pct": 55.0,
+  "z": -1.27,
+  "unidades": -7.64,
+  "roi_pct": -20.1
+ },
+ "por_temporada": {
+  "2025-26": {
+   "juegos": 21,
+   "ml_favoritos": {
+    "n": 13,
+    "gano": 9,
+    "acierto_pct": 69.2,
+    "implicita_pct": 58.9,
+    "z": 0.76,
+    "unidades": 2.1,
+    "roi_pct": 16.2
+   },
+   "ml_perros": {
+    "n": 3,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 46.9,
+    "z": -1.63,
+    "unidades": -3,
+    "roi_pct": -100.0
+   },
+   "total_over": {
+    "n": 13,
+    "gano": 3,
+    "acierto_pct": 23.1,
+    "implicita_pct": 55.9,
+    "z": -2.4,
+    "unidades": -7.56,
+    "roi_pct": -58.2
+   },
+   "total_under": {
+    "n": 11,
+    "gano": 5,
+    "acierto_pct": 45.5,
+    "implicita_pct": 56.7,
+    "z": -0.76,
+    "unidades": -2.03,
+    "roi_pct": -18.4
+   },
+   "tt_over": {
+    "n": 10,
+    "gano": 2,
+    "acierto_pct": 20.0,
+    "implicita_pct": 53.6,
+    "z": -2.14,
+    "unidades": -6.62,
+    "roi_pct": -66.2
+   },
+   "tt_under": {
+    "n": 8,
+    "gano": 4,
+    "acierto_pct": 50.0,
+    "implicita_pct": 52.5,
+    "z": -0.14,
+    "unidades": -0.57,
+    "roi_pct": -7.2
+   },
+   "carreras_por_juego": 6.0
+  },
+  "2026-27": {
+   "juegos": 52,
+   "ml_favoritos": {
+    "n": 37,
+    "gano": 20,
+    "acierto_pct": 54.1,
+    "implicita_pct": 60.2,
+    "z": -0.77,
+    "unidades": -4.78,
+    "roi_pct": -12.9
+   },
+   "ml_perros": {
+    "n": 8,
+    "gano": 6,
+    "acierto_pct": 75.0,
+    "implicita_pct": 46.2,
+    "z": 1.64,
+    "unidades": 4.11,
+    "roi_pct": 51.4
+   },
+   "total_over": {
+    "n": 19,
+    "gano": 8,
+    "acierto_pct": 42.1,
+    "implicita_pct": 55.2,
+    "z": -1.16,
+    "unidades": -5.42,
+    "roi_pct": -28.5
+   },
+   "total_under": {
+    "n": 27,
+    "gano": 12,
+    "acierto_pct": 44.4,
+    "implicita_pct": 54.8,
+    "z": -1.09,
+    "unidades": -5.91,
+    "roi_pct": -21.9
+   },
+   "tt_over": {
+    "n": 13,
+    "gano": 8,
+    "acierto_pct": 61.5,
+    "implicita_pct": 53.9,
+    "z": 0.55,
+    "unidades": 1.21,
+    "roi_pct": 9.3
+   },
+   "tt_under": {
+    "n": 30,
+    "gano": 13,
+    "acierto_pct": 43.3,
+    "implicita_pct": 55.7,
+    "z": -1.36,
+    "unidades": -7.07,
+    "roi_pct": -23.6
+   },
+   "carreras_por_juego": 9.75
+  }
  },
  "modelo_vs_mercado_ml": {
   "n": 21,
