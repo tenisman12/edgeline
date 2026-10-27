@@ -162,6 +162,14 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   sigue siendo el de la sede real). Capa de abridores: en LMP y NPB se aplica la parte del total (paso) y no la del ganador
   (`nucleo/abridores.aplica`). Action Network no cubre LMP: sin publico medido. Reglas nuevas 2026-27 (reloj de pitcheo,
   ABS, 3 bateadores por relevista): el nivel reciente de la capa se ajusta solo con los primeros juegos; se mide en vivo.
+- Cuotas de LMP capturadas (26-oct-2026, Alejandro: "siempre extrae esas cuotas"): en CADA analisis de LMP se sacan los
+  momios de scores24 (paginas `m-DD-MM-AAAA-<local>-<visita>-prediction`; la fecha del enlace es UTC = dia CDMX + 1; Bovada
+  cuando lo nombra) y las capturas de Novibet que pegue Alejandro (con hora de captura), y se agregan a
+  `semillas/lmp_cuotas_2026.csv` (una fila por momio: fecha_cdmx, local, visita, fuente, casa, captura, mercado_tipo ML|Total|TT,
+  equipo_total, lado, linea, momio, final_local, final_visita). Nunca se entregan como archivo aparte.
+  `utilidades/analizar_cuotas_lmp.py` (cada hora en cuotas.yml) -> `salida/cuotas_lmp_analisis.json`: lado publicado contra
+  resultado por rango de momio, local/visita, over/under y linea; modelo contra mercado (Brier en el mismo juego, sombra EV 4 %);
+  total del modelo contra la linea y el real; movimiento entre capturas de Novibet. Descriptivo: no cambia p ni picks.
 
 ## Hockey: SHL, Liiga, AHL y DEL (10-oct-2026, Alejandro: "igualito al de NHL")
 - Datos: `colectores/recolectar_hockey_ligas.py` (fuentes oficiales: stats.swehockey.se, liiga.fi/api/v2, HockeyTech de la

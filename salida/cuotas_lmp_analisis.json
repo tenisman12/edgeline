@@ -1,0 +1,352 @@
+{
+ "fuente": "semillas/lmp_cuotas_2026.csv",
+ "filas": 148,
+ "calificadas": 136,
+ "juegos": 52,
+ "supuesto": "un solo lado publicado: p = implicita / 1.0225 (vig total 4.5 %)",
+ "ml_lado_publicado": {
+  "n": 47,
+  "gano": 27,
+  "acierto_pct": 57.4,
+  "implicita_pct": 57.4,
+  "z": 0.01,
+  "unidades": -0.84,
+  "roi_pct": -1.8
+ },
+ "ml_favoritos": {
+  "n": 37,
+  "gano": 20,
+  "acierto_pct": 54.1,
+  "implicita_pct": 60.2,
+  "z": -0.77,
+  "unidades": -4.78,
+  "roi_pct": -12.9
+ },
+ "ml_perros": {
+  "n": 8,
+  "gano": 6,
+  "acierto_pct": 75.0,
+  "implicita_pct": 46.2,
+  "z": 1.64,
+  "unidades": 4.11,
+  "roi_pct": 51.4
+ },
+ "ml_por_banda": {
+  "-200 o menos": {
+   "n": 6,
+   "gano": 3,
+   "acierto_pct": 50.0,
+   "implicita_pct": 68.2,
+   "z": -0.96,
+   "unidades": -1.64,
+   "roi_pct": -27.3
+  },
+  "-160 a -199": {
+   "n": 13,
+   "gano": 8,
+   "acierto_pct": 61.5,
+   "implicita_pct": 61.9,
+   "z": -0.03,
+   "unidades": -0.32,
+   "roi_pct": -2.5
+  },
+  "-130 a -159": {
+   "n": 15,
+   "gano": 8,
+   "acierto_pct": 53.3,
+   "implicita_pct": 57.4,
+   "z": -0.32,
+   "unidades": -1.64,
+   "roi_pct": -10.9
+  },
+  "-101 a -129": {
+   "n": 9,
+   "gano": 5,
+   "acierto_pct": 55.6,
+   "implicita_pct": 49.7,
+   "z": 0.35,
+   "unidades": 0.39,
+   "roi_pct": 4.4
+  },
+  "+100 o mas": {
+   "n": 4,
+   "gano": 3,
+   "acierto_pct": 75.0,
+   "implicita_pct": 43.8,
+   "z": 1.26,
+   "unidades": 2.37,
+   "roi_pct": 59.3
+  }
+ },
+ "ml_favorito_local": {
+  "n": 19,
+  "gano": 10,
+  "acierto_pct": 52.6,
+  "implicita_pct": 59.8,
+  "z": -0.64,
+  "unidades": -2.9,
+  "roi_pct": -15.3
+ },
+ "ml_favorito_visita": {
+  "n": 18,
+  "gano": 10,
+  "acierto_pct": 55.6,
+  "implicita_pct": 60.8,
+  "z": -0.45,
+  "unidades": -1.88,
+  "roi_pct": -10.4
+ },
+ "total_over": {
+  "n": 19,
+  "gano": 8,
+  "acierto_pct": 42.1,
+  "implicita_pct": 55.2,
+  "z": -1.16,
+  "unidades": -5.42,
+  "roi_pct": -28.5
+ },
+ "total_under": {
+  "n": 27,
+  "gano": 12,
+  "acierto_pct": 44.4,
+  "implicita_pct": 54.8,
+  "z": -1.09,
+  "unidades": -5.91,
+  "roi_pct": -21.9
+ },
+ "total_por_linea": {
+  "6.5": {
+   "n": 4,
+   "over_real_pct": 75.0,
+   "over": {
+    "n": 3,
+    "gano": 2,
+    "acierto_pct": 66.7,
+    "implicita_pct": 66.8,
+    "z": -0.01,
+    "unidades": -0.12,
+    "roi_pct": -4.0
+   },
+   "under": {
+    "n": 1,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 42.7,
+    "z": -0.86,
+    "unidades": -1,
+    "roi_pct": -100.0
+   }
+  },
+  "7.5": {
+   "n": 5,
+   "over_real_pct": 0.0,
+   "over": {
+    "n": 2,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 55.9,
+    "z": -1.59,
+    "unidades": -2,
+    "roi_pct": -100.0
+   },
+   "under": {
+    "n": 3,
+    "gano": 3,
+    "acierto_pct": 100.0,
+    "implicita_pct": 52.5,
+    "z": 1.65,
+    "unidades": 2.6,
+    "roi_pct": 86.7
+   }
+  },
+  "8.5": {
+   "n": 8,
+   "over_real_pct": 62.5,
+   "over": {
+    "n": 4,
+    "gano": 2,
+    "acierto_pct": 50.0,
+    "implicita_pct": 53.6,
+    "z": -0.14,
+    "unidades": -0.44,
+    "roi_pct": -11.0
+   },
+   "under": {
+    "n": 4,
+    "gano": 1,
+    "acierto_pct": 25.0,
+    "implicita_pct": 51.6,
+    "z": -1.07,
+    "unidades": -2.18,
+    "roi_pct": -54.5
+   }
+  },
+  "9.5": {
+   "n": 14,
+   "over_real_pct": 50.0,
+   "over": {
+    "n": 5,
+    "gano": 1,
+    "acierto_pct": 20.0,
+    "implicita_pct": 50.1,
+    "z": -1.35,
+    "unidades": -2.99,
+    "roi_pct": -59.8
+   },
+   "under": {
+    "n": 9,
+    "gano": 3,
+    "acierto_pct": 33.3,
+    "implicita_pct": 54.9,
+    "z": -1.31,
+    "unidades": -3.59,
+    "roi_pct": -39.9
+   }
+  },
+  "10.5": {
+   "n": 7,
+   "over_real_pct": 57.1,
+   "over": {
+    "n": 3,
+    "gano": 3,
+    "acierto_pct": 100.0,
+    "implicita_pct": 58.0,
+    "z": 1.49,
+    "unidades": 2.13,
+    "roi_pct": 70.9
+   },
+   "under": {
+    "n": 4,
+    "gano": 3,
+    "acierto_pct": 75.0,
+    "implicita_pct": 59.2,
+    "z": 0.64,
+    "unidades": 0.92,
+    "roi_pct": 23.1
+   }
+  },
+  "11.5": {
+   "n": 7,
+   "over_real_pct": 42.9,
+   "over": {
+    "n": 2,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 49.1,
+    "z": -1.39,
+    "unidades": -2,
+    "roi_pct": -100.0
+   },
+   "under": {
+    "n": 5,
+    "gano": 2,
+    "acierto_pct": 40.0,
+    "implicita_pct": 55.4,
+    "z": -0.69,
+    "unidades": -1.66,
+    "roi_pct": -33.2
+   }
+  },
+  "13.5": {
+   "n": 1,
+   "over_real_pct": 100.0,
+   "over": {
+    "n": 0
+   },
+   "under": {
+    "n": 1,
+    "gano": 0,
+    "acierto_pct": 0.0,
+    "implicita_pct": 65.2,
+    "z": -1.37,
+    "unidades": -1,
+    "roi_pct": -100.0
+   }
+  }
+ },
+ "tt_over": {
+  "n": 13,
+  "gano": 8,
+  "acierto_pct": 61.5,
+  "implicita_pct": 53.9,
+  "z": 0.55,
+  "unidades": 1.21,
+  "roi_pct": 9.3
+ },
+ "tt_under": {
+  "n": 30,
+  "gano": 13,
+  "acierto_pct": 43.3,
+  "implicita_pct": 55.7,
+  "z": -1.36,
+  "unidades": -7.07,
+  "roi_pct": -23.6
+ },
+ "modelo_vs_mercado_ml": {
+  "n": 21,
+  "brier_modelo": 0.2422,
+  "brier_mercado": 0.2583,
+  "acierto_modelo_pct": 52.4,
+  "acierto_mercado_pct": 52.4,
+  "desacuerdos": 0,
+  "desacuerdos_gana_modelo": 0,
+  "brecha_media_pp": 5.2
+ },
+ "sombra_modelo_ev4": {
+  "n": 1,
+  "gano": 0,
+  "acierto_pct": 0.0,
+  "implicita_pct": 61.3,
+  "z": -1.26,
+  "unidades": -1,
+  "roi_pct": -100.0
+ },
+ "total_modelo_vs_linea": {
+  "n": 22,
+  "media_modelo": 8.37,
+  "media_linea": 9.05,
+  "media_real": 9.23,
+  "mae_modelo": 2.8,
+  "mae_linea": 2.77,
+  "lado_modelo_acierto_pct": 59.1,
+  "n_lado": 22
+ },
+ "novibet_movimiento": [
+  {
+   "fecha": "2026-10-25",
+   "local": "Tomateros de Culiacan",
+   "lado": "Tomateros de Culiacan",
+   "de": "-154",
+   "a": "-159",
+   "mov_pp": 0.7,
+   "gano": 0
+  },
+  {
+   "fecha": "2026-10-25",
+   "local": "Tomateros de Culiacan",
+   "lado": "Algodoneros de Guasave",
+   "de": "107",
+   "a": "110",
+   "mov_pp": -0.7,
+   "gano": 1
+  },
+  {
+   "fecha": "2026-10-25",
+   "local": "Venados de Mazatlan",
+   "lado": "Venados de Mazatlan",
+   "de": "115",
+   "a": "120",
+   "mov_pp": -1.0,
+   "gano": 1
+  },
+  {
+   "fecha": "2026-10-25",
+   "local": "Venados de Mazatlan",
+   "lado": "Charros de Jalisco",
+   "de": "-167",
+   "a": "-175",
+   "mov_pp": 1.0,
+   "gano": 0
+  }
+ ]
+}
