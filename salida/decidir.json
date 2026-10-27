@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-27T19:40:34",
+ "generado": "2026-10-27T23:28:27",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
  "partidos": [
@@ -10,14 +10,14 @@
    "hora": "18:00",
    "home": "Tampa Bay Rays",
    "away": "Milwaukee Brewers",
-   "p_modelo": 0.5142,
-   "p_sharp": 0.4758,
-   "p_final": 0.4892,
+   "p_modelo": 0.5447,
+   "p_sharp": 0.4768,
+   "p_final": 0.5006,
    "fuente": "pinnacle 65% + modelo 35%",
-   "p_mezcla": 0.4892,
-   "margen_esperado": -0.12,
+   "p_mezcla": 0.5006,
+   "margen_esperado": 0.01,
    "linea_home": "+1.5",
-   "p_runline_home": 0.6038,
+   "p_runline_home": 0.6144,
    "detalle_modelo": {
     "elo_h": 1564.3,
     "elo_a": 1637.7,
@@ -36,8 +36,19 @@
      "era_ajustada": 3.72,
      "ga_equipo": 3.971
     },
-    "abridor_a": null,
-    "carreras_abridor": 0.16,
+    "abridor_a": {
+     "nombre": "Dustin May",
+     "fip_ventana": 4.92,
+     "fip_ultimas5": 4.56,
+     "k_pct": 0.237,
+     "bb_pct": 0.076,
+     "ip_ventana": "29.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.23,
+     "ga_equipo": 3.734
+    },
+    "carreras_abridor": 0.46,
     "frio_caliente": 1
    },
    "lados": [
@@ -45,12 +56,12 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "Tampa Bay Rays",
-     "p": 0.4892,
-     "cuota": 115.0,
-     "decimal": 2.15,
-     "casa": "betrivers",
-     "ev": 0.0519,
-     "cuota_min": 2.04,
+     "p": 0.5006,
+     "cuota": 108.0,
+     "decimal": 2.08,
+     "casa": "gtbets",
+     "ev": 0.0413,
+     "cuota_min": 2.0,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 9,
@@ -71,21 +82,21 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 39.0,
+     "premium_pts": 32.8,
      "nota_lectura": "lectura 9 en contra contra 1 a favor: baja un escalon"
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Milwaukee Brewers",
-     "p": 0.5108,
-     "cuota": -115.0,
-     "decimal": 1.87,
-     "casa": "pinnacle",
-     "ev": -0.0451,
-     "cuota_min": 1.96,
+     "p": 0.4994,
+     "cuota": -114.0,
+     "decimal": 1.877,
+     "casa": "onexbet",
+     "ev": -0.0626,
+     "cuota_min": 2.0,
      "en_rango": true,
-     "senales_favor": 8,
+     "senales_favor": 9,
      "senales_contra": 1,
      "senales": {
       "a_favor": [
@@ -93,6 +104,7 @@
        "movimiento",
        "consenso",
        "h2h",
+       "contexto",
        "osciladores",
        "fuerza",
        "bullpen",
@@ -103,17 +115,17 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 57.5
+     "premium_pts": 58.3
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "Tampa Bay Rays +1.5",
-     "p": 0.6038,
+     "p": 0.6144,
      "cuota": -154.0,
      "decimal": 1.649,
      "casa": "onexbet",
-     "ev": -0.0042,
+     "ev": 0.0133,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 1,
@@ -131,18 +143,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 35.8
+     "premium_pts": 35.4
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Milwaukee Brewers -1.5",
-     "p": 0.3962,
-     "cuota": 147.0,
-     "decimal": 2.47,
-     "casa": "lowvig",
-     "ev": -0.0213,
-     "cuota_min": 2.52,
+     "p": 0.3856,
+     "cuota": 150.0,
+     "decimal": 2.5,
+     "casa": "mybookieag",
+     "ev": -0.0359,
+     "cuota_min": 2.59,
      "en_rango": true,
      "senales_favor": 5,
      "senales_contra": 1,
@@ -159,19 +171,19 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 48.3
+     "premium_pts": 52.1
     }
    ],
    "pick": {
     "mercado": "Ganador",
     "lado": "home",
     "texto": "Tampa Bay Rays",
-    "p": 0.4892,
-    "cuota": 115.0,
-    "decimal": 2.15,
-    "casa": "betrivers",
-    "ev": 0.0519,
-    "cuota_min": 2.04,
+    "p": 0.5006,
+    "cuota": 108.0,
+    "decimal": 2.08,
+    "casa": "gtbets",
+    "ev": 0.0413,
+    "cuota_min": 2.0,
     "en_rango": true,
     "senales_favor": 1,
     "senales_contra": 9,
@@ -192,7 +204,7 @@
      ]
     },
     "premium_nivel": "pasar",
-    "premium_pts": 39.0,
+    "premium_pts": 32.8,
     "nota_lectura": "lectura 9 en contra contra 1 a favor: baja un escalon"
    },
    "confianza": "baja",
