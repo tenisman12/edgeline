@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-28T13:29:37Z",
+ "generado": "2026-10-28T19:59:20Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -47,17 +47,17 @@
   },
   "wta|Ganador": {
    "w_vivo": 0.9,
-   "n": 140,
-   "mejora_milesimas": 10.67,
-   "z": 0.83,
+   "n": 139,
+   "mejora_milesimas": 10.232,
+   "z": 0.79,
    "mitades": [
-    9.575,
-    11.765
+    10.186,
+    10.278
    ],
-   "brier_pinnacle": 0.2337,
-   "brier_modelo": 0.2303,
+   "brier_pinnacle": 0.2342,
+   "brier_modelo": 0.2311,
    "previo": 0.35,
-   "w_usado": 0.525
+   "w_usado": 0.524
   },
   "nhl|Total": {
    "w_vivo": 0.0,
@@ -74,18 +74,18 @@
    "w_usado": 0.356
   },
   "atp|Ganador": {
-   "w_vivo": 0.6,
-   "n": 109,
-   "mejora_milesimas": 7.355,
-   "z": 0.58,
+   "w_vivo": 0.7,
+   "n": 111,
+   "mejora_milesimas": 11.438,
+   "z": 0.77,
    "mitades": [
-    17.463,
-    -2.569
+    15.758,
+    7.195
    ],
-   "brier_pinnacle": 0.2066,
-   "brier_modelo": 0.2049,
+   "brier_pinnacle": 0.2125,
+   "brier_modelo": 0.2083,
    "previo": 0.35,
-   "w_usado": 0.417
+   "w_usado": 0.445
   },
   "ncaafb|Spread": {
    "w_vivo": 0.3,
@@ -173,17 +173,17 @@
   },
   "liiga|Ganador": {
    "w_vivo": 0.0,
-   "n": 42,
+   "n": 48,
    "mejora_milesimas": -0.0,
-   "z": -0.65,
+   "z": -0.11,
    "mitades": [
     -0.0,
     0.0
    ],
-   "brier_pinnacle": 0.2329,
-   "brier_modelo": 0.2429,
+   "brier_pinnacle": 0.2344,
+   "brier_modelo": 0.2411,
    "previo": 0.5,
-   "w_usado": 0.439
+   "w_usado": 0.431
   },
   "kbo|Ganador": {
    "w_vivo": 1.0,
@@ -226,6 +226,20 @@
    "brier_modelo": 0.2332,
    "previo": 0.25,
    "w_usado": 0.314
+  },
+  "liiga|Total": {
+   "w_vivo": 0.0,
+   "n": 29,
+   "mejora_milesimas": 0.0,
+   "z": 1.0,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2446,
+   "brier_modelo": 0.2515,
+   "previo": 0.5,
+   "w_usado": 0.456
   },
   "mlb|Ganador": {
    "w_vivo": 1.0,
@@ -324,20 +338,6 @@
    "brier_modelo": 0.2206,
    "previo": 0.25,
    "w_usado": 0.303
-  },
-  "liiga|Total": {
-   "w_vivo": 0.0,
-   "n": 23,
-   "mejora_milesimas": 0.0,
-   "z": 1.0,
-   "mitades": [
-    0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2416,
-   "brier_modelo": 0.2543,
-   "previo": 0.5,
-   "w_usado": 0.464
   },
   "mlb|Total": {
    "w_vivo": 0.0,
