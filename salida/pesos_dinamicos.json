@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-27T19:45:37Z",
+ "generado": "2026-10-28T00:07:04Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -75,17 +75,17 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.6,
-   "n": 108,
-   "mejora_milesimas": 8.079,
-   "z": 0.64,
+   "n": 109,
+   "mejora_milesimas": 7.355,
+   "z": 0.58,
    "mitades": [
     17.463,
-    -1.305
+    -2.569
    ],
-   "brier_pinnacle": 0.2082,
-   "brier_modelo": 0.206,
+   "brier_pinnacle": 0.2066,
+   "brier_modelo": 0.2049,
    "previo": 0.35,
-   "w_usado": 0.416
+   "w_usado": 0.417
   },
   "ncaafb|Spread": {
    "w_vivo": 0.3,
@@ -339,6 +339,20 @@
    "previo": 0.5,
    "w_usado": 0.464
   },
+  "shl|Ganador": {
+   "w_vivo": 0.0,
+   "n": 22,
+   "mejora_milesimas": -0.0,
+   "z": -1.0,
+   "mitades": [
+    -0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2195,
+   "brier_modelo": 0.228,
+   "previo": 0.5,
+   "w_usado": 0.466
+  },
   "mlb|Total": {
    "w_vivo": 0.0,
    "n": 21,
@@ -352,20 +366,6 @@
    "brier_modelo": 0.2611,
    "previo": 0.25,
    "w_usado": 0.234
-  },
-  "shl|Ganador": {
-   "w_vivo": 0.0,
-   "n": 21,
-   "mejora_milesimas": -0.0,
-   "z": -1.0,
-   "mitades": [
-    -0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2148,
-   "brier_modelo": 0.2212,
-   "previo": 0.5,
-   "w_usado": 0.467
   }
  }
 }
