@@ -359,3 +359,15 @@ futbol (tiros/corners/tarjetas de Liga MX y MLS; posesion, pases y demas en las 
 Al inicio de cada sesión, antes de analizar, traer la rama de datos:
 git fetch origin datos:refs/remotes/origin/datos && git worktree add trabajo/datos origin/datos
 Quedan en trabajo/datos/datos/ y se pueden leer libremente para cualquier análisis.
+
+## Angulos de abridor de Roberto (28-oct-2026, Alejandro: "que se detecten aunque no pasen")
+- `utilidades/minar_angulos_rober.py` -> `trabajo/minar/2026-10-28_rober_abridores{.md,_resultados.json}`: LMP 2014-2025,
+  4,130 juegos, stats del abridor as-of; base ELO y ELO + FIP regresado (coef 0.197 logit por punto de FIP). Sin cuotas
+  historicas: mide acierto contra la base, no ROI. Ninguno pasa (n >= 300, |z| >= 2, mitades). El mas cercano: R10 8-14 dias
+  de descanso -3.5 pp (z -1.88, mitades -3.3 / -3.6, 10 de 12 temporadas negativas).
+- Codigos R4-R11 (contexto, sin peso; `nucleo/angulos._rober_x`, todas las ligas de beisbol con abridor anunciado):
+  R4 contra abridor suertudo (FIP >= ERA + 1.5), R5 peor ERA y mejor FIP, R6 contra abridor caliente, R7 underdog con mejor
+  FIP, R8 favorito con peor FIP, R9 primera apertura, R10 8-14 dias de descanso, R11 a favor del abridor caliente.
+  "Caliente" = su equipo +3 o mas en sus aperturas (sustituto del pitcher profit en unidades). ERA/FIP con 10+ IP en la
+  temporada en curso (datos/jugadores_recientes/mlb_lanzadores.csv). Se registran en salida/historial_angulos.csv para
+  medirlos en vivo con cuotas reales.

@@ -70,6 +70,11 @@ NOMBRES = {
     # tanda 11 (13-oct-2026): secuencia y senal del modelo, todos los deportes
     "S11": "perdio su ultimo juego", "S12": "racha en dosis (el mas caliente)", "S13": "perdio cerrado su ultimo juego",
     "S15": "persecucion: el modelo lo eligio, perdio y hoy lo vuelve a elegir", "S16": "supera al modelo en sus ultimos 10",
+    # 28-oct-2026 (angulos de abridor de Roberto; utilidades/minar_angulos_rober.py, LMP 2014-2025): contexto, sin peso
+    "R4": "contra el abridor suertudo (su FIP 1.5+ peor que su ERA)", "R5": "abridor con peor ERA pero mejor FIP que el rival",
+    "R6": "contra el abridor caliente (su equipo +3 o mas en sus aperturas)", "R7": "underdog con mejor abridor por FIP",
+    "R8": "favorito con peor abridor por FIP", "R9": "primera apertura de la temporada",
+    "R10": "abridor con 8 a 14 dias de descanso", "R11": "a favor del abridor caliente (su equipo +3 o mas en sus aperturas)",
 }
 
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
@@ -92,8 +97,8 @@ def _grupos(liga):
     if lg == "ncaamb": return {"K": ["NCAAMB"], "S": ["NCAAMB"], "L": ["NCAAMB"]}
     if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"], "S": ["NFL"], "L": ["NFL"]}
     if lg == "ncaafb": return {"N": ["NCAAFB"], "S": ["NCAAFB"], "L": ["NCAAFB"]}
-    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB"]}
-    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB"]}
+    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"]}
+    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"]}
     if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"], "S": ["FUTBOL"], "L": ["FUTBOL"]}
     return {}
 
@@ -184,7 +189,8 @@ def construir_catalogo():
     # tandas 7 y 8 (10-oct-2026): x continuo; beta por unidad de x en toda la muestra, encogido con el mismo tau
     for ruta78, md78 in (("2026-10-10_tanda7_resultados.json", "trabajo/minar/2026-10-10_tanda7.md"),
                          ("2026-10-10_tanda8_resultados.json", "trabajo/minar/2026-10-10_tanda8.md"),
-                         ("2026-10-13_tanda11_resultados.json", "trabajo/minar/2026-10-13_tanda11.md")):
+                         ("2026-10-13_tanda11_resultados.json", "trabajo/minar/2026-10-13_tanda11.md"),
+                         ("2026-10-28_rober_abridores_resultados.json", "trabajo/minar/2026-10-28_rober_abridores.md")):
         rr = os.path.join(CODIGO, "trabajo", "minar", ruta78)
         if not os.path.exists(rr):
             continue
@@ -669,6 +675,89 @@ def _pitcheos_previos(nombre, fecha):
     if not L or (fecha - L[-1][0]).days > 20 or L[-1][1] is None:
         return None
     return _ind(L[-1][1] >= 105)
+
+
+# ------------------------------------------------------------------ 28-oct-2026: angulos de abridor de Roberto (R4-R11)
+_ROB = None
+
+
+def _rober_datos():
+    """Lineas de lanzadores de la temporada en curso (datos/jugadores_recientes/mlb_lanzadores.csv: MLB, LMP, LVBP, LIDOM,
+    KBO, NPB) y resultado del equipo por juego (datos/beisbol.csv). Mismas definiciones que utilidades/minar_angulos_rober.py."""
+    global _ROB
+    if _ROB is None:
+        lin, tot, gano = {}, {}, {}
+        rb = io.ruta("datos", "beisbol.csv")
+        if os.path.exists(rb):
+            with _io.open(rb, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    a, b = _f(r.get("runs")), _f(r.get("runs_opp"))
+                    if a is not None and b is not None and a != b:
+                        gano[(r.get("gamePk"), r.get("team"))] = a > b
+        rl = io.ruta("datos", "jugadores_recientes", "mlb_lanzadores.csv")
+        if os.path.exists(rl):
+            with _io.open(rl, encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    fe = _d(r.get("game_date"))
+                    if not fe:
+                        continue
+                    ip_ = _f(r.get("ip")) or 0.0
+                    ip_ = int(ip_) + round((ip_ - int(ip_)) * 10) / 3.0
+                    v = {"fecha": fe, "liga": (r.get("liga") or "").lower(), "season": r.get("season"), "ip": ip_,
+                         "er": _f(r.get("er")) or 0.0, "hr": _f(r.get("hr")) or 0.0, "bb": (_f(r.get("bb")) or 0.0) + (_f(r.get("hbp")) or 0.0),
+                         "k": _f(r.get("k")) or 0.0, "ab": (r.get("abridor") or "") in ("1", "1.0", "True"),
+                         "gano": gano.get((r.get("game_id"), r.get("team")))}
+                    lin.setdefault((r.get("jugador") or "").strip().lower(), []).append(v)
+                    t = tot.setdefault((v["liga"], v["season"]), [0.0] * 5)
+                    t[0] += v["ip"]; t[1] += v["er"]; t[2] += v["hr"]; t[3] += v["bb"]; t[4] += v["k"]
+        const = {k: (9 * t[1] / t[0] - (13 * t[2] + 3 * t[3] - 2 * t[4]) / t[0]) for k, t in tot.items() if t[0] > 50}
+        _ROB = (lin, const)
+    return _ROB
+
+
+def _rober_abridor(liga, nombre, fecha):
+    """Stats as-of del abridor anunciado en esta liga y temporada: era, fip, ip, gs, wl (record del equipo en sus aperturas),
+    desc (dias desde su ultima aparicion en cualquier liga). None si el nombre no aparece en la bitacora."""
+    if not nombre:
+        return None
+    lin, const = _rober_datos()
+    L = [v for v in lin.get(nombre.strip().lower(), []) if v["fecha"] < fecha]
+    if not L:
+        return None
+    desc = (fecha - max(v["fecha"] for v in L)).days
+    M = [v for v in L if v["liga"] == liga]
+    temp = max((v["season"] for v in M), default=None)
+    M = [v for v in M if v["season"] == temp and (fecha - v["fecha"]).days <= 200]
+    ip = sum(v["ip"] for v in M)
+    out = {"desc": desc, "ip": ip, "gs": sum(1 for v in M if v["ab"]),
+           "wl": sum(1 if v["gano"] else -1 for v in M if v["ab"] and v["gano"] is not None), "era": None, "fip": None}
+    c = const.get((liga, temp))
+    if ip >= 10 and c is not None:
+        out["era"] = 9 * sum(v["er"] for v in M) / ip
+        out["fip"] = (13 * sum(v["hr"] for v in M) + 3 * sum(v["bb"] for v in M) - 2 * sum(v["k"] for v in M)) / ip + c
+    return out
+
+
+def _rober_x(p, liga, fecha):
+    """x de R4-R11 (+1 apunta al local, -1 a la visita), mismas condiciones que el minado."""
+    h = _rober_abridor(liga, (p.get("home") or {}).get("probable"), fecha)
+    a = _rober_abridor(liga, (p.get("away") or {}).get("probable"), fecha)
+    if not h or not a:
+        return {}
+    x = {}
+    ok = lambda s: s["era"] is not None
+    x["R4"] = _ind(ok(a) and a["fip"] - a["era"] >= 1.5) - _ind(ok(h) and h["fip"] - h["era"] >= 1.5)
+    if ok(h) and ok(a):
+        x["R5"] = _ind(h["era"] > a["era"] and h["fip"] < a["fip"]) - _ind(a["era"] > h["era"] and a["fip"] < h["fip"])
+    x["R6"] = _ind(a["wl"] >= 3) - _ind(h["wl"] >= 3)
+    x["R11"] = _ind(h["wl"] >= 3) - _ind(a["wl"] >= 3)
+    x["R9"] = _ind(h["gs"] == 0) - _ind(a["gs"] == 0)
+    x["R10"] = _ind(8 <= h["desc"] <= 14) - _ind(8 <= a["desc"] <= 14)
+    ph = (p.get("modelo") or {}).get("p_home")
+    if ph is not None and ok(h) and ok(a):
+        x["R7"] = _ind(ph <= 0.47 and h["fip"] < a["fip"]) - _ind(1 - ph <= 0.47 and a["fip"] < h["fip"])
+        x["R8"] = _ind(ph >= 0.53 and h["fip"] > a["fip"]) - _ind(1 - ph >= 0.53 and a["fip"] > h["fip"])
+    return x
 
 
 # ------------------------------------------------------------------ angulos de un partido
@@ -1187,6 +1276,11 @@ def calcular(p, todos=None):
             qh, qa = _pitcheos_previos(p["home"].get("probable"), fecha), _pitcheos_previos(p["away"].get("probable"), fecha)
             if qh is not None and qa is not None:
                 x["R3"] = qh - qa
+    if liga in _BEIS:
+        try:
+            x.update(_rober_x(p, liga, fecha))
+        except Exception:
+            pass
     if "F" in G:
         dz = _derbi(p, eh, ea)
         m_ = p.get("modelo") or {}

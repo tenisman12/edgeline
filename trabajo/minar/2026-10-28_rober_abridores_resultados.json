@@ -1,0 +1,372 @@
+{
+ "generado": "2026-10-28",
+ "fuente": "Roberto (28-oct-2026); medido en LMP 2014-2025 sin cuotas",
+ "juegos": 4130,
+ "coef_base": {
+  "elo": [
+   0.1086,
+   0.4549
+  ],
+  "elo_fip": [
+   0.1099,
+   0.4476,
+   0.1974
+  ]
+ },
+ "ganador": [
+  {
+   "liga": "LMP",
+   "codigo": "R4",
+   "angulo": "contra el abridor suertudo (su FIP 1.5+ peor que su ERA)",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 647,
+   "z": 0.52,
+   "residuo_firmado_pp": 1.01,
+   "mitades": [
+    0.82,
+    1.16
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "7/12",
+   "base_elo": {
+    "n": 647,
+    "acierto": 50.9,
+    "esperado": 49.3,
+    "exceso": 1.5,
+    "se": 0.019501494981851115,
+    "z": 0.77,
+    "mitades": [
+     1.36,
+     1.62
+    ],
+    "temporadas": "7/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R5",
+   "angulo": "abridor con peor ERA pero mejor FIP que el rival",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 868,
+   "z": 1.19,
+   "residuo_firmado_pp": 2.01,
+   "mitades": [
+    4.65,
+    -0.48
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "6/12",
+   "base_elo": {
+    "n": 868,
+    "acierto": 52.8,
+    "esperado": 49.7,
+    "exceso": 3.09,
+    "se": 0.01682068539557095,
+    "z": 1.84,
+    "mitades": [
+     5.75,
+     0.59
+    ],
+    "temporadas": "9/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R6",
+   "angulo": "contra el abridor caliente (su equipo +3 o mas en sus aperturas)",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 1165,
+   "z": -0.47,
+   "residuo_firmado_pp": -0.68,
+   "mitades": [
+    -1.99,
+    0.41
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "3/12",
+   "base_elo": {
+    "n": 1165,
+    "acierto": 47.6,
+    "esperado": 48.7,
+    "exceso": -1.13,
+    "se": 0.014519636620977999,
+    "z": -0.78,
+    "mitades": [
+     -2.37,
+     -0.1
+    ],
+    "temporadas": "3/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R7",
+   "angulo": "underdog con mejor abridor por FIP",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 934,
+   "z": 0.11,
+   "residuo_firmado_pp": 0.18,
+   "mitades": [
+    1.11,
+    -0.72
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "5/12",
+   "base_elo": {
+    "n": 934,
+    "acierto": 44.8,
+    "esperado": 43.1,
+    "exceso": 1.67,
+    "se": 0.016181521151151044,
+    "z": 1.03,
+    "mitades": [
+     2.65,
+     0.71
+    ],
+    "temporadas": "5/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R8",
+   "angulo": "favorito con peor abridor por FIP",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 934,
+   "z": -0.11,
+   "residuo_firmado_pp": -0.18,
+   "mitades": [
+    -1.11,
+    0.72
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "7/12",
+   "base_elo": {
+    "n": 934,
+    "acierto": 55.2,
+    "esperado": 56.9,
+    "exceso": -1.67,
+    "se": 0.016181521151151044,
+    "z": -1.03,
+    "mitades": [
+     -2.65,
+     -0.71
+    ],
+    "temporadas": "7/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R9",
+   "angulo": "primera apertura de la temporada",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 1136,
+   "z": -0.9,
+   "residuo_firmado_pp": -1.33,
+   "mitades": [
+    -0.93,
+    -1.64
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "3/12",
+   "base_elo": {
+    "n": 1136,
+    "acierto": 48.5,
+    "esperado": 49.9,
+    "exceso": -1.4,
+    "se": 0.014714372069698913,
+    "z": -0.95,
+    "mitades": [
+     -1.0,
+     -1.72
+    ],
+    "temporadas": "3/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R10",
+   "angulo": "abridor con 8 a 14 dias de descanso",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 718,
+   "z": -1.88,
+   "residuo_firmado_pp": -3.48,
+   "mitades": [
+    -3.29,
+    -3.64
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "2/12",
+   "base_elo": {
+    "n": 718,
+    "acierto": 46.1,
+    "esperado": 49.7,
+    "exceso": -3.6,
+    "se": 0.01850344667873392,
+    "z": -1.94,
+    "mitades": [
+     -3.34,
+     -3.81
+    ],
+    "temporadas": "2/12"
+   }
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R11",
+   "angulo": "a favor del abridor caliente (su equipo +3 o mas en sus aperturas)",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 1165,
+   "z": 0.47,
+   "residuo_firmado_pp": 0.68,
+   "mitades": [
+    1.99,
+    -0.41
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "9/12",
+   "base_elo": {
+    "n": 1165,
+    "acierto": 52.4,
+    "esperado": 51.3,
+    "exceso": 1.13,
+    "se": 0.014519636620977999,
+    "z": 0.78,
+    "mitades": [
+     2.37,
+     0.1
+    ],
+    "temporadas": "9/12"
+   }
+  }
+ ],
+ "estimacion": [
+  {
+   "liga": "LMP",
+   "codigo": "R4",
+   "angulo": "contra el abridor suertudo (su FIP 1.5+ peor que su ERA)",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 647,
+   "x_tipico": 1,
+   "beta": 0.04041,
+   "ee": 0.07797,
+   "pp_50": 1.01,
+   "pp_50_encogido": 0.59
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R5",
+   "angulo": "abridor con peor ERA pero mejor FIP que el rival",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 868,
+   "x_tipico": 1,
+   "beta": 0.08044,
+   "ee": 0.06727,
+   "pp_50": 2.01,
+   "pp_50_encogido": 1.31
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R6",
+   "angulo": "contra el abridor caliente (su equipo +3 o mas en sus aperturas)",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 1165,
+   "x_tipico": 1,
+   "beta": -0.0272,
+   "ee": 0.05803,
+   "pp_50": -0.68,
+   "pp_50_encogido": -0.49
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R7",
+   "angulo": "underdog con mejor abridor por FIP",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 934,
+   "x_tipico": 1,
+   "beta": 0.0072,
+   "ee": 0.06495,
+   "pp_50": 0.18,
+   "pp_50_encogido": 0.12
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R8",
+   "angulo": "favorito con peor abridor por FIP",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 934,
+   "x_tipico": 1,
+   "beta": -0.0072,
+   "ee": 0.06495,
+   "pp_50": -0.18,
+   "pp_50_encogido": -0.12
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R9",
+   "angulo": "primera apertura de la temporada",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 1136,
+   "x_tipico": 1,
+   "beta": -0.05321,
+   "ee": 0.05885,
+   "pp_50": -1.33,
+   "pp_50_encogido": -0.95
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R10",
+   "angulo": "abridor con 8 a 14 dias de descanso",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 718,
+   "x_tipico": 1,
+   "beta": -0.13943,
+   "ee": 0.07395,
+   "pp_50": -3.48,
+   "pp_50_encogido": -2.12
+  },
+  {
+   "liga": "LMP",
+   "codigo": "R11",
+   "angulo": "a favor del abridor caliente (su equipo +3 o mas en sus aperturas)",
+   "base": "modelo",
+   "n": 4130,
+   "n_activos": 1165,
+   "x_tipico": 1,
+   "beta": 0.0272,
+   "ee": 0.05803,
+   "pp_50": 0.68,
+   "pp_50_encogido": 0.49
+  }
+ ]
+}
