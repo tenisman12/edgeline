@@ -75,6 +75,11 @@ NOMBRES = {
     "R6": "contra el abridor caliente (su equipo +3 o mas en sus aperturas)", "R7": "underdog con mejor abridor por FIP",
     "R8": "favorito con peor abridor por FIP", "R9": "primera apertura de la temporada",
     "R10": "abridor con 8 a 14 dias de descanso", "R11": "a favor del abridor caliente (su equipo +3 o mas en sus aperturas)",
+    # 28-oct-2026: angulos de ML de Roberto (momios de cierre LMP 2021-26), medidos tambien contra ELO en LMP 2014-2025
+    "M1": "REBOTE: underdog que viene de 3+ derrotas", "M2": "ANTI-BARRIDA: el que va 0-2 en la serie, en el juego 3",
+    "M3": "BARRIDA: el que va 2-0 en la serie, en el juego 3", "M4": "RESACA: contra el equipo que viene de ganar por 7+",
+    "M5": "FAV INFLADO: favorito que viene de 3+ victorias", "M6": "PAREJO: visitante con momios parejos (1.80-2.05)",
+    "M7": "FAV CORTO: favorito de -143 o mas corto",
 }
 
 # liga en vivo -> grupos del catalogo donde se midio cada familia de codigos (el primero que tenga el codigo)
@@ -97,8 +102,8 @@ def _grupos(liga):
     if lg == "ncaamb": return {"K": ["NCAAMB"], "S": ["NCAAMB"], "L": ["NCAAMB"]}
     if lg == "nfl": return {"N": ["NFL"], "Q": ["NFL"], "S": ["NFL"], "L": ["NFL"]}
     if lg == "ncaafb": return {"N": ["NCAAFB"], "S": ["NCAAFB"], "L": ["NCAAFB"]}
-    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"]}
-    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"]}
+    if lg == "mlb": return {"B": ["MLB", "TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"], "M": ["LMP"]}
+    if lg in _BEIS: return {"B": ["TODAS"], "Q": ["BEISBOL"], "S": ["BEISBOL"], "L": ["BEISBOL"], "R": ["BEISBOL", "LMP+NPB", "LMP"], "M": ["LMP"]}
     if lg in _FUT: return {"F": ["7 ligas", "LigaMX", "5 ligas"], "Q": ["FUTBOL"], "S": ["FUTBOL"], "L": ["FUTBOL"]}
     return {}
 
@@ -204,7 +209,7 @@ def construir_catalogo():
                 "n_activo_prueba": r.get("n_activo_prueba"), "z": r.get("z"), "efecto_pp": r.get("residuo_firmado_pp"),
                 "tmle_pp": None, "tmle_ic95": None, "desde_prueba": r.get("desde_prueba"),
                 "signo_esperado": None if r.get("beta") is None else (1 if r["beta"] > 0 else -1) * (1 if r.get("direccion_ok") else -1),
-                "fuente": md78}
+                "fuente": md78, **{kk: r[kk] for kk in ("roi_rober", "n_rober", "q_rober", "sin_2022_24_pp", "temporadas_a_favor", "mitades") if kk in r}}
         for e in t78.get("estimacion") or []:
             k = "%s|%s" % (e.get("liga"), e.get("codigo"))
             if k not in cat or e.get("beta") is None or not e.get("x_tipico"):
@@ -705,7 +710,7 @@ def _rober_datos():
                     ip_ = int(ip_) + round((ip_ - int(ip_)) * 10) / 3.0
                     v = {"fecha": fe, "liga": (r.get("liga") or "").lower(), "season": r.get("season"), "ip": ip_,
                          "er": _f(r.get("er")) or 0.0, "hr": _f(r.get("hr")) or 0.0, "bb": (_f(r.get("bb")) or 0.0) + (_f(r.get("hbp")) or 0.0),
-                         "k": _f(r.get("k")) or 0.0, "ab": (r.get("abridor") or "") in ("1", "1.0", "True"),
+                         "k": _f(r.get("k")) or 0.0, "ab": (r.get("abridor") or "") in ("1", "1.0", "True"), "team": r.get("team"),
                          "gano": gano.get((r.get("game_id"), r.get("team")))}
                     lin.setdefault((r.get("jugador") or "").strip().lower(), []).append(v)
                     t = tot.setdefault((v["liga"], v["season"]), [0.0] * 5)
@@ -738,10 +743,36 @@ def _rober_abridor(liga, nombre, fecha):
     return out
 
 
+def _abridor_proyectado(liga, equipo, fecha):
+    """Sin abridor anunciado (LMP/LVBP/LIDOM casi siempre): el de la rotacion de los ultimos 15 dias con la apertura mas vieja
+    y 4+ dias de descanso. Es una proyeccion; queda marcada en el angulo ("proyectado")."""
+    lin, _ = _rober_datos()
+    ult = {}
+    for nom, L in lin.items():
+        for v in L:
+            if v["ab"] and v["liga"] == liga and v.get("team") == equipo and 0 < (fecha - v["fecha"]).days <= 15:
+                if nom not in ult or v["fecha"] > ult[nom]:
+                    ult[nom] = v["fecha"]
+    # turno normal primero (5-7 dias); si nadie, el de 4+ dias con la apertura mas reciente (evita al que salio de la rotacion)
+    turno = [(f_, n_) for n_, f_ in ult.items() if 5 <= (fecha - f_).days <= 7]
+    if turno:
+        return min(turno)[1]
+    cand = [(f_, n_) for n_, f_ in ult.items() if (fecha - f_).days >= 4]
+    return max(cand)[1] if cand else None
+
+
 def _rober_x(p, liga, fecha):
     """x de R4-R11 (+1 apunta al local, -1 a la visita), mismas condiciones que el minado."""
-    h = _rober_abridor(liga, (p.get("home") or {}).get("probable"), fecha)
-    a = _rober_abridor(liga, (p.get("away") or {}).get("probable"), fecha)
+    nh, na = (p.get("home") or {}).get("probable"), (p.get("away") or {}).get("probable")
+    proy_h = proy_a = False
+    if not nh:
+        nh = _abridor_proyectado(liga, _equipo(p, "home"), fecha); proy_h = bool(nh)
+    if not na:
+        na = _abridor_proyectado(liga, _equipo(p, "away"), fecha); proy_a = bool(na)
+    proy = proy_h or proy_a
+    p["_abridores_angulos"] = {"home": nh, "away": na, "proyectado": proy}
+    h = _rober_abridor(liga, nh, fecha)
+    a = _rober_abridor(liga, na, fecha)
     if not h or not a:
         return {}
     x = {}
@@ -751,12 +782,58 @@ def _rober_x(p, liga, fecha):
         x["R5"] = _ind(h["era"] > a["era"] and h["fip"] < a["fip"]) - _ind(a["era"] > h["era"] and a["fip"] < h["fip"])
     x["R6"] = _ind(a["wl"] >= 3) - _ind(h["wl"] >= 3)
     x["R11"] = _ind(h["wl"] >= 3) - _ind(a["wl"] >= 3)
-    x["R9"] = _ind(h["gs"] == 0) - _ind(a["gs"] == 0)
-    x["R10"] = _ind(8 <= h["desc"] <= 14) - _ind(8 <= a["desc"] <= 14)
+    # primera apertura y descanso solo con abridor anunciado (la proyeccion los inventaria)
+    x["R9"] = _ind(not proy_h and h["gs"] == 0) - _ind(not proy_a and a["gs"] == 0)
+    x["R10"] = _ind(not proy_h and 8 <= h["desc"] <= 14) - _ind(not proy_a and 8 <= a["desc"] <= 14)
     ph = (p.get("modelo") or {}).get("p_home")
     if ph is not None and ok(h) and ok(a):
         x["R7"] = _ind(ph <= 0.47 and h["fip"] < a["fip"]) - _ind(1 - ph <= 0.47 and a["fip"] < h["fip"])
         x["R8"] = _ind(ph >= 0.53 and h["fip"] > a["fip"]) - _ind(1 - ph >= 0.53 and a["fip"] > h["fip"])
+    return x
+
+
+def _p_ml(p):
+    """Probabilidad del local para las etiquetas de ML: cuota sin margen si la hay; si no, la del modelo."""
+    c = p.get("cuotas") or {}
+    a2d = lambda m: (1 + m / 100.0) if m > 0 else (1 + 100.0 / -m)
+    try:
+        if c.get("ml_home") and c.get("ml_away"):
+            ih, ia = 1 / a2d(float(c["ml_home"])), 1 / a2d(float(c["ml_away"]))
+            return ih / (ih + ia)
+    except Exception:
+        pass
+    return (p.get("modelo") or {}).get("p_home")
+
+
+def _rober_ml(p, Ph, Pa, ea, fecha):
+    """M1-M7 (+1 apunta al local). Mismas definiciones que utilidades/minar_angulos_rober.py."""
+    ph = _p_ml(p)
+    x = {}
+    def racha(P):
+        temp = [g for g in P if (fecha - g["fecha"]).days <= 120]
+        w = l = 0
+        for g in reversed(temp):
+            if g["gf"] > g["ga"] and l == 0: w += 1
+            elif g["gf"] < g["ga"] and w == 0: l += 1
+            else: break
+        ult = temp[-1] if temp and (fecha - temp[-1]["fecha"]).days <= 20 else None
+        return w, l, (ult["gf"] - ult["ga"]) if ult else None
+    wh, lh, mh = racha(Ph); wa, la, ma = racha(Pa)
+    # serie: juegos seguidos del local contra este rival en casa (dias consecutivos)
+    j = len(Ph); prev, pf = [], fecha
+    while j - 1 >= 0 and Ph[j - 1]["rival"] == ea and Ph[j - 1]["local"] and (pf - Ph[j - 1]["fecha"]).days <= 1:
+        j -= 1; prev.append(Ph[j]); pf = Ph[j]["fecha"]
+    if len(prev) == 2:
+        gh = sum(1 for g in prev if g["gf"] > g["ga"])
+        x["M2"] = _ind(gh == 0) - _ind(gh == 2)
+        x["M3"] = _ind(gh == 2) - _ind(gh == 0)
+    x["M4"] = _ind(ma is not None and ma >= 7) - _ind(mh is not None and mh >= 7)
+    if ph is not None:
+        pa_ = 1 - ph
+        x["M1"] = _ind(ph <= 0.53 and lh >= 3) - _ind(pa_ <= 0.53 and la >= 3)
+        x["M5"] = _ind(ph >= 0.53 and wh >= 3) - _ind(pa_ >= 0.53 and wa >= 3)
+        x["M6"] = -_ind(0.49 <= pa_ <= 0.56)
+        x["M7"] = _ind(ph >= 0.59) - _ind(pa_ >= 0.59)
     return x
 
 
@@ -970,6 +1047,7 @@ def _tenis_hist():
 
 
 # ------------------------------------------------------------------ capas con peso (aprobadas el 9-oct-2026)
+ROBER_R = {"R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"}
 CON_PESO = {("nba", "K14"), ("atp", "T1")} | {(lg, "S4") for lg in ("mlb", "npb", "kbo", "lmp", "lvbp", "lidom", "abl")}     # ya entran en p (plataforma.py); en la capa cualitativa no se cuentan dos veces
 _CAPAS = None
 
@@ -1281,6 +1359,11 @@ def calcular(p, todos=None):
             x.update(_rober_x(p, liga, fecha))
         except Exception:
             pass
+    if "M" in G:
+        try:
+            x.update(_rober_ml(p, Ph, Pa, ea, fecha))
+        except Exception:
+            pass
     if "F" in G:
         dz = _derbi(p, eh, ea)
         m_ = p.get("modelo") or {}
@@ -1294,7 +1377,9 @@ def calcular(p, todos=None):
         lado = "home" if v > 0 else "away"
         out.append({"codigo": c, "nombre": NOMBRES.get(c, c), "lado": lado, "equipo": p[lado].get("abrev") or p[lado]["nombre"],
                     "otro": p["away" if lado == "home" else "home"].get("abrev") or p["away" if lado == "home" else "home"]["nombre"],
-                    "x": v, "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO})
+                    "x": v, "medicion": medicion(liga, c), "con_peso": (liga, c) in CON_PESO,
+                    **({"abridores": p.get("_abridores_angulos")} if c in ROBER_R and p.get("_abridores_angulos") else {})})
+    p.pop("_abridores_angulos", None)
     return out
 
 

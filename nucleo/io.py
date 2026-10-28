@@ -159,7 +159,17 @@ def cargar_juegos(x, liga=None):
     if filtro:
         f = norm(filtro)
         filas = [r for r in filas if norm(r.get("league") or r.get("liga")) == f]
+    if dep == "beisbol":
+        filas = [r for r in filas if not _juego_fantasma(r)]
     return filas
+
+
+def _juego_fantasma(r):
+    """28-oct-2026: juegos pospuestos/suspendidos que la MLB Stats API marco como Final entraron como 0-0 sin entradas ni
+    turnos (LMP 138 filas, ABL 34, LIDOM 20, LVBP 14, MLB 14). No se jugaron: no cuentan para forma, racha, ELO ni H2H."""
+    def z(v):
+        return str(v if v is not None else "").strip() in ("", "0", "0.0")
+    return z(r.get("runs")) and z(r.get("runs_opp")) and z(r.get("pit_inningsPitched")) and z(r.get("bat_atBats"))
 
 # ------------------------------------------------------------------ cuotas
 def _fecha_iso(s):

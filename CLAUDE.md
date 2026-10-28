@@ -371,3 +371,17 @@ Quedan en trabajo/datos/datos/ y se pueden leer libremente para cualquier análi
   "Caliente" = su equipo +3 o mas en sus aperturas (sustituto del pitcher profit en unidades). ERA/FIP con 10+ IP en la
   temporada en curso (datos/jugadores_recientes/mlb_lanzadores.csv). Se registran en salida/historial_angulos.csv para
   medirlos en vivo con cuotas reales.
+- (28-oct-2026, segunda parte) Angulos de ML de Roberto (su reporte con momios de cierre de BetExplorer, LMP 2021-26) como
+  contexto M1-M7 (`nucleo/angulos._rober_ml`, grupo "M" -> LMP): M1 REBOTE (underdog tras 3+ derrotas), M2 ANTI-BARRIDA
+  (0-2 en el J3), M3 BARRIDA (2-0 en el J3), M4 RESACA (contra el que gano por 7+), M5 FAV INFLADO (favorito tras 3+
+  victorias), M6 PAREJO (visitante con momios 1.80-2.05), M7 FAV CORTO (-143 o mas corto). Probabilidad para underdog /
+  favorito: cuota sin margen si la hay; si no, la del modelo. El catalogo guarda su medicion contra ELO en LMP 2014-2025,
+  el ROI de Roberto (roi_rober, n_rober, q_rober) y el efecto sin 2022-23 / 2023-24 (sin_2022_24_pp).
+  Contra ELO solo pasa ANTI-BARRIDA / BARRIDA: +6.65 pp al que va 0-2 (n 619, z 3.34, mitades +5.5 / +7.6, 10 de 13
+  temporadas, sin 2022-24 +6.3; encogido +3.8). Sigue sin peso hasta que Alejandro lo apruebe (regla 2).
+- R4-R11 sin abridor anunciado (LMP, LVBP y LIDOM casi siempre llegan null de la MLB Stats API): se usa el proyectado por
+  rotacion (`_abridor_proyectado`: turno de 5-7 dias) y el angulo lleva `abridores.proyectado`; R9 y R10 solo con anunciado.
+- Juegos fantasma: pospuestos que la API marca Final entraban a datos/beisbol.csv como 0-0 sin entradas (LMP 138 filas, ABL 34,
+  LIDOM 20, LVBP 14, MLB 14). `io.cargar_juegos` los descarta en beisbol y `recolectar_boxscores.schedule` ya no los baja.
+- `lmp.yml` corre diario (11:17 UTC) con lanzadores de los ultimos 4 dias: lmp_lanzadores.csv tiene la temporada en curso.
+

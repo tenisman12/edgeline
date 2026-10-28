@@ -18,6 +18,23 @@ BASE = os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.pat
 CODIGO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAU = 0.0924  # mismo tau de la tanda 4 para encoger
 
+# ROI que reporto Roberto con momios de cierre de BetExplorer (LMP 2021-22 a 2025-26, temporada regular): (roi %, n, q)
+ROI_ROBER = {"R4": (13.1, 219, 0.18), "R5": (9.1, 137, 0.33), "R6": (6.5, 290, 0.33), "R7": (8.5, 153, 0.38),
+             "R8": (-16.2, 159, 0.30), "R9": (-12.4, 301, 0.33), "R10": (-11.6, 210, 0.43), "R11": (-15.8, 290, 0.18),
+             "M1": (21.4, 237, 0.013), "M2": (15.7, 232, 0.029), "M3": (-20.4, 254, 0.003), "M4": (18.0, 147, 0.047),
+             "M5": (-16.2, 225, 0.012), "M6": (-17.0, 227, 0.02), "M7": (-11.3, 723, None)}
+SIN_ATIPICAS = ("2022", "2023")   # 2022-23 y 2023-24: el favorito del casino gano 50.5 % y 51.3 % (reporte de Roberto)
+
+ANG_ML = {
+    "M1": ("REBOTE: underdog (p <= 0.53) que viene de 3+ derrotas", 1),
+    "M2": ("ANTI-BARRIDA: el que va 0-2 en la serie, en el juego 3", 1),
+    "M3": ("BARRIDA: el que va 2-0 en la serie, en el juego 3", -1),
+    "M4": ("RESACA: contra el equipo que viene de ganar por 7+", 1),
+    "M5": ("FAV INFLADO: favorito (p >= 0.53) que viene de 3+ victorias", -1),
+    "M6": ("PAREJO: visitante con p entre 0.49 y 0.56 (momios 1.80-2.05)", -1),
+    "M7": ("FAV CORTO: favorito de -143 o mas corto (p >= 0.59)", -1),
+}
+
 ANG = {
     "R4": ("contra el abridor suertudo (su FIP 1.5+ peor que su ERA)", 1),
     "R5": ("abridor con peor ERA pero mejor FIP que el rival", 1),
@@ -155,7 +172,8 @@ def main():
             por = collections.defaultdict(float)
             for s, g, p in ex:
                 por[s] += g - p
-            out[base] = dict(n=n, acierto=round(100 * sum(g for _, g, _ in ex) / n, 1), esperado=round(100 * sum(p for _, _, p in ex) / n, 1),
+            sa = [g - p for s_, g, p in ex if s_ not in SIN_ATIPICAS]
+            out[base] = dict(sin_atipicas=round(100 * sum(sa) / max(len(sa), 1), 2), n=n, acierto=round(100 * sum(g for _, g, _ in ex) / n, 1), esperado=round(100 * sum(p for _, _, p in ex) / n, 1),
                              exceso=round(100 * m, 2), se=se, z=round(z, 2), mitades=[round(100 * sum(h1) / max(len(h1), 1), 2), round(100 * sum(h2) / max(len(h2), 1), 2)],
                              temporadas=f"{sum(1 for v in por.values() if v > 0)}/{len(por)}")
         b = out["p2"]
@@ -163,13 +181,89 @@ def main():
         ganador.append({"liga": "LMP", "codigo": cod, "angulo": nom, "base": "modelo", "veredicto": "pasa" if pasa else "no pasa",
                         "n_activo_prueba": b["n"], "z": b["z"], "residuo_firmado_pp": b["exceso"], "mitades": b["mitades"],
                         "beta": 1.0 if signo > 0 else -1.0, "direccion_ok": True, "desde_prueba": "2014-10-10",
-                        "temporadas_a_favor": b["temporadas"], "base_elo": out["p1"]})
+                        "temporadas_a_favor": b["temporadas"], "base_elo": out["p1"], "sin_2022_24_pp": b["sin_atipicas"],
+                        "roi_rober": ROI_ROBER[cod][0], "n_rober": ROI_ROBER[cod][1], "q_rober": ROI_ROBER[cod][2]})
         beta = lg_(0.5 + b["exceso"] / 100); ee = 4 * b["se"]
         estim.append({"liga": "LMP", "codigo": cod, "angulo": nom, "base": "modelo", "n": len(filas), "n_activos": b["n"], "x_tipico": 1,
                       "beta": round(beta, 5), "ee": round(ee, 5), "pp_50": b["exceso"],
                       "pp_50_encogido": round(100 * (1 / (1 + math.exp(-beta * TAU ** 2 / (TAU ** 2 + ee ** 2))) - 0.5), 2)})
         md.append(f"| {cod} | {nom} | {b['n']} | {out['p1']['exceso']:+.2f} ({out['p1']['z']}) | {b['exceso']:+.2f} ({b['z']}) | "
-                  f"{b['mitades'][0]:+.2f} / {b['mitades'][1]:+.2f} | {b['temporadas']} | {'pasa' if pasa else 'no pasa'} |")
+                  f"{b['mitades'][0]:+.2f} / {b['mitades'][1]:+.2f} | {b['temporadas']} | {b['sin_atipicas']:+.2f} | {ROI_ROBER[cod][0]:+.1f} % ({ROI_ROBER[cod][1]}) | {'pasa' if pasa else 'no pasa'} |")
+    # ---------------- angulos de ML de Roberto (M1-M7): todos los juegos, base ELO
+    elo2 = collections.defaultdict(lambda: 1500.0); ut2 = {}; hist = collections.defaultdict(list)  # equipo -> [(fecha, rival, local, gf, ga)]
+    todos = sorted((v[0], gid) for gid, v in res.items())
+    filas_ml = []
+    for fecha, gid in todos:
+        _, season, home, away, rh, ra = res[gid]
+        if rh == ra:
+            continue
+        for t in (home, away):
+            if ut2.get(t) != season:
+                elo2[t] = 1500 + (elo2[t] - 1500) * 0.67; ut2[t] = season
+        def racha(t):
+            L = [g for g in hist[t] if (D(fecha) - D(g[0])).days <= 20 and g[5] == season]
+            w = l = 0
+            for g in reversed(L):
+                if g[3] > g[4] and l == 0: w += 1
+                elif g[3] < g[4] and w == 0: l += 1
+                else: break
+            return w, l, (L[-1][3] - L[-1][4]) if L else None
+        # serie: juegos previos seguidos contra el mismo rival en el mismo parque (dias consecutivos)
+        prev, pf = [], fecha
+        for g in reversed(hist[home]):
+            if g[1] == away and g[2] and (D(pf) - D(g[0])).days <= 1 and g[5] == season:
+                prev.append(g); pf = g[0]
+            else:
+                break
+        filas_ml.append({"season": season, "elo_d": elo2[home] - elo2[away] + 24, "win_home": 1 if rh > ra else 0,
+                         "rh": racha(home), "ra": racha(away), "num": len(prev) + 1,
+                         "serie_h": sum(1 for g in prev if g[3] > g[4]), "serie_a": sum(1 for g in prev if g[3] < g[4])})
+        e = 1 / (1 + 10 ** (-(elo2[home] - elo2[away] + 24) / 400))
+        elo2[home] += 6 * ((1 if rh > ra else 0) - e); elo2[away] -= 6 * ((1 if rh > ra else 0) - e)
+        hist[home].append((fecha, away, True, rh, ra, season)); hist[away].append((fecha, home, False, ra, rh, season))
+    bm = fit([[1, r["elo_d"] / 100] for r in filas_ml], [r["win_home"] for r in filas_ml])
+    for r in filas_ml:
+        r["p"] = sg(bm, [1, r["elo_d"] / 100])
+    CML = {
+        "M1": lambda r, l, o, p: p <= 0.53 and r["r" + l][1] >= 3,
+        "M2": lambda r, l, o, p: r["num"] == 3 and r["serie_" + o] == 2,
+        "M3": lambda r, l, o, p: r["num"] == 3 and r["serie_" + l] == 2,
+        "M4": lambda r, l, o, p: r["r" + o][2] is not None and r["r" + o][2] >= 7,
+        "M5": lambda r, l, o, p: p >= 0.53 and r["r" + l][0] >= 3,
+        "M6": lambda r, l, o, p: l == "a" and 0.49 <= p <= 0.56,
+        "M7": lambda r, l, o, p: p >= 0.59,
+    }
+    for cod, (nom, signo) in ANG_ML.items():
+        ex = []
+        for r in filas_ml:
+            for l, o, pk in (("h", "a", 1), ("a", "h", 0)):
+                pb = r["p"] if pk else 1 - r["p"]
+                if CML[cod](r, l, o, pb):
+                    ex.append((r["season"], r["win_home"] if pk else 1 - r["win_home"], pb))
+        n = len(ex)
+        if not n:
+            continue
+        m = sum(g - p for _, g, p in ex) / n; se = math.sqrt(sum(p * (1 - p) for _, _, p in ex) / n / n); z = m / se
+        ss = sorted(set(s_ for s_, _, _ in ex)); half = ss[len(ss) // 2]
+        h1 = [g - p for s_, g, p in ex if s_ < half]; h2 = [g - p for s_, g, p in ex if s_ >= half]
+        sa = [g - p for s_, g, p in ex if s_ not in SIN_ATIPICAS]
+        por = collections.defaultdict(float)
+        for s_, g, p in ex:
+            por[s_] += g - p
+        mit = [round(100 * sum(h1) / max(len(h1), 1), 2), round(100 * sum(h2) / max(len(h2), 1), 2)]
+        pasa = n >= 300 and abs(z) >= 2 and mit[0] * mit[1] > 0 and (z > 0) == (signo > 0)
+        tf = f"{sum(1 for v in por.values() if v > 0)}/{len(por)}"
+        ganador.append({"liga": "LMP", "codigo": cod, "angulo": nom, "base": "modelo", "veredicto": "pasa" if pasa else "no pasa",
+                        "n_activo_prueba": n, "z": round(z, 2), "residuo_firmado_pp": round(100 * m, 2), "mitades": mit,
+                        "beta": 1.0 if signo > 0 else -1.0, "direccion_ok": True, "desde_prueba": "2014-10-10",
+                        "temporadas_a_favor": tf, "sin_2022_24_pp": round(100 * sum(sa) / max(len(sa), 1), 2),
+                        "roi_rober": ROI_ROBER[cod][0], "n_rober": ROI_ROBER[cod][1], "q_rober": ROI_ROBER[cod][2]})
+        beta = lg_(0.5 + m); ee = 4 * se
+        estim.append({"liga": "LMP", "codigo": cod, "angulo": nom, "base": "modelo", "n": len(filas_ml), "n_activos": n, "x_tipico": 1,
+                      "beta": round(beta, 5), "ee": round(ee, 5), "pp_50": round(100 * m, 2),
+                      "pp_50_encogido": round(100 * (1 / (1 + math.exp(-beta * TAU ** 2 / (TAU ** 2 + ee ** 2))) - 0.5), 2)})
+        md.append(f"| {cod} | {nom} | {n} | {100*m:+.2f} ({z:.2f}) | (sin abridor) | {mit[0]:+.2f} / {mit[1]:+.2f} | {tf} | "
+                  f"{100*sum(sa)/max(len(sa),1):+.2f} | {ROI_ROBER[cod][0]:+.1f} % ({ROI_ROBER[cod][1]}) | {'pasa' if pasa else 'no pasa'} |")
     salida = {"generado": dt.date.today().isoformat(), "fuente": "Roberto (28-oct-2026); medido en LMP 2014-2025 sin cuotas",
               "juegos": len(filas), "coef_base": {"elo": [round(v, 4) for v in b1], "elo_fip": [round(v, 4) for v in b2]},
               "ganador": ganador, "estimacion": estim}
@@ -181,7 +275,7 @@ def main():
                  f"LMP 2014-2025, {len(filas)} juegos con los dos abridores. Base ELO y base ELO + FIP regresado "
                  f"(coef FIP {b2[2]:.3f} logit por punto). Exceso = acierto real - esperado (pp); z entre parentesis. Regla: n >= 300, "
                  "|z| >= 2, mitades del mismo signo, en la direccion de la hipotesis. Sin cuotas: no mide ROI.\n\n"
-                 "| Cod | Angulo | n | Exceso ELO | Exceso ELO+FIP | Mitades | Temporadas + | Veredicto |\n|---|---|---|---|---|---|---|---|\n"
+                 "| Cod | Angulo | n | Exceso ELO | Exceso ELO+FIP | Mitades | Temporadas + | Sin 2022-24 | ROI Roberto (n) | Veredicto |\n|---|---|---|---|---|---|---|---|---|---|\n"
                  + "\n".join(md) + "\n\nTodos quedan como contexto en nucleo/angulos (R4-R11) y se registran en vivo en "
                  "salida/historial_angulos.csv para medirlos con cuotas reales. R6/R11 usan el record del equipo en las aperturas del "
                  "abridor como sustituto del pitcher profit en unidades.\n")

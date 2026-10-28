@@ -106,6 +106,9 @@ def schedule(sport_id, d1, d2, league_id=None):
             estado = (g.get("status") or {}).get("abstractGameState")
             if estado != "Final":
                 continue
+            det = ((g.get("status") or {}).get("detailedState") or "").lower()
+            if any(k in det for k in ("postponed", "cancel", "suspended")):
+                continue                     # pospuesto: la API lo marca Final y entraba como 0-0 (28-oct-2026)
             juegos.append({
                 "gamePk": g.get("gamePk"),
                 "fecha": (g.get("officialDate") or (g.get("gameDate") or "")[:10]),

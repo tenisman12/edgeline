@@ -10,6 +10,8 @@ name: lmp (preparar temporada)
 # en main, y actualizar_todo.py (utilidades/semillas.py mezclar) las agrega a datos/ en la siguiente actualizacion.
 
 on:
+  schedule:
+    - cron: "17 11 * * *"   # 28-oct-2026: diario (05:17 CDMX) para que lmp_lanzadores.csv tenga la temporada en curso (pedido de Roberto)
   workflow_dispatch:
     inputs:
       desde:
@@ -77,7 +79,9 @@ jobs:
         continue-on-error: true
         timeout-minutes: 150
         run: |
-          python colectores/recolectar_jugadores.py lmp --desde "${DESDE:-2014}-10-01" --hasta "$(date -u +%Y-%m-%d)" --sin-raw
+          if [ "${{ github.event_name }}" = "schedule" ]; then D0="$(date -u -d '4 days ago' +%Y-%m-%d)"; else D0="${DESDE:-2014}-10-01"; fi
+          echo "Lanzadores LMP desde $D0"
+          python colectores/recolectar_jugadores.py lmp --desde "$D0" --hasta "$(date -u +%Y-%m-%d)" --sin-raw
           python - <<'EOF'
           import csv, os
           src = os.path.join("datos", "jugadores", "mlb_lanzadores.csv")

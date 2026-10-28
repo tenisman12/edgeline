@@ -32,6 +32,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "7/12",
    "base_elo": {
+    "sin_atipicas": -0.24,
     "n": 647,
     "acierto": 50.9,
     "esperado": 49.3,
@@ -43,7 +44,11 @@
      1.62
     ],
     "temporadas": "7/12"
-   }
+   },
+   "sin_2022_24_pp": -0.74,
+   "roi_rober": 13.1,
+   "n_rober": 219,
+   "q_rober": 0.18
   },
   {
    "liga": "LMP",
@@ -63,6 +68,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "6/12",
    "base_elo": {
+    "sin_atipicas": 2.93,
     "n": 868,
     "acierto": 52.8,
     "esperado": 49.7,
@@ -74,7 +80,11 @@
      0.59
     ],
     "temporadas": "9/12"
-   }
+   },
+   "sin_2022_24_pp": 1.86,
+   "roi_rober": 9.1,
+   "n_rober": 137,
+   "q_rober": 0.33
   },
   {
    "liga": "LMP",
@@ -94,6 +104,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "3/12",
    "base_elo": {
+    "sin_atipicas": -1.7,
     "n": 1165,
     "acierto": 47.6,
     "esperado": 48.7,
@@ -105,7 +116,11 @@
      -0.1
     ],
     "temporadas": "3/12"
-   }
+   },
+   "sin_2022_24_pp": -1.24,
+   "roi_rober": 6.5,
+   "n_rober": 290,
+   "q_rober": 0.33
   },
   {
    "liga": "LMP",
@@ -125,6 +140,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "5/12",
    "base_elo": {
+    "sin_atipicas": 1.58,
     "n": 934,
     "acierto": 44.8,
     "esperado": 43.1,
@@ -136,7 +152,11 @@
      0.71
     ],
     "temporadas": "5/12"
-   }
+   },
+   "sin_2022_24_pp": 0.08,
+   "roi_rober": 8.5,
+   "n_rober": 153,
+   "q_rober": 0.38
   },
   {
    "liga": "LMP",
@@ -156,6 +176,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "7/12",
    "base_elo": {
+    "sin_atipicas": -1.58,
     "n": 934,
     "acierto": 55.2,
     "esperado": 56.9,
@@ -167,7 +188,11 @@
      -0.71
     ],
     "temporadas": "7/12"
-   }
+   },
+   "sin_2022_24_pp": -0.08,
+   "roi_rober": -16.2,
+   "n_rober": 159,
+   "q_rober": 0.3
   },
   {
    "liga": "LMP",
@@ -187,6 +212,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "3/12",
    "base_elo": {
+    "sin_atipicas": -1.3,
     "n": 1136,
     "acierto": 48.5,
     "esperado": 49.9,
@@ -198,7 +224,11 @@
      -1.72
     ],
     "temporadas": "3/12"
-   }
+   },
+   "sin_2022_24_pp": -1.23,
+   "roi_rober": -12.4,
+   "n_rober": 301,
+   "q_rober": 0.33
   },
   {
    "liga": "LMP",
@@ -218,6 +248,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "2/12",
    "base_elo": {
+    "sin_atipicas": -3.85,
     "n": 718,
     "acierto": 46.1,
     "esperado": 49.7,
@@ -229,7 +260,11 @@
      -3.81
     ],
     "temporadas": "2/12"
-   }
+   },
+   "sin_2022_24_pp": -3.75,
+   "roi_rober": -11.6,
+   "n_rober": 210,
+   "q_rober": 0.43
   },
   {
    "liga": "LMP",
@@ -249,6 +284,7 @@
    "desde_prueba": "2014-10-10",
    "temporadas_a_favor": "9/12",
    "base_elo": {
+    "sin_atipicas": 1.7,
     "n": 1165,
     "acierto": 52.4,
     "esperado": 51.3,
@@ -260,7 +296,165 @@
      0.1
     ],
     "temporadas": "9/12"
-   }
+   },
+   "sin_2022_24_pp": 1.24,
+   "roi_rober": -15.8,
+   "n_rober": 290,
+   "q_rober": 0.18
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M1",
+   "angulo": "REBOTE: underdog (p <= 0.53) que viene de 3+ derrotas",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 675,
+   "z": 1.22,
+   "residuo_firmado_pp": 2.33,
+   "mitades": [
+    -2.22,
+    6.59
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "7/13",
+   "sin_2022_24_pp": 1.39,
+   "roi_rober": 21.4,
+   "n_rober": 237,
+   "q_rober": 0.013
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M2",
+   "angulo": "ANTI-BARRIDA: el que va 0-2 en la serie, en el juego 3",
+   "base": "modelo",
+   "veredicto": "pasa",
+   "n_activo_prueba": 619,
+   "z": 3.34,
+   "residuo_firmado_pp": 6.65,
+   "mitades": [
+    5.47,
+    7.62
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "10/13",
+   "sin_2022_24_pp": 6.27,
+   "roi_rober": 15.7,
+   "n_rober": 232,
+   "q_rober": 0.029
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M3",
+   "angulo": "BARRIDA: el que va 2-0 en la serie, en el juego 3",
+   "base": "modelo",
+   "veredicto": "pasa",
+   "n_activo_prueba": 619,
+   "z": -3.34,
+   "residuo_firmado_pp": -6.65,
+   "mitades": [
+    -5.47,
+    -7.62
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "3/13",
+   "sin_2022_24_pp": -6.27,
+   "roi_rober": -20.4,
+   "n_rober": 254,
+   "q_rober": 0.003
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M4",
+   "angulo": "RESACA: contra el equipo que viene de ganar por 7+",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 432,
+   "z": 0.87,
+   "residuo_firmado_pp": 2.08,
+   "mitades": [
+    0.79,
+    3.21
+   ],
+   "beta": 1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "7/13",
+   "sin_2022_24_pp": 1.92,
+   "roi_rober": 18.0,
+   "n_rober": 147,
+   "q_rober": 0.047
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M5",
+   "angulo": "FAV INFLADO: favorito (p >= 0.53) que viene de 3+ victorias",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 445,
+   "z": -0.45,
+   "residuo_firmado_pp": -1.06,
+   "mitades": [
+    -1.86,
+    -0.31
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "5/13",
+   "sin_2022_24_pp": -1.97,
+   "roi_rober": -16.2,
+   "n_rober": 225,
+   "q_rober": 0.012
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M6",
+   "angulo": "PAREJO: visitante con p entre 0.49 y 0.56 (momios 1.80-2.05)",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 485,
+   "z": 0.43,
+   "residuo_firmado_pp": 0.98,
+   "mitades": [
+    -4.56,
+    3.92
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "6/13",
+   "sin_2022_24_pp": 1.22,
+   "roi_rober": -17.0,
+   "n_rober": 227,
+   "q_rober": 0.02
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M7",
+   "angulo": "FAV CORTO: favorito de -143 o mas corto (p >= 0.59)",
+   "base": "modelo",
+   "veredicto": "no pasa",
+   "n_activo_prueba": 655,
+   "z": 0.23,
+   "residuo_firmado_pp": 0.43,
+   "mitades": [
+    -1.95,
+    1.85
+   ],
+   "beta": -1.0,
+   "direccion_ok": true,
+   "desde_prueba": "2014-10-10",
+   "temporadas_a_favor": "6/13",
+   "sin_2022_24_pp": 0.38,
+   "roi_rober": -11.3,
+   "n_rober": 723,
+   "q_rober": null
   }
  ],
  "estimacion": [
@@ -367,6 +561,97 @@
    "ee": 0.05803,
    "pp_50": 0.68,
    "pp_50_encogido": 0.49
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M1",
+   "angulo": "REBOTE: underdog (p <= 0.53) que viene de 3+ derrotas",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 675,
+   "x_tipico": 1,
+   "beta": 0.09345,
+   "ee": 0.07628,
+   "pp_50": 2.33,
+   "pp_50_encogido": 1.39
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M2",
+   "angulo": "ANTI-BARRIDA: el que va 0-2 en la serie, en el juego 3",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 619,
+   "x_tipico": 1,
+   "beta": 0.2674,
+   "ee": 0.07961,
+   "pp_50": 6.65,
+   "pp_50_encogido": 3.83
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M3",
+   "angulo": "BARRIDA: el que va 2-0 en la serie, en el juego 3",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 619,
+   "x_tipico": 1,
+   "beta": -0.2674,
+   "ee": 0.07961,
+   "pp_50": -6.65,
+   "pp_50_encogido": -3.83
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M4",
+   "angulo": "RESACA: contra el equipo que viene de ganar por 7+",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 432,
+   "x_tipico": 1,
+   "beta": 0.08334,
+   "ee": 0.09527,
+   "pp_50": 2.08,
+   "pp_50_encogido": 1.01
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M5",
+   "angulo": "FAV INFLADO: favorito (p >= 0.53) que viene de 3+ victorias",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 445,
+   "x_tipico": 1,
+   "beta": -0.04239,
+   "ee": 0.09345,
+   "pp_50": -1.06,
+   "pp_50_encogido": -0.52
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M6",
+   "angulo": "PAREJO: visitante con p entre 0.49 y 0.56 (momios 1.80-2.05)",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 485,
+   "x_tipico": 1,
+   "beta": 0.03926,
+   "ee": 0.09076,
+   "pp_50": 0.98,
+   "pp_50_encogido": 0.5
+  },
+  {
+   "liga": "LMP",
+   "codigo": "M7",
+   "angulo": "FAV CORTO: favorito de -143 o mas corto (p >= 0.59)",
+   "base": "modelo",
+   "n": 4190,
+   "n_activos": 655,
+   "x_tipico": 1,
+   "beta": 0.01724,
+   "ee": 0.0762,
+   "pp_50": 0.43,
+   "pp_50_encogido": 0.26
   }
  ]
 }
