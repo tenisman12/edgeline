@@ -1,45 +1,45 @@
 {
  "fuente": "semillas/lmp_cuotas_2026.csv",
  "filas": 214,
- "calificadas": 200,
+ "calificadas": 202,
  "juegos": 77,
  "supuesto": "un solo lado publicado: p = implicita / 1.0225 (vig total 4.5 %)",
  "ml_lado_publicado": {
-  "n": 69,
-  "gano": 39,
-  "acierto_pct": 56.5,
-  "implicita_pct": 56.6,
+  "n": 71,
+  "gano": 40,
+  "acierto_pct": 56.3,
+  "implicita_pct": 56.4,
   "z": -0.01,
-  "unidades": -1.94,
-  "roi_pct": -2.8
+  "unidades": -1.59,
+  "roi_pct": -2.2
  },
  "ml_favoritos": {
-  "n": 53,
+  "n": 54,
   "gano": 31,
-  "acierto_pct": 58.5,
+  "acierto_pct": 57.4,
   "implicita_pct": 59.7,
-  "z": -0.18,
-  "unidades": -2.28,
-  "roi_pct": -4.3
+  "z": -0.35,
+  "unidades": -3.28,
+  "roi_pct": -6.1
  },
  "ml_perros": {
-  "n": 14,
-  "gano": 7,
-  "acierto_pct": 50.0,
-  "implicita_pct": 45.7,
-  "z": 0.32,
-  "unidades": 0.51,
-  "roi_pct": 3.6
+  "n": 15,
+  "gano": 8,
+  "acierto_pct": 53.3,
+  "implicita_pct": 45.3,
+  "z": 0.63,
+  "unidades": 1.86,
+  "roi_pct": 12.4
  },
  "ml_por_banda": {
   "-200 o menos": {
-   "n": 10,
+   "n": 11,
    "gano": 4,
-   "acierto_pct": 40.0,
-   "implicita_pct": 66.8,
-   "z": -1.81,
-   "unidades": -4.17,
-   "roi_pct": -41.7
+   "acierto_pct": 36.4,
+   "implicita_pct": 66.3,
+   "z": -2.11,
+   "unidades": -5.17,
+   "roi_pct": -47.0
   },
   "-160 a -199": {
    "n": 17,
@@ -69,13 +69,13 @@
    "roi_pct": 6.4
   },
   "+100 o mas": {
-   "n": 8,
-   "gano": 4,
-   "acierto_pct": 50.0,
-   "implicita_pct": 43.5,
-   "z": 0.37,
-   "unidades": 0.77,
-   "roi_pct": 9.6
+   "n": 9,
+   "gano": 5,
+   "acierto_pct": 55.6,
+   "implicita_pct": 43.0,
+   "z": 0.76,
+   "unidades": 2.12,
+   "roi_pct": 23.6
   }
  },
  "ml_favorito_local": {
@@ -88,13 +88,13 @@
   "roi_pct": 0.8
  },
  "ml_favorito_visita": {
-  "n": 24,
+  "n": 25,
   "gano": 13,
-  "acierto_pct": 54.2,
-  "implicita_pct": 60.2,
-  "z": -0.61,
-  "unidades": -2.52,
-  "roi_pct": -10.5
+  "acierto_pct": 52.0,
+  "implicita_pct": 60.3,
+  "z": -0.85,
+  "unidades": -3.52,
+  "roi_pct": -14.1
  },
  "total_over": {
   "n": 32,
@@ -358,24 +358,24 @@
    "carreras_por_juego": 6.0
   },
   "2026-27": {
-   "juegos": 55,
+   "juegos": 56,
    "ml_favoritos": {
-    "n": 40,
+    "n": 41,
     "gano": 22,
-    "acierto_pct": 55.0,
+    "acierto_pct": 53.7,
     "implicita_pct": 60.0,
-    "z": -0.65,
-    "unidades": -4.38,
-    "roi_pct": -11.0
+    "z": -0.83,
+    "unidades": -5.38,
+    "roi_pct": -13.1
    },
    "ml_perros": {
-    "n": 11,
-    "gano": 7,
-    "acierto_pct": 63.6,
-    "implicita_pct": 45.4,
-    "z": 1.22,
-    "unidades": 3.51,
-    "roi_pct": 31.9
+    "n": 12,
+    "gano": 8,
+    "acierto_pct": 66.7,
+    "implicita_pct": 44.8,
+    "z": 1.52,
+    "unidades": 4.86,
+    "roi_pct": 40.5
    },
    "total_over": {
     "n": 19,
@@ -413,27 +413,27 @@
     "unidades": -7.07,
     "roi_pct": -23.6
    },
-   "carreras_por_juego": 9.67
+   "carreras_por_juego": 9.55
   }
  },
  "modelo_vs_mercado_ml": {
-  "n": 24,
+  "n": 25,
   "brier_modelo": 0.2444,
-  "brier_mercado": 0.2596,
-  "acierto_modelo_pct": 54.2,
-  "acierto_mercado_pct": 54.2,
-  "desacuerdos": 0,
-  "desacuerdos_gana_modelo": 0,
-  "brecha_media_pp": 5.3
+  "brier_mercado": 0.2641,
+  "acierto_modelo_pct": 56.0,
+  "acierto_mercado_pct": 52.0,
+  "desacuerdos": 1,
+  "desacuerdos_gana_modelo": 1,
+  "brecha_media_pp": 5.5
  },
  "sombra_modelo_ev4": {
-  "n": 1,
-  "gano": 0,
-  "acierto_pct": 0.0,
-  "implicita_pct": 61.3,
-  "z": -1.26,
-  "unidades": -1,
-  "roi_pct": -100.0
+  "n": 2,
+  "gano": 1,
+  "acierto_pct": 50.0,
+  "implicita_pct": 55.9,
+  "z": -0.17,
+  "unidades": 0.35,
+  "roi_pct": 17.5
  },
  "total_modelo_vs_linea": {
   "n": 22,
