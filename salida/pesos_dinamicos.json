@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-29T13:41:16Z",
+ "generado": "2026-10-29T20:00:21Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -75,17 +75,17 @@
   },
   "atp|Ganador": {
    "w_vivo": 0.75,
-   "n": 114,
-   "mejora_milesimas": 13.113,
+   "n": 122,
+   "mejora_milesimas": 12.595,
    "z": 0.84,
    "mitades": [
-    12.132,
-    14.094
+    -0.09,
+    25.281
    ],
-   "brier_pinnacle": 0.2134,
-   "brier_modelo": 0.208,
+   "brier_pinnacle": 0.2104,
+   "brier_modelo": 0.2053,
    "previo": 0.35,
-   "w_usado": 0.46
+   "w_usado": 0.466
   },
   "ncaafb|Spread": {
    "w_vivo": 0.3,
