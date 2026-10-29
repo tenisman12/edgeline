@@ -1,17 +1,17 @@
 {
  "fuente": "semillas/lmp_cuotas_2026.csv",
- "filas": 214,
- "calificadas": 202,
- "juegos": 77,
+ "filas": 215,
+ "calificadas": 203,
+ "juegos": 78,
  "supuesto": "un solo lado publicado: p = implicita / 1.0225 (vig total 4.5 %)",
  "ml_lado_publicado": {
-  "n": 71,
+  "n": 72,
   "gano": 40,
-  "acierto_pct": 56.3,
-  "implicita_pct": 56.4,
-  "z": -0.01,
-  "unidades": -1.59,
-  "roi_pct": -2.2
+  "acierto_pct": 55.6,
+  "implicita_pct": 56.3,
+  "z": -0.12,
+  "unidades": -2.59,
+  "roi_pct": -3.6
  },
  "ml_favoritos": {
   "n": 54,
@@ -23,13 +23,13 @@
   "roi_pct": -6.1
  },
  "ml_perros": {
-  "n": 15,
+  "n": 16,
   "gano": 8,
-  "acierto_pct": 53.3,
-  "implicita_pct": 45.3,
-  "z": 0.63,
-  "unidades": 1.86,
-  "roi_pct": 12.4
+  "acierto_pct": 50.0,
+  "implicita_pct": 45.4,
+  "z": 0.37,
+  "unidades": 0.86,
+  "roi_pct": 5.4
  },
  "ml_por_banda": {
   "-200 o menos": {
@@ -69,13 +69,13 @@
    "roi_pct": 6.4
   },
   "+100 o mas": {
-   "n": 9,
+   "n": 10,
    "gano": 5,
-   "acierto_pct": 55.6,
-   "implicita_pct": 43.0,
-   "z": 0.76,
-   "unidades": 2.12,
-   "roi_pct": 23.6
+   "acierto_pct": 50.0,
+   "implicita_pct": 43.4,
+   "z": 0.42,
+   "unidades": 1.12,
+   "roi_pct": 11.2
   }
  },
  "ml_favorito_local": {
@@ -358,7 +358,7 @@
    "carreras_por_juego": 6.0
   },
   "2026-27": {
-   "juegos": 56,
+   "juegos": 57,
    "ml_favoritos": {
     "n": 41,
     "gano": 22,
@@ -369,13 +369,13 @@
     "roi_pct": -13.1
    },
    "ml_perros": {
-    "n": 12,
+    "n": 13,
     "gano": 8,
-    "acierto_pct": 66.7,
-    "implicita_pct": 44.8,
-    "z": 1.52,
-    "unidades": 4.86,
-    "roi_pct": 40.5
+    "acierto_pct": 61.5,
+    "implicita_pct": 45.0,
+    "z": 1.2,
+    "unidades": 3.86,
+    "roi_pct": 29.7
    },
    "total_over": {
     "n": 19,
@@ -413,27 +413,27 @@
     "unidades": -7.07,
     "roi_pct": -23.6
    },
-   "carreras_por_juego": 9.55
+   "carreras_por_juego": 9.46
   }
  },
  "modelo_vs_mercado_ml": {
-  "n": 25,
-  "brier_modelo": 0.2444,
-  "brier_mercado": 0.2641,
-  "acierto_modelo_pct": 56.0,
-  "acierto_mercado_pct": 52.0,
-  "desacuerdos": 1,
+  "n": 26,
+  "brier_modelo": 0.2473,
+  "brier_mercado": 0.2626,
+  "acierto_modelo_pct": 53.8,
+  "acierto_mercado_pct": 53.8,
+  "desacuerdos": 2,
   "desacuerdos_gana_modelo": 1,
-  "brecha_media_pp": 5.5
+  "brecha_media_pp": 5.7
  },
  "sombra_modelo_ev4": {
-  "n": 2,
+  "n": 3,
   "gano": 1,
-  "acierto_pct": 50.0,
-  "implicita_pct": 55.9,
-  "z": -0.17,
-  "unidades": 0.35,
-  "roi_pct": 17.5
+  "acierto_pct": 33.3,
+  "implicita_pct": 56.1,
+  "z": -0.8,
+  "unidades": -0.65,
+  "roi_pct": -21.7
  },
  "total_modelo_vs_linea": {
   "n": 22,
