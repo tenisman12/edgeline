@@ -1,20 +1,20 @@
 {
- "generado": "2026-10-30 19:09",
+ "generado": "2026-10-30 19:54",
  "total": {
   "picks": 1454,
-  "calificados": 1058,
-  "pendientes": 151,
+  "calificados": 1064,
+  "pendientes": 145,
   "sin_resultado": 90,
   "anulados": 46,
-  "aciertos": 600,
+  "aciertos": 603,
   "acierto_pct": 56.7,
   "prob_media_pct": 57.7,
-  "brier": 0.2271,
+  "brier": 0.2273,
   "valor": {
-   "apuestas": 248,
+   "apuestas": 249,
    "ganadas": 102,
-   "unidades": 19.59,
-   "roi_pct": 7.9
+   "unidades": 18.59,
+   "roi_pct": 7.5
   }
  },
  "por_liga": {
@@ -129,19 +129,19 @@
   },
   "liiga": {
    "picks": 44,
-   "calificados": 34,
-   "pendientes": 8,
+   "calificados": 40,
+   "pendientes": 2,
    "sin_resultado": 0,
    "anulados": 0,
-   "aciertos": 21,
-   "acierto_pct": 61.8,
-   "prob_media_pct": 58.2,
-   "brier": 0.2238,
+   "aciertos": 24,
+   "acierto_pct": 60.0,
+   "prob_media_pct": 57.9,
+   "brier": 0.231,
    "valor": {
-    "apuestas": 4,
+    "apuestas": 5,
     "ganadas": 2,
-    "unidades": -0.38,
-    "roi_pct": -9.6
+    "unidades": -1.38,
+    "roi_pct": -27.7
    }
   },
   "mlb": {
@@ -376,19 +376,19 @@
   },
   "hockey": {
    "picks": 194,
-   "calificados": 144,
-   "pendientes": 17,
+   "calificados": 150,
+   "pendientes": 11,
    "sin_resultado": 0,
    "anulados": 0,
-   "aciertos": 90,
-   "acierto_pct": 62.5,
-   "prob_media_pct": 58.0,
-   "brier": 0.2256,
+   "aciertos": 93,
+   "acierto_pct": 62.0,
+   "prob_media_pct": 57.9,
+   "brier": 0.2275,
    "valor": {
-    "apuestas": 43,
+    "apuestas": 44,
     "ganadas": 19,
-    "unidades": -0.18,
-    "roi_pct": -0.4
+    "unidades": -1.18,
+    "roi_pct": -2.7
    }
   },
   "nba": {
@@ -419,21 +419,21 @@
  "calibracion": [
   {
    "rango": "50-55%",
-   "n": 187,
+   "n": 189,
    "prob_media_pct": 52.6,
-   "acierto_pct": 55.6
+   "acierto_pct": 56.1
   },
   {
    "rango": "55-60%",
-   "n": 183,
-   "prob_media_pct": 57.5,
-   "acierto_pct": 53.6
+   "n": 186,
+   "prob_media_pct": 57.4,
+   "acierto_pct": 53.2
   },
   {
    "rango": "60-65%",
-   "n": 138,
+   "n": 139,
    "prob_media_pct": 62.4,
-   "acierto_pct": 65.9
+   "acierto_pct": 65.5
   },
   {
    "rango": "65-70%",
@@ -451,30 +451,30 @@
  "por_nivel": {
   "lectura": {
    "picks": 1015,
-   "calificados": 853,
-   "pendientes": 115,
+   "calificados": 858,
+   "pendientes": 110,
    "sin_resultado": 41,
    "anulados": 6,
-   "aciertos": 499,
+   "aciertos": 502,
    "acierto_pct": 58.5,
    "prob_media_pct": 60.9,
-   "brier": 0.2301
+   "brier": 0.2303
   },
   "pick": {
    "picks": 435,
-   "calificados": 204,
-   "pendientes": 36,
+   "calificados": 205,
+   "pendientes": 35,
    "sin_resultado": 49,
    "anulados": 39,
    "aciertos": 100,
-   "acierto_pct": 49.0,
+   "acierto_pct": 48.8,
    "prob_media_pct": 44.4,
-   "brier": 0.2139,
+   "brier": 0.2144,
    "valor": {
-    "apuestas": 245,
+    "apuestas": 246,
     "ganadas": 100,
-    "unidades": 17.05,
-    "roi_pct": 7.0
+    "unidades": 16.05,
+    "roi_pct": 6.5
    }
   },
   "premium": {
@@ -744,8 +744,8 @@
  },
  "predicciones_modelo": {
   "total": 7404,
-  "calificadas": 5621,
-  "pendientes": 819,
+  "calificadas": 5646,
+  "pendientes": 794,
   "por_liga_mercado": {
    "ahl|Ganador": {
     "n": 105,
@@ -951,31 +951,31 @@
     "mae": null
    },
    "liiga|Ganador": {
-    "n": 54,
+    "n": 59,
     "acierto_pct": 59.3,
-    "p_media_pct": 58.5,
-    "brier": 0.2371,
+    "p_media_pct": 58.3,
+    "brier": 0.2392,
     "mae": null
    },
    "liiga|Goles": {
-    "n": 98,
-    "acierto_pct": 62.2,
-    "p_media_pct": 62.3,
-    "brier": 0.228,
+    "n": 108,
+    "acierto_pct": 63.9,
+    "p_media_pct": 62.2,
+    "brier": 0.2219,
     "mae": null
    },
    "liiga|Spread": {
-    "n": 54,
-    "acierto_pct": 63.0,
-    "p_media_pct": 69.5,
-    "brier": 0.2376,
+    "n": 59,
+    "acierto_pct": 64.4,
+    "p_media_pct": 69.7,
+    "brier": 0.2319,
     "mae": null
    },
    "liiga|Total": {
-    "n": 54,
-    "acierto_pct": 63.0,
-    "p_media_pct": 61.4,
-    "brier": 0.2235,
+    "n": 59,
+    "acierto_pct": 61.0,
+    "p_media_pct": 61.3,
+    "brier": 0.227,
     "mae": null
    },
    "lmp|Carreras": {
@@ -1519,25 +1519,25 @@
  "picks_dia": {
   "registros": 228,
   "con_pick": 228,
-  "calificados": 180,
-  "pendientes": 10,
+  "calificados": 181,
+  "pendientes": 9,
   "anulados": 2,
   "total": {
-   "n": 180,
-   "gano": 63,
-   "acierto_pct": 35.0,
-   "unidades": -24.3,
-   "roi_pct": -13.5,
-   "bank_pct": -46.74,
+   "n": 181,
+   "gano": 64,
+   "acierto_pct": 35.4,
+   "unidades": -23.14,
+   "roi_pct": -12.8,
+   "bank_pct": -45.58,
    "ev_medio_pct": 10.4
   },
   "con_stake": {
-   "n": 180,
-   "gano": 63,
-   "acierto_pct": 35.0,
-   "unidades": -24.3,
-   "roi_pct": -13.5,
-   "bank_pct": -46.74,
+   "n": 181,
+   "gano": 64,
+   "acierto_pct": 35.4,
+   "unidades": -23.14,
+   "roi_pct": -12.8,
+   "bank_pct": -45.58,
    "ev_medio_pct": 10.4
   },
   "por_confianza": {
@@ -1551,12 +1551,12 @@
     "ev_medio_pct": 15.6
    },
    "baja": {
-    "n": 46,
-    "gano": 16,
-    "acierto_pct": 34.8,
-    "unidades": -11.37,
-    "roi_pct": -24.7,
-    "bank_pct": -11.37,
+    "n": 47,
+    "gano": 17,
+    "acierto_pct": 36.2,
+    "unidades": -10.21,
+    "roi_pct": -21.7,
+    "bank_pct": -10.21,
     "ev_medio_pct": 3.0
    },
    "media": {
@@ -1580,12 +1580,12 @@
   },
   "por_ev": {
    "1-4%": {
-    "n": 44,
-    "gano": 16,
-    "acierto_pct": 36.4,
-    "unidades": -10.11,
-    "roi_pct": -23.0,
-    "bank_pct": -9.31,
+    "n": 45,
+    "gano": 17,
+    "acierto_pct": 37.8,
+    "unidades": -8.95,
+    "roi_pct": -19.9,
+    "bank_pct": -8.15,
     "ev_medio_pct": 2.7
    },
    "4-8%": {
@@ -1609,13 +1609,13 @@
   },
   "por_lectura": {
    "lectura a favor": {
-    "n": 150,
-    "gano": 55,
-    "acierto_pct": 36.7,
-    "unidades": -13.84,
-    "roi_pct": -9.2,
-    "bank_pct": -24.31,
-    "ev_medio_pct": 10.5
+    "n": 151,
+    "gano": 56,
+    "acierto_pct": 37.1,
+    "unidades": -12.68,
+    "roi_pct": -8.4,
+    "bank_pct": -23.15,
+    "ev_medio_pct": 10.4
    },
    "lectura en contra": {
     "n": 12,
@@ -1692,13 +1692,13 @@
     "ev_medio_pct": 17.0
    },
    "liiga": {
-    "n": 10,
-    "gano": 2,
-    "acierto_pct": 20.0,
-    "unidades": -4.87,
-    "roi_pct": -48.7,
-    "bank_pct": -9.74,
-    "ev_medio_pct": 7.0
+    "n": 11,
+    "gano": 3,
+    "acierto_pct": 27.3,
+    "unidades": -3.71,
+    "roi_pct": -33.7,
+    "bank_pct": -8.58,
+    "ev_medio_pct": 6.6
    },
    "mlb": {
     "n": 10,
@@ -1802,23 +1802,23 @@
     "ev_medio_pct": 21.5
    },
    "Total": {
-    "n": 34,
-    "gano": 15,
-    "acierto_pct": 44.1,
-    "unidades": -3.6,
-    "roi_pct": -10.6,
-    "bank_pct": -6.12,
-    "ev_medio_pct": 13.7
+    "n": 35,
+    "gano": 16,
+    "acierto_pct": 45.7,
+    "unidades": -2.44,
+    "roi_pct": -7.0,
+    "bank_pct": -4.96,
+    "ev_medio_pct": 13.4
    }
   },
   "por_origen": {
    "decidir_v2": {
-    "n": 164,
-    "gano": 56,
-    "acierto_pct": 34.1,
-    "unidades": -25.28,
-    "roi_pct": -15.4,
-    "bank_pct": -46.45,
+    "n": 165,
+    "gano": 57,
+    "acierto_pct": 34.5,
+    "unidades": -24.12,
+    "roi_pct": -14.6,
+    "bank_pct": -45.29,
     "ev_medio_pct": 10.0
    },
    "pick premium": {
@@ -1842,12 +1842,12 @@
   },
   "por_publico": {
    "": {
-    "n": 129,
-    "gano": 41,
-    "acierto_pct": 31.8,
-    "unidades": -29.95,
-    "roi_pct": -23.2,
-    "bank_pct": -63.66,
+    "n": 130,
+    "gano": 42,
+    "acierto_pct": 32.3,
+    "unidades": -28.79,
+    "roi_pct": -22.1,
+    "bank_pct": -62.49,
     "ev_medio_pct": 10.1
    },
    "publico con el pick": {
@@ -1889,13 +1889,13 @@
   },
   "por_movimiento": {
    "": {
-    "n": 28,
-    "gano": 9,
-    "acierto_pct": 32.1,
-    "unidades": -8.33,
-    "roi_pct": -29.7,
-    "bank_pct": -15.41,
-    "ev_medio_pct": 12.2
+    "n": 29,
+    "gano": 10,
+    "acierto_pct": 34.5,
+    "unidades": -7.17,
+    "roi_pct": -24.7,
+    "bank_pct": -14.25,
+    "ev_medio_pct": 11.9
    },
    "linea a favor (>=2 pp)": {
     "n": 22,
@@ -1936,13 +1936,13 @@
     "ev_medio_pct": 10.7
    },
    "2.00-2.49": {
-    "n": 57,
-    "gano": 23,
-    "acierto_pct": 40.4,
-    "unidades": -6.66,
-    "roi_pct": -11.7,
-    "bank_pct": -17.52,
-    "ev_medio_pct": 7.5
+    "n": 58,
+    "gano": 24,
+    "acierto_pct": 41.4,
+    "unidades": -5.5,
+    "roi_pct": -9.5,
+    "bank_pct": -16.36,
+    "ev_medio_pct": 7.4
    },
    "2.50-2.99": {
     "n": 46,

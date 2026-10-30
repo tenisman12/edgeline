@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-30T13:37:15Z",
+ "generado": "2026-10-30T19:55:28Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -74,18 +74,18 @@
    "w_usado": 0.348
   },
   "atp|Ganador": {
-   "w_vivo": 0.8,
-   "n": 124,
-   "mejora_milesimas": 13.545,
-   "z": 0.85,
+   "w_vivo": 0.7,
+   "n": 129,
+   "mejora_milesimas": 11.082,
+   "z": 0.82,
    "mitades": [
-    -2.608,
-    29.698
+    -1.954,
+    23.918
    ],
-   "brier_pinnacle": 0.2161,
-   "brier_modelo": 0.2103,
+   "brier_pinnacle": 0.2113,
+   "brier_modelo": 0.2067,
    "previo": 0.35,
-   "w_usado": 0.482
+   "w_usado": 0.455
   },
   "nhl|Spread": {
    "w_vivo": 0.9,
@@ -157,6 +157,20 @@
    "previo": 0.0,
    "w_usado": 0.016
   },
+  "liiga|Ganador": {
+   "w_vivo": 0.0,
+   "n": 53,
+   "mejora_milesimas": -0.0,
+   "z": -0.11,
+   "mitades": [
+    -0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2335,
+   "brier_modelo": 0.241,
+   "previo": 0.5,
+   "w_usado": 0.425
+  },
   "nfl|Total": {
    "w_vivo": 0.0,
    "n": 52,
@@ -170,20 +184,6 @@
    "brier_modelo": 0.2684,
    "previo": 0.0,
    "w_usado": 0.0
-  },
-  "liiga|Ganador": {
-   "w_vivo": 0.0,
-   "n": 48,
-   "mejora_milesimas": -0.0,
-   "z": -0.11,
-   "mitades": [
-    -0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2344,
-   "brier_modelo": 0.2411,
-   "previo": 0.5,
-   "w_usado": 0.431
   },
   "kbo|Ganador": {
    "w_vivo": 1.0,
@@ -212,6 +212,20 @@
    "brier_modelo": 0.2398,
    "previo": 0.25,
    "w_usado": 0.338
+  },
+  "liiga|Total": {
+   "w_vivo": 0.0,
+   "n": 34,
+   "mejora_milesimas": 0.0,
+   "z": 1.0,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.248,
+   "brier_modelo": 0.2564,
+   "previo": 0.5,
+   "w_usado": 0.449
   },
   "seriea|Ganador": {
    "w_vivo": 0.2,
@@ -268,20 +282,6 @@
    "brier_modelo": 0.24,
    "previo": 0.25,
    "w_usado": 0.318
-  },
-  "liiga|Total": {
-   "w_vivo": 0.0,
-   "n": 29,
-   "mejora_milesimas": 0.0,
-   "z": 1.0,
-   "mitades": [
-    0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2446,
-   "brier_modelo": 0.2515,
-   "previo": 0.5,
-   "w_usado": 0.456
   },
   "ligamx|Ganador": {
    "w_vivo": 0.0,
