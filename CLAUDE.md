@@ -295,7 +295,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Tres errores dieron picks malos sin poner nada en rojo: a la DEL le faltaban las jornadas 1-4 (penny-del.org /spiele solo
   muestra el mes en curso; ahora `recolectar_hockey_ligas.del_links_temporada` recorre todas las vistas por mes), ESPN
   "Deportivo" se casaba con Alaves y "FC Cologne" con nadie (`nucleo/equipos.py`: ALIAS_ESPN, palabras genericas que solas no
-  casan, empates ambiguos = sin dato) y en tenis 17 jugadores tenian dos grafias (`completar_datos.py` paso `tenis` las unifica
+  casan, empates ambiguos = sin dato; 31-oct: un punto cardinal que sobra en el nombre largo no casa, "Central College" ya no es "North Central College") y en tenis 17 jugadores tenian dos grafias (`completar_datos.py` paso `tenis` las unifica
   a la del partido mas reciente).
 - `utilidades/revision.py` bloque 8 INTEGRIDAD (corre en cada actualizacion): nombre mal casado = ERROR; record de ESPN contra
   partidos de la temporada en tus datos (faltan 2+ = ERROR); inicio verificado de ligas sin record de ESPN (INICIO_VERIFICADO,

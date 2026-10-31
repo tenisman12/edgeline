@@ -69,6 +69,11 @@ _GENERICOS = {"deportivo", "real", "atletico", "athletic", "sporting", "racing",
               "olympique", "stade", "borussia", "san", "st", "saint", "santa", "club", "town", "rovers", "wanderers",
               "nacional", "independiente", "universidad", "new", "los", "las"}
 
+# prefijos que distinguen escuelas distintas con el mismo nombre base (North Carolina / Carolina, Western Kentucky / Kentucky)
+_DIRECCIONALES = {"north", "south", "east", "west", "northern", "southern", "eastern", "western", "central",
+                  "northeast", "northwest", "southeast", "southwest", "northeastern", "northwestern",
+                  "southeastern", "southwestern", "upper", "lower"}
+
 # abreviaturas de ESPN -> otras que usan nflverse / api-web.nhle.com
 ALIAS_ABREV = {
     "NY": ["NYK"], "GS": ["GSW"], "SA": ["SAS"], "NO": ["NOP"],      # NBA (datos/nba.csv usa 3 letras)
@@ -134,6 +139,11 @@ def _score(na, nb):
                     utiles += 1
                 break
     if m < len(chico) or utiles == 0:
+        return 0.0
+    # un punto cardinal que sobra en el nombre largo marca OTRA escuela/equipo: "Central College" no es
+    # "North Central College", "Kentucky" no es "Western Kentucky" (31-oct-2026: ESPN mando la ubicacion
+    # "Central College" de los Dutch y empato con North Central College Cardinals)
+    if any(u in _DIRECCIONALES and u not in chico for i, u in enumerate(grande) if i not in usados):
         return 0.0
     return 0.80 + 0.19 * (m / len(grande))
 
