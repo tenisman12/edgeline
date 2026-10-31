@@ -1,6 +1,6 @@
 {
- "generado": "2026-10-31T06:21:34",
- "partidos_base": 1060,
+ "generado": "2026-10-31T13:05:28",
+ "partidos_base": 1062,
  "protocolo": "n >= 300, z >= 2.0 en la direccion registrada, las dos mitades del mismo lado",
  "angulos": {
   "FUTBOL|L3": {
@@ -75,12 +75,12 @@
    "grupo": "NCAAFB",
    "codigo": "L1",
    "angulo": "Pitagoras (record arriba de su diferencial)",
-   "n": 133,
-   "efecto_pp": -3.39,
-   "z": -0.8,
+   "n": 134,
+   "efecto_pp": -3.93,
+   "z": -0.93,
    "mitades_pp": [
-    0.77,
-    -7.49
+    0.95,
+    -8.81
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -92,12 +92,12 @@
    "grupo": "NCAAFB",
    "codigo": "L3",
    "angulo": "dominio de tiros o yardas",
-   "n": 133,
-   "efecto_pp": -3.28,
-   "z": -0.78,
+   "n": 134,
+   "efecto_pp": -3.73,
+   "z": -0.88,
    "mitades_pp": [
-    -5.54,
-    -1.06
+    -5.62,
+    -1.85
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -121,6 +121,23 @@
    "medido_historico_pp": 0.67,
    "desde": "2026-10-10",
    "hasta": "2026-10-29"
+  },
+  "BEISBOL|S12": {
+   "grupo": "BEISBOL",
+   "codigo": "S12",
+   "angulo": "racha en dosis (el mas caliente)",
+   "n": 130,
+   "efecto_pp": 4.71,
+   "z": 1.1,
+   "mitades_pp": [
+    8.1,
+    1.31
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -0.07,
+   "desde": "2026-10-14",
+   "hasta": "2026-10-30"
   },
   "NHL|L3": {
    "grupo": "NHL",
@@ -156,38 +173,38 @@
    "desde": "2026-10-11",
    "hasta": "2026-10-30"
   },
-  "BEISBOL|S12": {
-   "grupo": "BEISBOL",
-   "codigo": "S12",
-   "angulo": "racha en dosis (el mas caliente)",
-   "n": 129,
-   "efecto_pp": 4.5,
-   "z": 1.05,
-   "mitades_pp": [
-    7.67,
-    1.37
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -0.07,
-   "desde": "2026-10-14",
-   "hasta": "2026-10-30"
-  },
   "BEISBOL|Q1": {
    "grupo": "BEISBOL",
    "codigo": "Q1",
    "angulo": "revancha (perdio el ultimo cruce)",
    "n": 128,
-   "efecto_pp": -9.14,
-   "z": -2.13,
+   "efecto_pp": -9.09,
+   "z": -2.12,
    "mitades_pp": [
     -16.04,
-    -2.24
+    -2.14
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": 0.61,
    "desde": "2026-10-09",
+   "hasta": "2026-10-30"
+  },
+  "BEISBOL|L4": {
+   "grupo": "BEISBOL",
+   "codigo": "L4",
+   "angulo": "conversion neta (PDO, BABIP, triples, perdidas)",
+   "n": 127,
+   "efecto_pp": 5.31,
+   "z": 1.23,
+   "mitades_pp": [
+    8.75,
+    1.92
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.07,
+   "desde": "2026-10-10",
    "hasta": "2026-10-30"
   },
   "NHL|H18": {
@@ -207,33 +224,16 @@
    "desde": "2026-10-09",
    "hasta": "2026-10-30"
   },
-  "BEISBOL|L4": {
-   "grupo": "BEISBOL",
-   "codigo": "L4",
-   "angulo": "conversion neta (PDO, BABIP, triples, perdidas)",
-   "n": 126,
-   "efecto_pp": 5.16,
-   "z": 1.19,
-   "mitades_pp": [
-    8.88,
-    1.45
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.07,
-   "desde": "2026-10-10",
-   "hasta": "2026-10-30"
-  },
   "NCAAFB|L4": {
    "grupo": "NCAAFB",
    "codigo": "L4",
    "angulo": "conversion neta (PDO, BABIP, triples, perdidas)",
-   "n": 125,
-   "efecto_pp": -8.43,
-   "z": -1.95,
+   "n": 126,
+   "efecto_pp": -8.87,
+   "z": -2.06,
    "mitades_pp": [
-    -12.46,
-    -4.47
+    -11.43,
+    -6.31
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -262,12 +262,12 @@
    "grupo": "NCAAFB",
    "codigo": "L2",
    "angulo": "record en juegos cerrados",
-   "n": 114,
-   "efecto_pp": 2.23,
-   "z": 0.48,
+   "n": 115,
+   "efecto_pp": 2.79,
+   "z": 0.6,
    "mitades_pp": [
-    11.47,
-    -7.01
+    11.37,
+    -5.65
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -275,33 +275,16 @@
    "desde": "2026-10-10",
    "hasta": "2026-10-30"
   },
-  "BEISBOL|S11": {
-   "grupo": "BEISBOL",
-   "codigo": "S11",
-   "angulo": "perdio su ultimo juego",
-   "n": 110,
-   "efecto_pp": -2.1,
-   "z": -0.45,
-   "mitades_pp": [
-    -3.91,
-    -0.3
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.5,
-   "desde": "2026-10-14",
-   "hasta": "2026-10-30"
-  },
   "NCAAFB|S12": {
    "grupo": "NCAAFB",
    "codigo": "S12",
    "angulo": "racha en dosis (el mas caliente)",
-   "n": 110,
-   "efecto_pp": -5.55,
-   "z": -1.2,
+   "n": 111,
+   "efecto_pp": -6.12,
+   "z": -1.32,
    "mitades_pp": [
-    -2.95,
-    -8.16
+    -2.9,
+    -9.28
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -309,16 +292,33 @@
    "desde": "2026-10-14",
    "hasta": "2026-10-30"
   },
+  "BEISBOL|S11": {
+   "grupo": "BEISBOL",
+   "codigo": "S11",
+   "angulo": "perdio su ultimo juego",
+   "n": 110,
+   "efecto_pp": -2.04,
+   "z": -0.43,
+   "mitades_pp": [
+    -3.85,
+    -0.23
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.5,
+   "desde": "2026-10-14",
+   "hasta": "2026-10-30"
+  },
   "BEISBOL|R1": {
    "grupo": "BEISBOL",
    "codigo": "R1",
    "angulo": "ventaja de ponches (pitcheo - bateo)",
-   "n": 104,
-   "efecto_pp": -7.31,
-   "z": -1.54,
+   "n": 105,
+   "efecto_pp": -6.94,
+   "z": -1.47,
    "mitades_pp": [
-    -13.92,
-    -0.7
+    -13.89,
+    -0.13
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -347,12 +347,12 @@
    "grupo": "TODAS",
    "codigo": "B10",
    "angulo": "primer juego de serie",
-   "n": 89,
-   "efecto_pp": 1.16,
-   "z": 0.22,
+   "n": 90,
+   "efecto_pp": 1.39,
+   "z": 0.27,
    "mitades_pp": [
-    4.28,
-    -1.9
+    4.9,
+    -2.12
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -365,11 +365,11 @@
    "codigo": "B13",
    "angulo": "gira del visitante (2+ seguidos de visita)",
    "n": 89,
-   "efecto_pp": 4.43,
-   "z": 0.86,
+   "efecto_pp": 4.11,
+   "z": 0.79,
    "mitades_pp": [
-    5.9,
-    2.99
+    5.65,
+    2.61
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -483,12 +483,12 @@
    "grupo": "BEISBOL",
    "codigo": "S16",
    "angulo": "supera al modelo en sus ultimos 10",
-   "n": 63,
-   "efecto_pp": 11.95,
-   "z": 1.99,
+   "n": 64,
+   "efecto_pp": 12.39,
+   "z": 2.09,
    "mitades_pp": [
-    16.11,
-    7.91
+    17.3,
+    7.48
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -500,12 +500,12 @@
    "grupo": "NCAAFB",
    "codigo": "S11",
    "angulo": "perdio su ultimo juego",
-   "n": 63,
-   "efecto_pp": 8.69,
-   "z": 1.5,
+   "n": 64,
+   "efecto_pp": 9.62,
+   "z": 1.67,
    "mitades_pp": [
-    7.58,
-    9.76
+    6.59,
+    12.66
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -603,11 +603,11 @@
    "codigo": "S1",
    "angulo": "tras ganar por mucho",
    "n": 52,
-   "efecto_pp": -1.25,
-   "z": -0.19,
+   "efecto_pp": -1.14,
+   "z": -0.18,
    "mitades_pp": [
-    -0.4,
-    -2.1
+    -0.28,
+    -2.01
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -637,11 +637,11 @@
    "codigo": "N12",
    "angulo": "tras perder por 20 o mas",
    "n": 47,
-   "efecto_pp": -1.91,
-   "z": -0.26,
+   "efecto_pp": -1.95,
+   "z": -0.27,
    "mitades_pp": [
-    -12.47,
-    8.21
+    -12.59,
+    8.24
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -773,11 +773,11 @@
    "codigo": "S15",
    "angulo": "persecucion: el modelo lo eligio, perdio y hoy lo vuelve a elegir",
    "n": 41,
-   "efecto_pp": 0.23,
-   "z": 0.03,
+   "efecto_pp": 0.01,
+   "z": 0.0,
    "mitades_pp": [
-    -13.76,
-    13.54
+    -13.96,
+    13.31
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -841,11 +841,11 @@
    "codigo": "N8",
    "angulo": "segundo juego seguido de visita",
    "n": 38,
-   "efecto_pp": -2.41,
-   "z": -0.3,
+   "efecto_pp": -2.81,
+   "z": -0.35,
    "mitades_pp": [
-    -18.5,
-    13.67
+    -18.89,
+    13.28
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -875,11 +875,11 @@
    "codigo": "S13",
    "angulo": "perdio cerrado su ultimo juego",
    "n": 37,
-   "efecto_pp": -5.13,
-   "z": -0.62,
+   "efecto_pp": -5.21,
+   "z": -0.63,
    "mitades_pp": [
-    -0.21,
-    -9.79
+    -0.34,
+    -9.83
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -977,11 +977,11 @@
    "codigo": "B11",
    "angulo": "ultimo juego de serie (getaway)",
    "n": 31,
-   "efecto_pp": -3.49,
-   "z": -0.4,
+   "efecto_pp": -3.83,
+   "z": -0.44,
    "mitades_pp": [
-    -7.29,
-    0.06
+    -7.56,
+    -0.34
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -1045,10 +1045,10 @@
    "codigo": "S2",
    "angulo": "racha de victorias cortada",
    "n": 28,
-   "efecto_pp": -22.46,
-   "z": -2.25,
+   "efecto_pp": -22.49,
+   "z": -2.26,
    "mitades_pp": [
-    -39.88,
+    -39.93,
     -5.05
    ],
    "signo_esperado": null,
@@ -1079,11 +1079,11 @@
    "codigo": "S4",
    "angulo": "frio contra caliente (hacia el frio)",
    "n": 28,
-   "efecto_pp": 11.53,
-   "z": 1.38,
+   "efecto_pp": 11.5,
+   "z": 1.37,
    "mitades_pp": [
-    5.79,
-    17.27
+    5.84,
+    17.15
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -1125,6 +1125,23 @@
    "desde": "2026-10-10",
    "hasta": "2026-10-30"
   },
+  "TODAS|B5": {
+   "grupo": "TODAS",
+   "codigo": "B5",
+   "angulo": "dias seguidos jugando",
+   "n": 25,
+   "efecto_pp": -14.58,
+   "z": -1.49,
+   "mitades_pp": [
+    -9.24,
+    -19.51
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.09,
+   "desde": "2026-10-10",
+   "hasta": "2026-10-30"
+  },
   "NHL|H1": {
    "grupo": "NHL",
    "codigo": "H1",
@@ -1147,11 +1164,11 @@
    "codigo": "S15",
    "angulo": "persecucion: el modelo lo eligio, perdio y hoy lo vuelve a elegir",
    "n": 25,
-   "efecto_pp": 0.22,
+   "efecto_pp": 0.17,
    "z": 0.02,
    "mitades_pp": [
-    -4.93,
-    4.97
+    -5.12,
+    5.06
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -1176,23 +1193,6 @@
    "desde": "2026-10-15",
    "hasta": "2026-10-26"
   },
-  "TODAS|B5": {
-   "grupo": "TODAS",
-   "codigo": "B5",
-   "angulo": "dias seguidos jugando",
-   "n": 24,
-   "efecto_pp": -13.57,
-   "z": -1.34,
-   "mitades_pp": [
-    -9.24,
-    -17.9
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.09,
-   "desde": "2026-10-10",
-   "hasta": "2026-10-30"
-  },
   "FUTBOL|S15": {
    "grupo": "FUTBOL",
    "codigo": "S15",
@@ -1215,11 +1215,11 @@
    "codigo": "S13",
    "angulo": "perdio cerrado su ultimo juego",
    "n": 24,
-   "efecto_pp": -8.91,
-   "z": -0.87,
+   "efecto_pp": -8.98,
+   "z": -0.88,
    "mitades_pp": [
-    -13.37,
-    -4.45
+    -13.43,
+    -4.52
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -1233,7 +1233,7 @@
    "angulo": "frio contra caliente (hacia el frio)",
    "n": 23,
    "efecto_pp": -16.34,
-   "z": -1.57,
+   "z": -1.56,
    "mitades_pp": [
     -30.4,
     -3.46
@@ -1368,10 +1368,10 @@
    "codigo": "B15",
    "angulo": "tras extra innings",
    "n": 18,
-   "efecto_pp": 5.97,
-   "z": 0.52,
+   "efecto_pp": 6.06,
+   "z": 0.53,
    "mitades_pp": [
-    -3.71,
+    -3.53,
     15.66
    ],
    "signo_esperado": 1,
@@ -1419,11 +1419,11 @@
    "codigo": "S1",
    "angulo": "tras ganar por mucho",
    "n": 17,
-   "efecto_pp": 0.69,
-   "z": 0.06,
+   "efecto_pp": 0.6,
+   "z": 0.05,
    "mitades_pp": [
-    -3.54,
-    4.46
+    -3.64,
+    4.37
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -1436,17 +1436,34 @@
    "codigo": "S7",
    "angulo": "sequia de anotacion",
    "n": 17,
-   "efecto_pp": 1.44,
+   "efecto_pp": 1.38,
    "z": 0.13,
    "mitades_pp": [
-    -7.2,
-    9.13
+    -7.3,
+    9.09
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -3.54,
    "desde": "2026-10-10",
    "hasta": "2026-10-24"
+  },
+  "NCAAFB|S3": {
+   "grupo": "NCAAFB",
+   "codigo": "S3",
+   "angulo": "racha de derrotas cortada",
+   "n": 17,
+   "efecto_pp": -4.26,
+   "z": -0.37,
+   "mitades_pp": [
+    -12.27,
+    2.85
+   ],
+   "signo_esperado": null,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 2.95,
+   "desde": "2026-10-10",
+   "hasta": "2026-10-30"
   },
   "BEISBOL|Q6b": {
    "grupo": "BEISBOL",
@@ -1479,23 +1496,6 @@
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -9.68,
-   "desde": "2026-10-10",
-   "hasta": "2026-10-30"
-  },
-  "NCAAFB|S3": {
-   "grupo": "NCAAFB",
-   "codigo": "S3",
-   "angulo": "racha de derrotas cortada",
-   "n": 16,
-   "efecto_pp": -0.08,
-   "z": -0.01,
-   "mitades_pp": [
-    -12.07,
-    11.92
-   ],
-   "signo_esperado": null,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 2.95,
    "desde": "2026-10-10",
    "hasta": "2026-10-30"
   },
@@ -1584,6 +1584,23 @@
    "desde": "2026-10-11",
    "hasta": "2026-10-30"
   },
+  "TODAS|B21": {
+   "grupo": "TODAS",
+   "codigo": "B21",
+   "angulo": "tras perder por 7 o mas",
+   "n": 15,
+   "efecto_pp": 8.45,
+   "z": 0.66,
+   "mitades_pp": [
+    13.93,
+    3.65
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -0.0,
+   "desde": "2026-10-09",
+   "hasta": "2026-10-30"
+  },
   "AHL|S1": {
    "grupo": "AHL",
    "codigo": "S1",
@@ -1616,23 +1633,6 @@
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -0.1,
    "desde": "2026-10-11",
-   "hasta": "2026-10-30"
-  },
-  "TODAS|B21": {
-   "grupo": "TODAS",
-   "codigo": "B21",
-   "angulo": "tras perder por 7 o mas",
-   "n": 14,
-   "efecto_pp": 11.71,
-   "z": 0.88,
-   "mitades_pp": [
-    13.7,
-    9.72
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -0.0,
-   "desde": "2026-10-09",
    "hasta": "2026-10-30"
   },
   "AHL|H1": {
@@ -1810,11 +1810,11 @@
    "codigo": "M7",
    "angulo": "FAV CORTO: favorito de -143 o mas corto",
    "n": 12,
-   "efecto_pp": 3.99,
-   "z": 0.28,
+   "efecto_pp": 3.51,
+   "z": 0.25,
    "mitades_pp": [
-    0.63,
-    7.34
+    -0.17,
+    7.2
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -1827,11 +1827,11 @@
    "codigo": "S7",
    "angulo": "sequia de anotacion",
    "n": 11,
-   "efecto_pp": -28.15,
-   "z": -2.59,
+   "efecto_pp": -28.37,
+   "z": -2.63,
    "mitades_pp": [
     -42.58,
-    -16.13
+    -16.54
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -2065,17 +2065,34 @@
    "codigo": "B12",
    "angulo": "evitar la barrida",
    "n": 9,
-   "efecto_pp": -3.29,
-   "z": -0.2,
+   "efecto_pp": -3.2,
+   "z": -0.19,
    "mitades_pp": [
     -46.28,
-    31.09
+    31.25
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": 2.54,
    "desde": "2026-10-16",
    "hasta": "2026-10-29"
+  },
+  "BEISBOL|R2": {
+   "grupo": "BEISBOL",
+   "codigo": "R2",
+   "angulo": "bullpen cargado (entradas de relevo en 3 dias)",
+   "n": 9,
+   "efecto_pp": 3.25,
+   "z": 0.2,
+   "mitades_pp": [
+    -8.22,
+    12.43
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -0.9,
+   "desde": "2026-10-29",
+   "hasta": "2026-10-30"
   },
   "LIIGA|H14": {
    "grupo": "LIIGA",
@@ -2150,11 +2167,11 @@
    "codigo": "N14",
    "angulo": "jueves por la noche",
    "n": 8,
-   "efecto_pp": 7.24,
-   "z": 0.35,
+   "efecto_pp": 6.84,
+   "z": 0.33,
    "mitades_pp": [
-    19.53,
-    -5.06
+    19.14,
+    -5.46
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -2184,33 +2201,16 @@
    "codigo": "Q3",
    "angulo": "mirando adelante",
    "n": 8,
-   "efecto_pp": -15.48,
+   "efecto_pp": -15.58,
    "z": -0.84,
    "mitades_pp": [
-    -5.39,
+    -5.59,
     -25.57
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -2.41,
    "desde": "2026-10-23",
-   "hasta": "2026-10-30"
-  },
-  "BEISBOL|R2": {
-   "grupo": "BEISBOL",
-   "codigo": "R2",
-   "angulo": "bullpen cargado (entradas de relevo en 3 dias)",
-   "n": 8,
-   "efecto_pp": 8.7,
-   "z": 0.5,
-   "mitades_pp": [
-    -7.82,
-    25.23
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -0.9,
-   "desde": "2026-10-29",
    "hasta": "2026-10-30"
   },
   "AHL|H2": {
@@ -2558,10 +2558,10 @@
    "codigo": "M5",
    "angulo": "FAV INFLADO: favorito que viene de 3+ victorias",
    "n": 6,
-   "efecto_pp": 36.45,
-   "z": 30.35,
+   "efecto_pp": 36.05,
+   "z": 26.17,
    "mitades_pp": [
-    33.83,
+    33.03,
     39.07
    ],
    "signo_esperado": -1,
@@ -2575,11 +2575,11 @@
    "codigo": "Q6a",
    "angulo": "racha de 5+ derrotas",
    "n": 5,
-   "efecto_pp": 33.45,
-   "z": 1.72,
+   "efecto_pp": 33.77,
+   "z": 1.75,
    "mitades_pp": [
     52.43,
-    20.79
+    21.33
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -2765,8 +2765,8 @@
    "efecto_pp": -12.66,
    "z": -0.52,
    "mitades_pp": [
-    -9.5,
-    -14.76
+    -9.9,
+    -14.49
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -2950,7 +2950,7 @@
    "angulo": "bajon tras ganarle a un fuerte",
    "n": 4,
    "efecto_pp": -26.49,
-   "z": -1.27,
+   "z": -1.28,
    "mitades_pp": [
     -6.34,
     -46.64
@@ -3085,11 +3085,11 @@
    "codigo": "B14",
    "angulo": "regreso a casa tras gira de 6+",
    "n": 3,
-   "efecto_pp": 11.48,
-   "z": 0.36,
+   "efecto_pp": 11.21,
+   "z": 0.35,
    "mitades_pp": [
     -52.95,
-    43.7
+    43.29
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -3102,11 +3102,11 @@
    "codigo": "S3",
    "angulo": "racha de derrotas cortada",
    "n": 3,
-   "efecto_pp": -16.43,
+   "efecto_pp": -16.16,
    "z": -0.51,
    "mitades_pp": [
     -52.27,
-    1.49
+    1.89
    ],
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
@@ -3391,10 +3391,10 @@
    "codigo": "M1",
    "angulo": "REBOTE: underdog que viene de 3+ derrotas",
    "n": 2,
-   "efecto_pp": 50.17,
-   "z": 5.0,
+   "efecto_pp": 50.58,
+   "z": 4.85,
    "mitades_pp": [
-    60.2,
+    61.01,
     40.14
    ],
    "signo_esperado": 1,
@@ -3460,10 +3460,10 @@
    "angulo": "ANTI-BARRIDA: el que va 0-2 en la serie, en el juego 3",
    "n": 2,
    "efecto_pp": 45.55,
-   "z": 2.89,
+   "z": 2.75,
    "mitades_pp": [
-    29.77,
-    61.33
+    28.96,
+    62.14
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -3477,10 +3477,10 @@
    "angulo": "BARRIDA: el que va 2-0 en la serie, en el juego 3",
    "n": 2,
    "efecto_pp": -45.55,
-   "z": -2.89,
+   "z": -2.75,
    "mitades_pp": [
-    -29.77,
-    -61.33
+    -28.96,
+    -62.14
    ],
    "signo_esperado": -1,
    "veredicto": "muestra insuficiente",
@@ -3493,10 +3493,10 @@
    "codigo": "R4",
    "angulo": "contra el abridor suertudo (su FIP 1.5+ peor que su ERA)",
    "n": 2,
-   "efecto_pp": 8.34,
-   "z": 0.17,
+   "efecto_pp": 8.74,
+   "z": 0.18,
    "mitades_pp": [
-    -41.4,
+    -40.59,
     58.08
    ],
    "signo_esperado": 1,
@@ -3987,12 +3987,12 @@
    "grupo": "BEISBOL",
    "codigo": "TL3",
    "angulo": "BABIP en sus juegos",
-   "n": 126,
-   "por_unidad": -13.7318,
+   "n": 127,
+   "por_unidad": -13.5522,
    "z": -1.12,
    "mitades": [
-    4.0746,
-    -33.3848
+    4.0939,
+    -32.4123
    ],
    "signo_esperado": -1,
    "historico_por_unidad": -0.647,
@@ -4021,12 +4021,12 @@
    "grupo": "BEISBOL",
    "codigo": "TB3",
    "angulo": "dias seguidos jugando (suma/10)",
-   "n": 104,
-   "por_unidad": -0.1259,
+   "n": 105,
+   "por_unidad": -0.1253,
    "z": -0.13,
    "mitades": [
-    1.8627,
-    -1.3622
+    1.8655,
+    -1.3501
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 0.039,
@@ -4038,12 +4038,12 @@
    "grupo": "BEISBOL",
    "codigo": "TR1",
    "angulo": "ponches esperados del juego",
-   "n": 104,
-   "por_unidad": -10.6279,
+   "n": 105,
+   "por_unidad": -10.6093,
    "z": -0.94,
    "mitades": [
-    -5.8452,
-    -16.0533
+    -5.831,
+    -16.0283
    ],
    "signo_esperado": -1,
    "historico_por_unidad": 0.212,
@@ -4073,11 +4073,11 @@
    "codigo": "TS1",
    "angulo": "tras paliza (cuenta)",
    "n": 78,
-   "por_unidad": 1.4924,
-   "z": 0.88,
+   "por_unidad": 1.5642,
+   "z": 0.92,
    "mitades": [
-    -1.1894,
-    4.0402
+    -1.1166,
+    4.1109
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 0.727,
@@ -4141,11 +4141,11 @@
    "codigo": "TB4",
    "angulo": "los dos vienen de dia libre",
    "n": 51,
-   "por_unidad": -0.0986,
+   "por_unidad": -0.0977,
    "z": -0.16,
    "mitades": [
-    0.1783,
-    -0.3648
+    0.1789,
+    -0.3636
    ],
    "signo_esperado": -1,
    "historico_por_unidad": -0.03,
@@ -4260,11 +4260,11 @@
    "codigo": "TN2",
    "angulo": "viene de semana libre (cuenta)",
    "n": 35,
-   "por_unidad": -4.2058,
-   "z": -1.56,
+   "por_unidad": -4.1261,
+   "z": -1.53,
    "mitades": [
-    -3.0458,
-    -5.1725
+    -2.9628,
+    -5.0956
    ],
    "signo_esperado": 1,
    "historico_por_unidad": -0.212,
@@ -4395,12 +4395,12 @@
    "grupo": "BEISBOL",
    "codigo": "TS1",
    "angulo": "tras paliza (cuenta)",
-   "n": 23,
-   "por_unidad": -0.1911,
-   "z": -0.29,
+   "n": 24,
+   "por_unidad": -0.1898,
+   "z": -0.3,
    "mitades": [
-    0.7757,
-    -1.6643
+    0.7813,
+    -1.7156
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 0.081,
@@ -4413,11 +4413,11 @@
    "codigo": "TB2",
    "angulo": "extra innings en el anterior (cuenta)",
    "n": 22,
-   "por_unidad": -0.6231,
+   "por_unidad": -0.6218,
    "z": -0.71,
    "mitades": [
-    0.9272,
-    -2.447
+    0.9285,
+    -2.4458
    ],
    "signo_esperado": 1,
    "historico_por_unidad": -0.006,
@@ -4515,11 +4515,11 @@
    "codigo": "TB5",
    "angulo": "gira del visitante 6+",
    "n": 16,
-   "por_unidad": 0.4986,
+   "por_unidad": 0.4997,
    "z": 0.47,
    "mitades": [
-    0.7064,
-    0.2909
+    0.7068,
+    0.2926
    ],
    "signo_esperado": 1,
    "historico_por_unidad": -0.048,
@@ -4634,11 +4634,11 @@
    "codigo": "TS7",
    "angulo": "sequia de anotacion (cuenta)",
    "n": 13,
-   "por_unidad": -2.9353,
-   "z": -0.62,
+   "por_unidad": -2.843,
+   "z": -0.6,
    "mitades": [
-    -6.1165,
-    -0.2086
+    -6.0242,
+    -0.1163
    ],
    "signo_esperado": -1,
    "historico_por_unidad": 0.911,
@@ -4651,11 +4651,11 @@
    "codigo": "TS6",
    "angulo": "los dos calientes",
    "n": 11,
-   "por_unidad": -0.9024,
-   "z": -0.19,
+   "por_unidad": -0.8101,
+   "z": -0.17,
    "mitades": [
-    3.0745,
-    -4.2165
+    3.1668,
+    -4.1242
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 0.535,
@@ -4685,11 +4685,11 @@
    "codigo": "TS7",
    "angulo": "sequia de anotacion (cuenta)",
    "n": 10,
-   "por_unidad": -0.2728,
+   "por_unidad": -0.2717,
    "z": -0.24,
    "mitades": [
     -1.964,
-    1.4185
+    1.4206
    ],
    "signo_esperado": -1,
    "historico_por_unidad": -0.368,
@@ -4719,11 +4719,11 @@
    "codigo": "TS5",
    "angulo": "los dos frios",
    "n": 9,
-   "por_unidad": -2.0192,
-   "z": -0.37,
+   "por_unidad": -1.927,
+   "z": -0.35,
    "mitades": [
-    -3.209,
-    -1.0675
+    -3.1167,
+    -0.9752
    ],
    "signo_esperado": -1,
    "historico_por_unidad": -1.739,
@@ -4747,6 +4747,23 @@
    "veredicto": "muestra insuficiente",
    "desde": "2026-10-13",
    "hasta": "2026-10-28"
+  },
+  "LMP+NPB|TR2": {
+   "grupo": "LMP+NPB",
+   "codigo": "TR2",
+   "angulo": "bullpen de los dos (entradas de relevo en 3 dias)",
+   "n": 9,
+   "por_unidad": 0.0358,
+   "z": 0.56,
+   "mitades": [
+    0.0018,
+    0.048
+   ],
+   "signo_esperado": 1,
+   "historico_por_unidad": 0.084,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-10-29",
+   "hasta": "2026-10-30"
   },
   "7 ligas|TF4": {
    "grupo": "7 ligas",
@@ -4787,11 +4804,11 @@
    "codigo": "TN1",
    "angulo": "jueves por la noche",
    "n": 8,
-   "por_unidad": 5.2835,
-   "z": 0.85,
+   "por_unidad": 5.3758,
+   "z": 0.87,
    "mitades": [
-    7.501,
-    3.066
+    7.5933,
+    3.1583
    ],
    "signo_esperado": -1,
    "historico_por_unidad": 0.507,
@@ -4814,23 +4831,6 @@
    "historico_por_unidad": 0.163,
    "veredicto": "muestra insuficiente",
    "desde": "2026-10-16",
-   "hasta": "2026-10-30"
-  },
-  "LMP+NPB|TR2": {
-   "grupo": "LMP+NPB",
-   "codigo": "TR2",
-   "angulo": "bullpen de los dos (entradas de relevo en 3 dias)",
-   "n": 8,
-   "por_unidad": 0.0547,
-   "z": 0.67,
-   "mitades": [
-    0.0016,
-    0.0884
-   ],
-   "signo_esperado": 1,
-   "historico_por_unidad": 0.084,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-10-29",
    "hasta": "2026-10-30"
   },
   "7 ligas|TF7": {
@@ -4889,11 +4889,11 @@
    "codigo": "TN3",
    "angulo": "semana corta (cuenta)",
    "n": 5,
-   "por_unidad": -0.1373,
-   "z": -0.04,
+   "por_unidad": -0.0845,
+   "z": -0.02,
    "mitades": [
-    -5.6207,
-    7.174
+    -5.5746,
+    7.2355
    ],
    "signo_esperado": -1,
    "historico_por_unidad": -1.609,
@@ -5042,10 +5042,10 @@
    "codigo": "TS5",
    "angulo": "los dos frios",
    "n": 2,
-   "por_unidad": -4.7604,
+   "por_unidad": -4.7586,
    "z": -3.22,
    "mitades": [
-    -6.2392,
+    -6.2357,
     -3.2815
    ],
    "signo_esperado": -1,

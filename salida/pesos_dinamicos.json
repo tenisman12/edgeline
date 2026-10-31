@@ -1,19 +1,19 @@
 {
- "generado": "2026-10-31T06:22:17Z",
+ "generado": "2026-10-31T13:06:11Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
   "ncaafb|Ganador": {
    "w_vivo": 0.0,
-   "n": 227,
+   "n": 228,
    "mejora_milesimas": -0.0,
    "z": -0.71,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2031,
-   "brier_modelo": 0.2203,
+   "brier_pinnacle": 0.2046,
+   "brier_modelo": 0.2215,
    "previo": 0.35,
    "w_usado": 0.199
   },
@@ -33,7 +33,7 @@
   },
   "ncaafb|Total": {
    "w_vivo": 0.0,
-   "n": 198,
+   "n": 199,
    "mejora_milesimas": 0.0,
    "z": 0.77,
    "mitades": [
@@ -41,23 +41,23 @@
     -0.0
    ],
    "brier_pinnacle": 0.2492,
-   "brier_modelo": 0.2677,
+   "brier_modelo": 0.2686,
    "previo": 0.35,
-   "w_usado": 0.211
+   "w_usado": 0.21
   },
   "wta|Ganador": {
-   "w_vivo": 0.95,
-   "n": 149,
-   "mejora_milesimas": 10.983,
-   "z": 0.85,
+   "w_vivo": 0.9,
+   "n": 150,
+   "mejora_milesimas": 9.821,
+   "z": 0.81,
    "mitades": [
-    10.818,
-    11.146
+    12.414,
+    7.228
    ],
-   "brier_pinnacle": 0.2391,
-   "brier_modelo": 0.2356,
+   "brier_pinnacle": 0.238,
+   "brier_modelo": 0.2351,
    "previo": 0.35,
-   "w_usado": 0.549
+   "w_usado": 0.533
   },
   "nhl|Total": {
    "w_vivo": 0.0,
@@ -76,14 +76,14 @@
   "atp|Ganador": {
    "w_vivo": 0.7,
    "n": 130,
-   "mejora_milesimas": 10.367,
-   "z": 0.77,
+   "mejora_milesimas": 10.511,
+   "z": 0.78,
    "mitades": [
-    -2.183,
-    22.917
+    -1.225,
+    22.248
    ],
-   "brier_pinnacle": 0.2112,
-   "brier_modelo": 0.2071,
+   "brier_pinnacle": 0.2126,
+   "brier_modelo": 0.2084,
    "previo": 0.35,
    "w_usado": 0.456
   },
@@ -102,18 +102,18 @@
    "w_usado": 0.581
   },
   "ncaafb|Spread": {
-   "w_vivo": 0.3,
-   "n": 85,
-   "mejora_milesimas": 4.412,
-   "z": 0.43,
+   "w_vivo": 0.35,
+   "n": 86,
+   "mejora_milesimas": 5.806,
+   "z": 0.48,
    "mitades": [
-    14.729,
-    -5.666
+    17.651,
+    -6.04
    ],
    "brier_pinnacle": 0.2496,
-   "brier_modelo": 0.2569,
+   "brier_modelo": 0.2549,
    "previo": 0.35,
-   "w_usado": 0.339
+   "w_usado": 0.35
   },
   "mls|Ganador": {
    "w_vivo": 0.0,
