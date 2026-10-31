@@ -1,49 +1,49 @@
 {
- "generado": "2026-10-31T18:57:49Z",
+ "generado": "2026-10-31T23:45:53Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
   "ncaafb|Ganador": {
-   "w_vivo": 0.0,
-   "n": 228,
-   "mejora_milesimas": -0.0,
-   "z": -0.71,
+   "w_vivo": 0.05,
+   "n": 259,
+   "mejora_milesimas": 0.002,
+   "z": 0.0,
    "mitades": [
-    -0.0,
-    -0.0
+    -0.975,
+    0.972
    ],
-   "brier_pinnacle": 0.2046,
-   "brier_modelo": 0.2215,
+   "brier_pinnacle": 0.1934,
+   "brier_modelo": 0.2075,
    "previo": 0.35,
-   "w_usado": 0.199
-  },
-  "nhl|Ganador": {
-   "w_vivo": 0.0,
-   "n": 200,
-   "mejora_milesimas": -0.0,
-   "z": -0.57,
-   "mitades": [
-    -0.0,
-    -0.0
-   ],
-   "brier_pinnacle": 0.2311,
-   "brier_modelo": 0.2357,
-   "previo": 0.5,
-   "w_usado": 0.3
+   "w_usado": 0.211
   },
   "ncaafb|Total": {
    "w_vivo": 0.0,
-   "n": 199,
+   "n": 229,
    "mejora_milesimas": 0.0,
-   "z": 0.77,
+   "z": 0.73,
    "mitades": [
     0.0,
     -0.0
    ],
    "brier_pinnacle": 0.2492,
-   "brier_modelo": 0.2686,
+   "brier_modelo": 0.2687,
    "previo": 0.35,
-   "w_usado": 0.21
+   "w_usado": 0.198
+  },
+  "nhl|Ganador": {
+   "w_vivo": 0.0,
+   "n": 206,
+   "mejora_milesimas": -0.0,
+   "z": -0.78,
+   "mitades": [
+    -0.0,
+    -0.0
+   ],
+   "brier_pinnacle": 0.231,
+   "brier_modelo": 0.2355,
+   "previo": 0.5,
+   "w_usado": 0.296
   },
   "wta|Ganador": {
    "w_vivo": 0.9,
@@ -59,61 +59,61 @@
    "previo": 0.35,
    "w_usado": 0.533
   },
-  "atp|Ganador": {
-   "w_vivo": 0.7,
-   "n": 134,
-   "mejora_milesimas": 10.385,
-   "z": 0.78,
-   "mitades": [
-    -2.084,
-    22.854
-   ],
-   "brier_pinnacle": 0.2127,
-   "brier_modelo": 0.2087,
-   "previo": 0.35,
-   "w_usado": 0.458
-  },
   "nhl|Total": {
    "w_vivo": 0.0,
-   "n": 134,
+   "n": 137,
    "mejora_milesimas": -0.0,
-   "z": -1.78,
+   "z": -1.58,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2491,
-   "brier_modelo": 0.2587,
+   "brier_pinnacle": 0.2494,
+   "brier_modelo": 0.2583,
    "previo": 0.5,
-   "w_usado": 0.346
+   "w_usado": 0.343
+  },
+  "atp|Ganador": {
+   "w_vivo": 0.75,
+   "n": 133,
+   "mejora_milesimas": 11.475,
+   "z": 0.81,
+   "mitades": [
+    -1.091,
+    23.854
+   ],
+   "brier_pinnacle": 0.2133,
+   "brier_modelo": 0.2086,
+   "previo": 0.35,
+   "w_usado": 0.473
   },
   "nhl|Spread": {
-   "w_vivo": 0.85,
-   "n": 91,
-   "mejora_milesimas": 91.443,
-   "z": 2.03,
+   "w_vivo": 0.9,
+   "n": 96,
+   "mejora_milesimas": 104.093,
+   "z": 2.25,
    "mitades": [
-    103.635,
-    79.515
+    90.863,
+    117.323
    ],
-   "brier_pinnacle": 0.2729,
-   "brier_modelo": 0.2299,
+   "brier_pinnacle": 0.2756,
+   "brier_modelo": 0.226,
    "previo": 0.5,
-   "w_usado": 0.581
+   "w_usado": 0.597
   },
   "ncaafb|Spread": {
-   "w_vivo": 0.35,
-   "n": 86,
-   "mejora_milesimas": 5.806,
-   "z": 0.48,
+   "w_vivo": 0.4,
+   "n": 95,
+   "mejora_milesimas": 7.869,
+   "z": 0.61,
    "mitades": [
-    17.651,
-    -6.04
+    22.733,
+    -6.685
    ],
-   "brier_pinnacle": 0.2496,
-   "brier_modelo": 0.2549,
+   "brier_pinnacle": 0.2498,
+   "brier_modelo": 0.2526,
    "previo": 0.35,
-   "w_usado": 0.35
+   "w_usado": 0.362
   },
   "mls|Ganador": {
    "w_vivo": 0.0,
@@ -255,6 +255,20 @@
    "previo": 0.25,
    "w_usado": 0.226
   },
+  "shl|Ganador": {
+   "w_vivo": 0.0,
+   "n": 31,
+   "mejora_milesimas": -0.0,
+   "z": -1.36,
+   "mitades": [
+    -0.0,
+    -0.0
+   ],
+   "brier_pinnacle": 0.2072,
+   "brier_modelo": 0.2139,
+   "previo": 0.5,
+   "w_usado": 0.453
+  },
   "kbo|Spread": {
    "w_vivo": 0.95,
    "n": 30,
@@ -283,20 +297,6 @@
    "previo": 0.25,
    "w_usado": 0.318
   },
-  "shl|Ganador": {
-   "w_vivo": 0.0,
-   "n": 28,
-   "mejora_milesimas": -0.0,
-   "z": -1.0,
-   "mitades": [
-    -0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.1996,
-   "brier_modelo": 0.208,
-   "previo": 0.5,
-   "w_usado": 0.457
-  },
   "ligamx|Ganador": {
    "w_vivo": 0.0,
    "n": 27,
@@ -310,6 +310,20 @@
    "brier_modelo": 0.2726,
    "previo": 0.25,
    "w_usado": 0.229
+  },
+  "shl|Total": {
+   "w_vivo": 0.3,
+   "n": 27,
+   "mejora_milesimas": 0.267,
+   "z": 0.06,
+   "mitades": [
+    -4.426,
+    4.624
+   ],
+   "brier_pinnacle": 0.2278,
+   "brier_modelo": 0.2286,
+   "previo": 0.5,
+   "w_usado": 0.483
   },
   "ligamx|Total": {
    "w_vivo": 0.0,
@@ -338,20 +352,6 @@
    "brier_modelo": 0.2078,
    "previo": 0.25,
    "w_usado": 0.231
-  },
-  "shl|Total": {
-   "w_vivo": 0.25,
-   "n": 24,
-   "mejora_milesimas": 0.237,
-   "z": 0.06,
-   "mitades": [
-    -6.068,
-    6.542
-   ],
-   "brier_pinnacle": 0.2314,
-   "brier_modelo": 0.2323,
-   "previo": 0.5,
-   "w_usado": 0.481
   },
   "mlb|Total": {
    "w_vivo": 0.0,
