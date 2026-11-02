@@ -39,6 +39,14 @@ TEMPORADA = {
     "premier": (8, 5), "laliga": (8, 5), "seriea": (8, 5), "bundesliga": (8, 5),
     "ligue1": (8, 5), "ligamx": (7, 5), "mls": (2, 12), "champions": (9, 5),
 }
+# Ultimo juego verificado de una temporada que ya termino antes de cerrar su ventana de TEMPORADA. Si el ultimo juego en
+# los datos llega a esa fecha, el atraso no se revisa hasta que abra la ventana siguiente (la fecha queda atras sola).
+# La ventana de MLB/NPB cierra en noviembre porque el Juego 7 puede caer el 31-oct o el 1-nov; el 1-nov-2026 el chequeo
+# se puso en rojo con 4 dias "de atraso" cuando las dos series ya habian terminado.
+FIN_VERIFICADO = {
+    "mlb": "2026-10-28",     # Serie Mundial: Brewers 4-1 a los Rays en el Juego 5 (SI / AP, 28-oct-2026)
+    "npb": "2026-10-28",     # Serie de Japon: SoftBank barre 4-0 a DeNA (CubaHeadlines, 28-oct-2026)
+}
 # Dias de atraso tolerados dentro de temporada. Las ligas que juegan a diario toleran menos.
 ATRASO = defaultdict(lambda: 10, {
     "mlb": 3, "npb": 3, "kbo": 3, "nhl": 3, "nba": 3, "ncaamb": 5,
@@ -250,6 +258,9 @@ def revisar_datos():
                                              lg.upper(), ini.isoformat(), d_ini, u))
                         else:
                             ok("datos", "%s: temporada recien abierta (%s), aun sin juegos. Normal." % (lg.upper(), ini.isoformat()))
+                    elif lg in FIN_VERIFICADO and ini and ini <= dt.date.fromisoformat(FIN_VERIFICADO[lg]) <= fu:
+                        ok("datos", "%s: temporada terminada el %s (verificado); ultimo juego en tus datos %s. Normal." % (
+                            lg.upper(), FIN_VERIFICADO[lg], u))
                     else:
                         dias = (hoy - fu).days
                         if dias > ATRASO[lg]:
