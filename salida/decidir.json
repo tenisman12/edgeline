@@ -1,6 +1,178 @@
 {
- "generado": "2026-11-02T06:34:43",
+ "generado": "2026-11-02T14:10:27",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
- "partidos": []
+ "partidos": [
+  {
+   "liga": "kbo",
+   "id": "kbo-20261103SSKT0",
+   "fecha": "2026-11-03",
+   "hora": "03:30",
+   "home": "KT Wiz",
+   "away": "Samsung Lions",
+   "p_modelo": 0.6255,
+   "p_sharp": 0.6251,
+   "p_final": 0.6252,
+   "fuente": "pinnacle 65% + modelo 35%",
+   "p_mezcla": 0.6252,
+   "margen_esperado": 1.38,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.4809,
+   "detalle_modelo": {
+    "elo_h": 1604.9,
+    "elo_a": 1555.8,
+    "dif_h": 1.222,
+    "dif_a": 0.96,
+    "p_base": 0.5855,
+    "abridor_h": {
+     "nombre": "대니엘",
+     "fip_ventana": 2.81,
+     "fip_ultimas5": 2.27,
+     "k_pct": 0.293,
+     "bb_pct": 0.091,
+     "ip_ventana": "50.0",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.28,
+     "ga_equipo": 4.507
+    },
+    "abridor_a": {
+     "nombre": "최원태",
+     "fip_ventana": 4.36,
+     "fip_ultimas5": 3.47,
+     "k_pct": 0.22,
+     "bb_pct": 0.09,
+     "ip_ventana": "121.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 4.05,
+     "ga_equipo": 4.604
+    },
+    "carreras_abridor": 0.41,
+    "frio_caliente": 0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "KT Wiz",
+     "p": 0.6252,
+     "cuota": -172.0,
+     "decimal": 1.581,
+     "casa": "onexbet",
+     "ev": -0.0112,
+     "cuota_min": 1.8,
+     "en_rango": false,
+     "senales_favor": 7,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 66.5
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Samsung Lions",
+     "p": 0.3748,
+     "cuota": 155.0,
+     "decimal": 2.55,
+     "casa": "draftkings",
+     "ev": -0.0444,
+     "cuota_min": 2.67,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 7,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 17.2
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "KT Wiz -1.5",
+     "p": 0.4809,
+     "cuota": 115.0,
+     "decimal": 2.15,
+     "casa": "onexbet",
+     "ev": 0.0339,
+     "cuota_min": 2.08,
+     "en_rango": true,
+     "senales_favor": 5,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "pick",
+     "premium_pts": 68.8
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Samsung Lions +1.5",
+     "p": 0.5191,
+     "cuota": -124.0,
+     "decimal": 1.806,
+     "casa": "pinnacle",
+     "ev": -0.0622,
+     "cuota_min": 1.93,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 5,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "abridor",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 18.4
+    }
+   ],
+   "pick": null,
+   "confianza": "sin pick",
+   "stake": 0.0,
+   "pretemporada": false
+  }
+ ]
 }
