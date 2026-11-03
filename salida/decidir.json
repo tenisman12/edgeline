@@ -1,6 +1,202 @@
 {
- "generado": "2026-11-03T15:29:33",
+ "generado": "2026-11-03T20:38:38",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
- "partidos": []
+ "partidos": [
+  {
+   "liga": "kbo",
+   "id": "kbo-20261104SSKT0",
+   "fecha": "2026-11-04",
+   "hora": "03:30",
+   "home": "KT Wiz",
+   "away": "Samsung Lions",
+   "p_modelo": 0.5834,
+   "p_sharp": 0.5342,
+   "p_final": 0.5516,
+   "fuente": "pinnacle 65% + modelo 35%",
+   "p_mezcla": 0.5516,
+   "margen_esperado": 0.56,
+   "linea_home": "-1.5",
+   "p_runline_home": 0.3873,
+   "detalle_modelo": {
+    "elo_h": 1606.5,
+    "elo_a": 1554.1,
+    "dif_h": 1.221,
+    "dif_a": 0.947,
+    "p_base": 0.5889,
+    "abridor_h": {
+     "nombre": "고영표",
+     "fip_ventana": 3.36,
+     "fip_ultimas5": 3.42,
+     "k_pct": 0.26,
+     "bb_pct": 0.049,
+     "ip_ventana": "158.2",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.57,
+     "ga_equipo": 4.524
+    },
+    "abridor_a": {
+     "nombre": "페덱",
+     "fip_ventana": 3.06,
+     "fip_ultimas5": 3.25,
+     "k_pct": 0.269,
+     "bb_pct": 0.045,
+     "ip_ventana": "73.1",
+     "bullpen_game": false,
+     "innings": 5.5,
+     "era_ajustada": 3.58,
+     "ga_equipo": 4.627
+    },
+    "carreras_abridor": -0.06,
+    "frio_caliente": 0
+   },
+   "lados": [
+    {
+     "mercado": "Ganador",
+     "lado": "home",
+     "texto": "KT Wiz",
+     "p": 0.5516,
+     "cuota": -125.0,
+     "decimal": 1.8,
+     "casa": "onexbet",
+     "ev": -0.0072,
+     "cuota_min": 1.81,
+     "en_rango": true,
+     "senales_favor": 6,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 59.8
+    },
+    {
+     "mercado": "Ganador",
+     "lado": "away",
+     "texto": "Samsung Lions",
+     "p": 0.4484,
+     "cuota": 115.0,
+     "decimal": 2.15,
+     "casa": "betonlineag",
+     "ev": -0.0359,
+     "cuota_min": 2.23,
+     "en_rango": true,
+     "senales_favor": 1,
+     "senales_contra": 6,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "consenso",
+       "h2h",
+       "osciladores",
+       "fuerza",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 28.1
+    },
+    {
+     "mercado": "Run line",
+     "lado": "home",
+     "texto": "KT Wiz -1.5",
+     "p": 0.3873,
+     "cuota": 163.0,
+     "decimal": 2.63,
+     "casa": "onexbet",
+     "ev": 0.0185,
+     "cuota_min": 2.58,
+     "en_rango": true,
+     "senales_favor": 4,
+     "senales_contra": 1,
+     "senales": {
+      "a_favor": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "racha"
+      ],
+      "en_contra": [
+       "bullpen"
+      ]
+     },
+     "premium_nivel": "lean",
+     "premium_pts": 62.6
+    },
+    {
+     "mercado": "Run line",
+     "lado": "away",
+     "texto": "Samsung Lions +1.5",
+     "p": 0.6127,
+     "cuota": -180.0,
+     "decimal": 1.556,
+     "casa": "betonlineag",
+     "ev": -0.0469,
+     "cuota_min": 1.8,
+     "en_rango": false,
+     "senales_favor": 1,
+     "senales_contra": 4,
+     "senales": {
+      "a_favor": [
+       "bullpen"
+      ],
+      "en_contra": [
+       "forma",
+       "osciladores",
+       "fuerza",
+       "racha"
+      ]
+     },
+     "premium_nivel": "pasar",
+     "premium_pts": 19.9
+    }
+   ],
+   "pick": {
+    "mercado": "Ganador",
+    "lado": "home",
+    "texto": "KT Wiz",
+    "p": 0.5516,
+    "cuota": -125.0,
+    "decimal": 1.8,
+    "casa": "onexbet",
+    "ev": -0.0072,
+    "cuota_min": 1.81,
+    "en_rango": true,
+    "senales_favor": 6,
+    "senales_contra": 1,
+    "senales": {
+     "a_favor": [
+      "forma",
+      "consenso",
+      "h2h",
+      "osciladores",
+      "fuerza",
+      "racha"
+     ],
+     "en_contra": [
+      "bullpen"
+     ]
+    },
+    "premium_nivel": "lean",
+    "premium_pts": 59.8
+   },
+   "confianza": "minima",
+   "stake": 0.0,
+   "pretemporada": false
+  }
+ ]
 }
