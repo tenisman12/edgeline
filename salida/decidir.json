@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-04T01:36:23",
+ "generado": "2026-11-04T09:38:02",
  "coeficientes": "modelos/decidir_beisbol.json",
  "peso_modelo": 0.35,
  "partidos": [
@@ -11,13 +11,13 @@
    "home": "KT Wiz",
    "away": "Samsung Lions",
    "p_modelo": 0.5834,
-   "p_sharp": 0.53,
-   "p_final": 0.5488,
+   "p_sharp": 0.537,
+   "p_final": 0.5534,
    "fuente": "pinnacle 65% + modelo 35%",
-   "p_mezcla": 0.5488,
-   "margen_esperado": 0.53,
+   "p_mezcla": 0.5534,
+   "margen_esperado": 0.58,
    "linea_home": "-1.5",
-   "p_runline_home": 0.384,
+   "p_runline_home": 0.3895,
    "detalle_modelo": {
     "elo_h": 1606.5,
     "elo_a": 1554.1,
@@ -56,13 +56,13 @@
      "mercado": "Ganador",
      "lado": "home",
      "texto": "KT Wiz",
-     "p": 0.5488,
-     "cuota": -118.0,
-     "decimal": 1.847,
-     "casa": "betonlineag",
-     "ev": 0.014,
-     "cuota_min": 1.82,
-     "en_rango": true,
+     "p": 0.5534,
+     "cuota": -126.0,
+     "decimal": 1.794,
+     "casa": "pinnacle",
+     "ev": -0.0074,
+     "cuota_min": 1.81,
+     "en_rango": false,
      "senales_favor": 6,
      "senales_contra": 1,
      "senales": {
@@ -79,18 +79,18 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 64.4
+     "premium_pts": 59.9
     },
     {
      "mercado": "Ganador",
      "lado": "away",
      "texto": "Samsung Lions",
-     "p": 0.4512,
-     "cuota": 108.0,
-     "decimal": 2.08,
-     "casa": "onexbet",
-     "ev": -0.0616,
-     "cuota_min": 2.22,
+     "p": 0.4466,
+     "cuota": 125.0,
+     "decimal": 2.25,
+     "casa": "fanatics",
+     "ev": 0.0049,
+     "cuota_min": 2.24,
      "en_rango": true,
      "senales_favor": 1,
      "senales_contra": 6,
@@ -108,18 +108,18 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 22.1
+     "premium_pts": 37.7
     },
     {
      "mercado": "Run line",
      "lado": "home",
      "texto": "KT Wiz -1.5",
-     "p": 0.384,
-     "cuota": 162.0,
-     "decimal": 2.62,
+     "p": 0.3895,
+     "cuota": 156.0,
+     "decimal": 2.56,
      "casa": "pinnacle",
-     "ev": 0.0061,
-     "cuota_min": 2.6,
+     "ev": -0.003,
+     "cuota_min": 2.57,
      "en_rango": true,
      "senales_favor": 4,
      "senales_contra": 1,
@@ -135,17 +135,17 @@
       ]
      },
      "premium_nivel": "lean",
-     "premium_pts": 58.9
+     "premium_pts": 59.4
     },
     {
      "mercado": "Run line",
      "lado": "away",
      "texto": "Samsung Lions +1.5",
-     "p": 0.616,
-     "cuota": -180.0,
-     "decimal": 1.556,
-     "casa": "betonlineag",
-     "ev": -0.0418,
+     "p": 0.6105,
+     "cuota": -160.0,
+     "decimal": 1.625,
+     "casa": "draftkings",
+     "ev": -0.0079,
      "cuota_min": 1.8,
      "en_rango": false,
      "senales_favor": 1,
@@ -162,40 +162,40 @@
       ]
      },
      "premium_nivel": "pasar",
-     "premium_pts": 21.9
+     "premium_pts": 29.8
     }
    ],
    "pick": {
     "mercado": "Ganador",
-    "lado": "home",
-    "texto": "KT Wiz",
-    "p": 0.5488,
-    "cuota": -118.0,
-    "decimal": 1.847,
-    "casa": "betonlineag",
-    "ev": 0.014,
-    "cuota_min": 1.82,
+    "lado": "away",
+    "texto": "Samsung Lions",
+    "p": 0.4466,
+    "cuota": 125.0,
+    "decimal": 2.25,
+    "casa": "fanatics",
+    "ev": 0.0049,
+    "cuota_min": 2.24,
     "en_rango": true,
-    "senales_favor": 6,
-    "senales_contra": 1,
+    "senales_favor": 1,
+    "senales_contra": 6,
     "senales": {
      "a_favor": [
+      "bullpen"
+     ],
+     "en_contra": [
       "forma",
       "consenso",
       "h2h",
       "osciladores",
       "fuerza",
       "racha"
-     ],
-     "en_contra": [
-      "bullpen"
      ]
     },
-    "premium_nivel": "lean",
-    "premium_pts": 64.4
+    "premium_nivel": "pasar",
+    "premium_pts": 37.7
    },
-   "confianza": "baja",
-   "stake": 0.01,
+   "confianza": "minima",
+   "stake": 0.0,
    "pretemporada": false
   }
  ]
