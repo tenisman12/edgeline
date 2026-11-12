@@ -236,7 +236,8 @@ def apostabilidad(rec, v2, dec_bb):
             return None
         return ("mercado %s de %s descalibrado en vivo: prometio %.0f%% y acerto %.0f%% en %d casos" % (
             nombre, (rec.get("liga") or "").upper(), 100 * d["p_media"], 100 * d["acierto"], d["n"]))
-    if rec.get("deporte") == "beisbol":
+    gan_v2 = _beisbol_sin_sistema(rec, dec_bb) and (v2 or {}).get("ganador")
+    if rec.get("deporte") == "beisbol" and not gan_v2:
         d = (dec_bb or {}).get((rec["liga"], str(rec["id"]), rec["fecha"])) or {}
         k = d.get("pick") or {}
         mot = _descal("ganador")
@@ -251,6 +252,8 @@ def apostabilidad(rec, v2, dec_bb):
                           "ev": k.get("ev"), "cuota": k.get("decimal"), "cuota_min": k.get("cuota_min")}
     nombres = (("total", (v2 or {}).get("total")),) if rec.get("deporte") == "beisbol" else \
         (("ganador", (v2 or {}).get("ganador")), ("total", (v2 or {}).get("total")))
+    if gan_v2:
+        nombres = (("ganador", gan_v2),) + nombres
     for nombre, d in nombres:
         if not d:
             out[nombre] = {"apostable": False, "motivo": "sin modelo para este partido"}
@@ -321,11 +324,20 @@ def _candidatos_equipo(rec):
     return out
 
 
+def _beisbol_sin_sistema(rec, dec_bb):
+    """ligas de beisbol que decidir.py no cubre (LIGAS = mlb, npb, kbo): LMP, LMB, LVBP, LIDOM, ABL. Su ganador va por
+    decidir_v2 (mezcla con Pinnacle, como el resto de los deportes) en lugar de quedar bloqueado (12-nov-2026: con las
+    cuotas de Pinnacle de LMP, picks_del_dia decia 'sin cuota de Pinnacle' aunque decidir_v2 si la tenia)."""
+    return rec.get("deporte") == "beisbol" and not (dec_bb or {}).get((rec["liga"], str(rec["id"]), rec["fecha"]))
+
+
 def _candidatos(rec, dec_bb, v2=None):
     out = []
     if v2:
         if rec.get("deporte") == "beisbol":
             out += _candidatos_v2(rec, (v2.get("total"),))     # el total de beisbol por decidir_v2 (9-oct-2026)
+            if _beisbol_sin_sistema(rec, dec_bb):
+                out += _candidatos_v2(rec, (v2.get("ganador"),))   # LMP y demas: ganador por decidir_v2 (12-nov-2026)
         else:
             return _candidatos_v2(rec, (v2.get("ganador"), v2.get("total")))
     return out + _candidatos_resto(rec, dec_bb)

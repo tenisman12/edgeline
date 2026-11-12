@@ -192,7 +192,7 @@ def main():
     if not key:
         print("::warning::Sin EDGELINE_PINNACLE_KEY: no se piden cuotas de Pinnacle (guardar la llave de invitado en el secreto PINNACLE_KEY).")
         return 0
-    ahora = dt.datetime.utcnow().replace(microsecond=0)
+    ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None, microsecond=0)
     ts = ahora.isoformat() + "Z"
     nuevos, filas = [], []
     for lg in [x.strip().upper() for x in a.ligas.split(",") if x.strip()]:

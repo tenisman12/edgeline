@@ -1,0 +1,38 @@
+name: pinnacle (lineas de LMP y LMB cada 30 min)
+
+# 12-nov-2026: la corrida intradia (cuotas.yml) es "cada hora" pero GitHub se salta muchas (el 12-nov solo salieron
+# dos, 07:14 y 15:48 CDMX) y no quedo linea de cierre de LMP. Esta corrida es corta (1-2 min) y solo hace la foto de
+# Pinnacle: ML, run line, total y total por equipo de los juegos que no han empezado. La ultima foto antes del primer
+# lanzamiento es el cierre (CLV); la primera, la apertura.
+# Horario: cada 30 min de 09:00 a 23:30 CDMX (15:00 a 05:30 UTC), que cubre todos los juegos de LMP y LMB.
+on:
+  schedule:
+    - cron: "7,37 0-5,15-23 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: edgeline-pinnacle
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pinnacle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      EDGELINE_PINNACLE_KEY: ${{ secrets.PINNACLE_KEY }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Foto de Pinnacle (LMP y LMB)
+        continue-on-error: true
+        run: python colectores/recolectar_cuotas_pinnacle.py --ver
+      - name: Subir a main
+        run: bash utilidades/subir_a_main.sh "pinnacle" "salida/pinnacle_beisbol_*.csv" salida/cuotas_sharp_2026.csv salida/cuotas_casas.json
