@@ -1,0 +1,88 @@
+name: betexplorer historico (momios LMP / LMB)
+
+# Se corre A MANO (Actions -> "betexplorer historico" -> Run workflow) y se deja solo.
+# Baja de BetExplorer los momios de juegos ya jugados (ganador, total y run line, todas las casas y lineas) con
+# colectores/betexplorer_historico.py. Un job por temporada (2 a la vez, para no cargar a BetExplorer); cada uno
+# guarda semillas/betexplorer/<liga>_<temporada>.csv (todas las lineas) y <liga>_<temporada>_principal.csv (una fila
+# por juego con la linea que ponen las casas) y los sube a main en cuanto termina.
+# Si una temporada se corta, volver a correr: lo ya guardado se salta.
+# No toca la rama datos ni los modelos.
+
+on:
+  workflow_dispatch:
+    inputs:
+      liga:
+        description: "lmp, lmb, lvbp o lidom"
+        default: "lmp"
+      temporadas:
+        description: "LMP/LVBP/LIDOM '2013-2014:2025-2026'; LMB '2014:2025'; o lista con comas"
+        default: "2013-2014:2025-2026"
+      pausa:
+        description: "segundos entre paginas"
+        default: "1.5"
+
+permissions:
+  contents: write
+
+jobs:
+  lista:
+    runs-on: ubuntu-latest
+    outputs:
+      temporadas: ${{ steps.l.outputs.t }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -q beautifulsoup4
+      - name: Prueba con un juego (si BetExplorer bloquea a GitHub, aqui se ve)
+        continue-on-error: true
+        env:
+          EDGELINE_BASE: ${{ github.workspace }}
+        run: python colectores/betexplorer_historico.py --sonda
+      - id: l
+        run: echo "t=$(python colectores/betexplorer_historico.py --liga '${{ github.event.inputs.liga }}' --temporadas '${{ github.event.inputs.temporadas }}' --listar)" >> "$GITHUB_OUTPUT"
+
+  temporada:
+    needs: lista
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        temporada: ${{ fromJSON(needs.lista.outputs.temporadas) }}
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      LIGA: ${{ github.event.inputs.liga }}
+      TEMP: ${{ matrix.temporada }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -q beautifulsoup4
+      - name: Bajar momios de la temporada
+        continue-on-error: true
+        run: |
+          python colectores/betexplorer_historico.py --liga "$LIGA" --temporadas "$TEMP" \
+            --pausa "${{ github.event.inputs.pausa }}" --salida "semillas/betexplorer/${LIGA}_${TEMP}.csv"
+      - name: Resumen
+        run: |
+          f="semillas/betexplorer/${LIGA}_${TEMP}.csv"
+          if [ -f "$f" ]; then
+            python - "$f" <<'EOF'
+          import csv, sys, collections
+          r = list(csv.DictReader(open(sys.argv[1], encoding="utf-8-sig")))
+          j = {x["match_id"] for x in r}
+          con = {x["match_id"] for x in r if x["cuota_1"]}
+          m = collections.Counter(x["mercado"] for x in r if x["cuota_1"])
+          print("%s: %d juegos, %d con momios, filas por mercado %s" % (sys.argv[1], len(j), len(con), dict(m)))
+          EOF
+          else
+            echo "::warning::$LIGA $TEMP sin archivo (revisar el log del paso anterior)"
+          fi
+      - name: Subir a main
+        run: bash utilidades/subir_a_main.sh "betexplorer $LIGA $TEMP" "semillas/betexplorer/${LIGA}_${TEMP}.csv" "semillas/betexplorer/${LIGA}_${TEMP}_principal.csv"
