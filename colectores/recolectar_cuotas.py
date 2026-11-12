@@ -176,7 +176,8 @@ def guardar_compacto(eventos, ahora):
         prev = json.load(io.open(SALIDA, encoding="utf-8")).get("eventos") or []
     except Exception:
         prev = []
-    sgo = [e for e in prev if e.get("fuente_api") == "sgo" and (e.get("commence_time") or "") >= ahora[:19]]
+    # y los de Pinnacle (LMP/LMB, colectores/recolectar_cuotas_pinnacle.py, 12-nov-2026)
+    sgo = [e for e in prev if e.get("fuente_api") in ("sgo", "pinnacle") and (e.get("commence_time") or "") >= ahora[:19]]
     with io.open(SALIDA, "w", encoding="utf-8") as f:
         json.dump({"generado": ahora, "eventos": eventos + sgo}, f, ensure_ascii=False)
     hist_sharp(eventos, ahora)

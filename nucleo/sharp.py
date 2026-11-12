@@ -31,6 +31,7 @@ EV_MAX_CASA = 0.08      # una cuota con mas de 8% de EV contra Pinnacle es casi 
 LIGA_DE = {"baseball_mlb": "mlb", "baseball_npb": "npb", "baseball_kbo": "kbo", "icehockey_nhl": "nhl",
            "icehockey_sweden_hockey_league": "shl", "icehockey_liiga": "liiga", "icehockey_ahl": "ahl", 
            "baseball_lmp": "lmp", "baseball_lvbp": "lvbp", "baseball_lidom": "lidom",      # SportsGameOdds (recolectar_cuotas_sgo.py)
+           "baseball_lmb": "lmb",                                                    # Pinnacle (recolectar_cuotas_pinnacle.py)
            "americanfootball_nfl": "nfl", "americanfootball_ncaaf": "ncaafb", "basketball_nba": "nba",
            "basketball_ncaab": "ncaamb", "soccer_mexico_ligamx": "ligamx", "soccer_epl": "premier",
            "soccer_spain_la_liga": "laliga", "soccer_italy_serie_a": "seriea", "soccer_germany_bundesliga": "bundesliga",
