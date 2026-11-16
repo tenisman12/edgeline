@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-16T08:14:45Z",
+ "generado": "2026-11-16T18:50:50Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -33,43 +33,43 @@
   },
   "nhl|Ganador": {
    "w_vivo": 0.0,
-   "n": 313,
+   "n": 311,
    "mejora_milesimas": 0.0,
    "z": 0.36,
    "mitades": [
     -0.0,
     0.0
    ],
-   "brier_pinnacle": 0.2312,
+   "brier_pinnacle": 0.2311,
    "brier_modelo": 0.2341,
    "previo": 0.5,
    "w_usado": 0.245
   },
   "nhl|Total": {
    "w_vivo": 0.0,
-   "n": 222,
+   "n": 220,
    "mejora_milesimas": -0.0,
    "z": -1.21,
    "mitades": [
     -0.0,
     -0.0
    ],
-   "brier_pinnacle": 0.2509,
-   "brier_modelo": 0.2557,
+   "brier_pinnacle": 0.2512,
+   "brier_modelo": 0.2563,
    "previo": 0.5,
-   "w_usado": 0.287
+   "w_usado": 0.288
   },
   "atp|Ganador": {
    "w_vivo": 0.55,
-   "n": 180,
-   "mejora_milesimas": 6.152,
-   "z": 0.69,
+   "n": 181,
+   "mejora_milesimas": 5.891,
+   "z": 0.66,
    "mitades": [
     9.645,
-    2.658
+    2.178
    ],
-   "brier_pinnacle": 0.2205,
-   "brier_modelo": 0.219,
+   "brier_pinnacle": 0.2194,
+   "brier_modelo": 0.218,
    "previo": 0.35,
    "w_usado": 0.425
   },
@@ -283,6 +283,20 @@
    "previo": 0.25,
    "w_usado": 0.342
   },
+  "ligamx|Ganador": {
+   "w_vivo": 0.0,
+   "n": 40,
+   "mejora_milesimas": 0.0,
+   "z": 0.0,
+   "mitades": [
+    0.0,
+    0.0
+   ],
+   "brier_pinnacle": 0.2445,
+   "brier_modelo": 0.2535,
+   "previo": 0.25,
+   "w_usado": 0.221
+  },
   "premier|Ganador": {
    "w_vivo": 0.0,
    "n": 40,
@@ -311,33 +325,19 @@
    "previo": 0.5,
    "w_usado": 0.441
   },
-  "ligamx|Ganador": {
-   "w_vivo": 0.0,
-   "n": 39,
-   "mejora_milesimas": 0.0,
-   "z": 0.0,
-   "mitades": [
-    0.0,
-    0.0
-   ],
-   "brier_pinnacle": 0.2436,
-   "brier_modelo": 0.2501,
-   "previo": 0.25,
-   "w_usado": 0.221
-  },
   "ligamx|Total": {
    "w_vivo": 0.0,
-   "n": 38,
+   "n": 39,
    "mejora_milesimas": -0.0,
    "z": -0.44,
    "mitades": [
     -0.0,
     0.0
    ],
-   "brier_pinnacle": 0.2558,
-   "brier_modelo": 0.2682,
+   "brier_pinnacle": 0.2582,
+   "brier_modelo": 0.2689,
    "previo": 0.25,
-   "w_usado": 0.222
+   "w_usado": 0.221
   },
   "premier|Total": {
    "w_vivo": 1.0,
