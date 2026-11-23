@@ -114,7 +114,9 @@ def _reportar(filas):
     """Imprime los fallos y la frescura por liga. Devuelve 1 si algo esta mal, 0 si todo bien.
     'Mal' es: alguna liga-temporada no se pudo bajar, o la temporada en curso trae su ultimo partido
     con mas de ATRASO_MAX dias. Asi el paso del workflow se pone en rojo en lugar de pasar callado."""
-    ATRASO_MAX = 9
+    # 25 dias, igual que utilidades/revision.py: la fecha FIFA del 9 al 17-nov-2026 dejo 15 dias sin partidos (ultima
+    # jornada 8-nov, la siguiente 21-22-nov, mas el retraso de publicacion) y con 9 la corrida intradia se ponia en rojo.
+    ATRASO_MAX = 25
     malo = 0
     if FALLOS:
         malo = 1

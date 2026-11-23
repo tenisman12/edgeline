@@ -150,11 +150,6 @@ jobs:
         run: |
           if [ -n "$ANTHROPIC_API_KEY" ]; then python utilidades/picks_ia.py --dias 2; else echo "Sin ANTHROPIC_API_KEY: se omite Picks IA"; fi
 
-      - name: Dispersion real del total de carreras por liga (beisbol)
-        id: dispersion_real_del_total_de
-        continue-on-error: true
-        run: python utilidades/dispersion_beisbol.py
-
       - name: Totales del modelo contra la linea de cierre (acumula medicion)
         id: totales_del_modelo_contra_la
         continue-on-error: true

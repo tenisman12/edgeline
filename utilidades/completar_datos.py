@@ -11,15 +11,16 @@ existe: solo llena celdas vacias y agrega columnas nuevas. Lo que la fuente no t
   americano.csv  + yardas (total, pase neto, carrera), intentos, completos, primeros downs, perdidas, castigos,
                    sacks; NFL con EPA de pase y carrera (nfl_equipos.csv); NCAAF con 3a y 4a oportunidad y
                    tiempo de posesion (espn_ncaafb_equipos.csv)
-  nba.csv        + box completo de NCAAMB (espn_ncaamb_equipos.csv); + juegos de PLAY-IN y PLAYOFFS de la NBA
-                   que stats.nba no trae (espn_nba_equipos.csv); + puntos en la pintura, contraataque, tras
+  nba.csv        + box completo de NCAAMB (espn_ncaamb_equipos.csv); + juegos de la NBA que stats.nba no trae
+                   (play-in, playoffs y, si stats.nba no responde, la temporada regular; espn_nba_equipos.csv); + puntos en la pintura, contraataque, tras
                    perdida y ventaja maxima en NBA y NCAAMB; columna tipo (REG / PLAYIN / POST)
   beisbol.csv    NPB y KBO: lo que batea un equipo = lo que permite el rival (23 parejas, 100 % en MLB);
                    totales de bases, outs, carreras y HR por 9, y AVG/OBP/SLG/OPS/ERA/WHIP acumulados de la temporada
                    (asi los guarda MLB). MLB y las ligas de invierno ya estan completas: no se toca nada.
   futbol.csv     + tiros, tiros a puerta, corners, faltas y tarjetas de Liga MX y MLS (ESPN, desde ago-2023);
                    + posesion, pases, centros, balones largos, fueras de lugar, atajadas, tiros bloqueados,
-                   tacleadas, intercepciones, despejes y penales en las 7 ligas (ESPN, desde ago-2023)
+                   tacleadas, intercepciones, despejes y penales en las 7 ligas (ESPN, desde ago-2023);
+                   + liguilla de Liga MX y playoffs de MLS que football-data no publica (ESPN)
 
 Los nombres de equipo entre fuentes se emparejan con los mismos partidos: misma fecha (+-1 dia) y mismo
 marcador; cada nombre se queda con el que mas veces coincide. No hay tabla escrita a mano.
@@ -403,14 +404,25 @@ def nba(log):
         for s, dcol in EXTRA_NBA:
             poner(r, dcol, num(yo.get(s)), cont); poner(r, dcol + "_opp", num(el.get(s)), cont)
         poner(r, "tipo", TIPO_NBA.get(yo.get("tipo"), "REG"), cont)
-    # juegos ESPN que no estan en nba.csv: solo play-in y playoffs (la temporada regular la trae stats.nba)
+    # juegos ESPN que no estan en nba.csv. La temporada regular la trae stats.nba, pero stats.nba no responde desde
+    # GitHub Actions ("The read operation timed out" en cada corrida): la NBA 2026-27 quedo sin un solo juego hasta el
+    # 23-nov-2026. Desde entonces ESPN tambien llena la temporada regular que falte. Si despues stats.nba trae el mismo
+    # juego (corrida en la PC), su fila manda y la de ESPN se quita (abajo), asi no se duplica.
+    propios = {(dia(r["game_date"]), r["team"], r["opp"]) for r in filas
+               if r.get("league") == "NBA" and not str(r.get("gamePk") or "").startswith("espn_")}
+    antes_n = len(filas)
+    filas[:] = [r for r in filas if not (r.get("league") == "NBA" and str(r.get("gamePk") or "").startswith("espn_")
+                                         and r.get("tipo") == "REG" and dia(r.get("game_date")) and any(
+                                             (dia(r["game_date"]) + dt.timedelta(days=o), r["team"], r["opp"]) in propios
+                                             for o in (-1, 0, 1)))]
+    quitadas = antes_n - len(filas)
     existentes = {(dia(r["game_date"]), r["team"], r["opp"]) for r in filas if r.get("league") == "NBA"}
     nuevas = []; faltan_nombre = set()
     for gid, d in g.items():
         if gid in usados:
             continue
         tipo = TIPO_NBA.get(d["1"].get("tipo"), d["1"].get("tipo"))
-        if tipo not in ("PLAYIN", "POST"):
+        if tipo not in ("PLAYIN", "POST", "REG"):
             continue
         h, a = mapa.get(d["1"]["team"]), mapa.get(d["0"]["team"])
         if not h or not a:
@@ -428,9 +440,9 @@ def nba(log):
     filas.sort(key=lambda r: ((r.get("game_date") or "")[:10], str(r.get("gamePk") or ""), str(r.get("is_home"))))
     agregar_cols(cols, NBA_NUEVAS)
     n_ncb = sum(1 for r in filas if r.get("league") == "NCAAMB")
-    log.append("nba: NCAAMB box %d de %d filas; NBA extras ESPN en %d filas; +%d filas de play-in/playoffs NBA "
-               "(%d partidos); %d celdas llenadas%s" % (
-                   h_ncb, n_ncb, h_reg, len(nuevas), len(nuevas) // 2, sum(cont.values()),
+    log.append("nba: NCAAMB box %d de %d filas; NBA extras ESPN en %d filas; +%d filas NBA desde ESPN "
+               "(%d partidos; %d duplicadas de stats.nba quitadas); %d celdas llenadas%s" % (
+                   h_ncb, n_ncb, h_reg, len(nuevas), len(nuevas) // 2, quitadas, sum(cont.values()),
                    ("; sin nombre: " + ", ".join(sorted(faltan_nombre))) if faltan_nombre else ""))
     return ruta, cols, filas
 
@@ -449,6 +461,50 @@ FUT_EXTRA = [("possessionPct", "possession"), ("totalPasses", "passes"), ("accur
              ("interceptions", "interceptions"), ("totalClearance", "clearances"), ("penaltyKickGoals", "pk_goals"),
              ("penaltyKickShots", "pk_shots")]
 FUT_NUEVAS = con_opp([d for _, d in FUT_EXTRA])
+
+
+# football-data.co.uk (/new/MEX.csv y USA.csv) no trae la liguilla de Liga MX ni los playoffs de la MLS: la MLS quedo
+# con su ultimo juego el 8-nov-2026 (cierre de fase regular) mientras ESPN ya tenia 8 partidos de playoffs del 19 al
+# 22-nov. Los partidos que ESPN tiene despues del ultimo de football-data entran con gamePk espn_<id>; si despues
+# football-data publica el mismo juego, su fila manda y la de ESPN se quita.
+LIGAS_FUT_ESPN = ("LigaMX", "MLS")
+
+
+def _fut_desde_espn(liga, filas, g, mapa, cont):
+    propias = [r for r in filas if r.get("league") == liga and not str(r.get("gamePk") or "").startswith("espn_")]
+    if not propias:
+        return ""
+    ult = max((r.get("game_date") or "")[:10] for r in propias)
+    temporada = max((r for r in propias if (r.get("game_date") or "")[:10] == ult), key=lambda r: str(r.get("season")))["season"]
+    claves = {(dia(r["game_date"]), r["team"], r["opp"]) for r in propias if dia(r.get("game_date"))}
+
+    def ya(f, t, o):
+        return any((f + dt.timedelta(days=k), t, o) in claves for k in (-1, 0, 1))
+    antes = len(filas)
+    filas[:] = [r for r in filas if not (r.get("league") == liga and str(r.get("gamePk") or "").startswith("espn_")
+                                         and dia(r.get("game_date")) and ya(dia(r["game_date"]), r["team"], r["opp"]))]
+    quitadas = antes - len(filas)
+    tengo = {str(r.get("gamePk")) for r in filas if r.get("league") == liga}
+    f_ult = dia(ult); nuevas = 0
+    for gid, d in g.items():
+        if "espn_" + gid in tengo:
+            continue
+        f = dia(d["1"].get("game_date"))
+        h, a = mapa.get(d["1"]["team"]), mapa.get(d["0"]["team"])
+        gh, ga = num(d["1"].get("marcador")), num(d["0"].get("marcador"))
+        if not (f and h and a) or gh is None or ga is None or f <= f_ult or ya(f, h, a):
+            continue
+        for lado, yo, el, t, o in (("1", d["1"], d["0"], h, a), ("0", d["0"], d["1"], a, h)):
+            r = {"gamePk": "espn_" + gid, "league": liga, "season": temporada, "game_date": f.isoformat(),
+                 "team": t, "opp": o, "is_home": lado, "goals": fmt(num(yo.get("marcador"))),
+                 "goals_opp": fmt(num(el.get("marcador")))}
+            for sc, dcol in FUT_BASE + FUT_EXTRA:
+                poner(r, dcol, num(yo.get(sc)), cont); poner(r, dcol + "_opp", num(el.get(sc)), cont)
+            filas.append(r)
+        nuevas += 1
+    if nuevas or quitadas:
+        filas.sort(key=lambda r: ((r.get("game_date") or "")[:10], str(r.get("gamePk") or ""), str(r.get("is_home"))))
+    return " (+%d partidos ESPN despues del %s%s)" % (nuevas, ult, ("; %d ya publicados quitados" % quitadas) if quitadas else "")
 
 
 def futbol(log):
@@ -482,7 +538,8 @@ def futbol(log):
             for s, dcol in FUT_BASE + FUT_EXTRA:
                 poner(r, dcol, num(yo.get(s)), cont); poner(r, dcol + "_opp", num(el.get(s)), cont)
         sin = sorted({x for d in g.values() for x in (d["1"]["team"], d["0"]["team"]) if x not in mapa})
-        partes.append("%s %d/%d%s" % (liga, hit, n, (" (sin nombre: %d)" % len(sin)) if sin else ""))
+        extra = _fut_desde_espn(liga, filas, g, mapa, cont) if liga in LIGAS_FUT_ESPN else ""
+        partes.append("%s %d/%d%s%s" % (liga, hit, n, (" (sin nombre: %d)" % len(sin)) if sin else "", extra))
     agregar_cols(cols, FUT_NUEVAS)
     log.append("futbol: filas cruzadas con ESPN -> " + ", ".join(partes) + "; %d celdas llenadas" % sum(cont.values()))
     return ruta, cols, filas

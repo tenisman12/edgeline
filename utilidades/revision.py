@@ -46,6 +46,7 @@ TEMPORADA = {
 FIN_VERIFICADO = {
     "mlb": "2026-10-28",     # Serie Mundial: Brewers 4-1 a los Rays en el Juego 5 (SI / AP, 28-oct-2026)
     "npb": "2026-10-28",     # Serie de Japon: SoftBank barre 4-0 a DeNA (CubaHeadlines, 28-oct-2026)
+    "kbo": "2026-11-08",     # Serie de Corea: Samsung 12-1 a KT en el Juego 5, serie 4-1 (Korea Times / Yonhap, 8-nov-2026)
 }
 # Dias de atraso tolerados dentro de temporada. Las ligas que juegan a diario toleran menos.
 ATRASO = defaultdict(lambda: 10, {
@@ -111,6 +112,11 @@ CONOCIDOS = [
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
      "2026-12-15"),
+    ("calibracion", "NCAAMB Total",
+     "Detectado el 23-nov-2026 en vivo: prometio 58.8 % y acerto 46.3 % (n 136, z -2.97). Ya esta bloqueado por "
+     "descalibrados() en picks_del_dia.py (mismo criterio: n >= 30, brecha >= 10 % y z >= 2), asi que no genera pick; "
+     "la lectura del modelo se sigue mostrando. Decidir antes de esa fecha: medirlo contra la linea de cierre o corregirle el sesgo.",
+     "2026-12-31"),
     ("calibracion", "NFL Total",
      "Medido contra la linea de cierre el 18-oct-2026 (utilidades/medir_total_nfl_cierre.py, 2018-2026, n 2,281): elige el "
      "lado correcto 49.8 % (z -0.19) y promete 58.9 %. Quedo sin_validar en plataforma.CONTRA_CIERRE_NO: no genera pick "
