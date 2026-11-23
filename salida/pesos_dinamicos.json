@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-23T03:59:47Z",
+ "generado": "2026-11-23T15:10:06Z",
  "n0": 300,
  "como_leer": "w_vivo = peso del modelo que mejor predice en vivo (0 = solo Pinnacle, 1 = solo modelo); el peso que se usa = (n * w_vivo + n0 * previo) / (n + n0). z = mejora de log loss de w_vivo contra Pinnacle solo.",
  "pesos": {
@@ -129,6 +129,20 @@
    "previo": 0.35,
    "w_usado": 0.249
   },
+  "nfl|Ganador": {
+   "w_vivo": 0.0,
+   "n": 113,
+   "mejora_milesimas": -0.0,
+   "z": -2.54,
+   "mitades": [
+    -0.0,
+    -0.0
+   ],
+   "brier_pinnacle": 0.198,
+   "brier_modelo": 0.2135,
+   "previo": 0.0,
+   "w_usado": 0.0
+  },
   "ncaamb|Total": {
    "w_vivo": 0.0,
    "n": 113,
@@ -143,23 +157,9 @@
    "previo": 0.35,
    "w_usado": 0.254
   },
-  "nfl|Ganador": {
-   "w_vivo": 0.0,
-   "n": 112,
-   "mejora_milesimas": -0.0,
-   "z": -2.54,
-   "mitades": [
-    -0.0,
-    -0.0
-   ],
-   "brier_pinnacle": 0.1984,
-   "brier_modelo": 0.2138,
-   "previo": 0.0,
-   "w_usado": 0.0
-  },
   "nfl|Total": {
    "w_vivo": 0.0,
-   "n": 99,
+   "n": 100,
    "mejora_milesimas": 0.0,
    "z": 0.75,
    "mitades": [
@@ -167,23 +167,23 @@
     0.0
    ],
    "brier_pinnacle": 0.2497,
-   "brier_modelo": 0.268,
+   "brier_modelo": 0.267,
    "previo": 0.0,
    "w_usado": 0.0
   },
   "liiga|Ganador": {
    "w_vivo": 0.0,
-   "n": 95,
+   "n": 94,
    "mejora_milesimas": 0.0,
    "z": 0.51,
    "mitades": [
     -0.0,
     0.0
    ],
-   "brier_pinnacle": 0.2363,
-   "brier_modelo": 0.2451,
+   "brier_pinnacle": 0.2367,
+   "brier_modelo": 0.2445,
    "previo": 0.5,
-   "w_usado": 0.38
+   "w_usado": 0.381
   },
   "mls|Ganador": {
    "w_vivo": 0.0,
@@ -215,15 +215,15 @@
   },
   "liiga|Total": {
    "w_vivo": 0.4,
-   "n": 61,
-   "mejora_milesimas": 1.09,
-   "z": 0.19,
+   "n": 60,
+   "mejora_milesimas": 1.102,
+   "z": 0.18,
    "mitades": [
-    -3.971,
-    5.988
+    -3.617,
+    5.821
    ],
-   "brier_pinnacle": 0.2495,
-   "brier_modelo": 0.2499,
+   "brier_pinnacle": 0.2485,
+   "brier_modelo": 0.2489,
    "previo": 0.5,
    "w_usado": 0.483
   },
