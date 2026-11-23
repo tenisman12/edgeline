@@ -112,6 +112,12 @@ CONOCIDOS = [
      "Ya esta bloqueado en vivo por descalibrados() en picks_del_dia.py, asi que no puede generar pick. "
      "Decidir antes de esa fecha: retirar el mercado o corregirle el sesgo.",
      "2026-12-15"),
+    ("calibracion", "NBA Total",
+     "Salio el 23-nov-2026 (prometio 60.5 %, acerto 48.4 %, n 248, z -3.90). Causa probable: del 20-oct al 23-nov el modelo de "
+     "NBA predijo con datos hasta el 13-jun-2026 (stats.nba no responde desde Actions; ningun juego 2026-27 en datos/nba.csv), "
+     "asi que sus totales usaban el ritmo y la ofensiva de la temporada pasada. Desde el 23-nov ESPN llena la temporada. "
+     "descalibrados() lo bloquea mientras el historial no mejore. Revisar en esa fecha con filas nuevas.",
+     "2026-12-31"),
     ("calibracion", "NCAAMB Total",
      "Detectado el 23-nov-2026 en vivo: prometio 58.8 % y acerto 46.3 % (n 136, z -2.97). Ya esta bloqueado por "
      "descalibrados() en picks_del_dia.py (mismo criterio: n >= 30, brecha >= 10 % y z >= 2), asi que no genera pick; "
