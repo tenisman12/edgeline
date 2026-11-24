@@ -30,6 +30,9 @@ except Exception as _e:                   # sin la capa la lista sigue saliendo 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))   # maximo 4 al dia, cada uno con confianza y por que si / por que no (Alejandro, 6-oct-2026)
 TOPE_BANK = 0.10                      # suma de stakes del dia
+BANK_MXN = 10000.0
+NHL_STAKE_MXN = 500.0                 # 24-nov-2026: stake fijo de los picks NHL v2
+NHL_CUOTA_MAX = 2.60
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
 # Ligas donde el reparto del TOTAL no se usa por sesgo de fuente. Vacio: NHL salio del veto porque la linea
 # de totales se movio HACIA el over (5.5 -> 6.0 en cinco partidos), o sea que el precio corrobora la carga del
@@ -640,6 +643,24 @@ def main():
                 cc["angulos"] = "; ".join("%s:%+.2f" % (x["codigo"], x["moveria"]) for x in angs_t)
                 si += s_a[:3]; no += n_a[:3]
             cc["por_que_si"] = si; cc["por_que_no"] = no
+            # NHL v2 (24-nov-2026, Alejandro): ganador solo con cuota 1.80-2.60, angulos netos del lado >= 0 (filtro, sin
+            # peso en p) y stake fijo de 500 MXN. Backtest 2-oct a 23-nov, 368 juegos: 51 picks, 54.9 %, +8.19 u
+            # (mitades +2.93 / +5.25); la regla anterior daba +0.18 u y el visitante a 2.60+ -12.20 u (claude/sistema-nhl-angulos.md)
+            if p.get("liga") == "nhl" and c["lado"] in ("home", "away") and not str(c["mercado"]).startswith(("Total", "Goles", "Spread")):
+                neto = 0.0
+                for x in (angs or []):
+                    e_, s_ = ANG.efecto(x) if ANG is not None else (None, 0)
+                    if e_ is not None and s_ != 0:
+                        neto += abs(e_) * (s_ if x["lado"] == c["lado"] else -s_)
+                cc["angulos_neto_pp"] = round(neto, 2)
+                if (c.get("decimal") or 0) > NHL_CUOTA_MAX:
+                    cc["_fuera"] = "NHL: cuota %.2f mayor a %.2f" % (c["decimal"], NHL_CUOTA_MAX)
+                elif neto < 0:
+                    cc["_fuera"] = "NHL: angulos netos en contra (%+.1f pp)" % neto
+                else:
+                    cc["stake"] = NHL_STAKE_MXN / BANK_MXN; cc["stake_mxn"] = NHL_STAKE_MXN
+                    cc["por_que_si"].append("angulos netos %+.1f pp a favor o neutros (sistema NHL v2)" % neto)
+    cand = [c for c in cand if not c.get("_fuera")]
     # mejores picks de HOY: hasta un ganador, un total y un total por equipo por partido (Alejandro, 9-oct-2026: "quiero
     # tambien picks de totales"; 10-oct: totales por equipo), por EV, tope de cantidad y de bank
     picks, usados, bank = [], set(), 0.0
