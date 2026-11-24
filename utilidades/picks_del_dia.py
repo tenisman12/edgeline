@@ -34,6 +34,9 @@ BANK_MXN = 10000.0
 NHL_STAKE_MXN = 500.0                 # 24-nov-2026: stake fijo de los picks NHL v2
 NHL_CUOTA_MAX = 2.60
 NHL_EV_MIN = 0.05
+FUTBOL_LIGAS = {"mls", "laliga", "premier", "seriea", "bundesliga", "ligue1", "ligamx", "champions"}
+FUTBOL_CUOTA_MAX = 2.60               # 24-nov-2026: ganador de futbol
+FUTBOL_SIN_GANADOR = {"ligamx"}
 MIN_APUESTAS_PUBLICO = 2000   # con menos apuestas el reparto boletos/dinero es ruido
 # Ligas donde el reparto del TOTAL no se usa por sesgo de fuente. Vacio: NHL salio del veto porque la linea
 # de totales se movio HACIA el over (5.5 -> 6.0 en cinco partidos), o sea que el precio corrobora la carga del
@@ -662,6 +665,14 @@ def main():
                 else:
                     cc["stake"] = NHL_STAKE_MXN / BANK_MXN; cc["stake_mxn"] = NHL_STAKE_MXN
                     cc["por_que_si"].append("sistema NHL v2: cuota <= %.2f y EV >= %.0f%%; angulos netos %+.1f pp" % (NHL_CUOTA_MAX, 100 * NHL_EV_MIN, neto))
+            # Futbol (24-nov-2026, Alejandro): ganador con cuota maxima 2.60 y sin picks de ganador en Liga MX.
+            # Backtest 7 ligas: regla anterior 136 picks -8.33 u; con tope 82 picks +8.58 u (mitades +0.05 / +8.53);
+            # Liga MX negativa con todas las reglas (claude/backtest-ganador-ligas-2026-11-24.md)
+            if p.get("liga") in FUTBOL_LIGAS and c["lado"] in ("home", "away") and not str(c["mercado"]).startswith(("Total", "Goles", "Spread", "AA")):
+                if p.get("liga") in FUTBOL_SIN_GANADOR:
+                    cc["_fuera"] = "%s: sin picks de ganador" % p["liga"]
+                elif (c.get("decimal") or 0) > FUTBOL_CUOTA_MAX:
+                    cc["_fuera"] = "futbol: cuota %.2f mayor a %.2f" % (c["decimal"], FUTBOL_CUOTA_MAX)
     cand = [c for c in cand if not c.get("_fuera")]
     # mejores picks de HOY: hasta un ganador, un total y un total por equipo por partido (Alejandro, 9-oct-2026: "quiero
     # tambien picks de totales"; 10-oct: totales por equipo), por EV, tope de cantidad y de bank
