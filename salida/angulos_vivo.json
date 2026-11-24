@@ -1,6 +1,6 @@
 {
- "generado": "2026-11-24T12:55:09",
- "partidos_base": 2658,
+ "generado": "2026-11-24T23:44:51",
+ "partidos_base": 2660,
  "protocolo": "n >= 300, z >= 2.0 en la direccion registrada, las dos mitades del mismo lado",
  "angulos": {
   "FUTBOL|L3": {
@@ -382,10 +382,10 @@
    "codigo": "Q5",
    "angulo": "primer juego en casa",
    "n": 248,
-   "efecto_pp": -0.01,
+   "efecto_pp": -0.02,
    "z": -0.01,
    "mitades_pp": [
-    -2.36,
+    -2.37,
     2.33
    ],
    "signo_esperado": null,
@@ -636,12 +636,12 @@
    "grupo": "NBA",
    "codigo": "K14",
    "angulo": "ausencias (minutos de los que faltan)",
-   "n": 133,
-   "efecto_pp": -4.33,
-   "z": -1.09,
+   "n": 135,
+   "efecto_pp": -4.25,
+   "z": -1.08,
    "mitades_pp": [
-    3.35,
-    -11.9
+    3.68,
+    -12.07
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
@@ -2405,10 +2405,10 @@
    "codigo": "K13",
    "angulo": "altitud (Denver, Utah)",
    "n": 17,
-   "efecto_pp": -15.35,
+   "efecto_pp": -15.36,
    "z": -1.48,
    "mitades_pp": [
-    -24.28,
+    -24.29,
     -7.41
    ],
    "signo_esperado": 1,
@@ -3301,6 +3301,91 @@
    "desde": "2026-10-31",
    "hasta": "2026-11-21"
   },
+  "NBA|L1": {
+   "grupo": "NBA",
+   "codigo": "L1",
+   "angulo": "Pitagoras (record arriba de su diferencial)",
+   "n": 10,
+   "efecto_pp": 7.15,
+   "z": 0.45,
+   "mitades_pp": [
+    -15.97,
+    30.27
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -2.02,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|L2": {
+   "grupo": "NBA",
+   "codigo": "L2",
+   "angulo": "record en juegos cerrados",
+   "n": 10,
+   "efecto_pp": 10.82,
+   "z": 0.69,
+   "mitades_pp": [
+    -1.04,
+    22.68
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.64,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|L4": {
+   "grupo": "NBA",
+   "codigo": "L4",
+   "angulo": "conversion neta (PDO, BABIP, triples, perdidas)",
+   "n": 10,
+   "efecto_pp": -24.12,
+   "z": -1.74,
+   "mitades_pp": [
+    -50.2,
+    1.96
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -0.3,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|S12": {
+   "grupo": "NBA",
+   "codigo": "S12",
+   "angulo": "racha en dosis (el mas caliente)",
+   "n": 10,
+   "efecto_pp": -16.49,
+   "z": -1.1,
+   "mitades_pp": [
+    -31.01,
+    -1.96
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -0.83,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|S16": {
+   "grupo": "NBA",
+   "codigo": "S16",
+   "angulo": "supera al modelo en sus ultimos 10",
+   "n": 10,
+   "efecto_pp": 14.61,
+   "z": 0.96,
+   "mitades_pp": [
+    -1.04,
+    30.27
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.96,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
   "LIIGA|H15": {
    "grupo": "LIIGA",
    "codigo": "H15",
@@ -3471,91 +3556,6 @@
    "desde": "2026-11-01",
    "hasta": "2026-11-19"
   },
-  "NBA|L1": {
-   "grupo": "NBA",
-   "codigo": "L1",
-   "angulo": "Pitagoras (record arriba de su diferencial)",
-   "n": 8,
-   "efecto_pp": 5.29,
-   "z": 0.26,
-   "mitades_pp": [
-    -23.42,
-    33.99
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -2.02,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|L2": {
-   "grupo": "NBA",
-   "codigo": "L2",
-   "angulo": "record en juegos cerrados",
-   "n": 8,
-   "efecto_pp": 9.87,
-   "z": 0.5,
-   "mitades_pp": [
-    -4.75,
-    24.49
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.64,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|L4": {
-   "grupo": "NBA",
-   "codigo": "L4",
-   "angulo": "conversion neta (PDO, BABIP, triples, perdidas)",
-   "n": 8,
-   "efecto_pp": -26.49,
-   "z": -1.52,
-   "mitades_pp": [
-    -59.29,
-    6.3
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -0.3,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|S12": {
-   "grupo": "NBA",
-   "codigo": "S12",
-   "angulo": "racha en dosis (el mas caliente)",
-   "n": 8,
-   "efecto_pp": -24.26,
-   "z": -1.36,
-   "mitades_pp": [
-    -42.22,
-    -6.31
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -0.83,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|S16": {
-   "grupo": "NBA",
-   "codigo": "S16",
-   "angulo": "supera al modelo en sus ultimos 10",
-   "n": 8,
-   "efecto_pp": 14.62,
-   "z": 0.76,
-   "mitades_pp": [
-    -4.75,
-    33.99
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.96,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
   "LIIGA|Q2": {
    "grupo": "LIIGA",
    "codigo": "Q2",
@@ -3641,6 +3641,23 @@
    "desde": "2026-10-21",
    "hasta": "2026-11-18"
   },
+  "NBA|K3": {
+   "grupo": "NBA",
+   "codigo": "K3",
+   "angulo": "diferencia de descanso",
+   "n": 7,
+   "efecto_pp": -20.46,
+   "z": -1.25,
+   "mitades_pp": [
+    -39.91,
+    -5.87
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 1.0,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
   "NHL|H16": {
    "grupo": "NHL",
    "codigo": "H16",
@@ -3709,20 +3726,20 @@
    "desde": "2026-10-24",
    "hasta": "2026-11-14"
   },
-  "NBA|K3": {
+  "NBA|K12": {
    "grupo": "NBA",
-   "codigo": "K3",
-   "angulo": "diferencia de descanso",
+   "codigo": "K12",
+   "angulo": "cuarto juego en 6 noches",
    "n": 6,
-   "efecto_pp": -26.47,
-   "z": -1.47,
+   "efecto_pp": -22.45,
+   "z": -1.19,
    "mitades_pp": [
-    -39.91,
-    -13.02
+    -62.16,
+    17.26
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 1.0,
+   "medido_historico_pp": 2.03,
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
@@ -3731,15 +3748,32 @@
    "codigo": "K8a",
    "angulo": "gira del visitante (2+ seguidos de visita)",
    "n": 6,
-   "efecto_pp": -15.14,
+   "efecto_pp": -15.15,
    "z": -0.69,
    "mitades_pp": [
-    -5.18,
+    -5.19,
     -25.11
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -1.56,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|S11": {
+   "grupo": "NBA",
+   "codigo": "S11",
+   "angulo": "perdio su ultimo juego",
+   "n": 6,
+   "efecto_pp": 26.12,
+   "z": 1.32,
+   "mitades_pp": [
+    38.09,
+    14.15
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 0.45,
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
@@ -3827,23 +3861,6 @@
    "medido_historico_pp": -16.7,
    "desde": "2026-11-01",
    "hasta": "2026-11-21"
-  },
-  "NBA|S11": {
-   "grupo": "NBA",
-   "codigo": "S11",
-   "angulo": "perdio su ultimo juego",
-   "n": 5,
-   "efecto_pp": 34.46,
-   "z": 1.57,
-   "mitades_pp": [
-    64.05,
-    14.73
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 0.45,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
   },
   "AHL|S7": {
    "grupo": "AHL",
@@ -4032,20 +4049,71 @@
    "desde": "2026-11-11",
    "hasta": "2026-11-19"
   },
-  "NBA|K12": {
+  "NBA|S13": {
    "grupo": "NBA",
-   "codigo": "K12",
-   "angulo": "cuarto juego en 6 noches",
+   "codigo": "S13",
+   "angulo": "perdio cerrado su ultimo juego",
    "n": 4,
-   "efecto_pp": -40.99,
-   "z": -1.75,
+   "efecto_pp": 24.68,
+   "z": 1.07,
    "mitades_pp": [
-    -52.95,
-    -29.02
+    64.05,
+    -14.7
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 2.03,
+   "medido_historico_pp": 3.12,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|Q3": {
+   "grupo": "NBA",
+   "codigo": "Q3",
+   "angulo": "mirando adelante",
+   "n": 4,
+   "efecto_pp": -29.82,
+   "z": -1.07,
+   "mitades_pp": [
+    -77.75,
+    18.11
+   ],
+   "signo_esperado": -1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 5.36,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|Q1": {
+   "grupo": "NBA",
+   "codigo": "Q1",
+   "angulo": "revancha (perdio el ultimo cruce)",
+   "n": 4,
+   "efecto_pp": 38.56,
+   "z": 1.71,
+   "mitades_pp": [
+    76.17,
+    0.96
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -1.18,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|K2": {
+   "grupo": "NBA",
+   "codigo": "K2",
+   "angulo": "tercer juego en 4 noches",
+   "n": 4,
+   "efecto_pp": -7.2,
+   "z": -0.29,
+   "mitades_pp": [
+    -29.01,
+    14.62
+   ],
+   "signo_esperado": 1,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 2.72,
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
@@ -4115,40 +4183,6 @@
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -4.7,
    "desde": "2026-11-21",
-   "hasta": "2026-11-23"
-  },
-  "NBA|S13": {
-   "grupo": "NBA",
-   "codigo": "S13",
-   "angulo": "perdio cerrado su ultimo juego",
-   "n": 3,
-   "efecto_pp": 38.09,
-   "z": 1.45,
-   "mitades_pp": [
-    56.34,
-    28.96
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 3.12,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|Q3": {
-   "grupo": "NBA",
-   "codigo": "Q3",
-   "angulo": "mirando adelante",
-   "n": 3,
-   "efecto_pp": -44.32,
-   "z": -1.32,
-   "mitades_pp": [
-    -74.93,
-    -29.02
-   ],
-   "signo_esperado": -1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 5.36,
-   "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
   "DEL|Q6b": {
@@ -4275,7 +4309,7 @@
    "codigo": "K8b",
    "angulo": "regreso a casa tras gira 3+",
    "n": 2,
-   "efecto_pp": -7.58,
+   "efecto_pp": -7.59,
    "z": -0.29,
    "mitades_pp": [
     -34.15,
@@ -4287,29 +4321,12 @@
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
-  "NBA|Q1": {
-   "grupo": "NBA",
-   "codigo": "Q1",
-   "angulo": "revancha (perdio el ultimo cruce)",
-   "n": 2,
-   "efecto_pp": 76.17,
-   "z": 17.25,
-   "mitades_pp": [
-    71.76,
-    80.58
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -1.18,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
   "NBA|Q2": {
    "grupo": "NBA",
    "codigo": "Q2",
    "angulo": "bajon tras ganarle a un fuerte",
    "n": 2,
-   "efecto_pp": -28.96,
+   "efecto_pp": -28.97,
    "z": -0.68,
    "mitades_pp": [
     -71.76,
@@ -4321,20 +4338,37 @@
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
-  "NBA|K2": {
+  "NBA|S3": {
    "grupo": "NBA",
-   "codigo": "K2",
-   "angulo": "tercer juego en 4 noches",
+   "codigo": "S3",
+   "angulo": "racha de derrotas cortada",
    "n": 2,
-   "efecto_pp": -29.02,
-   "z": -0.56,
+   "efecto_pp": -42.71,
+   "z": -1.47,
+   "mitades_pp": [
+    -71.76,
+    -13.66
+   ],
+   "signo_esperado": null,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": -2.17,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|K1": {
+   "grupo": "NBA",
+   "codigo": "K1",
+   "angulo": "segunda noche",
+   "n": 2,
+   "efecto_pp": -32.5,
+   "z": -0.68,
    "mitades_pp": [
     -80.58,
-    22.55
+    15.58
    ],
    "signo_esperado": 1,
    "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 2.72,
+   "medido_historico_pp": 2.84,
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
@@ -4712,40 +4746,6 @@
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   },
-  "NBA|S3": {
-   "grupo": "NBA",
-   "codigo": "S3",
-   "angulo": "racha de derrotas cortada",
-   "n": 1,
-   "efecto_pp": -71.76,
-   "z": 0.0,
-   "mitades_pp": [
-    null,
-    -71.76
-   ],
-   "signo_esperado": null,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": -2.17,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|K1": {
-   "grupo": "NBA",
-   "codigo": "K1",
-   "angulo": "segunda noche",
-   "n": 1,
-   "efecto_pp": -80.58,
-   "z": 0.0,
-   "mitades_pp": [
-    null,
-    -80.58
-   ],
-   "signo_esperado": 1,
-   "veredicto": "muestra insuficiente",
-   "medido_historico_pp": 2.84,
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
   "NBA|K10": {
    "grupo": "NBA",
    "codigo": "K10",
@@ -4777,6 +4777,23 @@
    "signo_esperado": null,
    "veredicto": "muestra insuficiente",
    "medido_historico_pp": -10.88,
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|S1": {
+   "grupo": "NBA",
+   "codigo": "S1",
+   "angulo": "tras ganar por mucho",
+   "n": 1,
+   "efecto_pp": 13.66,
+   "z": 0.0,
+   "mitades_pp": [
+    null,
+    13.66
+   ],
+   "signo_esperado": null,
+   "veredicto": "muestra insuficiente",
+   "medido_historico_pp": 6.58,
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
   }
@@ -4957,11 +4974,11 @@
    "codigo": "TK5",
    "angulo": "descanso largo de los dos (3+ dias)",
    "n": 248,
-   "por_unidad": -0.3054,
-   "z": -0.24,
+   "por_unidad": -0.2424,
+   "z": -0.19,
    "mitades": [
-    0.1192,
-    -0.73
+    0.1822,
+    -0.667
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 0.236,
@@ -5450,11 +5467,11 @@
    "codigo": "TK6",
    "angulo": "gira del visitante 3+",
    "n": 36,
-   "por_unidad": 5.4142,
-   "z": 1.53,
+   "por_unidad": 5.4772,
+   "z": 1.54,
    "mitades": [
-    9.162,
-    1.6665
+    9.225,
+    1.7295
    ],
    "signo_esperado": -1,
    "historico_por_unidad": 0.541,
@@ -5807,11 +5824,11 @@
    "codigo": "TK3",
    "angulo": "altitud (Denver, Utah)",
    "n": 17,
-   "por_unidad": 1.3088,
-   "z": 0.27,
+   "por_unidad": 1.3718,
+   "z": 0.28,
    "mitades": [
-    6.0926,
-    -2.9435
+    6.1556,
+    -2.8805
    ],
    "signo_esperado": 1,
    "historico_por_unidad": 1.548,
@@ -5955,6 +5972,74 @@
    "desde": "2026-10-11",
    "hasta": "2026-11-22"
   },
+  "NBA|TL2": {
+   "grupo": "NBA",
+   "codigo": "TL2",
+   "angulo": "triples en sus juegos contra su temporada",
+   "n": 10,
+   "por_unidad": 234.3498,
+   "z": 1.53,
+   "mitades": [
+    470.2057,
+    -179.2849
+   ],
+   "signo_esperado": -1,
+   "historico_por_unidad": 11.089,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|TL7": {
+   "grupo": "NBA",
+   "codigo": "TL7",
+   "angulo": "posesiones en sus juegos",
+   "n": 10,
+   "por_unidad": -98.3099,
+   "z": -0.6,
+   "mitades": [
+    -42.8405,
+    -134.6733
+   ],
+   "signo_esperado": 1,
+   "historico_por_unidad": 60.362,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|TR3": {
+   "grupo": "NBA",
+   "codigo": "TR3",
+   "angulo": "tasa de triples de los dos",
+   "n": 10,
+   "por_unidad": 88.2876,
+   "z": 0.84,
+   "mitades": [
+    266.1796,
+    -147.9209
+   ],
+   "signo_esperado": 1,
+   "historico_por_unidad": 10.232,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
+  "NBA|TR4": {
+   "grupo": "NBA",
+   "codigo": "TR4",
+   "angulo": "choque de ritmos",
+   "n": 10,
+   "por_unidad": 27.995,
+   "z": 0.11,
+   "mitades": [
+    364.8948,
+    -628.9493
+   ],
+   "signo_esperado": -1,
+   "historico_por_unidad": 17.643,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
   "NCAAFB|TN3": {
    "grupo": "NCAAFB",
    "codigo": "TN3",
@@ -5988,74 +6073,6 @@
    "veredicto": "muestra insuficiente",
    "desde": "2026-10-11",
    "hasta": "2026-11-16"
-  },
-  "NBA|TL2": {
-   "grupo": "NBA",
-   "codigo": "TL2",
-   "angulo": "triples en sus juegos contra su temporada",
-   "n": 8,
-   "por_unidad": 308.0519,
-   "z": 2.12,
-   "mitades": [
-    338.1822,
-    269.3638
-   ],
-   "signo_esperado": -1,
-   "historico_por_unidad": 11.089,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|TL7": {
-   "grupo": "NBA",
-   "codigo": "TL7",
-   "angulo": "posesiones en sus juegos",
-   "n": 8,
-   "por_unidad": -109.9058,
-   "z": -0.65,
-   "mitades": [
-    -12.4415,
-    -190.071
-   ],
-   "signo_esperado": 1,
-   "historico_por_unidad": 60.362,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|TR3": {
-   "grupo": "NBA",
-   "codigo": "TR3",
-   "angulo": "tasa de triples de los dos",
-   "n": 8,
-   "por_unidad": 167.0422,
-   "z": 1.65,
-   "mitades": [
-    162.3876,
-    172.4144
-   ],
-   "signo_esperado": 1,
-   "historico_por_unidad": 10.232,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
-  },
-  "NBA|TR4": {
-   "grupo": "NBA",
-   "codigo": "TR4",
-   "angulo": "choque de ritmos",
-   "n": 8,
-   "por_unidad": 209.4873,
-   "z": 0.82,
-   "mitades": [
-    209.1659,
-    210.3864
-   ],
-   "signo_esperado": -1,
-   "historico_por_unidad": 17.643,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
   },
   "NFL|TN1": {
    "grupo": "NFL",
@@ -6159,6 +6176,23 @@
    "desde": "2026-11-11",
    "hasta": "2026-11-19"
   },
+  "NBA|TK2": {
+   "grupo": "NBA",
+   "codigo": "TK2",
+   "angulo": "tercer juego en 4 noches (cuenta)",
+   "n": 5,
+   "por_unidad": 2.6979,
+   "z": 0.41,
+   "mitades": [
+    5.1243,
+    -1.3461
+   ],
+   "signo_esperado": -1,
+   "historico_por_unidad": -0.179,
+   "veredicto": "muestra insuficiente",
+   "desde": "2026-11-23",
+   "hasta": "2026-11-23"
+  },
   "NHL|TS7": {
    "grupo": "NHL",
    "codigo": "TS7",
@@ -6244,19 +6278,19 @@
    "desde": "2026-11-09",
    "hasta": "2026-11-19"
   },
-  "NBA|TK2": {
+  "NBA|TK1": {
    "grupo": "NBA",
-   "codigo": "TK2",
-   "angulo": "tercer juego en 4 noches (cuenta)",
+   "codigo": "TK1",
+   "angulo": "segunda noche (cuenta)",
    "n": 3,
-   "por_unidad": 6.2434,
-   "z": 1.06,
+   "por_unidad": -0.1179,
+   "z": -0.01,
    "mitades": [
-    9.4188,
-    -0.1074
+    9.4503,
+    -19.2544
    ],
    "signo_esperado": -1,
-   "historico_por_unidad": -0.179,
+   "historico_por_unidad": 0.195,
    "veredicto": "muestra insuficiente",
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
@@ -6278,19 +6312,19 @@
    "desde": "2026-10-12",
    "hasta": "2026-10-23"
   },
-  "NBA|TK1": {
+  "NBA|TS1": {
    "grupo": "NBA",
-   "codigo": "TK1",
-   "angulo": "segunda noche (cuenta)",
+   "codigo": "TS1",
+   "angulo": "tras paliza (cuenta)",
    "n": 2,
-   "por_unidad": 5.0865,
-   "z": 0.59,
+   "por_unidad": 11.1456,
+   "z": 11.79,
    "mitades": [
-    9.4188,
-    -12.2424
+    12.0906,
+    10.2006
    ],
-   "signo_esperado": -1,
-   "historico_por_unidad": 0.195,
+   "signo_esperado": 1,
+   "historico_por_unidad": -0.901,
    "veredicto": "muestra insuficiente",
    "desde": "2026-11-23",
    "hasta": "2026-11-23"
@@ -6311,23 +6345,6 @@
    "veredicto": "muestra insuficiente",
    "desde": "2026-10-18",
    "hasta": "2026-10-18"
-  },
-  "NBA|TS1": {
-   "grupo": "NBA",
-   "codigo": "TS1",
-   "angulo": "tras paliza (cuenta)",
-   "n": 1,
-   "por_unidad": 12.0276,
-   "z": 0.0,
-   "mitades": [
-    null,
-    12.0276
-   ],
-   "signo_esperado": 1,
-   "historico_por_unidad": -0.901,
-   "veredicto": "muestra insuficiente",
-   "desde": "2026-11-23",
-   "hasta": "2026-11-23"
   }
  }
 }
