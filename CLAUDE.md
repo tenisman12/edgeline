@@ -296,6 +296,15 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Lo que no entra todavia: MLB dia -> under (abril 2027), LMP doble cartelera y frio (muestra corta), totales LMP por linea
   (la temporada 2026-27 va 55.7 % over en lineas 8-9.5). Medicion: proyecto claude/angulos-beisbol-clima-totales-2026-11-27.md.
 
+## LMP, mediciones del 27-nov-2026 (contra el cierre de BetExplorer, proyecto claude/lmp-ajustes-2026-11-27.md)
+- Peso del modelo en el ganador: la mezcla 0.35 EMPEORA al mercado fuera de muestra (z -1.88, 612 juegos desde 2024-25;
+  6 de 7 temporadas en contra). w libre ajusta 0.79 en muestra pero da z -1.41 fuera. PENDIENTE de aprobar w = 0 en LMP.
+- Ganador con todos los angulos (B, Q, S + los 4 de mercado) sobre la mezcla: z +0.92 (no pasa); solo los 4: z +0.19.
+- Capa de totales (doble cartelera, frio, viento adentro, calor, linea 8-9.5, base): z +0.31 y walk-forward negativo en
+  9 de 11 temporadas: no se aplica. Doble cartelera queda como senal de contexto en decidir_v2 (`_senal_doble`).
+- Abridores: `nucleo/abridores._buscar_latino` empareja nombres de prensa con el box (acentos, Pat/Patrick, Randall/Randy,
+  apellido + inicial o equipo).
+
 ## Probabilidad = modelo, Pinnacle de referencia (10-oct-2026, Alejandro: "tengo mi modelo y angulos y todo mi poder estadistico y luego buscar en que casa paga bien")
 - `decidir_v2.P_DESDE` y `decidir.P_DESDE` = "modelo" (variable `EDGELINE_P_DESDE`; "mezcla" regresa al sistema anterior): en
   todos los deportes p_final = p del modelo con sus capas; el EV es contra la mejor casa. Pinnacle se muestra como referencia

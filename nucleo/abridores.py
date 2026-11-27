@@ -156,9 +156,43 @@ def actual(base, nombre, fecha, liga_="kbo", equipo=None):
     nom = (nombre or "").strip()
     if nom and nom not in hist and liga_ == "npb":
         nom = _buscar_npb(hist, nom, equipo)
+    elif nom and nom not in hist:
+        nom = _buscar_latino(hist, nom, equipo) or nom
     if not nom or nom not in hist:
         return None
     return _valor(hist, liga, nom, int(fecha[:4]))
+
+
+def _sin_acentos(x):
+    import unicodedata
+    return " ".join(unicodedata.normalize("NFKD", x or "").encode("ascii", "ignore").decode().lower().replace(".", " ").split())
+
+
+def _buscar_latino(hist, nombre, equipo):
+    """27-nov-2026: la prensa anuncia 'Luis Iván Rodríguez', 'Pat Murphy', 'Randall Wynne' y el box dice 'Luis Ivan Rodriguez',
+    'Patrick Murphy', 'Randy Wynne'. 1) mismo nombre sin acentos; 2) mismo apellido y misma inicial del nombre; 3) mismo
+    apellido y mismo equipo. Solo si hay un unico candidato."""
+    n = _sin_acentos(nombre)
+    if not n:
+        return None
+    cand = [h for h in hist if _sin_acentos(h) == n]
+    if len(cand) == 1:
+        return cand[0]
+    partes = n.split()
+    ap, ini = partes[-1], partes[0][:1]
+    cand = [h for h in hist if _sin_acentos(h).split()[-1:] == [ap] and _sin_acentos(h)[:1] == ini]
+    if len(cand) > 1 and equipo:
+        eq = _sin_acentos(equipo)
+        cand = [h for h in cand if _sin_acentos(_EQUIPO.get(h)) and (_sin_acentos(_EQUIPO.get(h)) in eq or eq in _sin_acentos(_EQUIPO.get(h)))]
+    if len(cand) == 1:
+        return cand[0]
+    if equipo:
+        eq = _sin_acentos(equipo)
+        cand = [h for h in hist if _sin_acentos(h).split()[-1:] == [ap] and _sin_acentos(_EQUIPO.get(h)) and
+                (_sin_acentos(_EQUIPO.get(h)) in eq or eq in _sin_acentos(_EQUIPO.get(h)))]
+        if len(cand) == 1:
+            return cand[0]
+    return None
 
 
 def _buscar_npb(hist, corto, equipo):

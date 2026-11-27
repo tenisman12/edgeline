@@ -40,6 +40,38 @@ except Exception:
     _capa_ang = None
 
 
+_DOBLES = None
+DH_EFECTO = {"lmp": -2.09, "lvbp": -1.76, "abl": -1.53, "lidom": None, "mlb": -0.44}
+
+
+def _doble_cartelera(rec):
+    """27-nov-2026: True si en proximos.json hay otro juego de los mismos dos equipos el mismo dia (doble cartelera; en
+    ligas de invierno se juegan a 7 entradas)."""
+    global _DOBLES
+    if _DOBLES is None:
+        _DOBLES = {}
+        try:
+            sal = os.path.join(REPO, "salida") if os.path.exists(os.path.join(REPO, "salida", "proximos.json")) else os.path.join(BASE, "salida")
+            with io.open(os.path.join(sal, "proximos.json"), encoding="utf-8") as f:
+                for q in json.load(f).get("partidos") or []:
+                    if q.get("deporte") == "beisbol":
+                        k = (q.get("liga"), q.get("fecha"), frozenset((q["home"]["nombre"], q["away"]["nombre"])))
+                        _DOBLES[k] = _DOBLES.get(k, 0) + 1
+        except Exception:
+            pass
+    k = (rec.get("liga"), rec.get("fecha"), frozenset((rec["home"]["nombre"], rec["away"]["nombre"])))
+    return _DOBLES.get(k, 0) >= 2
+
+
+def _senal_doble(rec, tipo, lado):
+    if tipo != "Total" or rec.get("deporte") != "beisbol" or lado not in ("over", "under") or not _doble_cartelera(rec):
+        return []
+    ef = DH_EFECTO.get(rec.get("liga"))
+    txt = ("%+.2f carreras contra la media de la liga (medido 27-nov-2026)" % ef) if ef is not None else "sin medicion en esta liga"
+    return [{"capa": "doble cartelera (juegos a 7 entradas en invierno)", "dir": 1 if lado == "under" else -1, "valor": txt,
+             "peso": "contexto: en LMP el under pego 62 % contra 50 % del precio (n 100, z 2.39, muestra corta)"}]
+
+
 def _senal_sombra(p, ps, dec):
     """27-nov-2026 (Alejandro: "dejalo asi pero que se considere"): la capa en sombra no mueve p ni EV, pero entra al conteo
     de senales a favor / en contra cuando mueve 1 pp o mas."""
@@ -435,7 +467,7 @@ def decidir_mercado(rec, tipo, movs=None):
                       "p_mezcla": round(p_mez, 4), "ev_mezcla": None if ev_mez is None else round(ev_mez, 4),
                       "cuota": k.get("cuota"), "decimal": dec, "casa": k.get("casa"), "fuente": k.get("fuente"),
                       "ev": None if ev is None else round(ev, 4), "brecha_modelo_mercado": None if brecha is None else round(brecha, 4),
-                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp) + _senal_sombra(p_fin, p_sombra, dec),
+                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp) + _senal_sombra(p_fin, p_sombra, dec) + _senal_doble(rec, tipo, lado),
                       "p_sin_angulos": round(p_sin_ang, 4), "angulos_capa": ang_apl, "angulos_pp": round(100 * ang_pp, 2),
                       "p_capa_sombra": None if p_sombra is None else round(p_sombra, 4),
                       "ev_capa_sombra": None if (p_sombra is None or not dec) else round(p_sombra * dec - 1, 4)})
