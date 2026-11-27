@@ -408,6 +408,12 @@ def decidir_mercado(rec, tipo, movs=None):
                 p_fin, ang_apl, ang_pp = _capa_ang.aplicar(rec, tipo, lado, p_fin, ph)
             except Exception:
                 p_fin, ang_apl, ang_pp = p_sin_ang, [], 0.0
+        p_sombra = None
+        if _capa_ang is not None:
+            try:
+                p_sombra = _capa_ang.sombra(rec, tipo, lado, p_fin, None)[0]
+            except Exception:
+                p_sombra = None
         ev = (p_fin * dec - 1) if dec else None
         ev_mez = (p_mez * dec - 1) if dec else None
         mov = None
@@ -420,7 +426,9 @@ def decidir_mercado(rec, tipo, movs=None):
                       "cuota": k.get("cuota"), "decimal": dec, "casa": k.get("casa"), "fuente": k.get("fuente"),
                       "ev": None if ev is None else round(ev, 4), "brecha_modelo_mercado": None if brecha is None else round(brecha, 4),
                       "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp),
-                      "p_sin_angulos": round(p_sin_ang, 4), "angulos_capa": ang_apl, "angulos_pp": round(100 * ang_pp, 2)})
+                      "p_sin_angulos": round(p_sin_ang, 4), "angulos_capa": ang_apl, "angulos_pp": round(100 * ang_pp, 2),
+                      "p_capa_sombra": None if p_sombra is None else round(p_sombra, 4),
+                      "ev_capa_sombra": None if (p_sombra is None or not dec) else round(p_sombra * dec - 1, 4)})
     if not evals:
         return None
     con_ev = [e for e in evals if e["ev"] is not None]

@@ -140,7 +140,9 @@ jobs:
       - name: Capa bayesiana de angulos (reajuste con los juegos nuevos)
         id: capa_angulos
         continue-on-error: true
-        run: python nucleo/capa_angulos.py
+        run: |
+          python utilidades/ajustar_capa_nhl.py || echo "capa NHL: sin ajuste (se conserva el anterior)"
+          python nucleo/capa_angulos.py
 
       - name: Picks del dia (decision por partido y lista oficial, tope 4)
         id: picks_del_dia

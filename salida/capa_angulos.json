@@ -1,8 +1,289 @@
 {
- "generado": "2026-11-27T06:20:39Z",
+ "generado": "2026-11-27T06:34:49Z",
  "tope_logit": 0.35,
  "metodo": "logistica con offset logit(p mercado sin vig), prior N(0, sd) por angulo, MAP + Laplace; prueba 30 % mas reciente",
  "grupos": {
+  "nhl_ganador": {
+   "liga": "nhl",
+   "mercado": "Ganador",
+   "favorece": "home",
+   "n": 6900,
+   "desde": "2021-10-12",
+   "hasta": "2026-10-11",
+   "prueba": {
+    "n": 2070,
+    "mejora_logloss_media": 0.004256,
+    "z": 2.21,
+    "corte": "2025-01-19"
+   },
+   "activo": false,
+   "sombra": true,
+   "x_desde": "salida/historial_angulos.csv",
+   "base": "mezcla 35 % modelo / 65 % mercado",
+   "angulos": [
+    {
+     "codigo": "H1",
+     "descripcion": "H1",
+     "prior_sd": 0.2788,
+     "beta": 0.0944,
+     "sd_post": null,
+     "pp_aprox_50": 2.36,
+     "n_activo": 1046
+    },
+    {
+     "codigo": "H2",
+     "descripcion": "H2",
+     "prior_sd": 0.4497,
+     "beta": -0.1198,
+     "sd_post": null,
+     "pp_aprox_50": -2.99,
+     "n_activo": 360
+    },
+    {
+     "codigo": "H4",
+     "descripcion": "H4",
+     "prior_sd": 0.1746,
+     "beta": 0.039,
+     "sd_post": null,
+     "pp_aprox_50": 0.98,
+     "n_activo": 2286
+    },
+    {
+     "codigo": "H6",
+     "descripcion": "H6",
+     "prior_sd": 0.2069,
+     "beta": -0.0008,
+     "sd_post": null,
+     "pp_aprox_50": -0.02,
+     "n_activo": 1633
+    },
+    {
+     "codigo": "H7",
+     "descripcion": "H7",
+     "prior_sd": 0.1193,
+     "beta": 0.0301,
+     "sd_post": null,
+     "pp_aprox_50": 0.75,
+     "n_activo": 3366
+    },
+    {
+     "codigo": "H8",
+     "descripcion": "H8",
+     "prior_sd": 0.7183,
+     "beta": 0.2425,
+     "sd_post": null,
+     "pp_aprox_50": 6.03,
+     "n_activo": 134
+    },
+    {
+     "codigo": "H13",
+     "descripcion": "H13",
+     "prior_sd": 0.0791,
+     "beta": 0.0037,
+     "sd_post": null,
+     "pp_aprox_50": 0.09,
+     "n_activo": 3916
+    },
+    {
+     "codigo": "H14",
+     "descripcion": "H14",
+     "prior_sd": 0.2754,
+     "beta": 0.0313,
+     "sd_post": null,
+     "pp_aprox_50": 0.78,
+     "n_activo": 1078
+    },
+    {
+     "codigo": "H15",
+     "descripcion": "H15",
+     "prior_sd": 0.2741,
+     "beta": -0.1085,
+     "sd_post": null,
+     "pp_aprox_50": -2.71,
+     "n_activo": 1091
+    },
+    {
+     "codigo": "H16",
+     "descripcion": "H16",
+     "prior_sd": 0.3852,
+     "beta": 0.0253,
+     "sd_post": null,
+     "pp_aprox_50": 0.63,
+     "n_activo": 465
+    },
+    {
+     "codigo": "H17",
+     "descripcion": "H17",
+     "prior_sd": 0.2256,
+     "beta": -0.0859,
+     "sd_post": null,
+     "pp_aprox_50": -2.14,
+     "n_activo": 1356
+    },
+    {
+     "codigo": "H18",
+     "descripcion": "H18",
+     "prior_sd": 0.1292,
+     "beta": -0.0201,
+     "sd_post": null,
+     "pp_aprox_50": -0.5,
+     "n_activo": 3630
+    },
+    {
+     "codigo": "H21",
+     "descripcion": "H21",
+     "prior_sd": 0.2488,
+     "beta": 0.0197,
+     "sd_post": null,
+     "pp_aprox_50": 0.49,
+     "n_activo": 1115
+    },
+    {
+     "codigo": "H22",
+     "descripcion": "H22",
+     "prior_sd": 0.2921,
+     "beta": -0.1369,
+     "sd_post": null,
+     "pp_aprox_50": -3.42,
+     "n_activo": 809
+    },
+    {
+     "codigo": "H23",
+     "descripcion": "H23",
+     "prior_sd": 0.1995,
+     "beta": 0.0495,
+     "sd_post": null,
+     "pp_aprox_50": 1.24,
+     "n_activo": 1738
+    },
+    {
+     "codigo": "Q1",
+     "descripcion": "Q1",
+     "prior_sd": 0.1255,
+     "beta": 0.0181,
+     "sd_post": null,
+     "pp_aprox_50": 0.45,
+     "n_activo": 4388
+    },
+    {
+     "codigo": "Q2",
+     "descripcion": "Q2",
+     "prior_sd": 0.5307,
+     "beta": 0.1634,
+     "sd_post": null,
+     "pp_aprox_50": 4.08,
+     "n_activo": 245
+    },
+    {
+     "codigo": "Q3",
+     "descripcion": "Q3",
+     "prior_sd": 0.347,
+     "beta": 0.0342,
+     "sd_post": null,
+     "pp_aprox_50": 0.86,
+     "n_activo": 573
+    },
+    {
+     "codigo": "Q4",
+     "descripcion": "Q4",
+     "prior_sd": 0.7285,
+     "beta": -0.3446,
+     "sd_post": null,
+     "pp_aprox_50": -8.53,
+     "n_activo": 130
+    },
+    {
+     "codigo": "Q5",
+     "descripcion": "Q5",
+     "prior_sd": 0.6308,
+     "beta": 0.1206,
+     "sd_post": null,
+     "pp_aprox_50": 3.01,
+     "n_activo": 178
+    },
+    {
+     "codigo": "Q6a",
+     "descripcion": "Q6a",
+     "prior_sd": 0.3639,
+     "beta": -0.0943,
+     "sd_post": null,
+     "pp_aprox_50": -2.36,
+     "n_activo": 521
+    },
+    {
+     "codigo": "Q6b",
+     "descripcion": "Q6b",
+     "prior_sd": 0.3578,
+     "beta": 0.048,
+     "sd_post": null,
+     "pp_aprox_50": 1.2,
+     "n_activo": 539
+    },
+    {
+     "codigo": "Q7",
+     "descripcion": "Q7",
+     "prior_sd": 0.6805,
+     "beta": -0.4259,
+     "sd_post": null,
+     "pp_aprox_50": -10.49,
+     "n_activo": 149
+    },
+    {
+     "codigo": "S1",
+     "descripcion": "S1",
+     "prior_sd": 0.2518,
+     "beta": -0.0389,
+     "sd_post": null,
+     "pp_aprox_50": -0.97,
+     "n_activo": 1088
+    },
+    {
+     "codigo": "S2",
+     "descripcion": "S2",
+     "prior_sd": 0.5514,
+     "beta": -0.0426,
+     "sd_post": null,
+     "pp_aprox_50": -1.06,
+     "n_activo": 227
+    },
+    {
+     "codigo": "S3",
+     "descripcion": "S3",
+     "prior_sd": 0.5788,
+     "beta": 0.0568,
+     "sd_post": null,
+     "pp_aprox_50": 1.42,
+     "n_activo": 206
+    },
+    {
+     "codigo": "S4",
+     "descripcion": "S4",
+     "prior_sd": 0.487,
+     "beta": 0.1198,
+     "sd_post": null,
+     "pp_aprox_50": 2.99,
+     "n_activo": 291
+    },
+    {
+     "codigo": "S7",
+     "descripcion": "S7",
+     "prior_sd": 0.8857,
+     "beta": -0.2402,
+     "sd_post": null,
+     "pp_aprox_50": -5.98,
+     "n_activo": 88
+    },
+    {
+     "codigo": "S8",
+     "descripcion": "S8",
+     "prior_sd": 1.0911,
+     "beta": 0.1584,
+     "sd_post": null,
+     "pp_aprox_50": 3.95,
+     "n_activo": 58
+    }
+   ]
+  },
   "nfl_total": {
    "liga": "nfl",
    "mercado": "Total",

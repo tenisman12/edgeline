@@ -222,6 +222,13 @@ def ajustar(escribir=True):
     res = {"generado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "tope_logit": TOPE_LOGIT,
            "metodo": "logistica con offset logit(p mercado sin vig), prior N(0, sd) por angulo, MAP + Laplace; prueba 30 % mas reciente",
            "grupos": {}}
+    try:   # los grupos que se ajustan en otro script (nhl_ganador: utilidades/ajustar_capa_nhl.py) se conservan
+        with io.open(SALIDA, encoding="utf-8") as fh:
+            for gid, g in (json.load(fh).get("grupos") or {}).items():
+                if gid not in ("nfl_total", "lmp_ganador"):
+                    res["grupos"][gid] = g
+    except Exception:
+        pass
     for gid, fn in (("nfl_total", filas_nfl), ("lmp_ganador", filas_lmp)):
         try:
             fl = fn()
@@ -259,6 +266,27 @@ def _racha_num(s):
     return n if s[:1] == "W" else -n if s[:1] == "L" else 0
 
 
+_HIST = None
+
+
+def _x_historial(rec, codigos):
+    """x de cada angulo del partido segun salida/historial_angulos.csv (ultimo registro por codigo; x > 0 = local)."""
+    global _HIST
+    if _HIST is None:
+        _HIST = {}
+        try:
+            with io.open(os.path.join(REPO, "salida", "historial_angulos.csv"), encoding="utf-8-sig") as fh:
+                for r in csv.DictReader(fh):
+                    if r.get("codigo") and r["codigo"] != "_TODOS":
+                        _HIST.setdefault((r.get("liga"), str(r.get("id"))), {})[r["codigo"]] = _f(r.get("x")) or 0.0
+        except Exception:
+            pass
+    d = _HIST.get((rec.get("liga"), str(rec.get("id"))))
+    if d is None:
+        return None
+    return [d.get(c, 0.0) for c in codigos]
+
+
 def x_partido(rec, gid, p_mercado_home=None):
     """Vector de angulos del partido para el grupo (None si no aplica o falta el dato clave)."""
     if gid == "nfl_total":
@@ -276,6 +304,8 @@ def x_partido(rec, gid, p_mercado_home=None):
         des = ((rec.get("modelo") or {}).get("motor_puntos") or {}).get("descanso") or {}
         return nfl_x(aire, None if vk is None else vk / 1.609344, hora_et, f.weekday() == 0,
                      None if sp is None else abs(sp), _f(des.get("home")), _f(des.get("away")))
+    if gid == "nhl_ganador":
+        return _x_historial(rec, [x["codigo"] for x in ((_coef().get("grupos") or {}).get(gid) or {}).get("angulos") or []])
     if gid == "lmp_ganador":
         if p_mercado_home is None:
             return None
@@ -314,6 +344,24 @@ def aplicar(rec, tipo, lado, p, p_mercado_home=None):
     return p2, act, p2 - p
 
 
+def sombra(rec, tipo, lado, p, p_mercado_home=None):
+    """p con los grupos en sombra (se registran, no deciden): (p, pp, n angulos) o (None, 0, 0)."""
+    C = _coef().get("grupos") or {}
+    for gid, g in C.items():
+        if not g.get("sombra") or g.get("liga") != rec.get("liga") or g.get("mercado") != tipo:
+            continue
+        x = x_partido(rec, gid, p_mercado_home)
+        if not x:
+            continue
+        tot = sum(a["beta"] * xi for a, xi in zip(g["angulos"], x) if xi)
+        tope = _coef().get("tope_logit", TOPE_LOGIT)
+        tot = max(-tope, min(tope, tot))
+        s = 1 if lado == g["favorece"] else -1
+        p2 = _sig(_lg(p) + s * tot)
+        return p2, p2 - p, sum(1 for xi in x if xi)
+    return None, 0.0, 0
+
+
 if __name__ == "__main__":
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -325,4 +373,4 @@ if __name__ == "__main__":
             print(gid, "ERROR", g["error"]); continue
         print("%s: n %d (%s a %s) | prueba n %d z %+.2f | activo %s" % (gid, g["n"], g["desde"], g["hasta"], g["prueba"]["n"], g["prueba"]["z"], g["activo"]))
         for a in g["angulos"]:
-            print("   %-16s beta %+.3f (sd %.3f) ~%+.1f pp  n %d" % (a["codigo"], a["beta"], a["sd_post"], a["pp_aprox_50"], a["n_activo"]))
+            print("   %-16s beta %+.3f (sd %s) ~%+.1f pp  n %d" % (a["codigo"], a["beta"], "-" if a["sd_post"] is None else "%.3f" % a["sd_post"], a["pp_aprox_50"], a["n_activo"]))
