@@ -29,9 +29,10 @@ except Exception as _e:                   # sin la capa la lista sigue saliendo 
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MAX_PICKS = int(os.environ.get("EDGELINE_MAX_PICKS", "4"))   # maximo 4 al dia, cada uno con confianza y por que si / por que no (Alejandro, 6-oct-2026)
-TOPE_BANK = 0.10                      # suma de stakes del dia
+TOPE_BANK = 0.30                      # suma de stakes del dia (27-nov-2026, Alejandro: tope diario unos 3 mil de 10 mil)
 BANK_MXN = 10000.0
-NHL_STAKE_MXN = 500.0                 # 24-nov-2026: stake fijo de los picks NHL v2
+NHL_STAKE_MXN = 1000.0                # 27-nov-2026: stake fijo de 1,000 MXN en todos los picks (antes NHL 500)
+STAKE_FIJO_MXN = 1000.0               # 27-nov-2026 (Alejandro: "mi stake sera de 1000"): todos los picks, cualquier confianza
 NHL_CUOTA_MAX = 2.60
 NHL_EV_MIN = 0.05
 FUTBOL_LIGAS = {"mls", "laliga", "premier", "seriea", "bundesliga", "ligue1", "ligamx", "champions"}
@@ -676,6 +677,8 @@ def main():
     cand = [c for c in cand if not c.get("_fuera")]
     # mejores picks de HOY: hasta un ganador, un total y un total por equipo por partido (Alejandro, 9-oct-2026: "quiero
     # tambien picks de totales"; 10-oct: totales por equipo), por EV, tope de cantidad y de bank
+    for c in cand:                     # stake fijo por pick (27-nov-2026); la confianza queda como dato
+        c["stake"] = STAKE_FIJO_MXN / BANK_MXN; c["stake_mxn"] = STAKE_FIJO_MXN
     picks, usados, bank = [], set(), 0.0
     for c in sorted([c for c in cand if c["fecha"] == hoy.isoformat()], key=lambda c: -c["ev"]):
         k = (c["liga"], c["id"], tipo_mercado(c.get("mercado")))

@@ -296,6 +296,11 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Lo que no entra todavia: MLB dia -> under (abril 2027), LMP doble cartelera y frio (muestra corta), totales LMP por linea
   (la temporada 2026-27 va 55.7 % over en lineas 8-9.5). Medicion: proyecto claude/angulos-beisbol-clima-totales-2026-11-27.md.
 
+## Montos (27-nov-2026, Alejandro: "mi stake sera de 1000", "tope diario unos 3 mil"; bank 10,000 MXN)
+- Stake FIJO de 1,000 MXN por pick en todas las ligas y niveles (`picks_del_dia.STAKE_FIJO_MXN`; NHL tambien). Tope diario
+  3,000 MXN (`TOPE_BANK` 0.30) = maximo 3 picks al dia. La confianza (alta/media/baja) queda como dato; 0 u sigue siendo 0.
+  Reemplaza los montos 600/300/150 de la skill.
+
 ## Cuotas de todas las ligas (27-nov-2026, Alejandro: "necesito cuotas de todas las ligas, buscalas siempre y almacenalas")
 - En CADA analisis, si una liga no trae cuotas en el repo, se buscan en internet (BetExplorer, Pinnacle, Caliente, Covers,
   etc.) y se GUARDAN en `semillas/cuotas_manuales_2026.csv` (liga, fecha_cdmx, local, visita, fuente, casa, captura,
