@@ -340,6 +340,9 @@ def validar_equipos(clave, meses, bloque, liga=None):
 
 
 # ------------------------------------------------------------------ beisbol (MLB, NPB, KBO, ligas de invierno)
+MESES_INVIERNO = 72
+
+
 def validar_beisbol(liga, meses, bloque):
     """Walk-forward de beisbol con el mismo criterio que los demas deportes: Ganador (logistica entrenada solo con lo
     anterior), Total esperado, Over/Under en lineas ~promedio, Run line local -1.5 / visita +1.5 y run line a la linea
@@ -611,6 +614,10 @@ def main():
         elif d == "beisbol":
             for lg in ("MLB", "NPB", "KBO", "LMP"):
                 validar_beisbol(lg, a.meses, a.bloque)
+            # 27-nov-2026 (Alejandro: "ya no quiero que nada este sin validar"): las ligas de invierno juegan ~35 juegos por
+            # equipo al ano; con 24 meses no llegan a n 300. Se validan con 72 meses (6 temporadas), mismo criterio.
+            for lg in ("LVBP", "LIDOM", "ABL"):
+                validar_beisbol(lg, max(a.meses, MESES_INVIERNO), a.bloque)
         elif d == "hockey":
             for x in ("hockey", "hockey_shl", "hockey_liiga", "hockey_ahl", "hockey_del"): validar_equipos(x, a.meses, a.bloque)
         elif d == "ncaa":

@@ -93,7 +93,8 @@ def _aplicar_validacion():
     dep = vm.get("deportes", {})
     for liga, clave in (("nhl", "hockey"), ("shl", "hockey_shl"), ("liiga", "hockey_liiga"), ("ahl", "hockey_ahl"), ("del", "hockey_del"),
                         ("nfl", "nfl"), ("nba", "nba"), ("ncaafb", "ncaafb"), ("ncaamb", "ncaamb"),
-                        ("mlb", "beisbol_mlb"), ("npb", "beisbol_npb"), ("kbo", "beisbol_kbo"), ("lmp", "beisbol_lmp")):
+                        ("mlb", "beisbol_mlb"), ("npb", "beisbol_npb"), ("kbo", "beisbol_kbo"), ("lmp", "beisbol_lmp"),
+                        ("lvbp", "beisbol_lvbp"), ("lidom", "beisbol_lidom"), ("abl", "beisbol_abl")):
         d = dep.get(clave)
         if not d: continue
         poner(liga, "Ganador", pub(d, "Ganador"))

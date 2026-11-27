@@ -303,6 +303,13 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Pinnacle (`colectores/recolectar_cuotas_pinnacle.py`): LMP, LMB y ahora LVBP, LIDOM y ABL (id buscado por nombre en
   /sports/3/leagues). BetExplorer diario (`.github/workflows/betexplorer_diario.yml`): cierre de LMP, LVBP y LIDOM.
 
+## Ligas de invierno validadas (27-nov-2026, Alejandro: "ya no quiero que nada este sin validar")
+- `validar_mercados.py --deporte beisbol` valida tambien LVBP, LIDOM y ABL con 72 meses (`MESES_INVIERNO`), mismo criterio.
+- Total (capa) PUBLICABLE: LVBP z 4.8 (n 1,839), LIDOM z 2.43 (n 720). ABL sin muestra (n 549 lineas, z 0.06).
+- Ganador del modelo NO pasa (LVBP z -1.19, LIDOM -1.24, ABL +1.57 con n 183): el ganador de LMP, LVBP, LIDOM y ABL sale
+  del mercado (`decidir_v2.MERCADO_BASE`, peso del modelo 0): con Pinnacle en el partido, el mercado cuenta como validado y el
+  pick sale de una cuota mejor que la justa de Pinnacle + capa de angulos. Sin Pinnacle: 0 u en el ganador.
+
 ## LMP, mediciones del 27-nov-2026 (contra el cierre de BetExplorer, proyecto claude/lmp-ajustes-2026-11-27.md)
 - Peso del modelo en el ganador: la mezcla 0.35 EMPEORA al mercado fuera de muestra (z -1.88, 612 juegos desde 2024-25;
   6 de 7 temporadas en contra). w libre ajusta 0.79 en muestra pero da z -1.41 fuera. APLICADO 27-nov (Alejandro: "lo que

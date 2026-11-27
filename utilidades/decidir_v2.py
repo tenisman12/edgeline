@@ -135,7 +135,12 @@ P_DESDE = os.environ.get("EDGELINE_P_DESDE", "mezcla")
 # mejor que el modelo (z 2.46); en totales el mejor peso del modelo es 0; modelo solo -37.32 u en 314, w 0.35 -10.82 u en 161.
 # Los pesos dinamicos quedan solo como medicion (salida/pesos_dinamicos.json).
 PESO_FIJO = {"Ganador": 0.35, "Total": 0.0}
-PESO_FIJO_LIGA = {("nfl", "Ganador"): 0.0, ("lmp", "Ganador"): 0.0}
+PESO_FIJO_LIGA = {("nfl", "Ganador"): 0.0, ("lmp", "Ganador"): 0.0, ("lvbp", "Ganador"): 0.0, ("lidom", "Ganador"): 0.0,
+                  ("abl", "Ganador"): 0.0}
+# 27-nov-2026 (Alejandro: "ya no quiero que nada este sin validar"): en LVBP, LIDOM y ABL el modelo de ganador no le gana a la
+# tasa historica (walk-forward 72 meses: z -1.19, -1.24, +1.57 con n 183). Ahi el ganador sale del MERCADO (Pinnacle sin vig
+# + capa de angulos): el precio de Pinnacle es la probabilidad validada y el pick sale de comprar mejor cuota.
+MERCADO_BASE = {"lmp", "lvbp", "lidom", "abl"}
 # 27-nov-2026 (Alejandro: "lo que quiero es ganar"): en LMP la mezcla 0.35 empeora al cierre de BetExplorer (z -1.88, 6 de 7
 # temporadas; CLAUDE.md "LMP, mediciones del 27-nov-2026"): p = mercado + capa de angulos. El modelo queda como FILTRO:
 # si le da al lado del pick MENOS que el mercado (va en contra de la ventaja), 0 u.
@@ -416,6 +421,9 @@ def decidir_mercado(rec, tipo, movs=None):
     validado = (val == "publicable")
     w = w0 if validado else 0.0        # sin validacion el modelo no vota: la probabilidad es la del mercado
     lados = _lados(rec, tipo)
+    if (not validado and tipo == "Ganador" and liga in MERCADO_BASE and w0 == 0.0
+            and any((k or {}).get("p_sharp") is not None for k in lados.values())):
+        validado = True                # la probabilidad es la de Pinnacle (validada por el mercado), no la del modelo
     if not lados:
         if tipo == "Ganador" and m.get("p_home") is not None:
             lados = {"home": {"p_modelo": m["p_home"], "p_sharp": None, "decimal": None, "cuota": None, "fuente": "sin_cuota", "mercado": "Ganador"},
