@@ -1,0 +1,47 @@
+name: betexplorer diario (momios de cierre LMP, LVBP y LIDOM)
+
+# 27-nov-2026 (Alejandro: "necesito cuotas de todas las ligas, buscalas siempre y almacenalas").
+# Cada manana baja de BetExplorer los momios de los juegos YA JUGADOS de la temporada en curso (lo ya guardado se salta)
+# y los guarda en mercado/betexplorer/<liga>_2026-2027.csv y <liga>_2026-2027_principal.csv. Con eso se mide el modelo
+# y los angulos contra el cierre en cada liga (nucleo/capa_angulos.py lee los de LMP).
+
+on:
+  schedule:
+    - cron: "41 14 * * *"   # 08:41 CDMX, despues de que terminan los juegos de la noche
+  workflow_dispatch:
+
+concurrency:
+  group: edgeline-betexplorer-diario
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  diario:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      EDGELINE_BASE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      TEMP: "2026-2027"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -q beautifulsoup4
+      - name: Bajar momios de la temporada en curso
+        continue-on-error: true
+        run: |
+          for LIGA in lmp lvbp lidom; do
+            python colectores/betexplorer_historico.py --liga "$LIGA" --temporadas "$TEMP" --pausa 1.5 \
+              --salida "mercado/betexplorer/${LIGA}_${TEMP}.csv" || echo "::warning::$LIGA sin bajar"
+          done
+      - name: Subir a main
+        run: |
+          bash utilidades/subir_a_main.sh "betexplorer diario $TEMP" \
+            "mercado/betexplorer/lmp_${TEMP}.csv" "mercado/betexplorer/lmp_${TEMP}_principal.csv" \
+            "mercado/betexplorer/lvbp_${TEMP}.csv" "mercado/betexplorer/lvbp_${TEMP}_principal.csv" \
+            "mercado/betexplorer/lidom_${TEMP}.csv" "mercado/betexplorer/lidom_${TEMP}_principal.csv"

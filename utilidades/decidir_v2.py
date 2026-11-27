@@ -135,7 +135,11 @@ P_DESDE = os.environ.get("EDGELINE_P_DESDE", "mezcla")
 # mejor que el modelo (z 2.46); en totales el mejor peso del modelo es 0; modelo solo -37.32 u en 314, w 0.35 -10.82 u en 161.
 # Los pesos dinamicos quedan solo como medicion (salida/pesos_dinamicos.json).
 PESO_FIJO = {"Ganador": 0.35, "Total": 0.0}
-PESO_FIJO_LIGA = {("nfl", "Ganador"): 0.0}
+PESO_FIJO_LIGA = {("nfl", "Ganador"): 0.0, ("lmp", "Ganador"): 0.0}
+# 27-nov-2026 (Alejandro: "lo que quiero es ganar"): en LMP la mezcla 0.35 empeora al cierre de BetExplorer (z -1.88, 6 de 7
+# temporadas; CLAUDE.md "LMP, mediciones del 27-nov-2026"): p = mercado + capa de angulos. El modelo queda como FILTRO:
+# si va del otro lado del pick (p del modelo < 50 % en ese lado), 0 u.
+FILTRO_DIRECCION = {"lmp"}
 EV_MAX_LINEA = 0.12          # una linea con mas de 12% de EV contra el modelo mezclado suele ser vieja o de otro mercado: se ignora
 _EVENTOS = None
 
@@ -511,6 +515,9 @@ def decidir_mercado(rec, tipo, movs=None):
         razones_no.append("cuota %.2f mayor a %.2f" % (mejor["decimal"], CUOTA_MAX_PICK)); conf = "minima" if conf != "sin_cuota" else conf
     if tipo == "Ganador" and mejor.get("p_modelo") is not None and mejor["p_modelo"] < P_MIN_GANADOR:
         razones_no.append("perro puro: el modelo le da %.0f %% (minimo %.0f %%)" % (100 * mejor["p_modelo"], 100 * P_MIN_GANADOR))
+        conf = "minima" if conf not in ("sin_cuota", "solo_mercado") else conf
+    if tipo == "Ganador" and liga in FILTRO_DIRECCION and mejor.get("p_modelo") is not None and mejor["p_modelo"] < 0.5:
+        razones_no.append("el modelo va del otro lado (%.0f %% a este lado): filtro de direccion" % (100 * mejor["p_modelo"]))
         conf = "minima" if conf not in ("sin_cuota", "solo_mercado") else conf
     if mejor.get("mov_linea") is not None and mejor["mov_linea"] <= MOV_CONTRA:
         razones_no.append("la linea se movio %.1f pp en contra" % mejor["mov_linea"])

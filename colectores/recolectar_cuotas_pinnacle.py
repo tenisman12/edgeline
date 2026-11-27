@@ -44,6 +44,29 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 API = "https://guest.api.arcadia.pinnacle.com/0.1"
 LIGAS = {"LMP": (245, "baseball_lmp"), "LMB": (244, "baseball_lmb")}
+# 27-nov-2026 (Alejandro: "necesito cuotas de todas las ligas, buscalas siempre y almacenalas"): las ligas de invierno se
+# buscan por nombre en /sports/3/leagues?all=true (id de Pinnacle sin adivinar). Si no aparecen, se avisa y se sigue.
+BUSCAR = {"LVBP": (("venezuel",), "baseball_lvbp"), "LIDOM": (("dominican", "dominicana"), "baseball_lidom"),
+          "ABL": (("australia",), "baseball_abl")}
+
+
+def descubrir(key, ligas):
+    faltan = [lg for lg in ligas if lg not in LIGAS and lg in BUSCAR]
+    if not faltan:
+        return
+    try:
+        lst = _get("/sports/3/leagues?all=true", key)
+    except Exception as e:
+        print("::warning::Pinnacle: no se pudo listar ligas de beisbol (%s)" % e); return
+    for lg in faltan:
+        toks, sport = BUSCAR[lg]
+        cand = [x for x in lst if any(t in str(x.get("name", "")).lower() for t in toks)]
+        cand.sort(key=lambda x: -(x.get("matchupCount") or 0))
+        if cand:
+            LIGAS[lg] = (cand[0]["id"], sport)
+            print("Pinnacle %s -> liga %s (%s, %s partidos)" % (lg, cand[0]["id"], cand[0].get("name"), cand[0].get("matchupCount")))
+        else:
+            print("Pinnacle %s: sin liga en /sports/3/leagues (fuera de temporada o sin lineas)" % lg)
 SALIDA = os.path.join(BASE, "salida", "cuotas_casas.json")
 LINEAS = os.path.join(BASE, "salida", "pinnacle_beisbol_%s.csv")
 COLS = ["ts_utc", "liga", "matchup_id", "inicio_utc", "local", "visita", "mercado", "lado", "equipo", "linea", "momio", "limite"]
@@ -183,7 +206,7 @@ def ver(eventos):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ligas", default=os.environ.get("EDGELINE_PINNACLE_LIGAS", "LMP,LMB"))
+    ap.add_argument("--ligas", default=os.environ.get("EDGELINE_PINNACLE_LIGAS", "LMP,LMB,LVBP,LIDOM,ABL"))
     ap.add_argument("--horas", type=float, default=48.0, help="solo partidos que empiezan en las proximas N horas")
     ap.add_argument("--ver", action="store_true", help="imprime la tabla de lineas")
     ap.add_argument("--no-guardar", action="store_true", help="no escribe nada (prueba)")
@@ -195,7 +218,9 @@ def main():
     ahora = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None, microsecond=0)
     ts = ahora.isoformat() + "Z"
     nuevos, filas = [], []
-    for lg in [x.strip().upper() for x in a.ligas.split(",") if x.strip()]:
+    pedidas = [x.strip().upper() for x in a.ligas.split(",") if x.strip()]
+    descubrir(key, pedidas)
+    for lg in pedidas:
         if lg not in LIGAS:
             print("liga desconocida para Pinnacle:", lg); continue
         try:

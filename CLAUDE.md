@@ -296,9 +296,18 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Lo que no entra todavia: MLB dia -> under (abril 2027), LMP doble cartelera y frio (muestra corta), totales LMP por linea
   (la temporada 2026-27 va 55.7 % over en lineas 8-9.5). Medicion: proyecto claude/angulos-beisbol-clima-totales-2026-11-27.md.
 
+## Cuotas de todas las ligas (27-nov-2026, Alejandro: "necesito cuotas de todas las ligas, buscalas siempre y almacenalas")
+- En CADA analisis, si una liga no trae cuotas en el repo, se buscan en internet (BetExplorer, Pinnacle, Caliente, Covers,
+  etc.) y se GUARDAN en `semillas/cuotas_manuales_2026.csv` (liga, fecha_cdmx, local, visita, fuente, casa, captura,
+  mercado ML|Total, lado, linea, cuota_decimal) con commit, ademas de usarlas para el EV.
+- Pinnacle (`colectores/recolectar_cuotas_pinnacle.py`): LMP, LMB y ahora LVBP, LIDOM y ABL (id buscado por nombre en
+  /sports/3/leagues). BetExplorer diario (`.github/workflows/betexplorer_diario.yml`): cierre de LMP, LVBP y LIDOM.
+
 ## LMP, mediciones del 27-nov-2026 (contra el cierre de BetExplorer, proyecto claude/lmp-ajustes-2026-11-27.md)
 - Peso del modelo en el ganador: la mezcla 0.35 EMPEORA al mercado fuera de muestra (z -1.88, 612 juegos desde 2024-25;
-  6 de 7 temporadas en contra). w libre ajusta 0.79 en muestra pero da z -1.41 fuera. PENDIENTE de aprobar w = 0 en LMP.
+  6 de 7 temporadas en contra). w libre ajusta 0.79 en muestra pero da z -1.41 fuera. APLICADO 27-nov (Alejandro: "lo que
+  quiero es ganar"): `PESO_FIJO_LIGA[("lmp","Ganador")] = 0.0` y filtro de direccion (`FILTRO_DIRECCION`): si el modelo da
+  menos de 50 % al lado del pick, 0 u. Se regresa el peso cuando el modelo (con abridor/lineup) le gane al cierre.
 - Ganador con todos los angulos (B, Q, S + los 4 de mercado) sobre la mezcla: z +0.92 (no pasa); solo los 4: z +0.19.
 - Capa de totales (doble cartelera, frio, viento adentro, calor, linea 8-9.5, base): z +0.31 y walk-forward negativo en
   9 de 11 temporadas: no se aplica. Doble cartelera queda como senal de contexto en decidir_v2 (`_senal_doble`).
