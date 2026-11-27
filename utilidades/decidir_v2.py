@@ -40,6 +40,16 @@ except Exception:
     _capa_ang = None
 
 
+def _senal_sombra(p, ps, dec):
+    """27-nov-2026 (Alejandro: "dejalo asi pero que se considere"): la capa en sombra no mueve p ni EV, pero entra al conteo
+    de senales a favor / en contra cuando mueve 1 pp o mas."""
+    if ps is None or abs(ps - p) < 0.01:
+        return []
+    ev = (" (EV con capa %+.1f%%)" % (100 * (ps * dec - 1))) if dec else ""
+    return [{"capa": "capa de angulos en sombra", "dir": 1 if ps > p else -1, "valor": "%+.1f pp%s" % (100 * (ps - p), ev),
+             "peso": "sombra: medida contra el mercado, sin activar (claude/capa-bayesiana-nhl-2026-11-27.md)"}]
+
+
 def _senales_angulos(act, pp):
     """Una senal por angulo de la capa bayesiana (dir segun el signo de su aporte al lado)."""
     out = []
@@ -425,7 +435,7 @@ def decidir_mercado(rec, tipo, movs=None):
                       "p_mezcla": round(p_mez, 4), "ev_mezcla": None if ev_mez is None else round(ev_mez, 4),
                       "cuota": k.get("cuota"), "decimal": dec, "casa": k.get("casa"), "fuente": k.get("fuente"),
                       "ev": None if ev is None else round(ev, 4), "brecha_modelo_mercado": None if brecha is None else round(brecha, 4),
-                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp),
+                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp) + _senal_sombra(p_fin, p_sombra, dec),
                       "p_sin_angulos": round(p_sin_ang, 4), "angulos_capa": ang_apl, "angulos_pp": round(100 * ang_pp, 2),
                       "p_capa_sombra": None if p_sombra is None else round(p_sombra, 4),
                       "ev_capa_sombra": None if (p_sombra is None or not dec) else round(p_sombra * dec - 1, 4)})
