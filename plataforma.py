@@ -651,7 +651,8 @@ CAPA_TOT = {"nhl": ("hockey", "NHL", "hockey"),
             "ahl": ("hockey", "AHL", "hockey_ahl"), "del": ("hockey", "DEL", "hockey_del"), "nba": ("nba", "NBA", "nba"), "ncaamb": ("nba", "NCAAMB", "ncaamb"),
             "nfl": ("americano", "NFL", "nfl"), "ncaafb": ("americano", "NCAAFB", "ncaafb"),
             "mlb": ("beisbol", "MLB", "beisbol_mlb"), "npb": ("beisbol", "NPB", "beisbol_npb"),
-            "kbo": ("beisbol", "KBO", "beisbol_kbo"), "lmp": ("beisbol", "LMP", "beisbol_lmp")}
+            "kbo": ("beisbol", "KBO", "beisbol_kbo"), "lmp": ("beisbol", "LMP", "beisbol_lmp"),
+            "lvbp": ("beisbol", "LVBP", "beisbol_lvbp"), "lidom": ("beisbol", "LIDOM", "beisbol_lidom")}   # 27-nov-2026
 
 
 def _pred(g, c, fecha, eventos=None):
