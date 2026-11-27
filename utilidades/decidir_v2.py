@@ -400,6 +400,11 @@ def decidir_mercado(rec, tipo, movs=None):
         if _capa_ang is not None:
             try:
                 ph = (lados.get("home") or {}).get("p_sharp") if tipo == "Ganador" else None
+                if ph is None and tipo == "Ganador":
+                    # sin Pinnacle: precio sin vig de las cuotas que haya (consenso, casa pegada por el usuario)
+                    dh, da = (lados.get("home") or {}).get("decimal"), (lados.get("away") or {}).get("decimal")
+                    if dh and da and dh > 1 and da > 1:
+                        ph = (1 / dh) / ((1 / dh) + (1 / da))
                 p_fin, ang_apl, ang_pp = _capa_ang.aplicar(rec, tipo, lado, p_fin, ph)
             except Exception:
                 p_fin, ang_apl, ang_pp = p_sin_ang, [], 0.0
