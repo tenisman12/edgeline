@@ -282,6 +282,20 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
   (z 2.46); en totales el mejor peso del modelo es 0; modelo solo -37.32 u en 314 apuestas, mezcla 0.35 -10.82 u en 161.
 - La p del modelo se sigue mostrando primero en cada partido (lectura pura); la mezcla decide EV y pick.
 
+## Capa bayesiana de angulos (27-nov-2026, Alejandro: "si hazlo")
+- `nucleo/capa_angulos.py`: despues de la mezcla, `decidir_v2.decidir_mercado` suma en logit los angulos activos:
+  logit(p) = logit(p_mezcla) + sum(beta_i * x_i). Los beta salen de UNA logistica con offset logit(p mercado sin vig) y
+  prior N(0, sd) por angulo (0.15-0.20 si paso el protocolo, 0.06-0.08 si no), ajustada juntos (el traslape se reparte,
+  no se suma dos veces). Tope +-0.35 logit por partido. Se reajusta en cada corrida (Actions: paso "Capa bayesiana de
+  angulos") y escribe `salida/capa_angulos.json`.
+- Un grupo se aplica solo si en el 30 % mas reciente no empeora la log-loss del mercado (`activo`).
+- Grupos v1: `lmp_ganador` (local perro, visitante perro 35-40 %, local 3+ derrotas, visita 3+ victorias; betexplorer
+  2013-2026, n 3,791, prueba z +1.38: ACTIVO) y `nfl_total` (viento 10-20 mph aire libre, noche, lunes, spread <= 3,
+  descanso 10+; nfl_lineas 2018-2026, n 2,253, prueba z -0.69: INACTIVO; el viento fue 48.3 % y 50.9 % under en 2024 y 2025).
+- Cada lado guarda `p_sin_angulos`, `angulos_capa`, `angulos_pp`; cada angulo aparece como senal con sus pp.
+- Lo que no entra todavia: MLB dia -> under (abril 2027), LMP doble cartelera y frio (muestra corta), totales LMP por linea
+  (la temporada 2026-27 va 55.7 % over en lineas 8-9.5). Medicion: proyecto claude/angulos-beisbol-clima-totales-2026-11-27.md.
+
 ## Probabilidad = modelo, Pinnacle de referencia (10-oct-2026, Alejandro: "tengo mi modelo y angulos y todo mi poder estadistico y luego buscar en que casa paga bien")
 - `decidir_v2.P_DESDE` y `decidir.P_DESDE` = "modelo" (variable `EDGELINE_P_DESDE`; "mezcla" regresa al sistema anterior): en
   todos los deportes p_final = p del modelo con sus capas; el EV es contra la mejor casa. Pinnacle se muestra como referencia

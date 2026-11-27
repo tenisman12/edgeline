@@ -34,6 +34,23 @@ try:
     from modelos import beisbol as _bb          # binomial negativa con la dispersion medida por liga
 except Exception:
     _bb = None
+try:
+    from nucleo import capa_angulos as _capa_ang   # 27-nov-2026: angulos combinados en logit sobre el mercado
+except Exception:
+    _capa_ang = None
+
+
+def _senales_angulos(act, pp):
+    """Una senal por angulo de la capa bayesiana (dir segun el signo de su aporte al lado)."""
+    out = []
+    if not act:
+        return out
+    tot = sum(a["beta"] * a["x"] for a in act) or 1e-9
+    for a in act:
+        parte = pp * (a["beta"] * a["x"]) / tot        # pp que este angulo aporta al lado evaluado
+        out.append({"capa": "angulo %s (%s)" % (a["codigo"], a["descripcion"]), "dir": 1 if parte > 0 else -1 if parte < 0 else 0,
+                    "valor": "%+.1f pp" % (100 * parte), "peso": "capa bayesiana, beta %+.3f (sd %.3f)" % (a["beta"], a["sd_post"])})
+    return out
 
 BASE = os.path.abspath(os.environ.get("EDGELINE_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -377,6 +394,15 @@ def decidir_mercado(rec, tipo, movs=None):
         else:
             p_mez = _inv(_lg(p_sh) + w * (_lg(p_mod) - _lg(p_sh)))
         p_fin = p_mod if (P_DESDE == "modelo" and p_mod is not None) else p_mez
+        # capa bayesiana de angulos sobre el mercado (27-nov-2026, nucleo/capa_angulos.py): suma en logit los angulos
+        # activos con sus pesos ajustados en conjunto; solo grupos que no empeoran la log-loss fuera de muestra
+        p_sin_ang, ang_apl, ang_pp = p_fin, [], 0.0
+        if _capa_ang is not None:
+            try:
+                ph = (lados.get("home") or {}).get("p_sharp") if tipo == "Ganador" else None
+                p_fin, ang_apl, ang_pp = _capa_ang.aplicar(rec, tipo, lado, p_fin, ph)
+            except Exception:
+                p_fin, ang_apl, ang_pp = p_sin_ang, [], 0.0
         ev = (p_fin * dec - 1) if dec else None
         ev_mez = (p_mez * dec - 1) if dec else None
         mov = None
@@ -388,7 +414,8 @@ def decidir_mercado(rec, tipo, movs=None):
                       "p_mezcla": round(p_mez, 4), "ev_mezcla": None if ev_mez is None else round(ev_mez, 4),
                       "cuota": k.get("cuota"), "decimal": dec, "casa": k.get("casa"), "fuente": k.get("fuente"),
                       "ev": None if ev is None else round(ev, 4), "brecha_modelo_mercado": None if brecha is None else round(brecha, 4),
-                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov)})
+                      "mov_linea": mov, "senales": _senales(rec, tipo, lado, p_mod, p_sh, mov) + _senales_angulos(ang_apl, ang_pp),
+                      "p_sin_angulos": round(p_sin_ang, 4), "angulos_capa": ang_apl, "angulos_pp": round(100 * ang_pp, 2)})
     if not evals:
         return None
     con_ev = [e for e in evals if e["ev"] is not None]

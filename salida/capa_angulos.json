@@ -1,0 +1,122 @@
+{
+ "generado": "2026-11-27T06:20:39Z",
+ "tope_logit": 0.35,
+ "metodo": "logistica con offset logit(p mercado sin vig), prior N(0, sd) por angulo, MAP + Laplace; prueba 30 % mas reciente",
+ "grupos": {
+  "nfl_total": {
+   "liga": "nfl",
+   "mercado": "Total",
+   "favorece": "under",
+   "n": 2253,
+   "desde": "2018-09-06",
+   "hasta": "2026-09-28",
+   "prueba": {
+    "n": 676,
+    "mejora_logloss_media": -0.002607,
+    "z": -0.69,
+    "corte": "2023-12-17"
+   },
+   "activo": false,
+   "angulos": [
+    {
+     "codigo": "VIENTO_10_20",
+     "descripcion": "viento 10-20 mph, aire libre",
+     "prior_sd": 0.2,
+     "beta": 0.2881,
+     "sd_post": 0.0874,
+     "pp_aprox_50": 7.15,
+     "n_activo": 456
+    },
+    {
+     "codigo": "NOCHE",
+     "descripcion": "kickoff >= 20:00 ET",
+     "prior_sd": 0.08,
+     "beta": 0.07,
+     "sd_post": 0.0623,
+     "pp_aprox_50": 1.75,
+     "n_activo": 457
+    },
+    {
+     "codigo": "LUNES",
+     "descripcion": "lunes",
+     "prior_sd": 0.08,
+     "beta": 0.0414,
+     "sd_post": 0.0724,
+     "pp_aprox_50": 1.03,
+     "n_activo": 159
+    },
+    {
+     "codigo": "SPREAD_LE3",
+     "descripcion": "spread <= 3",
+     "prior_sd": 0.08,
+     "beta": 0.0715,
+     "sd_post": 0.0537,
+     "pp_aprox_50": 1.79,
+     "n_activo": 830
+    },
+    {
+     "codigo": "DESCANSO10",
+     "descripcion": "ambos con 10+ dias de descanso",
+     "prior_sd": 0.06,
+     "beta": 0.0223,
+     "sd_post": 0.0587,
+     "pp_aprox_50": 0.56,
+     "n_activo": 50
+    }
+   ]
+  },
+  "lmp_ganador": {
+   "liga": "lmp",
+   "mercado": "Ganador",
+   "favorece": "home",
+   "n": 3791,
+   "desde": "2013-10-12",
+   "hasta": "2026-11-10",
+   "prueba": {
+    "n": 1138,
+    "mejora_logloss_media": 0.003044,
+    "z": 1.38,
+    "corte": "2022-12-27"
+   },
+   "activo": true,
+   "angulos": [
+    {
+     "codigo": "LOCAL_PERRO",
+     "descripcion": "local perro",
+     "prior_sd": 0.2,
+     "beta": 0.1641,
+     "sd_post": 0.0634,
+     "pp_aprox_50": 4.09,
+     "n_activo": 992
+    },
+    {
+     "codigo": "VIS_PERRO_35_40",
+     "descripcion": "visitante perro 35-40 %",
+     "prior_sd": 0.2,
+     "beta": 0.202,
+     "sd_post": 0.0863,
+     "pp_aprox_50": 5.03,
+     "n_activo": 451
+    },
+    {
+     "codigo": "LOCAL_3DER",
+     "descripcion": "local viene de 3+ derrotas",
+     "prior_sd": 0.15,
+     "beta": 0.1272,
+     "sd_post": 0.0838,
+     "pp_aprox_50": 3.17,
+     "n_activo": 458
+    },
+    {
+     "codigo": "VIS_3VIC",
+     "descripcion": "visita viene de 3+ victorias",
+     "prior_sd": 0.15,
+     "beta": 0.0853,
+     "sd_post": 0.0842,
+     "pp_aprox_50": 2.13,
+     "n_activo": 446
+    }
+   ]
+  }
+ }
+}
