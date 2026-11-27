@@ -307,7 +307,7 @@ GitHub Actions: `actualizar.yml` 05:37, 13:37 y 19:37 UTC (jugadores, validacion
 - Peso del modelo en el ganador: la mezcla 0.35 EMPEORA al mercado fuera de muestra (z -1.88, 612 juegos desde 2024-25;
   6 de 7 temporadas en contra). w libre ajusta 0.79 en muestra pero da z -1.41 fuera. APLICADO 27-nov (Alejandro: "lo que
   quiero es ganar"): `PESO_FIJO_LIGA[("lmp","Ganador")] = 0.0` y filtro de direccion (`FILTRO_DIRECCION`): si el modelo da
-  menos de 50 % al lado del pick, 0 u. Se regresa el peso cuando el modelo (con abridor/lineup) le gane al cierre.
+  al lado del pick menos que el mercado (p_modelo < p_sharp), 0 u. Se regresa el peso cuando el modelo (con abridor/lineup) le gane al cierre.
 - Ganador con todos los angulos (B, Q, S + los 4 de mercado) sobre la mezcla: z +0.92 (no pasa); solo los 4: z +0.19.
 - Capa de totales (doble cartelera, frio, viento adentro, calor, linea 8-9.5, base): z +0.31 y walk-forward negativo en
   9 de 11 temporadas: no se aplica. Doble cartelera queda como senal de contexto en decidir_v2 (`_senal_doble`).
